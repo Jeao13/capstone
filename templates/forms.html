@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" href='/static/style.css' />
+<head>
+    <title>Offense Tags</title>
+</head>
+<body>
+    <div class="topnav">
+        <a href="/hello" >Home</a>
+        <a href="/menu">My Reports</a>
+        <a class="active" href="#contact">Forms</a>
+        <a href="#about">Notifications</a>
+        <a class="logout" href="/">Logout</a>
+      </div>
+
+    <h1>Forms</h1>
+
+    <ul>
+        {% for form in form_data %}
+        <li>
+            <a href="{{ url_for('download_form', form_id=form[0]) }}">{{ form[1] }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>

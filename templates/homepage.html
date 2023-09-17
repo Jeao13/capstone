@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href='/static/style.css' />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/static/script.js"></script>
+    <title>Offense Tags</title>
+</head>
+<body>
+    <div class="topnav">
+        <a class="active">Home</a>
+        <a href="/menu">My Reports</a>
+        <a href="/forms">Forms</a>
+        <a href="#about">Notifications</a>
+        <a class="logout" href="/">Logout</a>
+    </div>
+
+    <div class="user-profile">
+        <img src="data:image/jpeg;base64,{{ profile_picture_base64 }}" alt="Profile Picture">
+        <div class="user-info">
+            <h1>{{ name }}</h1>
+            <h2>{{ course }}</h2>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModalBtn">&times;</span>
+            <h3>File Report</h3>
+            <form action="/submit_report" method="POST">
+                <label for="department">Department:</label> 
+                <select name="department" id="department"> 
+                    <option value="CAFAD">CAFAD</option> 
+                    <option value="CICS">CICS</option> 
+                    <option value="CIT">CIT</option> 
+                    <option value="COE">COE</option> 
+                </select><br>
+    
+                <textarea id="report" name="report" rows="16" cols="50"></textarea>
+    
+                <input id="submit" type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+
+   
+
+    <button type="button" id="openModalBtn">File Report</button>
+
+   
+</body>
+</html>

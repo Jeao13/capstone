@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href='/static/style.css' />
+    <title>Offense Tags</title>
+</head>
+<body>
+    <div class="topnav">
+        <a href="/hello">Home</a>
+        <a class="active" href="/menu">My Reports</a>
+        <a href="/forms">Forms</a>
+        <a href="#about">Notifications</a>
+        <a class="logout" href="/">Logout</a>
+    </div>
+
+    <h1>My Reports</h1>
+
+ <!-- menu.html -->
+ <table>
+    <thead>
+        <tr>
+            <th>Date and Time</th>
+            <th>Report</th>
+            <th>Department</th>
+            <th>Status</th>
+
+            <!-- Add more table headers as needed -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in reports %}
+        <tr>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[2] }}</td>
+            <td>{{ row[3] }}</td>
+            <td>{{ row[4] }}</td>
+        
+            <!-- Add more table data cells as needed -->
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
