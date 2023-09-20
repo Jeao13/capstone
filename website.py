@@ -39,6 +39,32 @@ def submit_report():
     # Handle other cases as needed
     return redirect(url_for('homepage'))
 
+@app.route('/submit_sanction', methods=['POST'])
+def submit_sanction():
+    if request.method == 'POST':
+        # Get the values from the form
+        name = session.get('name')
+        course = session.get('course')
+        sanction = request.form['sanctions']
+        # Get the current date and time
+        current_datetime = datetime.now()
+        # Get the username from the session
+       
+
+        # Insert the values into the database
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("INSERT INTO sanctions (username, course, date_time, sanction) VALUES (%s, %s, %s, %s)",
+                          (name, course, current_datetime, sanction))
+        db_connection.commit()
+        db_cursor.close()
+
+        # Optionally, you can redirect to a success page or perform other actions
+        flash('Report submitted successfully!', 'success')
+        return redirect(url_for('homepage'))
+
+    # Handle other cases as needed
+    return redirect(url_for('homepage'))
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     # Retrieve the username from the session if it exists
@@ -90,11 +116,10 @@ def menu():
 
 
     return render_template('menu.html', reports=reports)
-
 @app.route('/search_students', methods=['POST'])
 def search_students():
     if request.method == 'POST':
-        search_value = request.form['search']
+        search_value = request.form['username']  # Updated to match the input name
 
         # Perform a database query to search for students in the accounts_cics table
         db_cursor = db_connection.cursor()
@@ -102,9 +127,26 @@ def search_students():
         search_results = db_cursor.fetchall()
         db_cursor.close()
 
-        # You can return the search results as JSON or in any other format you prefer
-        return jsonify(search_results)
+        # Check if any results were found
+        if search_results:
+            # Retrieve the first result (you can modify this logic as needed)
+            first_result = search_results[0]
 
+            # Extract the name and course from the result
+            name = first_result['Name']
+            course = first_result['CourseOrPosition']    
+
+            print(session.get('name'))
+            print(session.get('course'))
+
+            # Return the name and course as JSON
+            return jsonify({'name': name, 'course': course})
+        else:
+            # No results found, return an error message as JSON
+            print(session.get('name'))
+            print(session.get('course'))
+            return jsonify({'error': 'No results found'})
+        
 @app.route('/forms')
 def forms():
     db_cursor = db_connection.cursor()
@@ -234,6 +276,9 @@ def lookup_student():
     student_name, student_course = lookup_student_info(username)
     print(f"Student Name: {student_name}")
     print(f"Student Course: {student_course}")
+
+    session['name'] =  student_name
+    session['course'] = student_course
 
     # Return the result as JSON
     student_data = {'Name': student_name, 'CourseOrPosition': student_course}

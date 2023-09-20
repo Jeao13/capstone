@@ -104,6 +104,7 @@ function closeModal() {
     modal.style.display = 'none';
 }
 
+
 // Add an event listener for the search button in the "Tag Sanction" modal
 document.addEventListener("DOMContentLoaded", function () {
     // Existing code for other modals
@@ -150,4 +151,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+});
+
+$(document).ready(function() {
+    $('.js-example-basic-single').select2();
 });

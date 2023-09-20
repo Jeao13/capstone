@@ -5,6 +5,8 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/static/script.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
     <title>Offense Tags</title>
 </head>
 <body>
@@ -76,7 +78,7 @@
     <div class="modal-content">
         <span class="close" id="closeModalBtn2">&times;</span>
         <h3>Tag Sanction</h3>
-        <form method="POST" id="searchForm">
+        <form method="POST" action="/search_students" id="searchForm">
             <label for="username">Input Username:</label>
             <input type="text" id="username" name="username">
             <input type="submit" value="Search">
@@ -85,12 +87,74 @@
             <p>Name: <span id="studentName"></span></p>
             <p>Course: <span id="studentCourse"></span></p>
             <p>Sanctions: <span id="studentCourse"></span></p>
-            <select name="sanctions" id="sanctions"> 
-                <option value="CAFAD">CAFAD</option> 
-                <option value="CICS">CICS</option> 
-                <option value="CIT">CIT</option> 
-                <option value="COE">COE</option> 
-            </select><br>
+            <form action="/submit_sanction" method="POST">
+            <input list="sanctions" id="sanctionsInput" name="sanctions">
+            <datalist id="sanctions">
+                <option value="12.1.1 - attendance, punctuality, cutting classes">12.1.1 - attendance, punctuality, cutting classes</option> 
+                <option value="12.1.2 - dress code, uniform">12.1.2 - dress code, uniform</option> 
+                <option value="12.1.3 - property misuse">12.1.3 - property misuse</option> 
+                <option value="12.1.4 - noise disturbance">12.1.4 - noise disturbance</option>
+                <option value="12.1.5 - posting violation">12.1.5 - posting violation</option> 
+                <option value="12.1.6 - notice removal">12.1.6 - notice removal</option> 
+                <option value="12.1.7 - littering">12.1.7 - littering</option> 
+                <option value="12.1.8 - smoking violation">12.1.8 - smoking violation</option>
+                <option value="12.1.9 - trespassing">12.1.9 - trespassing</option> 
+                <option value="12.1.10 - misconduct">12.1.10 - misconduct</option> 
+                <option value="12.1.11 - harassment">12.1.11 - harassment</option> 
+                <option value="12.1.12 - provocation, fight">12.1.12 - provocation, fight</option> 
+                <option value="12.1.13 - PDA">12.1.13 - PDA</option> 
+                <option value="12.1.14 - truancy">12.1.14 - truancy</option> 
+                <option value="13.1 - repeat offenses">13.1 - repeat offenses</option> 
+                <option value="13.2 - insubordination">13.2 - insubordination</option>
+                <option value="13.3 - smoking violation">13.3 - smoking violation</option> 
+                <option value="13.4 - alcohol violation">13.4 - alcohol violation</option> 
+                <option value="13.5 - intoxication">13.5 - intoxication</option> 
+                <option value="13.6 - trespassing">13.6 - trespassing</option>
+                <option value="13.7 - property misuse">13.7 - property misuse</option> 
+                <option value="13.13 - abusive behavior">13.13 - abusive behavior</option> 
+                <option value="13.14 - unauthorized membership">13.14 - unauthorized membership</option> 
+                <option value="13.15 - online misconduct">13.15 - online misconduct</option>
+                <option value="13.16 - vandalism">13.16 - vandalism</option> 
+                <option value="13.17 - academic disruption">13.17 - academic disruption</option> 
+                <option value="13.18 - solicitation">13.18 - solicitation</option> 
+                <option value="13.19 - physical harm">13.19 - physical harm</option>
+                <option value="13.20 - weapons possession">13.20 - weapons possession</option> 
+                <option value="13.21 - theft">13.21 - theft</option> 
+                <option value="13.22 - bribery">13.22 - bribery</option> 
+                <option value="13.23 - sexual misconduct">13.23 - sexual misconduct</option>
+                <option value="13.24 - obscenity">13.24 - obscenity</option> 
+                <option value="13.25 - defamation">13.25 - defamation</option> 
+                <option value="13.26 - physical harm">13.26 - physical harm</option> 
+                <option value="13.27 - falsification">13.27 - falsification</option>
+                <option value="13.28 - disrepute">13.28 - disrepute</option> 
+                <option value="13.29 - riot">13.29 - riot</option> 
+                <option value="13.30 - destruction of property">13.30 - destruction of property</option> 
+                <option value="13.31 - burglary">13.31 - burglary</option> 
+                <option value="13.32 - hazing">13.32 - hazing</option> 
+                <option value="13.33 - drugs">13.33 - drugs</option> 
+                <option value="13.34 - firearms possession">13.34 - firearms possession</option> 
+                <option value="13.35 - threats">13.35 - threats</option> 
+                <option value="13.36 - felonies">13.36 - felonies</option> 
+                <option value="13.37 - moral turpitude">13.37 - moral turpitude</option> 
+                <option value="14.1 - cheating, mobile phone">14.1 - cheating, mobile phone</option> 
+                <option value="14.2 - cheating, talking">14.2 - cheating, talking</option> 
+                <option value="14.3 - cheating, dictating answers">14.3 - cheating, dictating answers</option> 
+                <option value="14.4 - cheating, notes possession">14.4 - cheating, notes possession</option> 
+                <option value="14.5 - cheating, outside information">14.5 - cheating, outside information</option> 
+                <option value="14.6 - cheating, leakage facilitation">14.6 - cheating, leakage facilitation</option> 
+                <option value="14.7 - cheating, buying/selling questions">14.7 - cheating, buying/selling questions</option> 
+                <option value="14.8 - cheating, copying answers">14.8 - cheating, copying answers</option> 
+                <option value="14.9 - cheating, covert devices">14.9 - cheating, covert devices</option> 
+                <option value="14.10 - cheating, impersonation">14.10 - cheating, impersonation</option> 
+                <option value="14.11 - plagiarism">14.11 - plagiarism</option> 
+                <option value="14.12 - cheating, surrogate attendance">14.12 - cheating, surrogate attendance</option> 
+                <option value="14.13 - plagiarism">14.13 - plagiarism</option> 
+                <option value="14.14 - cheating, caught">14.14 - cheating, caught</option> 
+                <option value="14.15 - cheating, aiding">14.15 - cheating, aiding</option> 
+
+            </datalist><br>
+            <input id="submit" type="submit" value="Submit">
+        </form>
         </div>
     </div>
 </div>
