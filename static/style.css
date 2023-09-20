@@ -39,6 +39,8 @@ body {
   .user-profile {
     display: flex;
     align-items: center;
+    background-color: #ffffff;
+    margin-top:20px;
 }
 
 .user-profile img {
@@ -144,4 +146,27 @@ td {
   border: 1px solid #000000;
   padding: 8px;
   text-align: left;
+}
+
+.view-report-button {
+  float: right;
+  margin-right: 10px;
+}
+
+#reports-container{
+  background-color: white;
+  margin:5px;
+  padding: 5px;
+  border: 1px solid #000000;
+
+}
+
+.report-separator {
+  border-top: 1px solid #ccc; /* Style the separator as a horizontal line */
+  margin-bottom: 20px; /* Add margin to create spacing between reports */
+}
+
+.report {
+  font-size: 24px; /* Set the font size to 16px */
+  margin-bottom: 20px; /* Add margin for spacing */
 }

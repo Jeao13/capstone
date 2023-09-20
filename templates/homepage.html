@@ -17,7 +17,11 @@
     </div>
 
     <div class="user-profile">
+        {% if profile_picture_base64 %}
         <img src="data:image/jpeg;base64,{{ profile_picture_base64 }}" alt="Profile Picture">
+        {% else %}
+        <img src="/static/default_profile.png" alt="Default Profile Picture">
+        {% endif %}
         <div class="user-info">
             <h1>{{ name }}</h1>
             <h2>{{ course }}</h2>
@@ -44,9 +48,52 @@
         </div>
     </div>
 
-   
 
     <button type="button" id="openModalBtn">File Report</button>
+
+    
+    <!-- Conditionally show the "My Sanctions" button based on user source -->
+    {% if user_source == 'accounts_cics'%}
+    <button type="button" id="openModalBtn1">My Sanctions</button>
+    {% endif %}
+
+    <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
+    {% if user_source == 'accounts_coordinators' %}
+    <button type="button" id="openModalBtn2">Tag Sanction</button>
+    {% endif %}
+
+<div id="myModal1" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModalBtn1">&times;</span>
+        <h3>My Sanctions</h3>
+        <!-- Add your content for My Sanctions here -->
+        <!-- This can be a blank div or any content you want to display -->
+    </div>
+</div>
+
+
+<div id="myModal2" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModalBtn2">&times;</span>
+        <h3>Tag Sanction</h3>
+        <form method="POST" id="searchForm">
+            <label for="username">Input Username:</label>
+            <input type="text" id="username" name="username">
+            <input type="submit" value="Search">
+        </form>
+        <div id="studentInfo">
+            <p>Name: <span id="studentName"></span></p>
+            <p>Course: <span id="studentCourse"></span></p>
+            <p>Sanctions: <span id="studentCourse"></span></p>
+            <select name="sanctions" id="sanctions"> 
+                <option value="CAFAD">CAFAD</option> 
+                <option value="CICS">CICS</option> 
+                <option value="CIT">CIT</option> 
+                <option value="COE">COE</option> 
+            </select><br>
+        </div>
+    </div>
+</div>
 
    
 </body>

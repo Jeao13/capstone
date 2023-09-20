@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash,send_file
+from flask import Flask, render_template, request, redirect, url_for, session, flash,send_file,jsonify
 import mysql.connector
 import base64
 import io 
@@ -51,31 +51,29 @@ def index():
         submitted_username = request.form['username']
         submitted_password = request.form['lname']  # Assuming password input is named 'lname'
 
-        # Query the database to check if the provided username and password exist
+        # Query the accounts_cics table to check if the provided username and password exist
         db_cursor = db_connection.cursor()
         db_cursor.execute("SELECT * FROM accounts_cics WHERE username = %s AND password = %s",
                           (submitted_username, submitted_password))
-        result = db_cursor.fetchone()
-
+        result_cics = db_cursor.fetchone()
         db_cursor.close()
 
-        if result:
-            # User exists in the database, continue to another page or perform actions
+        # Query the account_coordinators table to check if the provided username and password exist
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("SELECT * FROM accounts_coordinators WHERE username = %s AND password = %s",
+                          (submitted_username, submitted_password))
+        result_coordinators = db_cursor.fetchone()
+        db_cursor.close()
+
+        if result_cics or result_coordinators:
+            # User exists in either table, continue to another page or perform actions
             session['username'] = submitted_username  # Save the username in the session
             return redirect(url_for('homepage'))  # Redirect to another page after successful login
         else:
             # Invalid username or password, set error_message
             error_message = 'Invalid username or password'
 
-    db_cursor = db_connection.cursor()
-
-    # Execute an SQL query to retrieve user data
-    db_cursor.execute("SELECT * FROM accounts_cics")
-    result = db_cursor.fetchall()
-
-    # Close the cursor
-    db_cursor.close()
-    return render_template('index.html', username=username, data=result, error_message=error_message)
+    return render_template('index.html', username=username, error_message=error_message)
 
 @app.route('/menu')
 def menu():
@@ -92,6 +90,20 @@ def menu():
 
 
     return render_template('menu.html', reports=reports)
+
+@app.route('/search_students', methods=['POST'])
+def search_students():
+    if request.method == 'POST':
+        search_value = request.form['search']
+
+        # Perform a database query to search for students in the accounts_cics table
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("SELECT * FROM accounts_cics WHERE Name LIKE %s", ('%' + search_value + '%',))
+        search_results = db_cursor.fetchall()
+        db_cursor.close()
+
+        # You can return the search results as JSON or in any other format you prefer
+        return jsonify(search_results)
 
 @app.route('/forms')
 def forms():
@@ -141,35 +153,91 @@ def homepage():
         # Save the username in the session
         session['username'] = username
 
-
-    # Retrieve the profile picture path for the logged-in user from the database
+    # Determine the user source (accounts_cics or accounts_coordinators) and set the user_source variable
     db_cursor = db_connection.cursor()
-    db_cursor.execute("SELECT image_data FROM accounts_cics WHERE username = %s", (username,))
-    profile_picture_data = db_cursor.fetchone()[0]  # Assuming the path is in the first column
+    db_cursor.execute("SELECT * FROM accounts_cics WHERE username = %s", (username,))
+    result_cics = db_cursor.fetchone()
 
+    db_cursor.execute("SELECT * FROM accounts_coordinators WHERE username = %s", (username,))
+    result_coordinators = db_cursor.fetchone()
+
+    if result_cics:
+        user_source = 'accounts_cics'
+    elif result_coordinators:
+        user_source = 'accounts_coordinators'
+    else:
+        user_source = 'unknown'  # Handle the case where the user source is not found
+
+    # Close the cursor
+    db_cursor.close()
+
+    # Retrieve the profile picture path, name, and course for the logged-in user from the database
     db_cursor1 = db_connection.cursor()
-    db_cursor1.execute("SELECT Name FROM accounts_cics WHERE username = %s", (username,))
-    result = db_cursor1.fetchone()
 
-    if result is not None:
-        name = result[0]
+    if user_source == 'accounts_cics':
+        db_cursor1.execute("SELECT image_data, Name, CourseOrPosition FROM accounts_cics WHERE username = %s", (username,))
+    elif user_source == 'accounts_coordinators':
+        db_cursor1.execute("SELECT image_data, Name, Course FROM accounts_coordinators WHERE username = %s", (username,))
     else:
-        name = "Name not found"  # Provide a default value or handle the case where the result is None
+        # Handle the case where user_source is unknown
+        db_cursor1.execute("SELECT image_data, Name, CourseOrPosition FROM accounts_cics WHERE username = %s", (username,))
 
-    db_cursor2 = db_connection.cursor()
-    db_cursor2.execute("SELECT CourseOrPosition FROM accounts_cics WHERE username = %s", (username,))
-    course = db_cursor2.fetchone()
+    result_user_data = db_cursor1.fetchone()
 
-    if course is not None:
-        course = course[0]  # Assuming the data is in the first column
+    if result_user_data:
+        profile_picture_data, name, course = result_user_data
     else:
-        course = "Course/Position not found"  # Provide a default value or handle the case where the result is None
+        # Handle the case where user data is not found
+        profile_picture_data = None
+        name = "Name not found"
+        course = "Course/Position not found"
 
     # Encode the profile picture data as a Base64 string
-    profile_picture_base64 = base64.b64encode(profile_picture_data).decode('utf-8')
+    if profile_picture_data is not None:
+        profile_picture_base64 = base64.b64encode(profile_picture_data).decode('utf-8')
+    else:
+        profile_picture_base64 = None  # Handle the case where there is no profile picture data
 
-    # Pass the sorted offenses, username, and profile picture (Base64) to the template
-    return render_template('homepage.html', username=username, profile_picture_base64=profile_picture_base64, name=name,course=course)
+    # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
+    return render_template('homepage.html', username=username, profile_picture_base64=profile_picture_base64, name=name, course=course, user_source=user_source)
+
+def lookup_student_info(username):
+    try:
+        db_cursor = db_connection.cursor(dictionary=True)
+
+        # Assuming you have a table called 'students' with columns 'username', 'name', and 'course'
+        query = "SELECT Name, CourseOrPosition FROM accounts_cics WHERE username = %s"
+        db_cursor.execute(query, (username,))
+        student_data = db_cursor.fetchone()
+
+        if student_data:
+            student_name = student_data['Name']
+            student_course = student_data['CourseOrPosition']
+            return student_name, student_course
+        else:
+            # Return None if the student is not found
+            return None, None
+    except mysql.connector.Error as err:
+        # Handle any errors that may occur during the database query
+        print(f"Error: {err}")
+        return None, None
+    finally:
+        db_cursor.close()
+
+# Usage example:
+@app.route('/lookup_student', methods=['POST'])
+def lookup_student():
+    # Get the username from the request
+    username = request.form.get('username')
+
+    # Call the function to look up the student's name and course
+    student_name, student_course = lookup_student_info(username)
+    print(f"Student Name: {student_name}")
+    print(f"Student Course: {student_course}")
+
+    # Return the result as JSON
+    student_data = {'Name': student_name, 'CourseOrPosition': student_course}
+    return jsonify(student_data)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

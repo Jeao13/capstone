@@ -2,6 +2,7 @@
 <html>
 <head>
     <link rel="stylesheet" href='/static/style.css' />
+    <script src="/static/script.js"></script>
     <title>Offense Tags</title>
 </head>
 <body>
@@ -15,31 +16,29 @@
 
     <h1>My Reports</h1>
 
- <!-- menu.html -->
- <table>
-    <thead>
-        <tr>
-            <th>Date and Time</th>
-            <th>Report</th>
-            <th>Department</th>
-            <th>Status</th>
-
-            <!-- Add more table headers as needed -->
-        </tr>
-    </thead>
-    <tbody>
+    <div id="reports-container">
         {% for row in reports %}
-        <tr>
-            <td>{{ row[1] }}</td>
-            <td>{{ row[2] }}</td>
-            <td>{{ row[3] }}</td>
-            <td>{{ row[4] }}</td>
-        
-            <!-- Add more table data cells as needed -->
-        </tr>
+        <div class="report">
+            <b>Date and Time:</b> {{ row[1] }}<br>
+            <button class="view-report-button" onclick="openModal('{{ row[2] }}')">View Report</button>
+            <b>Department:</b> {{ row[3] }}<br>   
+         
+            <b>Status:</b> {{ row[4] }}<br>
+         
+        </div>
+        <hr class="report-separator"> <!-- Add a horizontal line as a separator -->
         {% endfor %}
-    </tbody>
-</table>
+    </div>
+
+    <!-- The Modal -->
+    <div class="modal" id="reportModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="reportContent"></div>
+        </div>
+    </div>
+
+
 
 </body>
 </html>
