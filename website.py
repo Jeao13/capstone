@@ -14,7 +14,7 @@ db_connection = mysql.connector.connect(
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
 
-@app.route('/submit_report', methods=['POST'])
+@app.route('/submit_report', methods=['POST'] )
 def submit_report():
     if request.method == 'POST':
         # Get the values from the form
@@ -25,10 +25,18 @@ def submit_report():
         # Get the username from the session
         username = session.get('username', '')
 
+        # Handle file uploads
+        file = request.files['file']
+        file1 = request.files['file1']
+
+        # Read file data as binary
+        file_data = file.read() if file else None
+        file1_data = file1.read() if file1 else None
+
         # Insert the values into the database
         db_cursor = db_connection.cursor()
-        db_cursor.execute("INSERT INTO reports (username, course, report, date_time, status) VALUES (%s, %s, %s, %s,%s)",
-                          (username, department, report, current_datetime,"Pending"))
+        db_cursor.execute("INSERT INTO reports (username, course, report, date_time, status,file_form,file_support) VALUES (%s, %s, %s, %s,%s,%s,%s)",
+                          (username, department, report, current_datetime,"Pending",file_data, file1_data))
         db_connection.commit()
         db_cursor.close()
 
@@ -91,9 +99,15 @@ def index():
         result_coordinators = db_cursor.fetchone()
         db_cursor.close()
 
-        if result_cics or result_coordinators:
-            # User exists in either table, continue to another page or perform actions
+        if result_cics:
+            # User exists in the accounts_cics table, set the role and continue
             session['username'] = submitted_username  # Save the username in the session
+            session['role'] = 'accounts_cics'  # Save the role in the session
+            return redirect(url_for('homepage'))  # Redirect to another page after successful login
+        elif result_coordinators:
+            # User exists in the accounts_coordinators table, set the role and continue
+            session['username'] = submitted_username  # Save the username in the session
+            session['role'] = 'accounts_coordinators'  # Save the role in the session
             return redirect(url_for('homepage'))  # Redirect to another page after successful login
         else:
             # Invalid username or password, set error_message
@@ -101,21 +115,43 @@ def index():
 
     return render_template('index.html', username=username, error_message=error_message)
 
+
 @app.route('/menu')
 def menu():
-    # Retrieve the username from the session
+    # Retrieve the username and role from the session
     username = session.get('username', '')
+    user_role = session.get('role', '')
+    user_source = session.get('source', '')
+    print(f"Student Name: {user_role}")
 
     # Query the database to retrieve reports for the logged-in user
     db_cursor = db_connection.cursor()
-    db_cursor.execute("SELECT * FROM reports WHERE username = %s", (username,))
-    reports = db_cursor.fetchall()
+
+    if user_role == 'accounts_coordinators':
+        # If the user is an accounts coordinator, retrieve the course of the user
+        db_cursor.execute("SELECT course FROM accounts_coordinators WHERE username = %s", (username,))
+        user_course = db_cursor.fetchone()
+        
+
+        if user_course:
+            user_course = user_course[0]  # Extract the course from the result
+
+            # Query reports where the course matches the user's course
+            db_cursor.execute("SELECT * FROM reports WHERE course = %s", (user_course,))
+            reports = db_cursor.fetchall()
+        else:
+            reports = []  # If user's course is not found, return an empty list
+    else:
+        # For other roles, simply retrieve reports for the logged-in user
+        db_cursor.execute("SELECT * FROM reports WHERE username = %s", (username,))
+        reports = db_cursor.fetchall()
 
     # Close the cursor
     db_cursor.close()
 
+    return render_template('menu.html', reports=reports, user_source=user_source, user_course=user_course)
 
-    return render_template('menu.html', reports=reports)
+
 @app.route('/search_students', methods=['POST'])
 def search_students():
     if request.method == 'POST':
@@ -149,6 +185,7 @@ def search_students():
         
 @app.route('/forms')
 def forms():
+    user_source = session.get('source', '')
     db_cursor = db_connection.cursor()
 
     # Execute an SQL query to retrieve form data
@@ -158,7 +195,7 @@ def forms():
     # Close the cursor
     db_cursor.close()
 
-    return render_template('forms.html', form_data=form_data)
+    return render_template('forms.html', form_data=form_data, user_source=user_source)
 
 @app.route('/download_form/<int:form_id>')
 def download_form(form_id):
@@ -205,8 +242,10 @@ def homepage():
 
     if result_cics:
         user_source = 'accounts_cics'
+        session['source'] = user_source
     elif result_coordinators:
         user_source = 'accounts_coordinators'
+        session['source'] = user_source
     else:
         user_source = 'unknown'  # Handle the case where the user source is not found
 

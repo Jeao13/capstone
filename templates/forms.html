@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html>
     <link rel="stylesheet" href='/static/style.css' />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/static/script.js"></script>
 <head>
     <title>Offense Tags</title>
 </head>
 <body>
     <div class="topnav">
         <a href="/hello" >Home</a>
+        {% if user_source == 'accounts_cics'%}
         <a href="/menu">My Reports</a>
+    {% endif %}
+
+    <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
+    {% if user_source == 'accounts_coordinators' %}
+    <a href="/menu">Reports</a>
+    {% endif %}
         <a class="active" href="#contact">Forms</a>
         <a href="#about">Notifications</a>
         <a class="logout" href="/">Logout</a>

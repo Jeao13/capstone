@@ -8,13 +8,24 @@
 <body>
     <div class="topnav">
         <a href="/hello">Home</a>
-        <a class="active" href="/menu">My Reports</a>
+        {% if user_source == 'accounts_cics'%}
+        <a href="/menu">My Reports</a>
+    {% endif %}
+
+    <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
+    {% if user_source == 'accounts_coordinators' %}
+    <a href="/menu">Reports</a>
+    {% endif %}
         <a href="/forms">Forms</a>
         <a href="#about">Notifications</a>
         <a class="logout" href="/">Logout</a>
     </div>
-
+    {% if user_source == 'accounts_cics'%}
     <h1>My Reports</h1>
+    {% endif %}
+    {% if user_source == 'accounts_coordinators' %}
+    <h1>Reports of {{user_course }}</h1>
+    {% endif %}
 
     <div id="reports-container">
         {% for row in reports %}
