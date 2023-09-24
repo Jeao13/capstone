@@ -1,7 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash,send_file,jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash,send_file,jsonify,make_response
 import mysql.connector
 import base64
 import io 
+import os
+from werkzeug.utils import secure_filename
+
+
 from datetime import datetime
 
 db_connection = mysql.connector.connect(
@@ -14,38 +18,59 @@ db_connection = mysql.connector.connect(
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
 
-@app.route('/submit_report', methods=['POST'] )
+@app.route('/submit_report', methods=['POST'])
 def submit_report():
-    if request.method == 'POST':
-        # Get the values from the form
-        department = request.form['department']
-        report = request.form['report']
-        # Get the current date and time
-        current_datetime = datetime.now()
-        # Get the username from the session
-        username = session.get('username', '')
-
-        # Handle file uploads
-        file = request.files['file']
-        file1 = request.files['file1']
-
-        # Read file data as binary
-        file_data = file.read() if file else None
-        file1_data = file1.read() if file1 else None
-
-        # Insert the values into the database
+    # Get form data including the uploaded files
+    department = request.form.get('department')
+    report_text = request.form.get('report')
+    current_datetime = datetime.now()
+        
+    username = session.get('username', '')
+    
+    # Check if the POST request has the file part for the report file
+    if 'file' not in request.files:
+        flash('No report file part')
+        return redirect(request.url)
+    
+    report_file = request.files['file']
+    
+    # Check if the user submitted an empty report file input
+    if report_file.filename == '':
+        flash('No selected report file')
+        return redirect(request.url)
+    
+    # Check if the POST request has the file part for the supporting document file
+    if 'file1' not in request.files:
+        flash('No supporting document file part')
+        return redirect(request.url)
+    
+    support_file = request.files['file1']
+    
+    # Check if the user submitted an empty supporting document file input
+    if support_file.filename == '':
+        flash('No selected supporting document file')
+        return redirect(request.url)
+    
+    if report_file and support_file:
+        # Securely get the filenames and file extensions
+        report_filename = secure_filename(report_file.filename)
+        support_filename = secure_filename(support_file.filename)
+        report_extension = os.path.splitext(report_filename)[1]
+        support_extension = os.path.splitext(support_filename)[1]
+        
+        # Read the file data into memory
+        report_data = report_file.read()
+        support_data = support_file.read()
+        
+        # Insert the report with file information into the database, including file data
         db_cursor = db_connection.cursor()
-        db_cursor.execute("INSERT INTO reports (username, course, report, date_time, status,file_form,file_support) VALUES (%s, %s, %s, %s,%s,%s,%s)",
-                          (username, department, report, current_datetime,"Pending",file_data, file1_data))
+        db_cursor.execute("INSERT INTO reports (course, report, file_form_name, file_form_type, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                          (department, report_text, report_filename, report_extension, report_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
         db_connection.commit()
         db_cursor.close()
-
-        # Optionally, you can redirect to a success page or perform other actions
-        flash('Report submitted successfully!', 'success')
-        return redirect(url_for('homepage'))
-
-    # Handle other cases as needed
-    return redirect(url_for('homepage'))
+        
+        flash('Report submitted successfully')
+        return redirect('/hello')
 
 @app.route('/submit_sanction', methods=['POST'])
 def submit_sanction():
@@ -131,7 +156,6 @@ def menu():
         # If the user is an accounts coordinator, retrieve the course of the user
         db_cursor.execute("SELECT course FROM accounts_coordinators WHERE username = %s", (username,))
         user_course = db_cursor.fetchone()
-        
 
         if user_course:
             user_course = user_course[0]  # Extract the course from the result
@@ -139,12 +163,11 @@ def menu():
             # Query reports where the course matches the user's course
             db_cursor.execute("SELECT * FROM reports WHERE course = %s", (user_course,))
             reports = db_cursor.fetchall()
-        else:
-            reports = []  # If user's course is not found, return an empty list
     else:
         # For other roles, simply retrieve reports for the logged-in user
         db_cursor.execute("SELECT * FROM reports WHERE username = %s", (username,))
         reports = db_cursor.fetchall()
+        user_course = ""
 
     # Close the cursor
     db_cursor.close()
@@ -152,14 +175,22 @@ def menu():
     return render_template('menu.html', reports=reports, user_source=user_source, user_course=user_course)
 
 
+
 @app.route('/search_students', methods=['POST'])
 def search_students():
     if request.method == 'POST':
         search_value = request.form['username']  # Updated to match the input name
+        session['search_value'] = search_value
+        
 
         # Perform a database query to search for students in the accounts_cics table
         db_cursor = db_connection.cursor()
         db_cursor.execute("SELECT * FROM accounts_cics WHERE Name LIKE %s", ('%' + search_value + '%',))
+        search_results = db_cursor.fetchall()
+        db_cursor.close()
+
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("SELECT * FROM sanctions WHERE username LIKE %s", ('%' + search_value + '%',))
         search_results = db_cursor.fetchall()
         db_cursor.close()
 
@@ -170,18 +201,18 @@ def search_students():
 
             # Extract the name and course from the result
             name = first_result['Name']
-            course = first_result['CourseOrPosition']    
+            course = first_result['CourseOrPosition']
+          
 
-            print(session.get('name'))
-            print(session.get('course'))
 
             # Return the name and course as JSON
-            return jsonify({'name': name, 'course': course})
+            return jsonify({'name': name, 'course': course, 'search_value': session.get('search_value')})
         else:
             # No results found, return an error message as JSON
             print(session.get('name'))
             print(session.get('course'))
             return jsonify({'error': 'No results found'})
+        
         
 @app.route('/forms')
 def forms():
@@ -322,6 +353,102 @@ def lookup_student():
     # Return the result as JSON
     student_data = {'Name': student_name, 'CourseOrPosition': student_course}
     return jsonify(student_data)
+
+@app.route('/download_report_file/<int:report_id>')
+def download_report_file(report_id):
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT file_form_name, file_form_type, file_form FROM reports WHERE report_id = %s", (report_id,))
+    result = db_cursor.fetchone()
+
+    if result is not None:
+        file_name, file_type, file_data = result
+
+        # Set the content type header based on the file type stored in the database
+        content_type = file_type
+
+        # Set the filename to have the original name and extension
+        response = make_response(file_data)
+        response.headers['Content-Type'] = content_type
+
+        # Set the filename based on the stored name and extension
+        response.headers['Content-Disposition'] = f'attachment; filename="{file_name}{file_type}"'
+
+        # Close the cursor after fetching the result
+        db_cursor.close()
+
+        return response
+
+    # Handle the case where the file is not found
+    db_cursor.close()
+    return "File not found", 404
+
+
+
+@app.route('/download_supporting_document/<int:report_id>')
+def download_supporting_document(report_id):
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT file_support_name, file_support_type, file_support FROM reports WHERE report_id = %s", (report_id,))
+    result = db_cursor.fetchone()
+
+    if result is not None:
+        file_name, file_type, file_data = result
+
+        # Set the content type header based on the supporting document's type stored in the database
+        content_type = file_type
+
+        # Set the filename to have the original name and extension
+        response = make_response(file_data)
+        response.headers['Content-Type'] = content_type
+
+        # Set the filename based on the stored name and extension
+        response.headers['Content-Disposition'] = f'attachment; filename="{file_name}{file_type}"'
+
+        # Close the cursor after fetching the result
+        db_cursor.close()
+
+        return response
+
+    # Handle the case where the file is not found
+    db_cursor.close()
+    return "File not found", 404
+
+@app.route('/change_report_status/<int:report_id>', methods=['POST'])
+def change_report_status(report_id):
+    new_status = request.form['new_status']
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("UPDATE reports SET status = %s WHERE report_id = %s;", (new_status, report_id))
+    db_connection.commit()  # Make sure to commit the changes to the database
+    db_cursor.close()
+
+    return redirect(url_for('menu'))
+
+@app.route('/delete_report/<int:report_id>', methods=['POST'])
+def delete_report(report_id):
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("DELETE FROM reports WHERE report_id = %s;", (report_id,))
+    db_connection.commit()  # Make sure to commit the changes to the database
+    db_cursor.close()
+
+    return redirect(url_for('menu'))
+
+@app.route('/lookup_sanctions', methods=['POST'])
+def lookup_sanctions():
+    if request.method == 'POST':
+        name = session.get('name', '')  # Updated to match the input name
+
+        # Perform a database query to search for sanctions based on the username
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("SELECT date_time, sanction FROM sanctions WHERE Username LIKE %s", ('%' + name + '%',))
+        search_sanctions = db_cursor.fetchall()
+        db_cursor.close()
+
+        # Check if any sanctions were found
+        if search_sanctions:
+            # Convert datetime objects to string representations
+            formatted_sanctions = [{'date_time': str(entry[0]), 'sanction': entry[1]} for entry in search_sanctions]
+            return jsonify({'sanctions': formatted_sanctions})
+        else:
+            return jsonify({'error': 'No sanctions found'})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

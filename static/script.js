@@ -63,6 +63,28 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    // Existing code for "File Report" modal
+
+    var modal3 = document.getElementById("myModal3"); // My Sanctions modal
+    var btn3 = document.getElementById("openModalBtn3");
+    var span3 = document.getElementById("closeModalBtn3");
+
+    btn3.onclick = function () {
+        modal3.style.display = "block";
+    };
+
+    span3.onclick = function () {
+        modal3.style.display = "none";
+    };
+
+    window.onclick = function (event) {
+        if (event.target == modal2) {
+            modal3.style.display = "none";
+        }
+    };
+});
+
 
 function showSuccessMessage() {
     // Get the success message element
@@ -85,12 +107,25 @@ window.onload = function() {
     showSuccessMessage();
 };
 
-function openModal(reportText) {
+function openModal(reportText, reportFileLink, supportingDocumentLink) {
     var modal = document.getElementById('reportModal');
     var reportContent = document.getElementById('reportContent');
 
-    // Display the report content in the modal
-    reportContent.innerHTML = reportText;
+    // Construct the HTML content for the modal
+    var modalContent = '<b>Report Text:</b><br>' + reportText + '<br><br>';
+
+    if (reportFileLink) {
+        modalContent += '<b>Attached Report File:</b><br>';
+        modalContent += '<a href="' + reportFileLink + '" target="_blank">Download Report File</a><br>';
+    }
+
+    if (supportingDocumentLink) {
+        modalContent += '<b>Attached Supporting Document:</b><br>';
+        modalContent += '<a href="' + supportingDocumentLink + '" target="_blank">Download Supporting Document</a>';
+    }
+
+    // Set the modal content
+    reportContent.innerHTML = modalContent;
 
     // Show the modal
     modal.style.display = 'block';
@@ -107,50 +142,83 @@ function closeModal() {
 
 // Add an event listener for the search button in the "Tag Sanction" modal
 document.addEventListener("DOMContentLoaded", function () {
-    // Existing code for other modals
-
-    // Get references to elements in the "Tag Sanction" modal
-    var modal2 = document.getElementById("myModal2");
-    var btn2 = document.getElementById("openModalBtn2");
-    var span2 = document.getElementById("closeModalBtn2");
-    var searchForm = document.getElementById("searchForm");
-    var studentName = document.getElementById("studentName");
-    var studentCourse = document.getElementById("studentCourse");
-
-    btn2.onclick = function () {
-        modal2.style.display = "block";
-    };
-
-    span2.onclick = function () {
-        modal2.style.display = "none";
-        // Clear the search form and student info when the modal is closed
-        searchForm.reset();
-        studentName.textContent = "";
-        studentCourse.textContent = "";
-    };
-
-    searchForm.addEventListener("submit", function (event) {
-        event.preventDefault(); // Prevent the form from submitting
-
-        // Get the username entered in the form
-        var usernameInput = document.getElementById("username");
-        var username = usernameInput.value;
-
-        // Make an AJAX request to the server to fetch student information
-        $.ajax({
-            type: 'POST',
-            url: '/lookup_student',
-            data: { username: username },
-            success: function (data) {
-                // Update the DOM elements with the student's name and course
-                $('#studentName').text(data.Name);
-                $('#studentCourse').text(data.CourseOrPosition);
-            },
-            error: function (error) {
-                console.error('Error:', error);
-            }
-        });
-    });
+          // Get references to elements in the "Tag Sanction" modal
+          var modal2 = $("#myModal2");
+          var btn2 = $("#openModalBtn2");
+          var span2 = $("#closeModalBtn2");
+          var searchForm = $("#searchForm");
+          var studentName = $("#studentName");
+          var studentCourse = $("#studentCourse");
+          var studentSanctions = $("#studentSanctions"); // Add this line to reference the element for displaying sanctions
+  
+          btn2.on("click", function () {
+              modal2.css("display", "block");
+          });
+  
+          span2.on("click", function () {
+              modal2.css("display", "none");
+              // Clear the search form and student info when the modal is closed
+              searchForm[0].reset();
+              studentName.text("");
+              studentCourse.text("");
+              studentSanctions.text(""); // Clear the sanctions content
+          });
+  
+          searchForm.on("submit", function (event) {
+              event.preventDefault(); // Prevent the form from submitting
+  
+              // Get the username entered in the form
+              var usernameInput = $("#username");
+              var username = usernameInput.val();
+  
+              // Make an AJAX request to the server to fetch student information and sanctions
+              $.ajax({
+                  type: "POST",
+                  url: "/lookup_student",
+                  data: { username: username },
+                  success: function (data) {
+                      // Update the DOM elements with the student's name and course
+                      studentName.text(data.Name);
+                      studentCourse.text(data.CourseOrPosition);
+                      
+                      // Make another AJAX request to fetch sanctions
+                      $.ajax({
+                        type: "POST",
+                        url: "/lookup_sanctions",
+                        data: { username: username },
+                        success: function (response) {
+                            console.log("Sanctions data received:", response);
+                            
+                            // Initialize an empty HTML string to store the formatted sanctions
+                            var formattedSanctions = "";
+                            
+                            // Loop through the list of sanctions and format each one
+                            response.sanctions.forEach(function (sanction) {
+                                // Convert the date_time string to a JavaScript Date object
+                                var date = new Date(sanction.date_time);
+                    
+                                // Format the date in your desired way (adjust the format as needed)
+                                var formattedDate = date.toLocaleString(); // Example format: "Month Day, Year Hour:Minute:Second"
+                    
+                                // Append the formatted sanction to the HTML string
+                                formattedSanctions += '<p><strong>Date:</strong> ' + formattedDate + '</p>';
+                                formattedSanctions += '<p><strong>Sanction:</strong> ' + sanction.sanction + '</p>';
+                                formattedSanctions += '<hr>'; // Add a horizontal line to separate sanctions
+                            });
+                    
+                            // Update the DOM element with the formatted sanctions
+                            studentSanctions.html(formattedSanctions);
+                        },
+                        error: function (error) {
+                            console.error("Error fetching sanctions:", error);
+                        }
+                    });
+                  },
+                  error: function (error) {
+                      console.error("Error fetching student data:", error);
+                  }
+              });
+          });
 });
 
 $(document).ready(function() {

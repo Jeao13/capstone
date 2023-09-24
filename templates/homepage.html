@@ -72,6 +72,10 @@
     <button type="button" id="openModalBtn1">My Sanctions</button>
     {% endif %}
 
+    {% if user_source == 'accounts_cics'%}
+    <button type="button" id="openModalBtn3">Request Form</button>
+    {% endif %}
+
     <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
     {% if user_source == 'accounts_coordinators' %}
     <button type="button" id="openModalBtn2">Tag Sanction</button>
@@ -86,6 +90,30 @@
     </div>
 </div>
 
+<div id="myModal3" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModalBtn3">&times;</span>
+        <h3>Request Form</h3>
+        <form action="/submit_report" method="POST" enctype="multipart/form-data">
+            <label for="department">Department:</label> 
+            <select name="department" id="department"> 
+                <option value="CAFAD">CAFAD</option> 
+                <option value="CICS">CICS</option> 
+                <option value="CIT">CIT</option> 
+                <option value="COE">COE</option> 
+            </select><br>
+            <label for="file">Attach form:</label>
+            <input type="file" name="file" id="file"><br>
+
+            <label for="file1">Attach Supporting Documents (if you have any):</label>
+            <input type="file" name="file1" id="file1">
+
+            <textarea id="report" name="report" rows="16" cols="50"></textarea>
+              
+            <input id="submit" type="submit" value="Submit">
+        </form>
+    </div>
+</div>
 
 <div id="myModal2" class="modal">
     <div class="modal-content">
@@ -99,7 +127,7 @@
         <div id="studentInfo">
             <p>Name: <span id="studentName"></span></p>
             <p>Course: <span id="studentCourse"></span></p>
-            <p>Sanctions: <span id="studentCourse"></span></p>
+            <p>Sanctions: <span id="studentSanctions"></span></p>
             <form action="/submit_sanction" method="POST">
             <input list="sanctions" id="sanctionsInput" name="sanctions">
             <datalist id="sanctions">
@@ -169,7 +197,7 @@
             <input id="submit" type="submit" value="Submit">
         </form>
         </div>
-    </div>
+    
 </div>
 
    
