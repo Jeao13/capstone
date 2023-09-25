@@ -224,3 +224,35 @@ document.addEventListener("DOMContentLoaded", function () {
 $(document).ready(function() {
     $('.js-example-basic-single').select2();
 });
+
+$(document).ready(function() {
+    // Attach a click event handler to the "My Sanctions" button
+    $("#openModalBtn1").click(function() {
+        // Make an AJAX request to fetch the user's sanctions data
+        $.ajax({
+            type: 'GET',
+            url: '/fetch_sanctions',
+            success: function(data) {
+                // Assuming 'data' is an array of objects with 'date' and 'sanction' properties
+                var table = '<table><thead><tr><th>Date</th><th>Sanction</th></tr></thead><tbody>';
+                
+                // Loop through the data and build the table rows
+                for (var i = 0; i < data.length; i++) {
+                    table += '<tr><td>' + data[i].date + '</td><td>' + data[i].sanction + '</td></tr>';
+                }
+                
+                table += '</tbody></table>';
+                
+                // Insert the table into a div with the id 'sanctionsTable'
+                $('#sanctionsTable').html(table);
+            }
+        });
+    });
+});
+
+
+
+
+
+
+

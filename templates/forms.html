@@ -19,18 +19,42 @@
     {% endif %}
         <a class="active" href="#contact">Forms</a>
         <a href="#about">Notifications</a>
-        <a class="logout" href="/">Logout</a>
+        <a class="logout" href="/logout">Logout</a>
       </div>
 
-    <h1>Forms</h1>
-
-    <ul>
-        {% for form in form_data %}
-        <li>
-            <a href="{{ url_for('download_form', form_id=form[0]) }}">{{ form[1] }}</a>
-        </li>
+      <div id="reports-container">
+        {% if user_source == 'accounts_cics' %}
+        {% for row in reports %}
+        <div class="report">
+            <b>Date and Time:</b> {{ row[2] }}<br>
+            <b>Department:</b> {{ row[4] }}<br>   
+            <b>Status:</b> {{ row[5] }}<br>
+            <button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button>
+            {% if row[5] %}
+            <b>Attached Form:</b>
+            <br>
+            <a id="form"href="{{ url_for('download_report_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
+            {% endif %}
+            {% if row[7] %}
+            <br>
+            <b>Attached Supporting Document:</b>
+            <br>
+            <a id="support"href="{{ url_for('download_supporting_document', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a>
+            {% endif %}
+        </div>
+        <hr class="report-separator">
         {% endfor %}
-    </ul>
+        {% endif %}
+    </div>
+
+    <!-- The Modal -->
+    <div class="modal" id="reportModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="reportContent"></div>
+        </div>
+    </div>
+
 
 </body>
 </html>

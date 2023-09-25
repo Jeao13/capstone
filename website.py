@@ -12,7 +12,7 @@ db_connection = mysql.connector.connect(
     host="127.0.0.1",
     user="root",
     password="",
-    database="accounts"
+    database="capstone"
 )
 
 app = Flask(__name__)
@@ -65,6 +65,60 @@ def submit_report():
         # Insert the report with file information into the database, including file data
         db_cursor = db_connection.cursor()
         db_cursor.execute("INSERT INTO reports (course, report, file_form_name, file_form_type, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                          (department, report_text, report_filename, report_extension, report_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
+        db_connection.commit()
+        db_cursor.close()
+        
+        flash('Report submitted successfully')
+        return redirect('/hello')
+    
+@app.route('/submit_request', methods=['POST'])
+def submit_request():
+    # Get form data including the uploaded files
+    department = request.form.get('department')
+    report_text = request.form.get('report')
+    current_datetime = datetime.now()
+        
+    username = session.get('username', '')
+    
+    # Check if the POST request has the file part for the report file
+    if 'file' not in request.files:
+        flash('No report file part')
+        return redirect(request.url)
+    
+    report_file = request.files['file']
+    
+    # Check if the user submitted an empty report file input
+    if report_file.filename == '':
+        flash('No selected report file')
+        return redirect(request.url)
+    
+    # Check if the POST request has the file part for the supporting document file
+    if 'file1' not in request.files:
+        flash('No supporting document file part')
+        return redirect(request.url)
+    
+    support_file = request.files['file1']
+    
+    # Check if the user submitted an empty supporting document file input
+    if support_file.filename == '':
+        flash('No selected supporting document file')
+        return redirect(request.url)
+    
+    if report_file and support_file:
+        # Securely get the filenames and file extensions
+        report_filename = secure_filename(report_file.filename)
+        support_filename = secure_filename(support_file.filename)
+        report_extension = os.path.splitext(report_filename)[1]
+        support_extension = os.path.splitext(support_filename)[1]
+        
+        # Read the file data into memory
+        report_data = report_file.read()
+        support_data = support_file.read()
+        
+        # Insert the report with file information into the database, including file data
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("INSERT INTO forms_osd (course, report, file_form_name, file_form_type, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                           (department, report_text, report_filename, report_extension, report_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
         db_connection.commit()
         db_cursor.close()
@@ -147,7 +201,7 @@ def menu():
     username = session.get('username', '')
     user_role = session.get('role', '')
     user_source = session.get('source', '')
-    print(f"Student Name: {user_role}")
+
 
     # Query the database to retrieve reports for the logged-in user
     db_cursor = db_connection.cursor()
@@ -181,6 +235,7 @@ def search_students():
     if request.method == 'POST':
         search_value = request.form['username']  # Updated to match the input name
         session['search_value'] = search_value
+
         
 
         # Perform a database query to search for students in the accounts_cics table
@@ -216,17 +271,35 @@ def search_students():
         
 @app.route('/forms')
 def forms():
+    username = session.get('username', '')
+    user_role = session.get('role', '')
     user_source = session.get('source', '')
+    print(f"Student Name: {user_role}")
+
+    # Query the database to retrieve reports for the logged-in user
     db_cursor = db_connection.cursor()
 
-    # Execute an SQL query to retrieve form data
-    db_cursor.execute("SELECT id, filename FROM files")
-    form_data = db_cursor.fetchall()
+    if user_role == 'accounts_coordinators':
+        # If the user is an accounts coordinator, retrieve the course of the user
+        db_cursor.execute("SELECT course FROM accounts_coordinators WHERE username = %s", (username,))
+        user_course = db_cursor.fetchone()
+
+        if user_course:
+            user_course = user_course[0]  # Extract the course from the result
+
+            # Query reports where the course matches the user's course
+            db_cursor.execute("SELECT * FROM forms_osd WHERE course = %s", (user_course,))
+            reports = db_cursor.fetchall()
+    else:
+        # For other roles, simply retrieve reports for the logged-in user
+        db_cursor.execute("SELECT * FROM forms_osd WHERE username = %s", (username,))
+        reports = db_cursor.fetchall()
+        user_course = ""
 
     # Close the cursor
     db_cursor.close()
 
-    return render_template('forms.html', form_data=form_data, user_source=user_source)
+    return render_template('forms.html', reports=reports, user_source=user_source, user_course=user_course)
 
 @app.route('/download_form/<int:form_id>')
 def download_form(form_id):
@@ -255,15 +328,18 @@ def download_form(form_id):
 
 @app.route('/hello', methods=['GET', 'POST'])
 def homepage():
-    username = session.get('username', '')  # Retrieve the username from the session
-
+    username = session.get('username', '')
+    
     if request.method == 'POST':
         # Handle the POST request (form submission)
         username = request.form['username']
         # Save the username in the session
         session['username'] = username
+        
 
     # Determine the user source (accounts_cics or accounts_coordinators) and set the user_source variable
+   
+
     db_cursor = db_connection.cursor()
     db_cursor.execute("SELECT * FROM accounts_cics WHERE username = %s", (username,))
     result_cics = db_cursor.fetchone()
@@ -298,6 +374,8 @@ def homepage():
 
     if result_user_data:
         profile_picture_data, name, course = result_user_data
+        session['namestudent'] = name
+        print(name)
     else:
         # Handle the case where user data is not found
         profile_picture_data = None
@@ -311,11 +389,12 @@ def homepage():
         profile_picture_base64 = None  # Handle the case where there is no profile picture data
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage.html', username=username, profile_picture_base64=profile_picture_base64, name=name, course=course, user_source=user_source)
+    return render_template('homepage.html', username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, user_source=user_source)
 
 def lookup_student_info(username):
     try:
         db_cursor = db_connection.cursor(dictionary=True)
+       
 
         # Assuming you have a table called 'students' with columns 'username', 'name', and 'course'
         query = "SELECT Name, CourseOrPosition FROM accounts_cics WHERE username = %s"
@@ -449,6 +528,33 @@ def lookup_sanctions():
             return jsonify({'sanctions': formatted_sanctions})
         else:
             return jsonify({'error': 'No sanctions found'})
+        
+@app.route('/logout', methods=['GET'])
+def logout():
+    # Clear the session data
+    session.clear()
+    
+    # Redirect the user to the login page or any other appropriate page
+    return redirect('/')
+
+@app.route('/fetch_sanctions', methods=['GET'])
+def fetch_sanctions():
+    student = session.get('namestudent', '')  # Retrieve the username from the session
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT date_time, sanction FROM sanctions WHERE username = %s", (student,))
+    sanctions_data = db_cursor.fetchall()
+    db_cursor.close()
+
+    # Debugging: Print the fetched data
+    print("Fetched Data:", sanctions_data)
+
+    # Convert the data to JSON and return it
+    try:
+        json_sanctions = [{"date": str(row[0]), "sanction": row[1]} for row in sanctions_data]
+        return jsonify(json_sanctions)
+    except Exception as e:
+        print("Error converting data to JSON:", str(e))
+        return jsonify({"error": "An error occurred while processing the data."}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

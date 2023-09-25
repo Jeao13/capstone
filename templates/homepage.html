@@ -23,7 +23,7 @@
 
         <a href="/forms">Forms</a>
         <a href="#about">Notifications</a>
-        <a class="logout" href="/">Logout</a>
+        <a class="logout" href="/logout">Logout</a>
     </div>
 
     <div class="user-profile">
@@ -85,8 +85,7 @@
     <div class="modal-content">
         <span class="close" id="closeModalBtn1">&times;</span>
         <h3>My Sanctions</h3>
-        <!-- Add your content for My Sanctions here -->
-        <!-- This can be a blank div or any content you want to display -->
+        <div id="sanctionsTable"></div>
     </div>
 </div>
 
@@ -94,7 +93,7 @@
     <div class="modal-content">
         <span class="close" id="closeModalBtn3">&times;</span>
         <h3>Request Form</h3>
-        <form action="/submit_report" method="POST" enctype="multipart/form-data">
+        <form action="/submit_request" method="POST" enctype="multipart/form-data">
             <label for="department">Department:</label> 
             <select name="department" id="department"> 
                 <option value="CAFAD">CAFAD</option> 
