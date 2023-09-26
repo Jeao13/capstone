@@ -7,6 +7,9 @@
     <script src="/static/script.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+
+
+
     <title>Offense Tags</title>
 </head>
 <body>
@@ -22,7 +25,7 @@
     {% endif %}
 
         <a href="/forms">Forms</a>
-        <a href="#about">Notifications</a>
+        <a href="#" id="notifications-bar" class="notifications">Notifications</a>
         <a class="logout" href="/logout">Logout</a>
     </div>
 
@@ -36,6 +39,11 @@
             <h1>{{ name }}</h1>
             <h2>{{ course }}</h2>
         </div>
+    </div>
+
+    <div id="notifications-container" class="notifications">
+        <!-- Add your notification content here -->
+        This is your notification content.
     </div>
 
     <div id="myModal" class="modal">

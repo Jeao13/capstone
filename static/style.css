@@ -64,6 +64,10 @@ body {
     float:right;
   }
 
+  .topnav a.notifications-bar {
+    float:right;
+  }
+
   .user-profile img {
     width: 200px; /* Set the desired width */
     height: 200px; /* Set the desired height */
@@ -181,4 +185,16 @@ td {
 
 #support{
   font-size: 14px;
+}
+
+.notifications {
+  display: none; /* Initially hidden */
+  position: absolute;
+  top: 50px; /* Adjust the top position as needed */
+  right: 20px; /* Adjust the right position as needed */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 999; /* Ensure it appears above other elements */
 }

@@ -250,6 +250,16 @@ $(document).ready(function() {
     });
 });
 
+$(document).ready(function() {
+    // When the "Notifications" bar is clicked
+    $("#notifications-bar").click(function() {
+        // Toggle the visibility of the notifications container
+        $("#notifications-container").toggle();
+    });
+});
+
+
+
 
 
 
