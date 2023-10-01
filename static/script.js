@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.onclick = function (event) {
         if (event.target == modal2) {
-            modal1.style.display = "none";
+            modal2.style.display = "none";
         }
     };
 });
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     window.onclick = function (event) {
-        if (event.target == modal2) {
+        if (event.target == modal3) {
             modal3.style.display = "none";
         }
     };
@@ -258,6 +258,14 @@ $(document).ready(function() {
     });
 });
 
+function confirmStatusChange(reportId) {
+    var confirmation = confirm('Are you sure you want to change the status of report ' + reportId + '?');
+    return confirmation;
+}
+
+ setTimeout(function () {
+        document.getElementById('flash-message').style.display = 'none';
+    }, 1000); // Hide the message after 3 seconds (adjust the time as needed)
 
 
 

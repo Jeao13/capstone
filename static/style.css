@@ -59,15 +59,16 @@ body {
     background-color: #04AA6D;
     color: white;
   }
+  
+  .topnav a.notif {
+    float:right;
+  }
 
   .topnav a.logout {
     float:right;
   }
 
-  .topnav a.notifications-bar {
-    float:right;
-  }
-
+  
   .user-profile img {
     width: 200px; /* Set the desired width */
     height: 200px; /* Set the desired height */
@@ -93,7 +94,9 @@ body {
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
-  height: 60%; /* Could be more or less, depending on screen size */
+  max-height: 80vh; /* Adjust the maximum height as needed */
+  overflow-y: auto; /* Add overflow-y property to enable vertical scrolling */
+  margin-bottom: 20px; 
 }
 
 /* Style for the close button */
@@ -120,7 +123,7 @@ body {
 }
 
 #submit{
-  margin-top:10px;
+  
   float:right;
 }
 
@@ -197,4 +200,44 @@ td {
   padding: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   z-index: 999; /* Ensure it appears above other elements */
+  width: 15%;
+  height: 30%;
+}
+
+.status-change-confirmation {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fefefe;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  z-index: 9999; /* Ensure it's above other content */
+}
+
+.flash-messages {
+  position: fixed;
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Center using translate */
+  z-index: 1000;
+}
+
+.flash-message {
+  padding: 10px;
+  margin: 10px;
+  border-radius: 4px;
+  text-align: center; /* Center text inside the message */
+}
+
+.success {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.error {
+  background-color: #f44336;
+  color: white;
 }

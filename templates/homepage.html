@@ -5,9 +5,6 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/static/script.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
-
 
 
     <title>Offense Tags</title>
@@ -25,8 +22,9 @@
     {% endif %}
 
         <a href="/forms">Forms</a>
-        <a href="#" id="notifications-bar" class="notifications">Notifications</a>
+       
         <a class="logout" href="/logout">Logout</a>
+        <a class="notif" href="#" id="notifications-bar" >Notifications</a>
     </div>
 
     <div class="user-profile">
@@ -42,8 +40,7 @@
     </div>
 
     <div id="notifications-container" class="notifications">
-        <!-- Add your notification content here -->
-        This is your notification content.
+        
     </div>
 
     <div id="myModal" class="modal">
@@ -52,24 +49,23 @@
             <h3>File Report</h3>
             <form action="/submit_report" method="POST" enctype="multipart/form-data">
                 <label for="department">Department:</label> 
-                <select name="department" id="department"> 
+                <select name="department" id="department" required> 
                     <option value="CAFAD">CAFAD</option> 
                     <option value="CICS">CICS</option> 
                     <option value="CIT">CIT</option> 
                     <option value="COE">COE</option> 
                 </select><br>
-                <label for="file">Attach form:</label>
-                <input type="file" name="file" id="file"><br>
-
+                
                 <label for="file1">Attach Supporting Documents (if you have any):</label>
                 <input type="file" name="file1" id="file1">
-    
-                <textarea id="report" name="report" rows="16" cols="50"></textarea>
+                
+                <textarea id="report" name="report" rows="16" cols="50" required></textarea>
                   
                 <input id="submit" type="submit" value="Submit">
             </form>
         </div>
     </div>
+
 
 
     <button type="button" id="openModalBtn">File Report</button>
@@ -126,17 +122,19 @@
     <div class="modal-content">
         <span class="close" id="closeModalBtn2">&times;</span>
         <h3>Tag Sanction</h3>
-        <form method="POST" action="/search_students" id="searchForm">
+        <form method="POST" action="/search_students" id="searchForm" required>
             <label for="username">Input Username:</label>
             <input type="text" id="username" name="username">
             <input type="submit" value="Search">
         </form>
+        <hr>
         <div id="studentInfo">
             <p>Name: <span id="studentName"></span></p>
             <p>Course: <span id="studentCourse"></span></p>
             <p>Sanctions: <span id="studentSanctions"></span></p>
+            
             <form action="/submit_sanction" method="POST">
-            <input list="sanctions" id="sanctionsInput" name="sanctions">
+            <input list="sanctions" id="sanctionsInput" name="sanctions" required>
             <datalist id="sanctions">
                 <option value="12.1.1 - attendance, punctuality, cutting classes">12.1.1 - attendance, punctuality, cutting classes</option> 
                 <option value="12.1.2 - dress code, uniform">12.1.2 - dress code, uniform</option> 
@@ -201,10 +199,23 @@
                 <option value="14.15 - cheating, aiding">14.15 - cheating, aiding</option> 
 
             </datalist><br>
+            
             <input id="submit" type="submit" value="Submit">
         </form>
         </div>
     
+</div>
+
+<div class="flash-messages" id="flash-message">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 </div>
 
    

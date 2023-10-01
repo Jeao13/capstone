@@ -7,6 +7,9 @@
     <title>Offense Tags</title>
 </head>
 <body>
+    <div id="notifications-container" class="notifications">
+        
+    </div>
     <div class="topnav">
         <a href="/hello" >Home</a>
         {% if user_source == 'accounts_cics'%}
@@ -18,8 +21,8 @@
     <a href="/menu">Reports</a>
     {% endif %}
         <a class="active" href="#contact">Forms</a>
-        <a href="#about">Notifications</a>
         <a class="logout" href="/logout">Logout</a>
+        <a class="notif" href="#" id="notifications-bar" >Notifications</a>
       </div>
 
       <div id="reports-container">

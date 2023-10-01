@@ -2,11 +2,13 @@
 <html>
 <head>
     <link rel="stylesheet" href='/static/style.css' />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/static/script.js"></script>
     <title>Offense Tags</title>
 </head>
 
 <body>
+
     <div class="topnav">
         <a href="/hello">Home</a>
         {% if user_source == 'accounts_cics' %}
@@ -18,8 +20,8 @@
         <a href="/menu">Reports</a>
         {% endif %}
         <a href="/forms">Forms</a>
-        <a href="#about">Notifications</a>
         <a class="logout" href="/logout">Logout</a>
+        <a class="notif" href="#" id="notifications-bar" >Notifications</a>
     </div>
     {% if user_source == 'accounts_cics' %}
     <h1>My Reports</h1>
@@ -30,7 +32,8 @@
     <div id="table-container">
         <table>
             <thead>
-                <tr>               
+                <tr>
+                    <th>Report ID</th>               
                     <th>SR-CODE</th>
                     <th>Date and Time</th>
                     <th>Department</th>
@@ -43,8 +46,10 @@
                 </tr>
             </thead>
             <tbody>
-                {% for row in reports %}
+                {% for row in reports|sort(attribute='2', reverse=true) %}
+                <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
                 <tr>
+                    <td>{{ row[0] }}</td>
                     <td>{{ row[1] }}</td>
                     <td>{{ row[2] }}</td>
                     <td>{{ row[4] }}</td>
@@ -54,15 +59,15 @@
                     <td><button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
                     <td>
                         <!-- Add a form to change the status -->
-                        <form method="POST" action="{{ url_for('change_report_status', report_id=row[0]) }}"
-                              onsubmit="return confirm('Are you sure you want to change the status?');">
-                            <select name="new_status">
-                                <option value="On Going">On Going</option>
-                                <option value="Rejected">Rejected</option>
-                                <option value="Case Closed">Case Closed</option>
-                            </select>
-                            <button type="submit">Change</button>
-                        </form>
+                        <form id="statusChangeForm" method="POST" action="{{ url_for('change_report_status', report_id=row[0]) }}"
+                        onsubmit="return confirmStatusChange('{{ row[0] }}')();">
+                        <select name="new_status">
+                            <option value="On Going">On Going</option>
+                            <option value="Rejected">Rejected</option>
+                            <option value="Case Closed">Case Closed</option>
+                        </select>
+                        <button type="submit">Change</button>
+                    </form>
                     </td>
                     <td>
                         <!-- Add a form to change the status -->
@@ -77,27 +82,33 @@
         </table>
     </div>
 {% endif %}
-    
+
+<div id="notifications-container" class="notifications">
+        
+</div>
+
+<div class="flash-messages" id="flash-message">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
 
     <div id="reports-container">
         {% if user_source == 'accounts_cics' %}
         {% for row in reports %}
         <div class="report">
+            <b>Report ID</b> {{ row[0] }}<br>
             <b>Date and Time:</b> {{ row[2] }}<br>
+            <button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button>
             <b>Department:</b> {{ row[4] }}<br>   
             <b>Status:</b> {{ row[5] }}<br>
-            <button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button>
-            {% if row[5] %}
-            <b>Attached Form:</b>
-            <br>
-            <a id="form"href="{{ url_for('download_report_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
-            {% endif %}
-            {% if row[7] %}
-            <br>
-            <b>Attached Supporting Document:</b>
-            <br>
-            <a id="support"href="{{ url_for('download_supporting_document', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a>
-            {% endif %}
+        
         </div>
         <hr class="report-separator">
         {% endfor %}

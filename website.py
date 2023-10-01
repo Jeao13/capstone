@@ -1,9 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash,send_file,jsonify,make_response
 import mysql.connector
 import base64
-import io 
+from io import BytesIO
 import os
+import random
+import string
+import base64
+from docx import Document
+from docx.shared import Pt, RGBColor, Inches
 from werkzeug.utils import secure_filename
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.oxml import OxmlElement
+
 
 
 from datetime import datetime
@@ -15,8 +23,25 @@ db_connection = mysql.connector.connect(
     database="capstone"
 )
 
+
+
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
+
+pdfkit_options = {
+    'page-size': 'A4',
+    'encoding': 'UTF-8',
+}
+
+
+def generate_random_code(length=8):
+    # Define the characters to choose from
+    characters = string.ascii_uppercase + string.digits
+
+    # Generate a random code
+    code = '#' + ''.join(random.choice(characters) for _ in range(length - 1))
+
+    return code
 
 @app.route('/submit_report', methods=['POST'])
 def submit_report():
@@ -24,20 +49,204 @@ def submit_report():
     department = request.form.get('department')
     report_text = request.form.get('report')
     current_datetime = datetime.now()
+    random_code = generate_random_code()
         
     username = session.get('username', '')
     
-    # Check if the POST request has the file part for the report file
-    if 'file' not in request.files:
-        flash('No report file part')
-        return redirect(request.url)
+    pdf_filename = 'Formal Complain Letter.docx'
+    pdf_path = os.path.join('C:\\Users\\aedri\\Downloads', pdf_filename)
+
+    doc = Document(pdf_path)
+
+    # Define your target texts and replacement texts
+    target_texts = ["NAME", "Name of Campus", "Head, Student Discipline/ Coordinator, Student Discipline", "Name of Student  : 	"]
+    replacement_texts = ["CAFAD Coordinator", "Alangilan Campus", "Student Discipline", "Name of Student  : Aedrian Jeao De Torres"]
+
+    # Iterate through target texts and replacement texts
+    for target_text, replacement_text in zip(target_texts, replacement_texts):
+        for paragraph in doc.paragraphs:
+            if target_text in paragraph.text:
+                inline = paragraph.runs
+                for i in range(len(inline)):
+                    if target_text in inline[i].text:
+                        text = inline[i].text.replace(target_text, replacement_text)
+                        inline[i].text = text
+
+
+    # Define the line number you want to clear (0-based index)
+    line_number_to_clear = 7
     
-    report_file = request.files['file']
-    
-    # Check if the user submitted an empty report file input
-    if report_file.filename == '':
-        flash('No selected report file')
-        return redirect(request.url)
+    line_number_to_clear1 = 4  # Change this to the desired line number
+
+    line_number_to_clear2 = 12 
+
+    line_number_to_clear3 = 13  # Change this to the desired line number
+
+    line_number_to_clear4 = 14 
+
+    line_number_to_clear5 = 8
+
+    line_number_to_clear6 = 17
+
+    line_number_to_clear7 = 23
+
+    line_number_to_clear8 = 31
+
+    # Define the new text to add
+    new_text = "Student Discipline"
+    new_text1 = "Date:     July 17 2002"
+    new_text2 = "Name of Student  :     Aedrian Jeao De Torres"
+    new_text3 = "College  :     CICS"
+    new_text4 = "Year and Section  :     ITSM 4109"
+    new_text5 = "  Alangilan Campus\n"
+    new_text6 = "  Wow amazing shizzzzzz"
+    new_text7 = "  Wow amazing shizzzzzz"
+    new_text8 = "  Wow amazing shizzzzzz"
+
+    # Iterate through the paragraphs to find the paragraph containing the line
+    for i, paragraph in enumerate(doc.paragraphs):
+        if i == line_number_to_clear:
+            # Clear the existing text in the paragraph
+            for run in paragraph.runs:
+                run.clear()
+            
+            # Add the new text to the cleared paragraph as a new Run
+            run = paragraph.add_run(new_text)
+            
+            # Set the formatting for the new text (e.g., font size, color, etc.)
+            run.font.size = Pt(12)  # Set the font size (adjust as needed)
+            run.font.bold = False  # Turn off bold
+            run.font.color.rgb = RGBColor(0, 0, 0)
+
+
+    # Iterate through the paragraphs to find the paragraph containing the line
+    for i, paragraph in enumerate(doc.paragraphs):
+        if i == line_number_to_clear1:
+            # Clear the existing text in the paragraph
+            paragraph.clear()
+            # Add the new text to the cleared paragraph
+            paragraph.add_run(new_text1)
+
+
+    for i, paragraph in enumerate(doc.paragraphs):
+        if i == line_number_to_clear2:
+            # Clear the existing text in the paragraph
+            for run in paragraph.runs:
+                run.clear()
+                run.underline = False
+            
+            # Add the new text to the cleared paragraph as a new Run
+            run = paragraph.add_run(new_text2)
+
+    for i, paragraph in enumerate(doc.paragraphs):
+        if i == line_number_to_clear3:
+            # Clear the existing text in the paragraph
+            for run in paragraph.runs:
+                run.clear()
+                run.underline = False
+            
+            # Add the new text to the cleared paragraph as a new Run
+            run = paragraph.add_run(new_text3)
+
+
+    for i, paragraph in enumerate(doc.paragraphs):
+        if i == line_number_to_clear4:
+            # Clear the existing text in the paragraph
+            for run in paragraph.runs:
+                run.clear()
+                run.underline = False
+            
+            # Add the new text to the cleared paragraph as a new Run
+            run = paragraph.add_run(new_text4)
+
+    for i, paragraph in enumerate(doc.paragraphs):
+        if i == line_number_to_clear5:
+            # Clear the existing text in the paragraph
+            for run in paragraph.runs:
+                run.clear()
+                run.underline = False
+            
+            # Add the new text to the cleared paragraph as a new Run
+            run = paragraph.add_run(new_text5)
+            run.font.size = Pt(12)  # Set the font size (adjust as needed)
+            run.font.bold = False  # Turn off bold
+            run.font.italic = False  
+            run.font.color.rgb = RGBColor(0, 0, 0)
+
+    for i, paragraph in enumerate(doc.paragraphs):
+        if i == line_number_to_clear6:
+            # Clear the existing text in the paragraph
+            for run in paragraph.runs:
+                run.underline = False  # Turn off underline if present
+
+            # Add the new text to the cleared paragraph as a new Run
+            run = paragraph.add_run(new_text6)
+            run.font.size = Pt(12)  # Set the font size (adjust as needed)
+            run.font.bold = False  # Turn off bold
+            run.font.italic = False  
+            run.font.color.rgb = RGBColor(0, 0, 0)
+            run.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+    for i, paragraph in enumerate(doc.paragraphs):
+        if i == line_number_to_clear7:
+            # Clear the existing text in the paragraph
+            for run in paragraph.runs:
+                run.underline = False  # Turn off underline if present
+
+            # Add the new text to the cleared paragraph as a new Run
+            run = paragraph.add_run(new_text7)
+            run.font.size = Pt(12)  # Set the font size (adjust as needed)
+            run.font.bold = False  # Turn off bold
+            run.font.italic = False  
+            run.font.color.rgb = RGBColor(0, 0, 0)
+            run.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+    for i, paragraph in enumerate(doc.paragraphs):
+        if i == line_number_to_clear8:
+            # Clear the existing text in the paragraph
+            for run in paragraph.runs:
+                run.underline = False  # Turn off underline if present
+
+            # Add the new text to the cleared paragraph as a new Run
+            run = paragraph.add_run(new_text8)
+            run.font.size = Pt(12)  # Set the font size (adjust as needed)
+            run.font.bold = False  # Turn off bold
+            run.font.italic = False  
+            run.font.color.rgb = RGBColor(0, 0, 0)
+            run.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+    line_number_to_insert_image = 2  # Adjust this to your desired line number
+
+    # Iterate through the paragraphs to find the target paragraph
+    for i, paragraph in enumerate(doc.paragraphs):
+        if i == line_number_to_insert_image:
+                # Add a run to the paragraph to insert the image
+            run = paragraph.add_run()
+
+            # Set the alignment of the run to center (optional)
+            run.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+            filename1 = 'eya.jpg'
+            img_path = os.path.join('C:\\Users\\aedri\\Downloads', filename1)
+            
+            # Insert the image as a floating shape
+            width = Inches(4.0)  # Specify the width in inches
+            height = Inches(3.0)  # Specify the height in inches
+
+            # Insert the image as a floating shape
+            shape = doc.add_picture(img_path,width, height)
+
+            # Configure text wrapping for the shape
+            shape.wrap_text = True  # Enable text wrapping
+
+
+
+    doc.save("modified_document.docx")
+
+    file_name = f'modified_{random_code}'
+    with open("modified_document.docx", "rb") as docx_file:
+        docx_data = docx_file.read()
+        
     
     # Check if the POST request has the file part for the supporting document file
     if 'file1' not in request.files:
@@ -47,31 +256,33 @@ def submit_report():
     support_file = request.files['file1']
     
     # Check if the user submitted an empty supporting document file input
+   
     if support_file.filename == '':
-        flash('No selected supporting document file')
-        return redirect(request.url)
+        support_file = None 
+        
     
-    if report_file and support_file:
+    if support_file:
         # Securely get the filenames and file extensions
-        report_filename = secure_filename(report_file.filename)
         support_filename = secure_filename(support_file.filename)
-        report_extension = os.path.splitext(report_filename)[1]
+       
         support_extension = os.path.splitext(support_filename)[1]
         
         # Read the file data into memory
-        report_data = report_file.read()
+        
         support_data = support_file.read()
+        
         
         # Insert the report with file information into the database, including file data
         db_cursor = db_connection.cursor()
-        db_cursor.execute("INSERT INTO reports (course, report, file_form_name, file_form_type, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                          (department, report_text, report_filename, report_extension, report_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
+        db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                    (random_code, department, report_text,   docx_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+        db_connection.commit()
         db_connection.commit()
         db_cursor.close()
         
-        flash('Report submitted successfully')
+        flash('The report is submitted', 'success')
         return redirect('/hello')
-    
+
 @app.route('/submit_request', methods=['POST'])
 def submit_request():
     # Get form data including the uploaded files
@@ -146,10 +357,10 @@ def submit_sanction():
         db_cursor.close()
 
         # Optionally, you can redirect to a success page or perform other actions
-        flash('Report submitted successfully!', 'success')
+        
         return redirect(url_for('homepage'))
 
-    # Handle other cases as needed
+    flash('Report submitted successfully!', 'success')
     return redirect(url_for('homepage'))
 
 @app.route('/', methods=['GET', 'POST'])
@@ -335,6 +546,7 @@ def homepage():
         username = request.form['username']
         # Save the username in the session
         session['username'] = username
+
         
 
     # Determine the user source (accounts_cics or accounts_coordinators) and set the user_source variable
@@ -433,24 +645,24 @@ def lookup_student():
     student_data = {'Name': student_name, 'CourseOrPosition': student_course}
     return jsonify(student_data)
 
-@app.route('/download_report_file/<int:report_id>')
+@app.route('/download_report_file/<string:report_id>')
 def download_report_file(report_id):
     db_cursor = db_connection.cursor()
-    db_cursor.execute("SELECT file_form_name, file_form_type, file_form FROM reports WHERE report_id = %s", (report_id,))
+    db_cursor.execute("SELECT file_form, file_form_name FROM reports WHERE report_id = %s", (report_id,))
     result = db_cursor.fetchone()
 
     if result is not None:
-        file_name, file_type, file_data = result
+        file_data, file_name = result
 
-        # Set the content type header based on the file type stored in the database
-        content_type = file_type
+        # Set the content type header to PDF
+        content_type = 'application/docx'
 
-        # Set the filename to have the original name and extension
+        # Set the filename to "default.pdf"
         response = make_response(file_data)
         response.headers['Content-Type'] = content_type
 
-        # Set the filename based on the stored name and extension
-        response.headers['Content-Disposition'] = f'attachment; filename="{file_name}{file_type}"'
+        # Set the filename to "default.pdf"
+        response.headers['Content-Disposition'] = f'attachment; filename="{file_name}.docx"'
 
         # Close the cursor after fetching the result
         db_cursor.close()
@@ -463,7 +675,7 @@ def download_report_file(report_id):
 
 
 
-@app.route('/download_supporting_document/<int:report_id>')
+@app.route('/download_supporting_document/<string:report_id>')
 def download_supporting_document(report_id):
     db_cursor = db_connection.cursor()
     db_cursor.execute("SELECT file_support_name, file_support_type, file_support FROM reports WHERE report_id = %s", (report_id,))
@@ -491,17 +703,21 @@ def download_supporting_document(report_id):
     db_cursor.close()
     return "File not found", 404
 
-@app.route('/change_report_status/<int:report_id>', methods=['POST'])
+@app.route('/change_report_status/<string:report_id>', methods=['POST'])
 def change_report_status(report_id):
     new_status = request.form['new_status']
+    print(new_status)
+    print(report_id)
     db_cursor = db_connection.cursor()
     db_cursor.execute("UPDATE reports SET status = %s WHERE report_id = %s;", (new_status, report_id))
     db_connection.commit()  # Make sure to commit the changes to the database
     db_cursor.close()
 
+    flash('Status has been successfully changed', 'success')
+
     return redirect(url_for('menu'))
 
-@app.route('/delete_report/<int:report_id>', methods=['POST'])
+@app.route('/delete_report/<string:report_id>', methods=['POST'])
 def delete_report(report_id):
     db_cursor = db_connection.cursor()
     db_cursor.execute("DELETE FROM reports WHERE report_id = %s;", (report_id,))
