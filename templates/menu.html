@@ -29,6 +29,11 @@
 
     {% if user_source == 'accounts_coordinators' %}
     <h1>Reports</h1>
+
+    <form method="POST" action="{{ url_for('delete_all_report', report_id=user_course)}}"
+                              onsubmit="return confirm('Are you sure you want to delete all this report?');">
+                            <button type="submit">Delete All Report</button>
+                        </form>
     <div id="table-container">
         <table>
             <thead>

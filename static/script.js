@@ -5,7 +5,17 @@ document.addEventListener("DOMContentLoaded", function () {
     var span = document.getElementById("closeModalBtn");
 
     btn.onclick = function () {
+        var targetScrollPosition = modal.offsetTop;
+
+        // Scroll the page downward to the modal
+        window.scrollTo(0, targetScrollPosition);
+
         modal.style.display = "block";
+
+        // Scroll the modal to the center of the viewport
+        modal.style.top = "50%";
+        modal.style.left = "50%";
+        modal.style.transform = "translate(-50%, -50%)";
     };
 
     span.onclick = function () {
@@ -17,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
             modal.style.display = "none";
         }
     };
+    
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -268,7 +279,22 @@ function confirmStatusChange(reportId) {
     }, 1000); // Hide the message after 3 seconds (adjust the time as needed)
 
 
-
+function toggleInputFields() {
+        var kindSelect = document.getElementById("kind");
+        var formContainer = document.getElementById("formContainer");
+        var formContainer1 = document.getElementById("formContainer1");
+       
+    
+        if (kindSelect.value === "Formal Complaint") {
+            formContainer.style.display = "block";
+            formContainer1.style.display = "none";
+          
+        } else {
+            formContainer.style.display = "none";
+            formContainer1.style.display = "block";
+         
+        }
+    }
 
 
 

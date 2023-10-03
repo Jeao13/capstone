@@ -1,16 +1,22 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash,send_file,jsonify,make_response
 import mysql.connector
 import base64
-from io import BytesIO
+import io
 import os
 import random
 import string
 import base64
 from docx import Document
-from docx.shared import Pt, RGBColor, Inches
+from docx.shared import Pt, RGBColor, Inches,Cm
 from werkzeug.utils import secure_filename
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from docx2pdf import convert
+import PyPDF2
+import tempfile
+
 
 
 
@@ -34,6 +40,81 @@ pdfkit_options = {
 }
 
 
+
+
+
+def replace_placeholder1(doc, placeholder, image_path,font_size=12, alignment=WD_ALIGN_PARAGRAPH.LEFT, bold=False,indentation_spaces=0):
+    for paragraph in doc.paragraphs:
+        if placeholder in paragraph.text:
+            for run in paragraph.runs:
+                run.clear()
+
+            # Add the image to the paragraph
+            indentation = "               " * indentation_spaces
+            paragraph.alignment = alignment
+            paragraph.left_indent = Cm(10)
+            run = paragraph.add_run()
+            run.bold = bold
+            run.font.size = Pt(font_size)
+
+            run.add_text(indentation)
+            run.add_picture(image_path, width=Cm(2.88), height=Cm(1.56))  # Adjust width and height as needed
+
+def replace_placeholder(doc, placeholder, new_text, font_size=12, bold=False, italic=False, alignment=None):
+    for paragraph in doc.paragraphs:
+        if placeholder in paragraph.text:
+            for run in paragraph.runs:
+                if placeholder in run.text:
+                    run.text = run.text.replace(placeholder, new_text)
+                    run.font.size = Pt(font_size)
+                    run.font.bold = bold
+                    run.font.italic = italic
+                    run.font.color.rgb = RGBColor(0, 0, 0)  # Black color
+                    if alignment:
+                        run.alignment = alignment
+
+                    
+
+def clear_and_add_line(doc, line_number, new_text, font_size=12, bold=False, italic=False, alignment=None,indentation=None):
+    for i, paragraph in enumerate(doc.paragraphs):
+        if i == line_number:
+            for run in paragraph.runs:
+                run.clear()
+            run = paragraph.add_run(new_text)
+            run.font.size = Pt(font_size)
+            run.font.bold = bold
+            run.font.italic = italic
+            run.font.color.rgb = RGBColor(0, 0, 0)  # Black color
+            if alignment:
+                run.alignment = alignment
+
+            if indentation is not None:
+                # Set the left indentation for the paragraph
+                paragraph.paragraph_format.left_indent = Pt(indentation)
+
+            break
+
+def replace_table_cell_placeholder(table, row_index, col_index, new_text):
+    cell = table.cell(row_index, col_index)
+    
+    # Clear the existing text in the cell
+    for paragraph in cell.paragraphs:
+        for run in paragraph.runs:
+            run.text = ""
+    
+    # Add the new text to the cell
+    cell.text = new_text
+
+def clear_and_add_image_to_table_cell(table, row_index, col_index, image_path):
+    cell = table.cell(row_index, col_index)
+    
+    # Clear the existing content in the cell
+    for paragraph in cell.paragraphs:
+        for run in paragraph.runs:
+            run.clear()
+
+    run.add_picture(image_path, width=Cm(2.88), height=Cm(1.56)) 
+
 def generate_random_code(length=8):
     # Define the characters to choose from
     characters = string.ascii_uppercase + string.digits
@@ -45,243 +126,235 @@ def generate_random_code(length=8):
 
 @app.route('/submit_report', methods=['POST'])
 def submit_report():
-    # Get form data including the uploaded files
-    department = request.form.get('department')
-    report_text = request.form.get('report')
-    current_datetime = datetime.now()
-    random_code = generate_random_code()
-        
-    username = session.get('username', '')
     
-    pdf_filename = 'Formal Complain Letter.docx'
-    pdf_path = os.path.join('C:\\Users\\aedri\\Downloads', pdf_filename)
+    kind = request.form.get('kind')
+    if kind == "Formal Complaint":
+        department = request.form.get('department')
+        provision = request.form.get('provision')
+        final = request.form.get('final')
+        report_text = request.form.get('narrate')
+        name = request.form.get('name')
+        section = request.form.get('section')
+        number = request.form.get('number')
+        email = request.form.get('email')
+        witness1 = request.form.get('witness1')
+        witness2 = request.form.get('witness2')
+        witness3 = request.form.get('witness3')
+        evidence1 = request.form.get('witness1')
+        evidence2 = request.form.get('witness2')
+        evidence3 = request.form.get('witness3')
+        pic = request.files['file2']
+        current_datetime = datetime.now()
+        current_date = current_datetime.date()
+        formatted_date = current_date.strftime("/%m/%d/%Y") 
+        random_code = generate_random_code()
+        print("Department:", department)
+        print("Provision:", provision)
+        print("Final:", final)
+        print("Report Text:", report_text)
+        print("Name:", name)
+        print("Section:", section)
+        print("Number:", number)
+        print("Email:", email)
+        print("Witness1:", witness1)
+        print("Witness2:", witness2)
+        print("Witness3:", witness3)
+        print("Evidence1:", evidence1)
+        print("Evidence2:", evidence2)
+        print("Evidence3:", evidence3)
+        print("Pic:", pic)
+        print("Current Date:", current_date)
+        print("Formatted Date:", formatted_date)
+        print("Random Code:", random_code)
 
-    doc = Document(pdf_path)
+        if department == "CAFAD":
+            Name_Coordinator = "CAFAD Coordinator"
 
-    # Define your target texts and replacement texts
-    target_texts = ["NAME", "Name of Campus", "Head, Student Discipline/ Coordinator, Student Discipline", "Name of Student  : 	"]
-    replacement_texts = ["CAFAD Coordinator", "Alangilan Campus", "Student Discipline", "Name of Student  : Aedrian Jeao De Torres"]
+        elif department == "CICS":
+            Name_Coordinator = "Lovely Rose Tipan Hernandez"
+            
+            
+        username = session.get('username', '')
+        print(username)
+        
+        pdf_filename = 'Formal Complain Letter.docx'
+        pdf_path = os.path.join('C:\\Users\\aedri\\Downloads', pdf_filename)
 
-    # Iterate through target texts and replacement texts
-    for target_text, replacement_text in zip(target_texts, replacement_texts):
-        for paragraph in doc.paragraphs:
-            if target_text in paragraph.text:
-                inline = paragraph.runs
-                for i in range(len(inline)):
-                    if target_text in inline[i].text:
-                        text = inline[i].text.replace(target_text, replacement_text)
-                        inline[i].text = text
+        doc = Document(pdf_path)
+        # Replace placeholders
+        replace_placeholder(doc, "contact_number", number, font_size=10, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "lol", email, font_size=10, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "witness1", witness1, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "witness2", witness2, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "witness3", witness3, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "evidence1", evidence1, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "evidence2", evidence2, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "evidence3", evidence3, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "NAME", Name_Coordinator, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
+        replace_placeholder1(doc, "image_placholder", pic,indentation_spaces=6,font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
+        
 
+        # Clear and add lines
+        clear_and_add_line(doc, 7, "Student Discipline", font_size=12)
+        clear_and_add_line(doc, 4, "Date:     "+formatted_date)
+        clear_and_add_line(doc, 12, "Name of Student  :     "+name)
+        clear_and_add_line(doc, 13, "College  :     "+department)
+        clear_and_add_line(doc, 14, "Year and Section  :     "+section)
+        clear_and_add_line(doc, 8, "  Alangilan Campus\n", font_size=12)
+        clear_and_add_line(doc, 17, provision, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER,indentation=36)
+        clear_and_add_line(doc, 23, final, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, indentation=36)
+        clear_and_add_line(doc, 31, report_text, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, indentation=36)
 
-    # Define the line number you want to clear (0-based index)
-    line_number_to_clear = 7
+        doc.save("modified_document.docx")
+
     
-    line_number_to_clear1 = 4  # Change this to the desired line number
 
-    line_number_to_clear2 = 12 
+        file_name = f'modified_{random_code}'
+        with open("modified_document.docx", "rb") as docx_file:
+            docx_data = docx_file.read()
 
-    line_number_to_clear3 = 13  # Change this to the desired line number
-
-    line_number_to_clear4 = 14 
-
-    line_number_to_clear5 = 8
-
-    line_number_to_clear6 = 17
-
-    line_number_to_clear7 = 23
-
-    line_number_to_clear8 = 31
-
-    # Define the new text to add
-    new_text = "Student Discipline"
-    new_text1 = "Date:     July 17 2002"
-    new_text2 = "Name of Student  :     Aedrian Jeao De Torres"
-    new_text3 = "College  :     CICS"
-    new_text4 = "Year and Section  :     ITSM 4109"
-    new_text5 = "  Alangilan Campus\n"
-    new_text6 = "  Wow amazing shizzzzzz"
-    new_text7 = "  Wow amazing shizzzzzz"
-    new_text8 = "  Wow amazing shizzzzzz"
-
-    # Iterate through the paragraphs to find the paragraph containing the line
-    for i, paragraph in enumerate(doc.paragraphs):
-        if i == line_number_to_clear:
-            # Clear the existing text in the paragraph
-            for run in paragraph.runs:
-                run.clear()
-            
-            # Add the new text to the cleared paragraph as a new Run
-            run = paragraph.add_run(new_text)
-            
-            # Set the formatting for the new text (e.g., font size, color, etc.)
-            run.font.size = Pt(12)  # Set the font size (adjust as needed)
-            run.font.bold = False  # Turn off bold
-            run.font.color.rgb = RGBColor(0, 0, 0)
-
-
-    # Iterate through the paragraphs to find the paragraph containing the line
-    for i, paragraph in enumerate(doc.paragraphs):
-        if i == line_number_to_clear1:
-            # Clear the existing text in the paragraph
-            paragraph.clear()
-            # Add the new text to the cleared paragraph
-            paragraph.add_run(new_text1)
-
-
-    for i, paragraph in enumerate(doc.paragraphs):
-        if i == line_number_to_clear2:
-            # Clear the existing text in the paragraph
-            for run in paragraph.runs:
-                run.clear()
-                run.underline = False
-            
-            # Add the new text to the cleared paragraph as a new Run
-            run = paragraph.add_run(new_text2)
-
-    for i, paragraph in enumerate(doc.paragraphs):
-        if i == line_number_to_clear3:
-            # Clear the existing text in the paragraph
-            for run in paragraph.runs:
-                run.clear()
-                run.underline = False
-            
-            # Add the new text to the cleared paragraph as a new Run
-            run = paragraph.add_run(new_text3)
-
-
-    for i, paragraph in enumerate(doc.paragraphs):
-        if i == line_number_to_clear4:
-            # Clear the existing text in the paragraph
-            for run in paragraph.runs:
-                run.clear()
-                run.underline = False
-            
-            # Add the new text to the cleared paragraph as a new Run
-            run = paragraph.add_run(new_text4)
-
-    for i, paragraph in enumerate(doc.paragraphs):
-        if i == line_number_to_clear5:
-            # Clear the existing text in the paragraph
-            for run in paragraph.runs:
-                run.clear()
-                run.underline = False
-            
-            # Add the new text to the cleared paragraph as a new Run
-            run = paragraph.add_run(new_text5)
-            run.font.size = Pt(12)  # Set the font size (adjust as needed)
-            run.font.bold = False  # Turn off bold
-            run.font.italic = False  
-            run.font.color.rgb = RGBColor(0, 0, 0)
-
-    for i, paragraph in enumerate(doc.paragraphs):
-        if i == line_number_to_clear6:
-            # Clear the existing text in the paragraph
-            for run in paragraph.runs:
-                run.underline = False  # Turn off underline if present
-
-            # Add the new text to the cleared paragraph as a new Run
-            run = paragraph.add_run(new_text6)
-            run.font.size = Pt(12)  # Set the font size (adjust as needed)
-            run.font.bold = False  # Turn off bold
-            run.font.italic = False  
-            run.font.color.rgb = RGBColor(0, 0, 0)
-            run.alignment = WD_ALIGN_PARAGRAPH.CENTER
-
-    for i, paragraph in enumerate(doc.paragraphs):
-        if i == line_number_to_clear7:
-            # Clear the existing text in the paragraph
-            for run in paragraph.runs:
-                run.underline = False  # Turn off underline if present
-
-            # Add the new text to the cleared paragraph as a new Run
-            run = paragraph.add_run(new_text7)
-            run.font.size = Pt(12)  # Set the font size (adjust as needed)
-            run.font.bold = False  # Turn off bold
-            run.font.italic = False  
-            run.font.color.rgb = RGBColor(0, 0, 0)
-            run.alignment = WD_ALIGN_PARAGRAPH.CENTER
-
-    for i, paragraph in enumerate(doc.paragraphs):
-        if i == line_number_to_clear8:
-            # Clear the existing text in the paragraph
-            for run in paragraph.runs:
-                run.underline = False  # Turn off underline if present
-
-            # Add the new text to the cleared paragraph as a new Run
-            run = paragraph.add_run(new_text8)
-            run.font.size = Pt(12)  # Set the font size (adjust as needed)
-            run.font.bold = False  # Turn off bold
-            run.font.italic = False  
-            run.font.color.rgb = RGBColor(0, 0, 0)
-            run.alignment = WD_ALIGN_PARAGRAPH.CENTER
-
-    line_number_to_insert_image = 2  # Adjust this to your desired line number
-
-    # Iterate through the paragraphs to find the target paragraph
-    for i, paragraph in enumerate(doc.paragraphs):
-        if i == line_number_to_insert_image:
-                # Add a run to the paragraph to insert the image
-            run = paragraph.add_run()
-
-            # Set the alignment of the run to center (optional)
-            run.alignment = WD_ALIGN_PARAGRAPH.CENTER
-
-            filename1 = 'eya.jpg'
-            img_path = os.path.join('C:\\Users\\aedri\\Downloads', filename1)
-            
-            # Insert the image as a floating shape
-            width = Inches(4.0)  # Specify the width in inches
-            height = Inches(3.0)  # Specify the height in inches
-
-            # Insert the image as a floating shape
-            shape = doc.add_picture(img_path,width, height)
-
-            # Configure text wrapping for the shape
-            shape.wrap_text = True  # Enable text wrapping
-
-
-
-    doc.save("modified_document.docx")
-
-    file_name = f'modified_{random_code}'
-    with open("modified_document.docx", "rb") as docx_file:
-        docx_data = docx_file.read()
         
+            
+        
+        # Check if the POST request has the file part for the supporting document file
+        if 'file1' not in request.files:
+            flash('No supporting document file part')
+            return redirect(request.url)
+        
+        support_file = request.files['file1']
+        
+        # Check if the user submitted an empty supporting document file input
     
-    # Check if the POST request has the file part for the supporting document file
-    if 'file1' not in request.files:
-        flash('No supporting document file part')
-        return redirect(request.url)
+        if support_file.filename == '':
+            support_file = None 
+            
+        
+        if support_file:
+            # Securely get the filenames and file extensions
+            support_filename = secure_filename(support_file.filename)
+        
+            support_extension = os.path.splitext(support_filename)[1]
+            
+            # Read the file data into memory
+            
+            support_data = support_file.read()
+            
+            
+            # Insert the report with file information into the database, including file data
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        (random_code, department, report_text,   docx_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_connection.commit()
+            
+            db_cursor.close()
+            os.remove("modified_document.docx")
+            
+            
+            flash('The report is submitted', 'success')
+            return redirect('/hello')
+    else:
+        department = request.form.get('department')
+        remarks = request.form.get('remarks')
+        report_text = request.form.get('narrate1')
+        name = request.form.get('name1')
+        section = request.form.get('section1')
+        designation = request.form.get('designation')
+        program = request.form.get('program') 
+        pic = request.files['file3']
+        current_datetime = datetime.now()
+        current_date = current_datetime.date()
+        formatted_date = current_date.strftime("/%m/%d/%Y") 
+        current_time = current_datetime.strftime('%H:%M')
+        random_code = generate_random_code()
+                 
+        username = session.get('username', '')
+        print("Department:", department)
+        print("Remarks:", remarks)
+        print("Report Text:", report_text)
+        print("Name:", name)
+        print("Section:", section)
+        print("Designation:", designation)
+        print("Program:", program)
+        print("Pic:", pic)
+        print("Current Date:", current_date)
+        print("Formatted Date:", formatted_date)
+        print("Current Time:", current_time)
+        print("Random Code:", random_code)
+        print("Username:", username)
+
+        
+        pdf_filename = 'Incident Report.docx'
+        pdf_path = os.path.join('C:\\Users\\aedri\\Downloads', pdf_filename)
+
+        doc = Document(pdf_path)
+        # Replace placeholders
+        replace_placeholder(doc, "(date)", str(current_date), font_size=10, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "(name)", name, font_size=10, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "(college)", department, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "(program)", program, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "(time)", current_time, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "(sr-code)", username, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "(section)", section, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "(incident)", report_text, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+        replace_placeholder(doc, "(remarks)", remarks, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
+        replace_placeholder1(doc, "(signature)", pic,indentation_spaces=6,font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
+        replace_placeholder(doc, "(designation)", designation, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
+        replace_placeholder(doc, "(date1)", str(current_date), font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
+        replace_table_cell_placeholder(doc.tables[0], 2, 3, str(current_date))
+        replace_table_cell_placeholder(doc.tables[0], 3, 3, name)
+        replace_table_cell_placeholder(doc.tables[0], 4, 3, department)
+        replace_table_cell_placeholder(doc.tables[0], 5, 3, program)
+        replace_table_cell_placeholder(doc.tables[0], 6, 4, report_text)
+        replace_table_cell_placeholder(doc.tables[0], 10, 4, remarks)
+        clear_and_add_image_to_table_cell(doc.tables[0], 14, 1, pic)
+        
+        doc.save("modified_document.docx")
+
     
-    support_file = request.files['file1']
+
+        file_name = f'modified_{random_code}'
+        with open("modified_document.docx", "rb") as docx_file:
+            docx_data = docx_file.read()
+
+        
+            
+        
+        # Check if the POST request has the file part for the supporting document file
+        if 'file4' not in request.files:
+            flash('No supporting document file part')
+            return redirect(request.url)
+        
+        support_file = request.files['file4']
+        
+        # Check if the user submitted an empty supporting document file input
     
-    # Check if the user submitted an empty supporting document file input
-   
-    if support_file.filename == '':
-        support_file = None 
+        if support_file.filename == '':
+            support_file = None 
+            
         
-    
-    if support_file:
-        # Securely get the filenames and file extensions
-        support_filename = secure_filename(support_file.filename)
-       
-        support_extension = os.path.splitext(support_filename)[1]
+        if support_file:
+            # Securely get the filenames and file extensions
+            support_filename = secure_filename(support_file.filename)
         
-        # Read the file data into memory
-        
-        support_data = support_file.read()
-        
-        
-        # Insert the report with file information into the database, including file data
-        db_cursor = db_connection.cursor()
-        db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                    (random_code, department, report_text,   docx_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
-        db_connection.commit()
-        db_connection.commit()
-        db_cursor.close()
-        
-        flash('The report is submitted', 'success')
-        return redirect('/hello')
+            support_extension = os.path.splitext(support_filename)[1]
+            
+            # Read the file data into memory
+            
+            support_data = support_file.read()
+            
+            
+            # Insert the report with file information into the database, including file data
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        (random_code, department, report_text,  docx_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_connection.commit()
+            
+            db_cursor.close()
+            os.remove("modified_document.docx")
+            
+            
+            flash('The report is submitted', 'success')
+            return redirect('/hello')
 
 @app.route('/submit_request', methods=['POST'])
 def submit_request():
@@ -721,6 +794,15 @@ def change_report_status(report_id):
 def delete_report(report_id):
     db_cursor = db_connection.cursor()
     db_cursor.execute("DELETE FROM reports WHERE report_id = %s;", (report_id,))
+    db_connection.commit()  # Make sure to commit the changes to the database
+    db_cursor.close()
+
+    return redirect(url_for('menu'))
+
+@app.route('/delete_all_report/<string:report_id>', methods=['POST'])
+def delete_all_report(report_id):
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("DELETE FROM reports WHERE course = %s;", (report_id,))
     db_connection.commit()  # Make sure to commit the changes to the database
     db_cursor.close()
 

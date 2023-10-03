@@ -55,12 +55,86 @@
                     <option value="CIT">CIT</option> 
                     <option value="COE">COE</option> 
                 </select><br>
+                <label for="kind">Kind of Report:</label> 
+                <select name="kind" id="kind" required onchange="toggleInputFields()"> 
+                    <option value="" selected disabled>Select a Report Type</option>
+                    <option value="Formal Complaint">Formal Complaint</option> 
+                    <option value="Incident Report">Incident Report</option> 
+                </select><br>
+                <div id="formContainer" style="display: none;">
+                    <label id="provision1" for="provision" >Provision in the Norms of Conduct Violated by the Student/s:</label>
+                    <textarea id="provision" name="provision" rows="16" cols="20" ></textarea><br>
                 
-                <label for="file1">Attach Supporting Documents (if you have any):</label>
-                <input type="file" name="file1" id="file1">
+                    <label id="narrate1" for="narrate" >Brief Narration of Facts and Circumstances:</label>
+                    <textarea id="narrate" name="narrate" rows="16" cols="20" ></textarea><br>
                 
-                <textarea id="report" name="report" rows="16" cols="50" required></textarea>
-                  
+                    <label id="final1" for="final" >Final Word</label>
+                    <textarea id="final" name="final" rows="16" cols="20" ></textarea><br>
+                
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name"><br>
+                
+                    <label for="section">Year And Section</label>
+                    <input type="text" id="section" name="section"><br>
+                
+                    <label for="number">Contact Number:</label>
+                    <input type="text" id="number" name="number"><br>
+                
+                    <label for="email">Email Address</label>
+                    <input type="text" id="email" name="email"><br>
+                
+                    <label for="witness1">Witness 1:</label>
+                    <input type="text" id="witness1" name="witness1"><br>
+                
+                    <label for="witness2">Witness 2:</label>
+                    <input type="text" id="witness2" name="witness2"><br>
+                
+                    <label for="witness3">Witness 3:</label>
+                    <input type="text" id="witness3" name="witness3"><br>
+                
+                    <label for="evidence1">Evidence 1:</label>
+                    <input type="text" id="evidence1" name="evidence1"><br>
+                
+                    <label for="evidence2">Evidence 2:</label>
+                    <input type="text" id="evidence2" name="evidence2"><br>
+                
+                    <label for="evidence3">Evidence 3:</label>
+                    <input type="text" id="evidence3" name="evidence3"><br>
+                
+                    <label for="file1">Attach Your Signature with Printed Name:</label>
+                    <input type="file" name="file2" id="file2">
+                
+                    <label for="file1">Attach Supporting Documents (if you have any):</label>
+                    <input type="file" name="file1" id="file1">
+                </div>
+
+                <div id="formContainer1" style="display: none;">
+                    
+                    <label id="narrate1" for="narrate1" >Incident:</label>
+                    <textarea id="narrate1" name="narrate1" rows="16" cols="20" ></textarea><br>
+
+                    <label id="provision1" for="remarks" >Remarks:</label>
+                    <textarea id="remarks" name="remarks" rows="16" cols="20" ></textarea><br>
+                
+                    <label for="name1">Name:</label>
+                    <input type="text" id="name1" name="name1"><br>
+                
+                    <label for="section">Year And Section:</label>
+                    <input type="text" id="section1" name="section1"><br>
+                
+                    <label for="program">Program:</label>
+                    <input type="text" id="program" name="program"><br>
+                
+                    <label for="designation">Designation:</label>
+                    <input type="text" id="designation" name="designation"><br>
+                
+                    <label for="file3">Attach Your Signature with Printed Name:</label>
+                    <input type="file" name="file3" id="file3">
+                
+                    <label for="file4">Attach Supporting Documents (if you have any):</label>
+                    <input type="file" name="file4" id="file4">
+                </div>
+               
                 <input id="submit" type="submit" value="Submit">
             </form>
         </div>
