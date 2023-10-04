@@ -14,8 +14,6 @@ from docx.oxml import OxmlElement
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from docx2pdf import convert
-import PyPDF2
-import tempfile
 
 
 
@@ -105,15 +103,41 @@ def replace_table_cell_placeholder(table, row_index, col_index, new_text):
     # Add the new text to the cell
     cell.text = new_text
 
-def clear_and_add_image_to_table_cell(table, row_index, col_index, image_path):
+def replace_table_cell_placeholder1(table, row_index, col_index, new_text, placeholder):
     cell = table.cell(row_index, col_index)
+    print(placeholder)
     
-    # Clear the existing content in the cell
+    # Flag to track if the placeholder was found and replaced
+    placeholder_replaced = False
+
+    # Clear the existing text in the cell and replace the placeholder
     for paragraph in cell.paragraphs:
         for run in paragraph.runs:
-            run.clear()
+            if placeholder in run.text:
+                run.text = run.text.replace(placeholder, new_text)
+                placeholder_replaced = True
 
-    run.add_picture(image_path, width=Cm(2.88), height=Cm(1.56)) 
+    # Add the new text to the cell if the placeholder was not found
+    if not placeholder_replaced:
+        cell.text = new_text
+
+
+def replace_table_cell_placeholder_with_image(table, row_index, col_index, image_path, placeholder, indentation_spaces=0):
+    cell = table.cell(row_index, col_index)
+
+    # Iterate through the runs in the cell
+    for paragraph in cell.paragraphs:
+        for run in paragraph.runs:
+            if placeholder in run.text:
+                # Clear the existing run
+                run.clear()
+
+                # Add an image with the specified path
+                indentation = "   " * indentation_spaces
+                paragraph.left_indent = Cm(3)
+                run = paragraph.add_run()
+                run.add_text(indentation)
+                run.add_picture(image_path, width=Cm(2.88), height=Cm(1.56)) 
 
 def generate_random_code(length=8):
     # Define the characters to choose from
@@ -148,24 +172,6 @@ def submit_report():
         current_date = current_datetime.date()
         formatted_date = current_date.strftime("/%m/%d/%Y") 
         random_code = generate_random_code()
-        print("Department:", department)
-        print("Provision:", provision)
-        print("Final:", final)
-        print("Report Text:", report_text)
-        print("Name:", name)
-        print("Section:", section)
-        print("Number:", number)
-        print("Email:", email)
-        print("Witness1:", witness1)
-        print("Witness2:", witness2)
-        print("Witness3:", witness3)
-        print("Evidence1:", evidence1)
-        print("Evidence2:", evidence2)
-        print("Evidence3:", evidence3)
-        print("Pic:", pic)
-        print("Current Date:", current_date)
-        print("Formatted Date:", formatted_date)
-        print("Random Code:", random_code)
 
         if department == "CAFAD":
             Name_Coordinator = "CAFAD Coordinator"
@@ -178,9 +184,8 @@ def submit_report():
         print(username)
         
         pdf_filename = 'Formal Complain Letter.docx'
-        pdf_path = os.path.join('C:\\Users\\aedri\\Downloads', pdf_filename)
 
-        doc = Document(pdf_path)
+        doc = Document(pdf_filename)
         # Replace placeholders
         replace_placeholder(doc, "contact_number", number, font_size=10, alignment=WD_ALIGN_PARAGRAPH.CENTER)
         replace_placeholder(doc, "lol", email, font_size=10, alignment=WD_ALIGN_PARAGRAPH.CENTER)
@@ -202,16 +207,20 @@ def submit_report():
         clear_and_add_line(doc, 14, "Year and Section  :     "+section)
         clear_and_add_line(doc, 8, "  Alangilan Campus\n", font_size=12)
         clear_and_add_line(doc, 17, provision, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER,indentation=36)
-        clear_and_add_line(doc, 23, final, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, indentation=36)
-        clear_and_add_line(doc, 31, report_text, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, indentation=36)
+        clear_and_add_line(doc, 23, report_text, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, indentation=36)
+        clear_and_add_line(doc, 31, final, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, indentation=36)
 
         doc.save("modified_document.docx")
+         # Convert the Word document to PDF using docx2pdf
+        pdf_path = os.path.join('modified_document.pdf')
+        convert("modified_document.docx", pdf_path)
 
     
 
-        file_name = f'modified_{random_code}'
-        with open("modified_document.docx", "rb") as docx_file:
-            docx_data = docx_file.read()
+        file_name = f'{random_code}_Formal Complaint'
+        with open(pdf_path, "rb") as pdf_file:
+            pdf_data = pdf_file.read()
+
 
         
             
@@ -243,11 +252,12 @@ def submit_report():
             # Insert the report with file information into the database, including file data
             db_cursor = db_connection.cursor()
             db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                        (random_code, department, report_text,   docx_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+                        (random_code, department, report_text,   pdf_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
             db_connection.commit()
             
             db_cursor.close()
             os.remove("modified_document.docx")
+            os.remove("modified_document.pdf")
             
             
             flash('The report is submitted', 'success')
@@ -264,57 +274,54 @@ def submit_report():
         current_datetime = datetime.now()
         current_date = current_datetime.date()
         formatted_date = current_date.strftime("/%m/%d/%Y") 
-        current_time = current_datetime.strftime('%H:%M')
+        current_time = current_datetime.strftime('%I:%M %p')
         random_code = generate_random_code()
                  
         username = session.get('username', '')
-        print("Department:", department)
-        print("Remarks:", remarks)
-        print("Report Text:", report_text)
-        print("Name:", name)
-        print("Section:", section)
-        print("Designation:", designation)
-        print("Program:", program)
-        print("Pic:", pic)
-        print("Current Date:", current_date)
-        print("Formatted Date:", formatted_date)
-        print("Current Time:", current_time)
-        print("Random Code:", random_code)
-        print("Username:", username)
 
-        
         pdf_filename = 'Incident Report.docx'
-        pdf_path = os.path.join('C:\\Users\\aedri\\Downloads', pdf_filename)
-
-        doc = Document(pdf_path)
+        doc = Document(pdf_filename)
         # Replace placeholders
-        replace_placeholder(doc, "(date)", str(current_date), font_size=10, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "(name)", name, font_size=10, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "(college)", department, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "(program)", program, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "(time)", current_time, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "(sr-code)", username, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "(section)", section, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "(incident)", report_text, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "(remarks)", remarks, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
-        replace_placeholder1(doc, "(signature)", pic,indentation_spaces=6,font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
-        replace_placeholder(doc, "(designation)", designation, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
-        replace_placeholder(doc, "(date1)", str(current_date), font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
+    
         replace_table_cell_placeholder(doc.tables[0], 2, 3, str(current_date))
         replace_table_cell_placeholder(doc.tables[0], 3, 3, name)
         replace_table_cell_placeholder(doc.tables[0], 4, 3, department)
         replace_table_cell_placeholder(doc.tables[0], 5, 3, program)
         replace_table_cell_placeholder(doc.tables[0], 6, 4, report_text)
         replace_table_cell_placeholder(doc.tables[0], 10, 4, remarks)
-        clear_and_add_image_to_table_cell(doc.tables[0], 14, 1, pic)
+        
+        replace_table_cell_placeholder_with_image(doc.tables[0], 14, 1, pic,"(signature)",29)
+        replace_table_cell_placeholder1(doc.tables[0], 14, 1, designation,"(designation)")
+        replace_table_cell_placeholder1(doc.tables[0], 14, 1, str(current_date),"lol")
+        replace_table_cell_placeholder(doc.tables[0], 2, 8, current_time)
+        replace_table_cell_placeholder(doc.tables[0], 3, 10, username)
+        replace_table_cell_placeholder(doc.tables[0], 5, 8, section)
+        
+        replace_table_cell_placeholder(doc.tables[1], 2, 3, str(current_date))
+        replace_table_cell_placeholder(doc.tables[1], 3, 3, name)
+        replace_table_cell_placeholder(doc.tables[1], 4, 3, department)
+        replace_table_cell_placeholder(doc.tables[1], 5, 3, program)
+        replace_table_cell_placeholder(doc.tables[1], 6, 4, report_text)
+        replace_table_cell_placeholder(doc.tables[1], 10, 4, remarks)
+        
+        replace_table_cell_placeholder_with_image(doc.tables[1], 14, 1, pic,"(signature)",29)
+        replace_table_cell_placeholder1(doc.tables[1], 14, 1, designation,"(designation)")
+        replace_table_cell_placeholder1(doc.tables[1], 14, 1, str(current_date),"lol")
+        replace_table_cell_placeholder(doc.tables[1], 2, 8, current_time)
+        replace_table_cell_placeholder(doc.tables[1], 3, 10, username)
+        replace_table_cell_placeholder(doc.tables[1], 5, 8, section)
+        
+    
         
         doc.save("modified_document.docx")
+        pdf_path = os.path.join('modified_document.pdf')
+        convert("modified_document.docx", pdf_path)
 
     
 
-        file_name = f'modified_{random_code}'
-        with open("modified_document.docx", "rb") as docx_file:
-            docx_data = docx_file.read()
+        file_name = f'{random_code}_Incident Report'
+        with open(pdf_path, "rb") as pdf_file:
+            pdf_data = pdf_file.read()
 
         
             
@@ -346,11 +353,12 @@ def submit_report():
             # Insert the report with file information into the database, including file data
             db_cursor = db_connection.cursor()
             db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                        (random_code, department, report_text,  docx_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+                        (random_code, department, report_text,  pdf_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
             db_connection.commit()
             
             db_cursor.close()
             os.remove("modified_document.docx")
+            os.remove("modified_document.pdf")
             
             
             flash('The report is submitted', 'success')
@@ -728,14 +736,14 @@ def download_report_file(report_id):
         file_data, file_name = result
 
         # Set the content type header to PDF
-        content_type = 'application/docx'
+        content_type = 'application/pdf'
 
         # Set the filename to "default.pdf"
         response = make_response(file_data)
         response.headers['Content-Type'] = content_type
 
         # Set the filename to "default.pdf"
-        response.headers['Content-Disposition'] = f'attachment; filename="{file_name}.docx"'
+        response.headers['Content-Disposition'] = f'attachment; filename="{file_name}.pdf"'
 
         # Close the cursor after fetching the result
         db_cursor.close()
