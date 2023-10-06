@@ -15,17 +15,23 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from docx2pdf import convert
 import pythoncom
-
-
-
-
 from datetime import datetime
+from lxml import etree
+
+nsmap = {
+    'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',
+    'a': 'http://schemas.openxmlformats.org/drawingml/2006/main',
+    'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
+    'w14': 'http://schemas.microsoft.com/office/word/2010/wordml',
+    'wp': 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing',
+    'm': 'http://schemas.openxmlformats.org/officeDocument/2006/math',
+}
 
 db_connection = mysql.connector.connect(
     host="127.0.0.1",
     user="root",
     password="",
-    database="capstone"
+    database="capstoneproject"
 )
 
 
@@ -106,7 +112,7 @@ def replace_table_cell_placeholder(table, row_index, col_index, new_text):
 
 def replace_table_cell_placeholder1(table, row_index, col_index, new_text, placeholder):
     cell = table.cell(row_index, col_index)
-    print(placeholder)
+    
     
     # Flag to track if the placeholder was found and replaced
     placeholder_replaced = False
@@ -115,12 +121,45 @@ def replace_table_cell_placeholder1(table, row_index, col_index, new_text, place
     for paragraph in cell.paragraphs:
         for run in paragraph.runs:
             if placeholder in run.text:
+                
                 run.text = run.text.replace(placeholder, new_text)
                 placeholder_replaced = True
 
     # Add the new text to the cell if the placeholder was not found
     if not placeholder_replaced:
         cell.text = new_text
+
+def toggle_table_cell_checkbox(table, row_index, col_index, checkbox_state):
+    cell = table.cell(row_index, col_index)
+    
+    # Iterate through the elements in the cell
+    for element in cell._element:
+        if element.tag.endswith('tcBorders'):
+            continue  # Skip table cell borders
+
+        if element.tag.endswith('tcContent'):
+            for p in element.iter():
+                # Check if the element is a checkbox
+                if p.tag.endswith('sdt'):
+                    for sdtContent in p.iter():
+                        if sdtContent.tag.endswith('fldSimple'):
+                            # Find the checkbox value
+                            w_t = sdtContent.find('.//w:t', namespaces=nsmap)
+                            if w_t is not None:
+                                # Toggle the checkbox value based on input
+                                if checkbox_state == "Check":
+                                    w_t.text = "X"
+                                elif checkbox_state == "Not Check":
+                                    w_t.text = " "
+                # Add a new checkbox if it doesn't exist
+                elif p.tag.endswith('p'):
+                    new_checkbox = etree.Element("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}fldSimple")
+                    checkbox_content = etree.SubElement(new_checkbox, "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                    if checkbox_state == "Check":
+                        checkbox_content.text = "X"
+                    else:
+                        checkbox_content.text = " "
+                    p.append(new_checkbox)
 
 
 def replace_table_cell_placeholder_with_image(table, row_index, col_index, image_path, placeholder, indentation_spaces=0):
@@ -366,58 +405,171 @@ def submit_report():
 
 @app.route('/submit_request', methods=['POST'])
 def submit_request():
-    # Get form data including the uploaded files
-    department = request.form.get('department')
-    report_text = request.form.get('report')
-    current_datetime = datetime.now()
+    pythoncom.CoInitialize()
+    kind = request.form.get('forms')
+    if kind == "Temporary Gate Pass":
+
+        remarks = request.form.get('remarks')
+        department = request.form.get('department')
+        print(department)
+        section = request.form.get('section2')
+        program = request.form.get('program')
+        current_datetime = datetime.now()
+        random_code = generate_random_code()
+        current_date = current_datetime.date()
+        formatted_date = current_date.strftime("/%m/%d/%Y") 
+
+        student = session.get('namestudent', '') 
+        username = session.get('username', '')
+
+        if department == "CAFAD":
+            Name_Coordinator1 = "CAFAD Coordinator"
+
+        elif department == "CICS":
+            Name_Coordinator1 = "Lovely Rose Tipan Hernandez"
+
+        pdf_filename = 'Temporary Gate Pass.docx'
+        doc = Document(pdf_filename)
+
         
-    username = session.get('username', '')
-    print(username)
+
+        replace_table_cell_placeholder1(doc.tables[0], 2, 11, formatted_date,"(date)")
+        replace_table_cell_placeholder1(doc.tables[0], 11, 1, formatted_date,"(date1)")
+        replace_table_cell_placeholder1(doc.tables[0], 11, 1, Name_Coordinator1,"(Coord)")
+        replace_table_cell_placeholder1(doc.tables[0], 3, 3, student,"(name)")
+        replace_table_cell_placeholder1(doc.tables[0], 6, 4, remarks,"(remarks)")
+        replace_table_cell_placeholder1(doc.tables[0], 3, 11, username,"(code)")
+        replace_table_cell_placeholder1(doc.tables[0], 5, 9, section, "(section)")
+        replace_table_cell_placeholder1(doc.tables[0], 4, 3, department, "(department)")
+        replace_table_cell_placeholder1(doc.tables[0], 5, 3, program, "(program)")
+
+        replace_table_cell_placeholder1(doc.tables[1], 2, 11, formatted_date,"(date)")
+        replace_table_cell_placeholder1(doc.tables[1], 11, 1, formatted_date,"(date1)")
+        replace_table_cell_placeholder1(doc.tables[1], 11, 1, Name_Coordinator1,"(Coord)")
+        replace_table_cell_placeholder1(doc.tables[1], 3, 3, student,"(name)")
+        replace_table_cell_placeholder1(doc.tables[1], 6, 4, remarks,"(remarks)")
+        replace_table_cell_placeholder1(doc.tables[1], 3, 11, username,"(code)")
+        replace_table_cell_placeholder1(doc.tables[1], 5, 9, section, "(section)")
+        replace_table_cell_placeholder1(doc.tables[1], 4, 3, department, "(department)")
+        replace_table_cell_placeholder1(doc.tables[1], 5, 3, program, "(program)")
+
+        doc.save("modified_document.docx")
+        pdf_path = os.path.join('modified_document.pdf')
+        convert("modified_document.docx", pdf_path)
+
     
-    # Check if the POST request has the file part for the report file
-    if 'file' not in request.files:
-        flash('No report file part')
-        return redirect(request.url)
-    
-    report_file = request.files['file']
-    
-    # Check if the user submitted an empty report file input
-    if report_file.filename == '':
-        flash('No selected report file')
-        return redirect(request.url)
-    
-    # Check if the POST request has the file part for the supporting document file
-    if 'file1' not in request.files:
-        flash('No supporting document file part')
-        return redirect(request.url)
-    
-    support_file = request.files['file1']
-    
-    # Check if the user submitted an empty supporting document file input
-    if support_file.filename == '':
-        flash('No selected supporting document file')
-        return redirect(request.url)
-    
-    if report_file and support_file:
-        # Securely get the filenames and file extensions
-        report_filename = secure_filename(report_file.filename)
-        support_filename = secure_filename(support_file.filename)
-        report_extension = os.path.splitext(report_filename)[1]
-        support_extension = os.path.splitext(support_filename)[1]
+
+        file_name = f'{random_code}_Temporary Gate Pass'
+        with open(pdf_path, "rb") as pdf_file:
+            pdf_data = pdf_file.read()
         
-        # Read the file data into memory
-        report_data = report_file.read()
-        support_data = support_file.read()
         
-        # Insert the report with file information into the database, including file data
-        db_cursor = db_connection.cursor()
-        db_cursor.execute("INSERT INTO forms_osd (course, report, file_form_name, file_form_type, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                          (department, report_text, report_filename, report_extension, report_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
-        db_connection.commit()
-        db_cursor.close()
+        if 'file5' not in request.files:
+            flash('No supporting document file part')
+            return redirect(request.url)
         
-        flash('Report submitted successfully')
-        return redirect('/hello')
+        support_file = request.files['file5']
+        
+        # Check if the user submitted an empty supporting document file input
+    
+        if support_file.filename == '':
+            support_file = None 
+        
+       
+        
+        if support_file:
+            # Securely get the filenames and file extensions
+           
+            support_filename = secure_filename(support_file.filename)
+            support_extension = os.path.splitext(support_filename)[1]
+            
+        
+            support_data = support_file.read()
+            
+            # Insert the report with file information into the database, including file data
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course, report, file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                            (random_code, department, remarks, file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
+            db_connection.commit()
+            db_cursor.close()
+            os.remove("modified_document.docx")
+            os.remove("modified_document.pdf")
+            
+            flash('Report submitted successfully')
+            return redirect('/hello')
+        
+    elif kind == "Request for Non-Wearing of Uniform":
+
+        remarks = request.form.get('remarks')
+        department = request.form.get('department')
+        print(department)
+        section = request.form.get('section2')
+        program = request.form.get('program')
+        current_datetime = datetime.now()
+        random_code = generate_random_code()
+        current_date = current_datetime.date()
+        formatted_date = current_date.strftime("/%m/%d/%Y") 
+
+        student = session.get('namestudent', '') 
+        username = session.get('username', '')
+
+        if department == "CAFAD":
+            Name_Coordinator1 = "CAFAD Coordinator"
+
+        elif department == "CICS":
+            Name_Coordinator1 = "Lovely Rose Tipan Hernandez"
+
+        pdf_filename = 'Request for Non-Wearing of Uniform.docx'
+        doc = Document(pdf_filename)
+
+        toggle_table_cell_checkbox(doc.tables[0], 9, 1, "Check")
+
+        
+
+        doc.save("modified_document.docx")
+        pdf_path = os.path.join('modified_document.pdf')
+        convert("modified_document.docx", pdf_path)
+
+    
+
+        file_name = f'{random_code}_Temporary Gate Pass'
+        with open(pdf_path, "rb") as pdf_file:
+            pdf_data = pdf_file.read()
+        
+        
+        if 'file5' not in request.files:
+            flash('No supporting document file part')
+            return redirect(request.url)
+        
+        support_file = request.files['file5']
+        
+        # Check if the user submitted an empty supporting document file input
+    
+        if support_file.filename == '':
+            support_file = None 
+        
+       
+        
+        if support_file:
+            # Securely get the filenames and file extensions
+           
+            support_filename = secure_filename(support_file.filename)
+            support_extension = os.path.splitext(support_filename)[1]
+            
+        
+            support_data = support_file.read()
+            
+            # Insert the report with file information into the database, including file data
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course, report, file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                            (random_code, department, remarks, file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
+            db_connection.commit()
+            db_cursor.close()
+            os.remove("modified_document.docx")
+            os.remove("modified_document.pdf")
+            
+            flash('Report submitted successfully')
+            return redirect('/hello')
 
 @app.route('/submit_sanction', methods=['POST'])
 def submit_sanction():
@@ -818,6 +970,64 @@ def download_supporting_document(report_id):
     db_cursor.close()
     return "File not found", 404
 
+@app.route('/download_report_file1/<string:report_id>')
+def download_report_file1(report_id):
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT file_form, file_form_name FROM forms_osd WHERE form_id = %s", (report_id,))
+    result = db_cursor.fetchone()
+
+    if result is not None:
+        file_data, file_name = result
+
+        # Set the content type header to PDF
+        content_type = 'application/pdf'
+
+        # Set the filename to "default.pdf"
+        response = make_response(file_data)
+        response.headers['Content-Type'] = content_type
+
+        # Set the filename to "default.pdf"
+        response.headers['Content-Disposition'] = f'attachment; filename="{file_name}.pdf"'
+
+        # Close the cursor after fetching the result
+        db_cursor.close()
+
+        return response
+
+    # Handle the case where the file is not found
+    db_cursor.close()
+    return "File not found", 404
+
+
+
+@app.route('/download_supporting_document1/<string:report_id>')
+def download_supporting_document1(report_id):
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT file_support_name, file_support_type, file_support FROM forms_osd WHERE form_id = %s", (report_id,))
+    result = db_cursor.fetchone()
+
+    if result is not None:
+        file_name, file_type, file_data = result
+
+        # Set the content type header based on the supporting document's type stored in the database
+        content_type = file_type
+
+        # Set the filename to have the original name and extension
+        response = make_response(file_data)
+        response.headers['Content-Type'] = content_type
+
+        # Set the filename based on the stored name and extension
+        response.headers['Content-Disposition'] = f'attachment; filename="{file_name}{file_type}"'
+
+        # Close the cursor after fetching the result
+        db_cursor.close()
+
+        return response
+
+    # Handle the case where the file is not found
+    db_cursor.close()
+    return "File not found", 404
+
 @app.route('/change_report_status/<string:report_id>', methods=['POST'])
 def change_report_status(report_id):
     new_status = request.form['new_status']
@@ -831,6 +1041,20 @@ def change_report_status(report_id):
     flash('Status has been successfully changed', 'success')
 
     return redirect(url_for('menu'))
+
+@app.route('/change_report_status1/<string:report_id>', methods=['POST'])
+def change_report_status1(report_id):
+    new_status = request.form['new_status']
+    print(new_status)
+    print(report_id)
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("UPDATE forms_osd SET status = %s WHERE form_id = %s;", (new_status, report_id))
+    db_connection.commit()  # Make sure to commit the changes to the database
+    db_cursor.close()
+
+    flash('Status has been successfully changed', 'success')
+
+    return redirect(url_for('requestpage'))
 
 @app.route('/delete_report/<string:report_id>', methods=['POST'])
 def delete_report(report_id):

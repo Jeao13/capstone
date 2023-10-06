@@ -352,34 +352,31 @@ function toggleInputFields() {
 
     document.addEventListener('DOMContentLoaded', function () {
         // Function to toggle the visibility of the containers
-        function toggleContainer(reportsContainerId) {
+        function toggleContainer(containerId) {
             // Hide all containers
             document.querySelectorAll('#table-container > div').forEach(function (container) {
                 container.style.display = 'none';
             });
-        
+
             // Show the selected container
-            const selectedContainer = document.getElementById(reportsContainerId);
+            const selectedContainer = document.getElementById(containerId);
             if (selectedContainer) {
                 selectedContainer.style.display = 'block';
             }
         }
-        
+
         // Add click event listeners to navbar items
-        document.querySelectorAll('.nav-item1').forEach(function (navItem) {
+        document.querySelectorAll('.nav-item').forEach(function (navItem) {
             navItem.addEventListener('click', function (event) {
                 event.preventDefault();
                 const targetId = navItem.getAttribute('data-target');
                 toggleContainer(targetId);
             });
         });
-        
+
         // Initially show the "Pending" container
         toggleContainer('pending');
-    
-        
-        
-        });
+    });
 
 
     

@@ -21,13 +21,12 @@
         <a href="/menu">Reports</a>
         <a href="/request">Requests</a>
         {% endif %}
-        <a href="/forms">Forms</a>
         <a class="logout" href="/logout">Logout</a>
         <a class="notif" href="#" id="notifications-bar" >Notifications</a>
     </div>
     
     {% if user_source == 'accounts_cics' %}
-    <h1>My Reports</h1>
+    <h1>My Requests</h1>
     
     
     
@@ -38,9 +37,9 @@
     <div class="navbar-container">
         
         <div class="navbar1">
-            <a class="nav-item1" href="#" id="pending-tab" data-target="pending">Pending</a>
-            <a class="nav-item1" href="#" id="ongoing-tab" data-target="ongoing">Ongoing</a>
-            <a class="nav-item1" href="#" id="result-tab" data-target="result">Result</a>
+            <a class="nav-item" href="#" id="pending-tab" data-target="pending">Pending</a>
+            <a class="nav-item" href="#" id="ongoing-tab" data-target="ongoing">Ongoing</a>
+            <a class="nav-item" href="#" id="result-tab" data-target="result">Result</a>
             
         </div>
         </div>
@@ -50,6 +49,7 @@
                             <button type="submit">Delete All Report</button>
                         </form>
     <div id="table-container">
+        <div id="pending">
         <table>
             <thead>
                 <tr>
@@ -66,7 +66,7 @@
                 </tr>
             </thead>
             <tbody>
-                <div id="pending">
+    
                 {% for row in reports|sort(attribute='2', reverse=true) %}
                 {% if row[5] == 'Pending' %}
                 <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
@@ -76,17 +76,17 @@
                     <td>{{ row[2] }}</td>
                     <td>{{ row[4] }}</td>
                     <td>{{ row[5] }}</td>
-                    <td><a href="{{ url_for('download_report_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
-                    <td><a href="{{ url_for('download_supporting_document', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
+                    <td><a href="{{ url_for('download_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
+                    <td><a href="{{ url_for('download_supporting_document1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
                     <td><button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
                     <td>
                         <!-- Add a form to change the status -->
-                        <form id="statusChangeForm" method="POST" action="{{ url_for('change_report_status', report_id=row[0]) }}"
+                        <form id="statusChangeForm" method="POST" action="{{ url_for('change_report_status1', report_id=row[0]) }}"
                         onsubmit="return confirmStatusChange('{{ row[0] }}')();">
                         <select name="new_status">
-                            <option value="On Going">On Going</option>
-                            <option value="Rejected">Rejected</option>
-                            <option value="Case Closed">Case Closed</option>
+                            <option value="Ongoing">Ongoing</option>
+                            <option value="Result">Result</option>
+            
                         </select>
                         <button type="submit">Change</button>
                     </form>
@@ -101,9 +101,29 @@
                 </tr>
                 {% endif %}
                 {% endfor %}
-            </div>
+                
+            </tbody>
+        </table>
+    </div>
 
-            <div id="ongoing" style="display: none;">
+    <div id="ongoing">
+        <table>
+            <thead>
+                <tr>
+                    <th>Report ID</th>               
+                    <th>SR-CODE</th>
+                    <th>Date and Time</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                    <th>Attached Form</th>
+                    <th>Attached Supporting Document</th>
+                    <th>Action</th>
+                    <th>Change Status</th>
+                    <th>Delete Report</th>
+                </tr>
+            </thead>
+            <tbody>
+    
                 {% for row in reports|sort(attribute='2', reverse=true) %}
                 {% if row[5] == 'Ongoing' %}
                 <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
@@ -118,12 +138,13 @@
                     <td><button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
                     <td>
                         <!-- Add a form to change the status -->
-                        <form id="statusChangeForm" method="POST" action="{{ url_for('change_report_status', report_id=row[0]) }}"
+                        <form id="statusChangeForm" method="POST" action="{{ url_for('change_report_status1', report_id=row[0]) }}"
                         onsubmit="return confirmStatusChange('{{ row[0] }}')();">
                         <select name="new_status">
-                            <option value="On Going">On Going</option>
+                            <option value="Ongoing">Ongoing</option>
+                            <option value="Approved">Approved</option>
                             <option value="Rejected">Rejected</option>
-                            <option value="Case Closed">Case Closed</option>
+                            
                         </select>
                         <button type="submit">Change</button>
                     </form>
@@ -138,11 +159,30 @@
                 </tr>
                 {% endif %}
                 {% endfor %}
-            </div>
+                
+            </tbody>
+        </table>
+    </div>
 
-            <div id="result" style="display: none;">
+    <div id="result">
+        <table>
+            <thead>
+                <tr>
+                    <th>Report ID</th>               
+                    <th>SR-CODE</th>
+                    <th>Date and Time</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                    <th>Attached Form</th>
+                    <th>Attached Supporting Document</th>
+                    <th>Action</th>
+                    <th>Delete Report</th>
+                </tr>
+            </thead>
+            <tbody>
+    
                 {% for row in reports|sort(attribute='2', reverse=true) %}
-                {% if row[5] == 'Result' %}
+                {% if row[5] == 'Approved' or row[5] == 'Rejected' %}
                 <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
                 <tr>
                     <td>{{ row[0] }}</td>
@@ -155,18 +195,6 @@
                     <td><button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
                     <td>
                         <!-- Add a form to change the status -->
-                        <form id="statusChangeForm" method="POST" action="{{ url_for('change_report_status', report_id=row[0]) }}"
-                        onsubmit="return confirmStatusChange('{{ row[0] }}')();">
-                        <select name="new_status">
-                            <option value="On Going">On Going</option>
-                            <option value="Rejected">Rejected</option>
-                            <option value="Case Closed">Case Closed</option>
-                        </select>
-                        <button type="submit">Change</button>
-                    </form>
-                    </td>
-                    <td>
-                        <!-- Add a form to change the status -->
                         <form method="POST" action="{{ url_for('delete_report', report_id=row[0]) }}"
                               onsubmit="return confirm('Are you sure you want to delete this report?');">
                             <button type="submit">Delete</button>
@@ -175,9 +203,10 @@
                 </tr>
                 {% endif %}
                 {% endfor %}
-            </div>
+                
             </tbody>
         </table>
+    </div>
     </div>
 {% endif %}
 

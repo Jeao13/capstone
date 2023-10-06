@@ -21,7 +21,6 @@
         <a href="/menu">Reports</a>
         <a href="/request">Requests</a>
         {% endif %}
-        <a href="/forms">Forms</a>
         <a class="logout" href="/logout">Logout</a>
         <a class="notif" href="#" id="notifications-bar" >Notifications</a>
     </div>
@@ -113,7 +112,7 @@
 
     <div id="reports-container">
         {% if user_source == 'accounts_cics' %}
-        {% for row in reports %}
+        {% for row in reports|sort(attribute='2', reverse=true) %}
         <div class="report">
             <b>Report ID</b> {{ row[0] }}<br>
             <b>Date and Time:</b> {{ row[2] }}<br>

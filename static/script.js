@@ -332,6 +332,34 @@ function toggleInputFields() {
         }
     }
 
+    function toggleInputFields1() {
+        var kindSelect = document.getElementById("forms");
+        var formContainer2 = document.getElementById("formContainer2");
+        var formContainer3 = document.getElementById("formContainer3");
+        var formContainer4 = document.getElementById("formContainer4");
+       
+    
+        if (kindSelect.value === "Temporary Gate Pass") {
+            formContainer2.style.display = "block";
+            formContainer3.style.display = "none";
+            formContainer4.style.display = "none";
+          
+        } 
+        
+        else if (kindSelect.value === "Request for Non-Wearing of Uniform"){
+            formContainer2.style.display = "none";
+            formContainer3.style.display = "block";
+            formContainer4.style.display = "none";
+        }
+        
+        else {
+            formContainer2.style.display = "none";
+            formContainer3.style.display = "none";
+            formContainer4.style.display = "block";
+         
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         const searchForm = document.getElementById("searchForm");
         const searchInput = document.getElementById("searchInput");

@@ -23,7 +23,6 @@
     <a href="/request">Requests</a>
     {% endif %}
 
-        <a href="/forms">Forms</a>
        
         <a class="logout" href="/logout">Logout</a>
         <a class="notif" href="#" id="notifications-bar" >Notifications</a>
@@ -185,19 +184,78 @@
         <h3>Request Form</h3>
         <form action="/submit_request" method="POST" enctype="multipart/form-data">
             <label for="department">Department:</label> 
-            <select name="department" id="department"> 
+            <select name="department" id="department">
+                <option value="" selected disabled>Select the Department:</option> 
                 <option value="CAFAD">CAFAD</option> 
                 <option value="CICS">CICS</option> 
                 <option value="CIT">CIT</option> 
                 <option value="COE">COE</option> 
-            </select><br>
-            <label for="file">Attach form:</label>
-            <input type="file" name="file" id="file"><br>
+            </select><br><br>
 
-            <label for="file1">Attach Supporting Documents (if you have any):</label>
-            <input type="file" name="file1" id="file1">
+            <label for="forms">Forms:</label> 
+            <select name="forms" id="forms" required onchange="toggleInputFields1()"> 
+                <option value="" selected disabled>Select Form:</option> 
+                <option value="Temporary Gate Pass">Temporary Gate Pass</option> 
+                <option value="Request for Non-Wearing of Uniform">Request for Non-Wearing of Uniform</option> 
+                <option value="Request for New ID">Request for New ID</option> 
+    
+            </select><br><br>
 
-            <textarea id="report" name="report" rows="16" cols="50"></textarea>
+            <div id="formContainer2" style="display: none;">
+
+                <label id="provision1" for="remarks" >Remarks:</label>
+                <textarea id="remarks" name="remarks" rows="16" cols="20" ></textarea><br>
+            
+            
+                <label for="section">Year And Section:</label>
+                <input type="text" id="section2" name="section2" ><br>
+            
+                <label for="program">Program:</label>
+                <input type="text" id="program" name="program" ><br> 
+            
+            
+                <label for="file5">Attach Supporting Documents (if you have any):</label>
+                <input type="file" name="file5" id="file5" accept=".png, .jpg, .jpeg, .pdf, .docx">
+            </div>
+
+            <div id="formContainer3" style="display: none;">
+                <p>2</p>
+                    
+            
+                <label for="file3">Attach Your Signature with Printed Name:</label>
+                <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg">
+            
+                <label for="file4">Attach Supporting Documents (if you have any):</label>
+                <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx">
+            </div>
+
+            <div id="formContainer4" style="display: none;">
+                <p>3</p>
+                <label id="narrate1" for="narrate1" >Incident:</label>
+                <textarea id="narrate1" name="narrate1" rows="16" cols="20" ></textarea><br>
+
+                <label id="provision1" for="remarks" >Remarks:</label>
+                <textarea id="remarks" name="remarks" rows="16" cols="20" ></textarea><br>
+            
+                <label for="name1">Name of the Student:</label>
+                <input type="text" id="name1" name="name1"><br>
+            
+                <label for="section">Year And Section:</label>
+                <input type="text" id="section1" name="section1"><br>
+            
+                <label for="program">Program:</label>
+                <input type="text" id="program" name="program"><br>
+            
+                <label for="designation">Designation:</label>
+                <input type="text" id="designation" name="designation"><br>
+            
+                <label for="file3">Attach Your Signature with Printed Name:</label>
+                <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg">
+            
+                <label for="file4">Attach Supporting Documents (if you have any):</label>
+                <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx">
+            </div>
+
               
             <input id="submit" type="submit" value="Submit">
         </form>
