@@ -205,6 +205,7 @@ td {
   height: 30%;
 }
 
+
 .status-change-confirmation {
   display: none;
   position: fixed;
@@ -242,3 +243,76 @@ td {
   background-color: #f44336;
   color: white;
 }
+
+.navbar1 {
+  width: 800px;
+  height: 100px; /* Adjust the height as needed */
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.nav-item {
+  width: 90px;
+  height: 100px; /* Adjust the height to match .navbar1 */
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 100px;
+}
+
+.nav-item a {
+  text-decoration: none;
+  color: #000000;
+  font-size: 14px;
+}
+
+.nav-item1 {
+  width: 90px;
+  height: 100px; /* Adjust the height to match .navbar1 */
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 100px;
+}
+
+.nav-item1 a {
+  text-decoration: none;
+  color: #000000;
+  font-size: 14px;
+}
+.navbar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+#char-count {
+  position: absolute;
+  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  right: 5px; /* Adjust the distance from the right as needed */
+  font-size: 12px; /* Adjust the font size as needed */
+  color: #999; /* Adjust the color as needed */
+}
+
+#char-count1 {
+  position: absolute;
+  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  right: 5px; /* Adjust the distance from the right as needed */
+  font-size: 12px; /* Adjust the font size as needed */
+  color: #999; /* Adjust the color as needed */
+}
+
+#char-count2 {
+  position: absolute;
+  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  right: 5px; /* Adjust the distance from the right as needed */
+  font-size: 12px; /* Adjust the font size as needed */
+  color: #999; /* Adjust the color as needed */
+}
+

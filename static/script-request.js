@@ -1,44 +1,39 @@
+document.addEventListener('DOMContentLoaded', function () {
+    // Function to toggle the visibility of the containers
+    function toggleContainer(reportsContainerId) {
+        // Hide all containers
+        document.querySelectorAll('#reports-container > div').forEach(function (container) {
+            container.style.display = 'none';
+        });
+    
+        // Show the selected container
+        const selectedContainer = document.getElementById(reportsContainerId);
+        if (selectedContainer) {
+            selectedContainer.style.display = 'block';
+        }
+    }
+    
+    // Add click event listeners to navbar items
+    document.querySelectorAll('.nav-item').forEach(function (navItem) {
+        navItem.addEventListener('click', function (event) {
+            event.preventDefault();
+            const targetId = navItem.getAttribute('data-target');
+            toggleContainer(targetId);
+        });
+    });
+    
+    // Initially show the "Pending" container
+    toggleContainer('pending');
+
+    
+    
+    });
+
 // script.js
 document.addEventListener("DOMContentLoaded", function () {
     var modal = document.getElementById("myModal");
     var btn = document.getElementById("openModalBtn");
     var span = document.getElementById("closeModalBtn");
-    const textarea = document.getElementById("provision");
-    const charCount = document.getElementById("char-count");
-    const textarea1 = document.getElementById("narrate");
-    const charCount1 = document.getElementById("char-count1");
-    const textarea2 = document.getElementById("final");
-    const charCount2 = document.getElementById("char-count2");
-
-    textarea.addEventListener("input", function() {
-        const remainingChars = 250 - textarea.value.length;
-        charCount.textContent = remainingChars + " characters remaining";
-        
-        if (remainingChars < 0) {
-          textarea.value = textarea.value.slice(0, 250);
-          charCount.textContent = "0 characters remaining";
-        }
-      });
-
-      textarea1.addEventListener("input", function() {
-        const remainingChars = 250 - textarea1.value.length;
-        charCount1.textContent = remainingChars + " characters remaining";
-        
-        if (remainingChars < 0) {
-          textarea1.value = textarea1.value.slice(0, 250);
-          charCount1.textContent = "0 characters remaining";
-        }
-      });
-
-      textarea2.addEventListener("input", function() {
-        const remainingChars = 250 - textarea2.value.length;
-        charCount2.textContent = remainingChars + " characters remaining";
-        
-        if (remainingChars < 0) {
-          textarea2.value = textarea2.value.slice(0, 250);
-          charCount2.textContent = "0 characters remaining";
-        }
-      });
 
     btn.onclick = function () {
         var targetScrollPosition = modal.offsetTop;
@@ -355,5 +350,36 @@ function toggleInputFields() {
     });
 
 
+    document.addEventListener('DOMContentLoaded', function () {
+        // Function to toggle the visibility of the containers
+        function toggleContainer(reportsContainerId) {
+            // Hide all containers
+            document.querySelectorAll('#table-container > div').forEach(function (container) {
+                container.style.display = 'none';
+            });
+        
+            // Show the selected container
+            const selectedContainer = document.getElementById(reportsContainerId);
+            if (selectedContainer) {
+                selectedContainer.style.display = 'block';
+            }
+        }
+        
+        // Add click event listeners to navbar items
+        document.querySelectorAll('.nav-item1').forEach(function (navItem) {
+            navItem.addEventListener('click', function (event) {
+                event.preventDefault();
+                const targetId = navItem.getAttribute('data-target');
+                toggleContainer(targetId);
+            });
+        });
+        
+        // Initially show the "Pending" container
+        toggleContainer('pending');
+    
+        
+        
+        });
 
 
+    

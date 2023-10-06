@@ -14,11 +14,13 @@
         <a class="active">Home</a>
         {% if user_source == 'accounts_cics'%}
         <a href="/menu">My Reports</a>
+        <a href="/request">My Request</a>
     {% endif %}
 
     <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
     {% if user_source == 'accounts_coordinators' %}
     <a href="/menu">Reports</a>
+    <a href="/request">Requests</a>
     {% endif %}
 
         <a href="/forms">Forms</a>
@@ -62,14 +64,24 @@
                     <option value="Incident Report">Incident Report</option> 
                 </select><br>
                 <div id="formContainer" style="display: none;">
-                    <label id="provision1" for="provision" >Provision in the Norms of Conduct Violated by the Student/s:</label>
-                    <textarea id="provision" name="provision" rows="16" cols="20" ></textarea><br>
+                    <label id="provision1" for="provision">Provision in the Norms of Conduct Violated by the Student/s:</label>
+                    <div style="position: relative;">
+                    <textarea id="provision" name="provision" rows="4" cols="20" maxlength="250"></textarea>
+                    <div id="char-count">250 characters remaining</div>
+                    </div>
+                
                 
                     <label id="narrate1" for="narrate" >Brief Narration of Facts and Circumstances:</label>
-                    <textarea id="narrate" name="narrate" rows="16" cols="20" ></textarea><br>
+                    <div style="position: relative;">
+                    <textarea id="narrate" name="narrate" rows="4" cols="20" maxlength="250"></textarea><br>
+                    <div id="char-count1">250 characters remaining</div>
+                </div>
                 
                     <label id="final1" for="final" >Final Word</label>
-                    <textarea id="final" name="final" rows="16" cols="20" ></textarea><br>
+                    <div style="position: relative;">
+                    <textarea id="final" name="final" rows="4" cols="20" maxlength="250"></textarea><br>
+                    <div id="char-count2">250 characters remaining</div>
+                </div>
                 
                     <label for="name">Name</label>
                     <input type="text" id="name" name="name"><br>

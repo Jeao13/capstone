@@ -14,6 +14,7 @@ from docx.oxml import OxmlElement
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from docx2pdf import convert
+import pythoncom
 
 
 
@@ -150,6 +151,7 @@ def generate_random_code(length=8):
 
 @app.route('/submit_report', methods=['POST'])
 def submit_report():
+    pythoncom.CoInitialize()
     
     kind = request.form.get('kind')
     if kind == "Formal Complaint":
@@ -173,6 +175,8 @@ def submit_report():
         formatted_date = current_date.strftime("/%m/%d/%Y") 
         random_code = generate_random_code()
 
+        print(pic)
+
         if department == "CAFAD":
             Name_Coordinator = "CAFAD Coordinator"
 
@@ -183,32 +187,28 @@ def submit_report():
         username = session.get('username', '')
         print(username)
         
-        pdf_filename = 'Formal Complain Letter.docx'
+        pdf_filename = 'Formal Complaint Letter.docx'
 
         doc = Document(pdf_filename)
         # Replace placeholders
-        replace_placeholder(doc, "contact_number", number, font_size=10, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "lol", email, font_size=10, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "witness1", witness1, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "witness2", witness2, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "witness3", witness3, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "evidence1", evidence1, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "evidence2", evidence2, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "evidence3", evidence3, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER)
-        replace_placeholder(doc, "NAME", Name_Coordinator, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
-        replace_placeholder1(doc, "image_placholder", pic,indentation_spaces=6,font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
-        
 
-        # Clear and add lines
-        clear_and_add_line(doc, 7, "Student Discipline", font_size=12)
-        clear_and_add_line(doc, 4, "Date:     "+formatted_date)
-        clear_and_add_line(doc, 12, "Name of Student  :     "+name)
-        clear_and_add_line(doc, 13, "College  :     "+department)
-        clear_and_add_line(doc, 14, "Year and Section  :     "+section)
-        clear_and_add_line(doc, 8, "  Alangilan Campus\n", font_size=12)
-        clear_and_add_line(doc, 17, provision, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER,indentation=36)
-        clear_and_add_line(doc, 23, report_text, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, indentation=36)
-        clear_and_add_line(doc, 31, final, font_size=12, alignment=WD_ALIGN_PARAGRAPH.CENTER, indentation=36)
+        replace_table_cell_placeholder1(doc.tables[0], 2, 2, formatted_date,"(date)")
+        replace_table_cell_placeholder1(doc.tables[0], 4, 1, Name_Coordinator,"NAME")
+        replace_table_cell_placeholder1(doc.tables[0], 11, 8, name,"(student)")
+        replace_table_cell_placeholder1(doc.tables[0], 12, 8, department,"(college)")
+        replace_table_cell_placeholder1(doc.tables[0], 13, 8, section,"(section)")
+        replace_table_cell_placeholder1(doc.tables[0], 16, 3, provision,"(provision)")
+        replace_table_cell_placeholder1(doc.tables[0], 23, 3, report_text,"(narration)")
+        replace_table_cell_placeholder1(doc.tables[0], 30, 3, final,"(final)")
+        replace_table_cell_placeholder_with_image(doc.tables[0], 37, 18, pic,"lol")
+        replace_table_cell_placeholder1(doc.tables[0], 38, 18, number,"(number)")
+        replace_table_cell_placeholder1(doc.tables[0], 39, 18, email, "(email)")
+        replace_table_cell_placeholder1(doc.tables[0], 40, 6, witness1,"(witness1)")
+        replace_table_cell_placeholder1(doc.tables[0], 41, 6, witness2,"(witness2)")
+        replace_table_cell_placeholder1(doc.tables[0], 42, 6, witness3,"(witness3)")
+        replace_table_cell_placeholder1(doc.tables[0], 44, 9, evidence1,"(evidence1)")
+        replace_table_cell_placeholder1(doc.tables[0], 45, 9, evidence2,"(evidence2)")
+        replace_table_cell_placeholder1(doc.tables[0], 46, 9, evidence3,"(evidence3)")
 
         doc.save("modified_document.docx")
          # Convert the Word document to PDF using docx2pdf
@@ -372,6 +372,7 @@ def submit_request():
     current_datetime = datetime.now()
         
     username = session.get('username', '')
+    print(username)
     
     # Check if the POST request has the file part for the report file
     if 'file' not in request.files:
@@ -519,6 +520,39 @@ def menu():
     db_cursor.close()
 
     return render_template('menu.html', reports=reports, user_source=user_source, user_course=user_course)
+
+@app.route('/request')
+def requestpage():
+    # Retrieve the username and role from the session
+    username = session.get('username', '')
+    user_role = session.get('role', '')
+    user_source = session.get('source', '')
+
+
+    # Query the database to retrieve reports for the logged-in user
+    db_cursor = db_connection.cursor()
+
+    if user_role == 'accounts_coordinators':
+        # If the user is an accounts coordinator, retrieve the course of the user
+        db_cursor.execute("SELECT course FROM accounts_coordinators WHERE username = %s", (username,))
+        user_course = db_cursor.fetchone()
+
+        if user_course:
+            user_course = user_course[0]  # Extract the course from the result
+
+            # Query reports where the course matches the user's course
+            db_cursor.execute("SELECT * FROM forms_osd WHERE course = %s", (user_course,))
+            reports = db_cursor.fetchall()
+    else:
+        # For other roles, simply retrieve reports for the logged-in user
+        db_cursor.execute("SELECT * FROM forms_osd WHERE username = %s", (username,))
+        reports = db_cursor.fetchall()
+        user_course = ""
+
+    # Close the cursor
+    db_cursor.close()
+
+    return render_template('request.html', reports=reports, user_source=user_source, user_course=user_course)
 
 
 

@@ -12,12 +12,14 @@
     <div class="topnav">
         <a href="/hello">Home</a>
         {% if user_source == 'accounts_cics' %}
-        <a href="/menu">My Reports</a>
+        <a class="active" href="/menu">My Reports</a>
+        <a href="/request">My Request</a>
         {% endif %}
 
         <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
         {% if user_source == 'accounts_coordinators' %}
         <a href="/menu">Reports</a>
+        <a href="/request">Requests</a>
         {% endif %}
         <a href="/forms">Forms</a>
         <a class="logout" href="/logout">Logout</a>
@@ -29,6 +31,11 @@
 
     {% if user_source == 'accounts_coordinators' %}
     <h1>Reports</h1>
+
+    <form id="searchForm">
+        <input type="text" id="searchInput" name="searchQuery" placeholder="Search...">
+        <button type="submit">Search</button>
+    </form>
 
     <form method="POST" action="{{ url_for('delete_all_report', report_id=user_course)}}"
                               onsubmit="return confirm('Are you sure you want to delete all this report?');">

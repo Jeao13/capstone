@@ -14,39 +14,42 @@
         <a href="/hello" >Home</a>
         {% if user_source == 'accounts_cics'%}
         <a href="/menu">My Reports</a>
+        <a href="/menu">My Request</a>
     {% endif %}
 
     <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
-    {% if user_source == 'accounts_coordinators' %}
-    <a href="/menu">Reports</a>
-    {% endif %}
+   
         <a class="active" href="#contact">Forms</a>
         <a class="logout" href="/logout">Logout</a>
         <a class="notif" href="#" id="notifications-bar" >Notifications</a>
       </div>
 
+      {% if user_source == 'accounts_coordinators' %}
+
+      <a href="/menu">Reports</a>
+      {% endif %}
+      
+
       <div id="reports-container">
         {% if user_source == 'accounts_cics' %}
+        <div class="navbar1">
+            <div class="nav-item"><a href="#">Home</a></div>
+            <div class="nav-item"><a href="#">About</a></div>
+            <div class="nav-item"><a href="#">Services</a></div>
+            <div class="nav-item"><a href="#">Contact</a></div>
+        </div>
         {% for row in reports %}
+    {% if row[5] == 'Status1' %}
         <div class="report">
+            <b>Report ID</b> {{ row[0] }}<br>
             <b>Date and Time:</b> {{ row[2] }}<br>
+            <button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button>
             <b>Department:</b> {{ row[4] }}<br>   
             <b>Status:</b> {{ row[5] }}<br>
-            <button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button>
-            {% if row[5] %}
-            <b>Attached Form:</b>
-            <br>
-            <a id="form"href="{{ url_for('download_report_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
-            {% endif %}
-            {% if row[7] %}
-            <br>
-            <b>Attached Supporting Document:</b>
-            <br>
-            <a id="support"href="{{ url_for('download_supporting_document', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a>
-            {% endif %}
         </div>
         <hr class="report-separator">
-        {% endfor %}
+    {% endif %}
+{% endfor %}
         {% endif %}
     </div>
 
