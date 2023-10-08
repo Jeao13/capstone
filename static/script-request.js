@@ -148,6 +148,37 @@ function showSuccessMessage() {
 window.onload = function() {
     showSuccessMessage();
 };
+function openModal5(reportText, reportFileLink, supportingDocumentLink) {
+    var modal = document.getElementById('reportModal5');
+    var reportContent = document.getElementById('reportContent5');
+
+    // Construct the HTML content for the modal
+    var modalContent = '<b>Reason of Rejection:</b><br>' + reportText + '<br><br>';
+
+    if (reportFileLink) {
+        modalContent += '<b>Attached Report File:</b><br>';
+        modalContent += '<a href="' + reportFileLink + '" target="_blank">Download Report File</a><br>';
+    }
+
+    if (supportingDocumentLink) {
+        modalContent += '<b>Attached Supporting Document:</b><br>';
+        modalContent += '<a href="' + supportingDocumentLink + '" target="_blank">Download Supporting Document</a>';
+    }
+
+    // Set the modal content
+    reportContent.innerHTML = modalContent;
+
+    // Show the modal
+    modal.style.display = 'block';
+}
+
+// JavaScript function to close the modal
+function closeModal5() {
+    var modal = document.getElementById('reportModal5');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
 
 function openModal(reportText, reportFileLink, supportingDocumentLink) {
     var modal = document.getElementById('reportModal');
@@ -181,6 +212,37 @@ function closeModal() {
     modal.style.display = 'none';
 }
 
+function openModal1(reportText, reportFileLink, supportingDocumentLink) {
+    var modal = document.getElementById('reportModal1');
+    var reportContent = document.getElementById('reportContent1');
+
+    // Construct the HTML content for the modal
+    var modalContent = '<b>Report Text:</b><br>' + reportText + '<br><br>';
+
+    if (reportFileLink) {
+        modalContent += '<b>Attached Report File:</b><br>';
+        modalContent += '<a href="' + reportFileLink + '" target="_blank">Download Report File</a><br>';
+    }
+
+    if (supportingDocumentLink) {
+        modalContent += '<b>Attached Supporting Document:</b><br>';
+        modalContent += '<a href="' + supportingDocumentLink + '" target="_blank">Download Supporting Document</a>';
+    }
+
+    // Set the modal content
+    reportContent.innerHTML = modalContent;
+
+    // Show the modal
+    modal.style.display = 'block';
+}
+
+// JavaScript function to close the modal
+function closeModal1() {
+    var modal = document.getElementById('reportModal1');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
 
 // Add an event listener for the search button in the "Tag Sanction" modal
 document.addEventListener("DOMContentLoaded", function () {
@@ -379,4 +441,59 @@ function toggleInputFields() {
     });
 
 
+      function openModal1() {
+        const modal = document.getElementById('modalContainer6');
+        modal.style.display = 'block';
+
+        
     
+    }
+    function closeModal7() {
+        var modal = document.getElementById('modalContainer6');
+    
+        // Hide the modal
+        modal.style.display = 'none';
+    }
+    
+    
+    
+    function openModal2() {
+        const modal = document.getElementById('modalContainer');
+        modal.style.display = 'block';
+
+        
+    
+    }
+    function closeModal6() {
+        var modal = document.getElementById('modalContainer');
+    
+        // Hide the modal
+        modal.style.display = 'none';
+    }
+    
+
+    document.getElementById('statusChangeForm').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent the default form submission behavior
+    
+        const reason = document.getElementById('remarks').value;
+        const reportId = document.getElementById('reportIdInput').value; // Assuming you have an input field for reportId
+    
+        // Send an AJAX request to the server to save the reason in the database
+        fetch('/save-reason', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ reason, reportId }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response from the server (e.g., show a success message)
+            console.log(data);
+        })
+        .catch(error => {
+            // Handle any errors
+            console.error(error);
+        });
+    });
+

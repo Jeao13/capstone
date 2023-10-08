@@ -10,6 +10,7 @@ from docx import Document
 from docx.shared import Pt, RGBColor, Inches,Cm
 from werkzeug.utils import secure_filename
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -116,50 +117,57 @@ def replace_table_cell_placeholder1(table, row_index, col_index, new_text, place
     
     # Flag to track if the placeholder was found and replaced
     placeholder_replaced = False
+    if new_text == "":
+        for paragraph in cell.paragraphs:
+            for run in paragraph.runs:
+                if placeholder in run.text:
+                    
+                    run.text = run.text.replace(placeholder, "")
+                    placeholder_replaced = True
 
-    # Clear the existing text in the cell and replace the placeholder
-    for paragraph in cell.paragraphs:
-        for run in paragraph.runs:
-            if placeholder in run.text:
-                
-                run.text = run.text.replace(placeholder, new_text)
-                placeholder_replaced = True
+        # Add the new text to the cell if the placeholder was not found
+        if not placeholder_replaced:
+            cell.text = new_text
+    else:
+        for paragraph in cell.paragraphs:
+            for run in paragraph.runs:
+                if placeholder in run.text:
+                    
+                    run.text = run.text.replace(placeholder, new_text)
+                    placeholder_replaced = True
 
-    # Add the new text to the cell if the placeholder was not found
-    if not placeholder_replaced:
-        cell.text = new_text
+        # Add the new text to the cell if the placeholder was not found
+        if not placeholder_replaced:
+            cell.text = new_text
 
-def toggle_table_cell_checkbox(table, row_index, col_index, checkbox_state):
+
+def toggle_table_cell_checkbox(table, row_index, col_index, status):
     cell = table.cell(row_index, col_index)
-    
-    # Iterate through the elements in the cell
-    for element in cell._element:
-        if element.tag.endswith('tcBorders'):
-            continue  # Skip table cell borders
+    print(status)
+    if status == "checked":
+        for paragraph in cell.paragraphs:
+            for run in paragraph.runs:
+                run.text = ""
+        cell.text = "☑"
 
-        if element.tag.endswith('tcContent'):
-            for p in element.iter():
-                # Check if the element is a checkbox
-                if p.tag.endswith('sdt'):
-                    for sdtContent in p.iter():
-                        if sdtContent.tag.endswith('fldSimple'):
-                            # Find the checkbox value
-                            w_t = sdtContent.find('.//w:t', namespaces=nsmap)
-                            if w_t is not None:
-                                # Toggle the checkbox value based on input
-                                if checkbox_state == "Check":
-                                    w_t.text = "X"
-                                elif checkbox_state == "Not Check":
-                                    w_t.text = " "
-                # Add a new checkbox if it doesn't exist
-                elif p.tag.endswith('p'):
-                    new_checkbox = etree.Element("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}fldSimple")
-                    checkbox_content = etree.SubElement(new_checkbox, "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
-                    if checkbox_state == "Check":
-                        checkbox_content.text = "X"
-                    else:
-                        checkbox_content.text = " "
-                    p.append(new_checkbox)
+        # Center-align the text horizontally
+        for paragraph in cell.paragraphs:
+            for run in paragraph.runs:
+                run.font.size = Pt(11)  # Adjust font size if needed
+                paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    else:
+        for paragraph in cell.paragraphs:
+            for run in paragraph.runs:
+                run.text = ""
+        cell.text = "☐"
+
+        # Center-align the text horizontally
+        for paragraph in cell.paragraphs:
+            for run in paragraph.runs:
+                run.font.size = Pt(11)  # Adjust font size if needed
+                paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+
 
 
 def replace_table_cell_placeholder_with_image(table, row_index, col_index, image_path, placeholder, indentation_spaces=0):
@@ -403,10 +411,11 @@ def submit_report():
             flash('The report is submitted', 'success')
             return redirect('/hello')
 
-@app.route('/submit_request', methods=['POST'])
+@app.route('/submit_request', methods=['GET', 'POST'])
 def submit_request():
     pythoncom.CoInitialize()
     kind = request.form.get('forms')
+    print(kind)
     if kind == "Temporary Gate Pass":
 
         remarks = request.form.get('remarks')
@@ -499,9 +508,18 @@ def submit_request():
             return redirect('/hello')
         
     elif kind == "Request for Non-Wearing of Uniform":
-
+        fieldwork = request.form.get('fieldwork')
+        prolonged = request.form.get('prolonged')
+        foreign = request.form.get('foreign')
+        pregnant = request.form.get('pregnant')
+        cases = request.form.get('cases')
+        majeure = request.form.get('majeure')
+        internship = request.form.get('internship')
+        specify = request.form.get('specify')
         remarks = request.form.get('remarks')
         department = request.form.get('department')
+        specify1 = request.form.get('specifyTextarea')
+        print(specify1)
         print(department)
         section = request.form.get('section2')
         program = request.form.get('program')
@@ -509,9 +527,50 @@ def submit_request():
         random_code = generate_random_code()
         current_date = current_datetime.date()
         formatted_date = current_date.strftime("/%m/%d/%Y") 
+        pic = request.files['file3']
 
         student = session.get('namestudent', '') 
         username = session.get('username', '')
+
+        if fieldwork == "fieldwork":
+            status = "checked"
+        else:
+            status = "not"
+
+        if prolonged == "prolonged":
+            status1 = "checked"
+        else:
+            status1 = "not"
+
+        if foreign == "foreign":
+            status2 = "checked"
+        else:
+            status2 = "not"
+
+        if pregnant == "pregnant":
+            status3 = "checked"
+        else:
+            status3 = "not"
+
+        if cases == "cases":
+            status4 = "checked"
+        else:
+            status4 = "not"
+
+        if majeure == "majeure":
+            status5 = "checked"
+        else:
+            status5 = "not"
+
+        if internship == "internship":
+            status6 = "checked"
+        else:
+            status6 = "not"
+
+        if specify == "specify":
+            status7 = "checked"
+        else:
+            status7 = "not"
 
         if department == "CAFAD":
             Name_Coordinator1 = "CAFAD Coordinator"
@@ -522,7 +581,27 @@ def submit_request():
         pdf_filename = 'Request for Non-Wearing of Uniform.docx'
         doc = Document(pdf_filename)
 
-        toggle_table_cell_checkbox(doc.tables[0], 9, 1, "Check")
+        toggle_table_cell_checkbox(doc.tables[0], 6, 0, status)
+        toggle_table_cell_checkbox(doc.tables[0], 7, 0, status1)
+        toggle_table_cell_checkbox(doc.tables[0], 8, 0, status2)
+        toggle_table_cell_checkbox(doc.tables[0], 9, 0, status3)
+        toggle_table_cell_checkbox(doc.tables[0], 10, 0, status4)
+        toggle_table_cell_checkbox(doc.tables[0], 11, 0, status5)
+        toggle_table_cell_checkbox(doc.tables[0], 12, 0, status6)
+        toggle_table_cell_checkbox(doc.tables[0], 13, 0, status7)
+
+
+        replace_table_cell_placeholder1(doc.tables[0], 16, 1, formatted_date,"(date)")
+        replace_table_cell_placeholder1(doc.tables[0], 13, 2, specify1,"(specify)")
+        replace_table_cell_placeholder1(doc.tables[0], 2, 4, student,"(name)")
+        replace_table_cell_placeholder1(doc.tables[0], 3, 4, department,"(college)")
+        replace_table_cell_placeholder1(doc.tables[0], 4, 4, program,"(program)")
+        replace_table_cell_placeholder1(doc.tables[0], 2, 10, username,"(srcode)")
+        replace_table_cell_placeholder1(doc.tables[0], 4, 10, section,"(section)")
+        replace_table_cell_placeholder_with_image(doc.tables[0], 16, 1, pic,"(signature)",29)
+
+        
+
 
         
 
@@ -532,16 +611,16 @@ def submit_request():
 
     
 
-        file_name = f'{random_code}_Temporary Gate Pass'
+        file_name = f'{random_code}_Request for Non-Wearing of Uniform'
         with open(pdf_path, "rb") as pdf_file:
             pdf_data = pdf_file.read()
         
         
-        if 'file5' not in request.files:
+        if 'file6' not in request.files:
             flash('No supporting document file part')
             return redirect(request.url)
         
-        support_file = request.files['file5']
+        support_file = request.files['file6']
         
         # Check if the user submitted an empty supporting document file input
     
@@ -561,8 +640,8 @@ def submit_request():
             
             # Insert the report with file information into the database, including file data
             db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course, report, file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                            (random_code, department, remarks, file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                            (random_code, department,file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
             db_connection.commit()
             db_cursor.close()
             os.remove("modified_document.docx")
@@ -570,6 +649,41 @@ def submit_request():
             
             flash('Report submitted successfully')
             return redirect('/hello')
+        
+
+@app.route('/submit_approve', methods=['GET', 'POST'])
+def submit_approve():
+    remarks = request.form.get('remarks')
+    report_id = session.get('Idreport', '') 
+    modified_file = request.files['file4']
+    support_data = modified_file.read()
+    print(report_id)
+    print(remarks)
+    status = "Approved"
+
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("UPDATE forms_osd SET remarks = %s, status = %s, file_form = %s WHERE form_id = %s",(remarks,status,support_data,report_id))
+    db_connection.commit()
+    db_cursor.close()
+
+    
+    return redirect('/request')
+
+@app.route('/submit_reject', methods=['GET', 'POST'])
+def submit_reject():
+    remarks = request.form.get('remarks')
+    report_id = session.get('Idreport', '') 
+    print(report_id)
+    print(remarks)
+    status = "Rejected"
+
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("UPDATE forms_osd SET remarks = %s, status = %s WHERE form_id = %s",(remarks,status,report_id))
+    db_connection.commit()
+    db_cursor.close()
+
+    
+    return redirect('/request')
 
 @app.route('/submit_sanction', methods=['POST'])
 def submit_sanction():
@@ -673,7 +787,7 @@ def menu():
 
     return render_template('menu.html', reports=reports, user_source=user_source, user_course=user_course)
 
-@app.route('/request')
+@app.route('/request', methods=['GET', 'POST'])
 def requestpage():
     # Retrieve the username and role from the session
     username = session.get('username', '')
@@ -707,6 +821,13 @@ def requestpage():
     return render_template('request.html', reports=reports, user_source=user_source, user_course=user_course)
 
 
+@app.route('/save_Id', methods=['GET', 'POST'])
+def save_Id():
+    report_id = request.form.get('reportId')
+    print("Received report_id:", report_id)
+    session['Idreport'] = report_id
+    return '', 204
+        
 
 @app.route('/search_students', methods=['POST'])
 def search_students():
@@ -1064,6 +1185,33 @@ def delete_report(report_id):
     db_cursor.close()
 
     return redirect(url_for('menu'))
+
+@app.route('/delete_report1/<string:report_id>', methods=['POST'])
+def delete_report1(report_id):
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("DELETE FROM forms_osd WHERE form_id = %s;", (report_id,))
+    db_connection.commit()  # Make sure to commit the changes to the database
+    db_cursor.close()
+
+    return redirect(url_for('requestpage'))
+
+@app.route('/delete_all_report1/<string:report_id>/<string:status>', methods=['POST'])
+def delete_all_report1(report_id, status):
+    if status == "Result":
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("DELETE FROM forms_osd WHERE course = %s AND status = 'Approved' OR status = 'Rejected';", (report_id,))
+        db_connection.commit()  # Make sure to commit the changes to the database
+        db_cursor.close()
+        return redirect(url_for('requestpage'))
+        
+    else:
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("DELETE FROM forms_osd WHERE course = %s AND status = %s;", (report_id, status))
+        db_connection.commit()  # Make sure to commit the changes to the database
+        db_cursor.close()
+        return redirect(url_for('requestpage'))
+
+    
 
 @app.route('/delete_all_report/<string:report_id>', methods=['POST'])
 def delete_all_report(report_id):

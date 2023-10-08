@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 <head>
     <link rel="stylesheet" href='/static/style.css' />
@@ -33,7 +32,7 @@
     {% endif %}
 
     {% if user_source == 'accounts_coordinators' %}
-    <h1>Reports</h1>
+    <h1>Request</h1>
     <div class="navbar-container">
         
         <div class="navbar1">
@@ -44,12 +43,15 @@
         </div>
         </div>
 
-    <form method="POST" action="{{ url_for('delete_all_report', report_id=user_course)}}"
-                              onsubmit="return confirm('Are you sure you want to delete all this report?');">
-                            <button type="submit">Delete All Report</button>
-                        </form>
+   
     <div id="table-container">
+        
         <div id="pending">
+            <form method="POST" action="{{ url_for('delete_all_report1', report_id=user_course, status="Pending")}}"
+        onsubmit="return confirm('Are you sure you want to delete all this report?');">
+      <button type="submit">Delete All Report</button> 
+  </form>
+  {% if reports|selectattr('5', 'equalto', 'Pending')|list %}
         <table>
             <thead>
                 <tr>
@@ -66,8 +68,10 @@
                 </tr>
             </thead>
             <tbody>
+                
     
                 {% for row in reports|sort(attribute='2', reverse=true) %}
+                
                 {% if row[5] == 'Pending' %}
                 <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
                 <tr>
@@ -85,7 +89,6 @@
                         onsubmit="return confirmStatusChange('{{ row[0] }}')();">
                         <select name="new_status">
                             <option value="Ongoing">Ongoing</option>
-                            <option value="Result">Result</option>
             
                         </select>
                         <button type="submit">Change</button>
@@ -93,7 +96,7 @@
                     </td>
                     <td>
                         <!-- Add a form to change the status -->
-                        <form method="POST" action="{{ url_for('delete_report', report_id=row[0]) }}"
+                        <form method="POST" action="{{ url_for('delete_report1', report_id=row[0]) }}"
                               onsubmit="return confirm('Are you sure you want to delete this report?');">
                             <button type="submit">Delete</button>
                         </form>
@@ -104,9 +107,18 @@
                 
             </tbody>
         </table>
+        {% else %}
+        <p>No pending requests</p>
+        {% endif %}
     </div>
 
     <div id="ongoing">
+        <form method="POST" action="{{ url_for('delete_all_report1', report_id=user_course, status="Ongoing")}}"
+        onsubmit="return confirm('Are you sure you want to delete all this report?');">
+      <button type="submit">Delete All Report</button> 
+  </form>
+  {% if reports|selectattr('5', 'equalto', 'Ongoing')|list %}
+        
         <table>
             <thead>
                 <tr>
@@ -133,25 +145,22 @@
                     <td>{{ row[2] }}</td>
                     <td>{{ row[4] }}</td>
                     <td>{{ row[5] }}</td>
-                    <td><a href="{{ url_for('download_report_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
-                    <td><a href="{{ url_for('download_supporting_document', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
+                    <td><a href="{{ url_for('download_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
+                    <td><a href="{{ url_for('download_supporting_document1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
                     <td><button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
                     <td>
-                        <!-- Add a form to change the status -->
-                        <form id="statusChangeForm" method="POST" action="{{ url_for('change_report_status1', report_id=row[0]) }}"
-                        onsubmit="return confirmStatusChange('{{ row[0] }}')();">
-                        <select name="new_status">
-                            <option value="Ongoing">Ongoing</option>
-                            <option value="Approved">Approved</option>
-                            <option value="Rejected">Rejected</option>
-                            
-                        </select>
-                        <button type="submit">Change</button>
+                        <form method="POST" action="/save_Id">
+                        <button class="view-report-button" onclick="openModal1('{{ row[0] }}')">Approved</button>
+                         <input type="hidden" id="reportId" name="reportId" value="{{ row[0] }}">
+                         </form>
+                        <form method="POST" action="/save_Id">
+                        <button class="view-report-button" onclick="openModal2('{{ row[0] }}')">Rejected</button>
+                        <input type="hidden" id="reportId" name="reportId" value="{{ row[0] }}">
                     </form>
                     </td>
                     <td>
                         <!-- Add a form to change the status -->
-                        <form method="POST" action="{{ url_for('delete_report', report_id=row[0]) }}"
+                        <form method="POST" action="{{ url_for('delete_report1', report_id=row[0]) }}"
                               onsubmit="return confirm('Are you sure you want to delete this report?');">
                             <button type="submit">Delete</button>
                         </form>
@@ -162,9 +171,17 @@
                 
             </tbody>
         </table>
+        {% else %}
+        <p>No ongoing requests</p>
+        {% endif %}
     </div>
 
     <div id="result">
+        <form method="POST" action="{{ url_for('delete_all_report1', report_id=user_course, status="Result")}}"
+        onsubmit="return confirm('Are you sure you want to delete all this report?');">
+      <button type="submit">Delete All Report</button> 
+  </form>
+  {% if reports|selectattr('5', 'equalto', 'Approved')|list or reports|selectattr('5', 'equalto', 'Rejected')|list %}
         <table>
             <thead>
                 <tr>
@@ -175,12 +192,13 @@
                     <th>Status</th>
                     <th>Attached Form</th>
                     <th>Attached Supporting Document</th>
-                    <th>Action</th>
+                    <th>Report</th>
                     <th>Delete Report</th>
+                    <th>Remarks</th>
                 </tr>
             </thead>
             <tbody>
-    
+                
                 {% for row in reports|sort(attribute='2', reverse=true) %}
                 {% if row[5] == 'Approved' or row[5] == 'Rejected' %}
                 <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
@@ -190,22 +208,26 @@
                     <td>{{ row[2] }}</td>
                     <td>{{ row[4] }}</td>
                     <td>{{ row[5] }}</td>
-                    <td><a href="{{ url_for('download_report_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
-                    <td><a href="{{ url_for('download_supporting_document', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
+                    <td><a href="{{ url_for('download_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
+                    <td><a href="{{ url_for('download_supporting_document1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
                     <td><button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
                     <td>
                         <!-- Add a form to change the status -->
-                        <form method="POST" action="{{ url_for('delete_report', report_id=row[0]) }}"
+                        <form method="POST" action="{{ url_for('delete_report1', report_id=row[0]) }}"
                               onsubmit="return confirm('Are you sure you want to delete this report?');">
                             <button type="submit">Delete</button>
                         </form>
                     </td>
+                    <td><button class="view-report-button" onclick="openModal5('{{ row[12] }}')">View Remarks</button></td>
                 </tr>
                 {% endif %}
                 {% endfor %}
                 
             </tbody>
         </table>
+        {% else %}
+        <p>No results</p>
+        {% endif %}
     </div>
     </div>
 {% endif %}
@@ -269,11 +291,11 @@
         </div>
         <div id="result" style="display: none;">
             {% for row in reports %}
-            {% if row[5] == 'Result' %}
+            {% if row[5] == 'Approved' or row[5] == 'Rejected' %}
                 <div class="report">
                     <b>Report ID</b> {{ row[0] }}<br>
                     <b>Date and Time:</b> {{ row[2] }}<br>
-                    <button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button>
+                    <button class="view-report-button" onclick="openModal('{{ row[12] }}')">View Remarks</button>
                     <b>Department:</b> {{ row[4] }}<br>   
                     <b>Status:</b> {{ row[5] }}<br>
                 </div>
@@ -289,11 +311,46 @@
     </div>
 
     <!-- The Modal -->
+    <div class="modal" id="modalContainer6">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal7()">&times;</span>
+             <form id="statusChangeForm" method="POST" action="/submit_approve" enctype="multipart/form-data">
+            <label id="provision1" for="remarks" >Message:</label><br>
+            <textarea id="remarks" name="remarks" rows="16" cols="100" style="resize: none;" ></textarea>
+            <label for="file4">Attach the Modified Document:</label>
+            <input type="file" name="file4" id="file4" accept=".pdf"><br><br>
+            <button type="submit">Change</button>
+            </form>
+        </div>
+    </div>
+
     <div class="modal" id="reportModal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <div id="reportContent"></div>
         </div>
     </div>
+
+    <div class="modal" id="reportModal5">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal5()">&times;</span>
+            <div id="reportContent5"></div>
+        </div>
+    </div>
+
+    <div id="modalContainer" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal6()">&times;</span>
+            <form id="statusChangeForm" method="POST" action="/submit_reject">
+            <label id="provision1" for="remarks" >Reasons for Rejection:</label><br>
+            <textarea id="remarks" name="remarks" rows="16" cols="100" style="resize: none;" ></textarea>
+           
+            <button type="submit">Change</button>
+          
+        </form>
+        </div>
+        
+    </div>
+    
 </body>
 </html>

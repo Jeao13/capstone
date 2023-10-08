@@ -182,15 +182,8 @@
     <div class="modal-content">
         <span class="close" id="closeModalBtn3">&times;</span>
         <h3>Request Form</h3>
-        <form action="/submit_request" method="POST" enctype="multipart/form-data">
-            <label for="department">Department:</label> 
-            <select name="department" id="department">
-                <option value="" selected disabled>Select the Department:</option> 
-                <option value="CAFAD">CAFAD</option> 
-                <option value="CICS">CICS</option> 
-                <option value="CIT">CIT</option> 
-                <option value="COE">COE</option> 
-            </select><br><br>
+       
+            
 
             <label for="forms">Forms:</label> 
             <select name="forms" id="forms" required onchange="toggleInputFields1()"> 
@@ -202,62 +195,125 @@
             </select><br><br>
 
             <div id="formContainer2" style="display: none;">
+                <form action="/submit_request" method="POST" enctype="multipart/form-data">
+                <label for="department">Department:</label> 
+            <select name="department" id="department">
+                <option value="" selected disabled>Select the Department:</option> 
+                <option value="CAFAD">CAFAD</option> 
+                <option value="CICS">CICS</option> 
+                <option value="CIT">CIT</option> 
+                <option value="COE">COE</option> 
+            </select><br><br>
 
                 <label id="provision1" for="remarks" >Remarks:</label>
-                <textarea id="remarks" name="remarks" rows="16" cols="20" ></textarea><br>
+                <textarea id="remarks" name="remarks" rows="16" cols="20" required ></textarea><br>
             
             
                 <label for="section">Year And Section:</label>
-                <input type="text" id="section2" name="section2" ><br>
+                <input type="text" id="section2" name="section2" required><br>
             
                 <label for="program">Program:</label>
-                <input type="text" id="program" name="program" ><br> 
+                <input type="text" id="program" name="program" required><br> 
             
             
                 <label for="file5">Attach Supporting Documents (if you have any):</label>
-                <input type="file" name="file5" id="file5" accept=".png, .jpg, .jpeg, .pdf, .docx">
+                <input type="file" name="file5" id="file5" accept=".png, .jpg, .jpeg, .pdf, .docx" required>
+                <input type="hidden" id = "forms"name="forms" value="Temporary Gate Pass">
+                <input id="submit" type="submit" value="Submit">
+                </form>
             </div>
-
+            
             <div id="formContainer3" style="display: none;">
-                <p>2</p>
+                <form action="/submit_request" method="POST" enctype="multipart/form-data">
+                    <label for="department">Department:</label> 
+            <select name="department" id="department">
+                <option value="" selected disabled>Select the Department:</option> 
+                <option value="CAFAD">CAFAD</option> 
+                <option value="CICS">CICS</option> 
+                <option value="CIT">CIT</option> 
+                <option value="COE">COE</option> 
+            </select><br><br>
                     
+
+                <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork">
+                <label for="fieldwork"> Classes with fieldwork or workshop.</label><br>
+                <input type="checkbox" id="prolonged" name="prolonged" value="prolonged">
+                <label for="prolonged"> Classes that require prolonged standing (such as architectural drafting classes).</label><br>
+                <input type="checkbox" id="foreign" name="foreign" value="foreign">
+                <label for="foreign"> Foreign students who are enrolled only on short special courses.</label><br>
+                <input type="checkbox" id="pregnant" name="pregnant" value="pregnant">
+                <label for="pregnant"> Students who are pregnant.</label><br>
+                <input type="checkbox" id="cases" name="cases" value="cases">
+                <label for="cases"> Special cases e.g.: students who are temporarily incapacitated or with permanent physical disability; students who are on special training for sports/cultural events, etc.</label><br>
+                <input type="checkbox" id="majeure" name="majeure" value="majeure">
+                <label for="majeure">Force majeure (fire, flood, other emergency situation)</label><br>
+                <input type="checkbox" id="internship" name="internship" value="internship">
+                <label for="internship">Students who are enrolled in Internship Training Program (ITP) or On-the-Job Training (OJT) whose training company or office is not BatStateU itself and enter the campus for various purposes during the training period.</label><br>
+                <input type="checkbox" id="specify" name="specify" value="specify">
+                <label for="specify">Others, please specify:</label><br><br>
+                
+                <textarea id="specifyTextarea" name="specifyTextarea" rows="4" cols="50"></textarea>
+                
+             
+            
+            
+                <label for="section">Year And Section:</label>
+                <input type="text" id="section2" name="section2" required><br>
+            
+                <label for="program">Program:</label>
+                <input type="text" id="program" name="program" required><br> 
             
                 <label for="file3">Attach Your Signature with Printed Name:</label>
-                <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg">
+                <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg" required>
             
-                <label for="file4">Attach Supporting Documents (if you have any):</label>
-                <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx">
+                <label for="file6">Attach Supporting Documents (if you have any):</label>
+                <input type="file" name="file6" id="file6" accept=".png, .jpg, .jpeg, .pdf, .docx" required>
+                <input type="hidden" name="forms" value="Request for Non-Wearing of Uniform">
+                <input id="submit" type="submit" value="Submit">
+            </form>
             </div>
 
             <div id="formContainer4" style="display: none;">
-                <p>3</p>
+                <form action="/submit_request" method="POST" enctype="multipart/form-data">
+                    <label for="department">Department:</label> 
+            <select name="department" id="department">
+                <option value="" selected disabled>Select the Department:</option> 
+                <option value="CAFAD">CAFAD</option> 
+                <option value="CICS">CICS</option> 
+                <option value="CIT">CIT</option> 
+                <option value="COE">COE</option> 
+            </select><br><br>
                 <label id="narrate1" for="narrate1" >Incident:</label>
-                <textarea id="narrate1" name="narrate1" rows="16" cols="20" ></textarea><br>
+                <textarea id="narrate1" name="narrate1" rows="16" cols="20" required></textarea><br>
 
                 <label id="provision1" for="remarks" >Remarks:</label>
-                <textarea id="remarks" name="remarks" rows="16" cols="20" ></textarea><br>
+                <textarea id="remarks" name="remarks" rows="16" cols="20" required></textarea><br>
             
                 <label for="name1">Name of the Student:</label>
-                <input type="text" id="name1" name="name1"><br>
+                <input type="text" id="name1" name="name1"required><br>
             
                 <label for="section">Year And Section:</label>
-                <input type="text" id="section1" name="section1"><br>
+                <input type="text" id="section1" name="section1"required><br>
             
                 <label for="program">Program:</label>
-                <input type="text" id="program" name="program"><br>
+                <input type="text" id="program" name="program"required>
+                <br>
             
                 <label for="designation">Designation:</label>
-                <input type="text" id="designation" name="designation"><br>
+                <input type="text" id="designation" name="designation"required><br>
             
                 <label for="file3">Attach Your Signature with Printed Name:</label>
-                <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg">
+                <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
             
                 <label for="file4">Attach Supporting Documents (if you have any):</label>
-                <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx">
+                <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx"required>
+                <input type="hidden" name="forms" value="Request for New ID">
+                <input id="submit" type="submit" value="Submit">
+            </form>
             </div>
 
               
-            <input id="submit" type="submit" value="Submit">
+            
         </form>
     </div>
 </div>

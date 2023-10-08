@@ -382,6 +382,25 @@ function toggleInputFields() {
         });
     });
 
+$(document).ready(function() {
+    // When the page is loaded, check the initial state of the checkbox
+    toggleSpecifyTextarea();
 
+    // Attach a change event handler to the checkbox
+    $("#specify").change(function() {
+        toggleSpecifyTextarea();
+    });
+
+    function toggleSpecifyTextarea() {
+        // Check if the checkbox is checked
+        if ($("#specify").is(":checked")) {
+            // If checked, show the text area
+            $("#specifyTextarea").show();
+        } else {
+            // If not checked, hide the text area and clear its value
+            $("#specifyTextarea").hide().val("");
+        }
+    }
+});
 
 

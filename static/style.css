@@ -316,3 +316,24 @@ td {
   color: #999; /* Adjust the color as needed */
 }
 
+#closeModal {
+    margin-top: 10px;
+    background-color: #008CBA;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    float: right;
+}
+
+/* CSS for the close button */
+.close-button {
+  position: absolute;
+  top: 10px; /* Adjust as needed to position it vertically */
+  left: 10px; /* Adjust as needed to position it horizontally */
+  color: hsl(0, 0%, 99%);
+  font-size: 60px;
+  font-weight: bold;
+  cursor: pointer;
+ 
+}
