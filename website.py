@@ -122,7 +122,7 @@ def replace_table_cell_placeholder1(table, row_index, col_index, new_text, place
             for run in paragraph.runs:
                 if placeholder in run.text:
                     
-                    run.text = run.text.replace(placeholder, "")
+                    run.text = run.text.replace(placeholder, "N/A")
                     placeholder_replaced = True
 
         # Add the new text to the cell if the placeholder was not found
@@ -139,6 +139,28 @@ def replace_table_cell_placeholder1(table, row_index, col_index, new_text, place
         # Add the new text to the cell if the placeholder was not found
         if not placeholder_replaced:
             cell.text = new_text
+
+def replace_table_cell_placeholder2(table, row_index, col_index, new_text, placeholder):
+    cell = table.cell(row_index, col_index)
+    
+    
+    
+    if new_text == "checked":
+        for paragraph in cell.paragraphs:
+            for run in paragraph.runs:
+                if placeholder in run.text:
+                    
+                    run.text = run.text.replace(placeholder, "☑")
+
+    else:
+        for paragraph in cell.paragraphs:
+            for run in paragraph.runs:
+                if placeholder in run.text:
+                    
+                    run.text = run.text.replace(placeholder, "☐")
+                    pdfkit_options
+
+                 
 
 
 def toggle_table_cell_checkbox(table, row_index, col_index, status):
@@ -282,10 +304,25 @@ def submit_report():
         # Check if the user submitted an empty supporting document file input
     
         if support_file.filename == '':
-            support_file = None 
+            support_data = None
+            support_filename = "None"
+            support_extension = "None"
+
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        (random_code, department, report_text,   pdf_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_connection.commit()
+            
+            db_cursor.close()
+            os.remove("modified_document.docx")
+            os.remove("modified_document.pdf")
+            
+            
+            flash('The report is submitted', 'success')
+            return redirect('/hello')
             
         
-        if support_file:
+        else:
             # Securely get the filenames and file extensions
             support_filename = secure_filename(support_file.filename)
         
@@ -383,10 +420,25 @@ def submit_report():
         # Check if the user submitted an empty supporting document file input
     
         if support_file.filename == '':
-            support_file = None 
+            support_data = None
+            support_filename = "None"
+            support_extension = "None"
+
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        (random_code, department, report_text,   pdf_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_connection.commit()
+            
+            db_cursor.close()
+            os.remove("modified_document.docx")
+            os.remove("modified_document.pdf")
+            
+            
+            flash('The report is submitted', 'success')
+            return redirect('/hello')
             
         
-        if support_file:
+        else:
             # Securely get the filenames and file extensions
             support_filename = secure_filename(support_file.filename)
         
@@ -400,7 +452,7 @@ def submit_report():
             # Insert the report with file information into the database, including file data
             db_cursor = db_connection.cursor()
             db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                        (random_code, department, report_text,  pdf_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+                        (random_code, department, report_text,   pdf_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
             db_connection.commit()
             
             db_cursor.close()
@@ -522,6 +574,7 @@ def submit_request():
         print(specify1)
         print(department)
         section = request.form.get('section2')
+        college = request.form.get('college')
         program = request.form.get('program')
         current_datetime = datetime.now()
         random_code = generate_random_code()
@@ -594,13 +647,15 @@ def submit_request():
         replace_table_cell_placeholder1(doc.tables[0], 16, 1, formatted_date,"(date)")
         replace_table_cell_placeholder1(doc.tables[0], 13, 2, specify1,"(specify)")
         replace_table_cell_placeholder1(doc.tables[0], 2, 4, student,"(name)")
-        replace_table_cell_placeholder1(doc.tables[0], 3, 4, department,"(college)")
+        replace_table_cell_placeholder1(doc.tables[0], 3, 4, college,"(college)")
         replace_table_cell_placeholder1(doc.tables[0], 4, 4, program,"(program)")
         replace_table_cell_placeholder1(doc.tables[0], 2, 10, username,"(srcode)")
         replace_table_cell_placeholder1(doc.tables[0], 4, 10, section,"(section)")
         replace_table_cell_placeholder_with_image(doc.tables[0], 16, 1, pic,"(signature)",29)
 
         
+
+
 
 
         
@@ -649,7 +704,133 @@ def submit_request():
             
             flash('Report submitted successfully')
             return redirect('/hello')
+
+            #Request for new id 
+    elif kind == "Request for New ID":
+        fieldwork = request.form.get('fieldwork')
+        prolonged = request.form.get('prolonged')
+        foreign = request.form.get('foreign')
+        pregnant = request.form.get('pregnant')    
+        specify2 = request.form.get('specify1')
+        print(specify2)
+        remarks = request.form.get('remarks')
+        department = request.form.get('department')
+        specify3 = request.form.get('specifyTextarea1')
+        section = request.form.get('section1')
+        college = request.form.get('college')
+        program = request.form.get('program')
+        current_datetime = datetime.now()
+        random_code = generate_random_code()
+        current_date = current_datetime.date()
+        formatted_date = current_date.strftime("/%m/%d/%Y") 
+        pic = request.files['file8']
+        print(pic)
+
+        student = session.get('namestudent', '') 
+        username = session.get('username', '')
+
+        if fieldwork == "fieldwork":
+            status = "checked"
+        else:
+            status = "not"
+
+        if prolonged == "prolonged":
+            status1 = "checked"
+        else:
+            status1 = "not"
+
+        if foreign == "foreign":
+            status2 = "checked"
+        else:
+            status2 = "not"
+
+        if pregnant == "pregnant":
+            status3 = "checked"
+
+        else:
+            status3 = "not"
+
+
+        if specify2 == "specify1":
+            status7 = "checked"
+        else:
+            status7 = "not"
+
+        if department == "CAFAD":
+            Name_Coordinator1 = "CAFAD Coordinator"
+
+        elif department == "CICS":
+            Name_Coordinator1 = "Lovely Rose Tipan Hernandez"
+
+        pdf_filename = 'request for new id.docx'
+        doc = Document(pdf_filename)
+#problem
+        replace_table_cell_placeholder2(doc.tables[0], 7, 0, status,"SHIFT")
+        replace_table_cell_placeholder2(doc.tables[0], 7, 4, status1,"LOST")
+        replace_table_cell_placeholder2(doc.tables[0], 7, 8, status2,"TORN")
+        replace_table_cell_placeholder2(doc.tables[0], 9, 2, status3,"UPDATE")
+        replace_table_cell_placeholder2(doc.tables[0], 9, 4, status7,"OTHERS")
+
         
+        replace_table_cell_placeholder1(doc.tables[0], 2, 3, formatted_date,"(date)")
+        replace_table_cell_placeholder1(doc.tables[0], 10, 1, formatted_date,"(date1)")
+        replace_table_cell_placeholder1(doc.tables[0], 10, 8, Name_Coordinator1,"NAME")
+        replace_table_cell_placeholder1(doc.tables[0], 8, 8, specify3,"(specify)")
+        replace_table_cell_placeholder1(doc.tables[0], 3, 3, student,"(name)")
+        replace_table_cell_placeholder1(doc.tables[0], 4, 3, college,"(college)")
+        replace_table_cell_placeholder1(doc.tables[0], 5, 3, program,"(program)")
+        replace_table_cell_placeholder1(doc.tables[0], 3, 10, username,"(srcode)")
+        replace_table_cell_placeholder1(doc.tables[0], 5, 10, section,"(yearlevel)")
+        replace_table_cell_placeholder_with_image(doc.tables[0], 10, 1, pic,"(signature)",29)
+        
+       
+
+
+        doc.save("modified_document.docx")
+        pdf_path = os.path.join('modified_document.pdf')
+        convert("modified_document.docx", pdf_path)
+
+    
+
+        file_name = f'{random_code}_Request for New ID'
+        with open(pdf_path, "rb") as pdf_file:
+            pdf_data = pdf_file.read()
+        
+        
+        if 'file4' not in request.files:
+            flash('No supporting document file part')
+            return redirect(request.url)
+        
+        support_file = request.files['file4']
+        
+        # Check if the user submitted an empty supporting document file input
+    
+        if support_file.filename == '':
+            support_file = None 
+        
+       
+        
+        if support_file:
+            # Securely get the filenames and file extensions
+           
+            support_filename = secure_filename(support_file.filename)
+            support_extension = os.path.splitext(support_filename)[1]
+            
+        
+            support_data = support_file.read()
+            
+            # Insert the report with file information into the database, including file data
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                            (random_code, department,file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
+            db_connection.commit()
+            db_cursor.close()
+            os.remove("modified_document.docx")
+            os.remove("modified_document.pdf")
+            
+            flash('Report submitted successfully')
+            return redirect('/hello')
+
 
 @app.route('/submit_approve', methods=['GET', 'POST'])
 def submit_approve():

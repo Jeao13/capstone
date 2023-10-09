@@ -316,6 +316,22 @@ td {
   color: #999; /* Adjust the color as needed */
 }
 
+#char-count3 {
+  position: absolute;
+  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  right: 5px; /* Adjust the distance from the right as needed */
+  font-size: 12px; /* Adjust the font size as needed */
+  color: #999; /* Adjust the color as needed */
+}
+
+#char-count4 {
+  position: absolute;
+  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  right: 5px; /* Adjust the distance from the right as needed */
+  font-size: 12px; /* Adjust the font size as needed */
+  color: #999; /* Adjust the color as needed */
+}
+
 #closeModal {
     margin-top: 10px;
     background-color: #008CBA;

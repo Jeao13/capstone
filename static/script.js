@@ -9,6 +9,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const charCount1 = document.getElementById("char-count1");
     const textarea2 = document.getElementById("final");
     const charCount2 = document.getElementById("char-count2");
+    const textarea3 = document.getElementById("incident");
+    const charCount3 = document.getElementById("char-count3");
+    const textarea4 = document.getElementById("remarks");
+    const charCount4 = document.getElementById("char-count4");
 
     textarea.addEventListener("input", function() {
         const remainingChars = 250 - textarea.value.length;
@@ -37,6 +41,26 @@ document.addEventListener("DOMContentLoaded", function () {
         if (remainingChars < 0) {
           textarea2.value = textarea2.value.slice(0, 250);
           charCount2.textContent = "0 characters remaining";
+        }
+      });
+
+      textarea3.addEventListener("input", function() {
+        const remainingChars = 250 - textarea3.value.length;
+        charCount3.textContent = remainingChars + " characters remaining";
+        
+        if (remainingChars < 0) {
+          textarea3.value = textarea1.value.slice(0, 250);
+          charCount3.textContent = "0 characters remaining";
+        }
+      });
+
+      textarea4.addEventListener("input", function() {
+        const remainingChars = 250 - textarea4.value.length;
+        charCount4.textContent = remainingChars + " characters remaining";
+        
+        if (remainingChars < 0) {
+          textarea4.value = textarea4.value.slice(0, 250);
+          charCount4.textContent = "0 characters remaining";
         }
       });
 
@@ -399,6 +423,27 @@ $(document).ready(function() {
         } else {
             // If not checked, hide the text area and clear its value
             $("#specifyTextarea").hide().val("");
+        }
+    }
+});
+
+$(document).ready(function() {
+    // When the page is loaded, check the initial state of the checkbox
+    toggleSpecifyTextarea1();
+
+    // Attach a change event handler to the checkbox
+    $("#specify1").change(function() {
+        toggleSpecifyTextarea1();
+    });
+
+    function toggleSpecifyTextarea1() {
+        // Check if the checkbox is checked
+        if ($("#specify1").is(":checked")) {
+            // If checked, show the text area
+            $("#specifyTextarea1").show();
+        } else {
+            // If not checked, hide the text area and clear its value
+            $("#specifyTextarea1").hide().val("");
         }
     }
 });
