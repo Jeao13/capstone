@@ -447,5 +447,167 @@ $(document).ready(function() {
         }
     }
 });
+document.addEventListener('DOMContentLoaded', function () {
+    const openModalLinks = document.querySelectorAll('.open-modal-link');
+   
+    openModalLinks.forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+         
+            // Call the preview_report_file function with the report ID
+            previewReportFile();
+        });
+    });
+    
+    // Function to call the preview_report_file function with the report ID
+    function previewReportFile() {
+        // Construct the URL for the report with the specific report ID
+        // Show the modal
+        const modal = document.getElementById('Viewform');
+        modal.style.display = 'block';
+    }
+});
+
+// JavaScript to open the modal when the link is clicked
+document.addEventListener('DOMContentLoaded', function () {
+    const openModalLinks = document.querySelectorAll('.open-modal-link1');
+   
+  
+    openModalLinks.forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('data-target');
+        const modal = document.getElementById(targetId);
+        modal.style.display = 'block';
+      });
+    });
+  });
+  
+  function submitForm(reportId) {
+   // Set the reportId value to the hidden input field
+   document.getElementById("reportId_").value = reportId;
+
+    // Add a unique query parameter to the iframe src
+    var iframe = document.getElementById("modalObject");
+    var iframeSrc = iframe.getAttribute("data");
+    var separator = iframeSrc.includes("?") ? "&" : "?";
+    iframe.src = iframeSrc + separator + "timestamp=" + new Date().getTime();
+    
+   // Submit the form
+   document.getElementById("myForm_").submit();
+}
+
+function clearIdreportSession()  {
+    // Clear the 'Idreport' session value
+    fetch('/clear_Idreport', {
+        method: 'POST'
+    })
+    .then(response => {
+        if (response.status === 204) {
+            console.log('Idreport session cleared.');
+        } else {
+            console.error('Failed to clear Idreport session.');
+        }
+    })
+    .catch(error => {
+        console.error('An error occurred while clearing Idreport session:', error);
+    });
+}
 
 
+function closeviewModal() {
+
+
+    var modal = document.getElementById('Viewform');
+
+    // Hide the modal
+    modal.style.display = 'none';
+     // Add a delay before the first reload
+     setTimeout(function() {
+        location.reload();
+
+        // Add a delay before the second reload
+        setTimeout(function() {
+            location.reload();
+        }, 100); // 2 seconds
+    }, 100); // 2 seconds
+    
+}
+
+
+
+
+function closeviewModal1() {
+    var modal = document.getElementById('Viewsupport');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
+
+function loadModalContent() {
+    // Make an AJAX request to get the new content
+    fetch('/load_modal_content', {
+        method: 'GET',
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Update the modal content with the new data
+        const modalContent = document.getElementById('modal-content1');
+        modalContent.innerHTML = data.content;
+
+        // Display the modal
+        const modal = document.getElementById('Viewform');
+        modal.style.display = 'block';
+    })
+    .catch(error => {
+        console.error('Failed to load modal content:', error);
+    });
+}
+
+// JavaScript function to make an AJAX request
+function getAlgorithmResult(complaintText) {
+    // Make an AJAX request to the 'algorithm' endpoint
+    $.ajax({
+        type: "POST",  // Use POST or GET based on your endpoint
+        url: "/algorithm/" + encodeURIComponent(complaintText), // Pass the complaint text as a parameter
+        success: function (response) {
+            // Handle the response here, e.g., display it in a modal
+            openAlgorithmModal(response);
+        },
+        error: function (error) {
+            // Handle errors, if any
+            console.error("Error:", error);
+        }
+    });
+}
+
+function openAlgorithmModal(result) {
+    // Display the result in a modal or any other way you prefer
+    const modal = document.getElementById("myModal21");
+    const offenseList = modal.querySelector("#offense-list");
+
+    // Clear previous content
+    offenseList.innerHTML = '';
+
+
+    if (result && result.top_10_offense_scores) {
+        result.top_10_offense_scores.forEach(offense => {
+            // Create a list item for each offense and score
+            const listItem = document.createElement('li');
+            listItem.textContent = 'Offense ID: ' + offense.offense_id + ', Score: ' + offense.score + '%';
+
+            // Add the list item to the offense list
+            offenseList.appendChild(listItem);
+        });
+    }
+
+    modal.style.display = "block";
+
+    
+}
+function closeAlgoModal() {
+    var modal = document.getElementById('myModal21');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}

@@ -80,8 +80,8 @@
                     <td>{{ row[2] }}</td>
                     <td>{{ row[4] }}</td>
                     <td>{{ row[5] }}</td>
-                    <td><a href="{{ url_for('download_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
-                    <td><a href="{{ url_for('download_supporting_document1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
+                    <td><a href="{{ url_for('preview_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
+                    <td> <a href="{{ url_for('preview_support_file1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
                     <td><button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
                     <td>
                         <!-- Add a form to change the status -->
@@ -145,8 +145,8 @@
                     <td>{{ row[2] }}</td>
                     <td>{{ row[4] }}</td>
                     <td>{{ row[5] }}</td>
-                    <td><a href="{{ url_for('download_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
-                    <td><a href="{{ url_for('download_supporting_document1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
+                    <td><a href="{{ url_for('preview_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
+                    <td><a href="{{ url_for('preview_support_file1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
                     <td><button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
                     <td>
                         <form method="POST" action="/save_Id">
@@ -208,8 +208,8 @@
                     <td>{{ row[2] }}</td>
                     <td>{{ row[4] }}</td>
                     <td>{{ row[5] }}</td>
-                    <td><a href="{{ url_for('download_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
-                    <td><a href="{{ url_for('download_supporting_document1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
+                    <td><a href="{{ url_for('preview_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
+                    <td><a href="{{ url_for('preview_support_file1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
                     <td><button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
                     <td>
                         <!-- Add a form to change the status -->

@@ -3,6 +3,7 @@ import mysql.connector
 import base64
 import io
 import os
+import time
 import random
 import string
 import base64
@@ -18,6 +19,21 @@ from docx2pdf import convert
 import pythoncom
 from datetime import datetime
 from lxml import etree
+from flask_sqlalchemy import SQLAlchemy
+import pandas as pd
+import numpy as np
+from scipy.stats import randint
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_selection import chi2
+from sklearn.model_selection import train_test_split
+from sklearn.svm import LinearSVC
+from sklearn.model_selection import cross_val_score
+from sklearn.metrics import confusion_matrix
+from sklearn import metrics
+from os import urandom
+
 
 nsmap = {
     'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',
@@ -39,6 +55,7 @@ db_connection = mysql.connector.connect(
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
+
 
 pdfkit_options = {
     'page-size': 'A4',
@@ -222,7 +239,7 @@ def generate_random_code(length=8):
 def submit_report():
     pythoncom.CoInitialize()
     
-    kind = request.form.get('kind')
+    kind = request.form.get('forms')
     if kind == "Formal Complaint":
         department = request.form.get('department')
         provision = request.form.get('provision')
@@ -238,7 +255,7 @@ def submit_report():
         evidence1 = request.form.get('witness1')
         evidence2 = request.form.get('witness2')
         evidence3 = request.form.get('witness3')
-        pic = request.files['file2']
+        pic = request.files['file9']
         current_datetime = datetime.now()
         current_date = current_datetime.date()
         formatted_date = current_date.strftime("/%m/%d/%Y") 
@@ -349,7 +366,7 @@ def submit_report():
     else:
         department = request.form.get('department')
         remarks = request.form.get('remarks')
-        report_text = request.form.get('narrate1')
+        report_text = request.form.get('Incident')
         name = request.form.get('name1')
         section = request.form.get('section1')
         designation = request.form.get('designation')
@@ -937,7 +954,7 @@ def index():
 
 @app.route('/menu')
 def menu():
-    # Retrieve the username and role from the session
+    
     username = session.get('username', '')
     user_role = session.get('role', '')
     user_source = session.get('source', '')
@@ -1002,13 +1019,99 @@ def requestpage():
     return render_template('request.html', reports=reports, user_source=user_source, user_course=user_course)
 
 
-@app.route('/save_Id', methods=['GET', 'POST'])
-def save_Id():
-    report_id = request.form.get('reportId')
-    print("Received report_id:", report_id)
-    session['Idreport'] = report_id
-    return '', 204
-        
+@app.route('/algorithm/<complaint_text>', methods=['GET', 'POST'])
+def algorithm(complaint_text):
+
+        # Load the dataset
+    df = pd.read_csv("Grievance_News.csv")
+
+    # Create category_id column
+    df['category_id'] = df['offense_tag'].factorize()[0]
+
+        # Text preprocessing and feature extraction
+    tfidf = TfidfVectorizer(sublinear_tf=True, min_df=5, ngram_range=(1, 2), stop_words='english')
+    features = tfidf.fit_transform(df.grievance).toarray()
+    labels = df.category_id
+
+        # Train and evaluate the model
+    X = df['grievance']
+    y = df['offense_tag']
+
+    # Split the data into train and test sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+    models = [
+        LinearSVC(),
+    ]
+
+    # 5 Cross-validation
+    CV = 5
+    cv_df = pd.DataFrame(index=range(CV * len(models)))
+    entries = []
+    for model in models:
+        model_name = model.__class__.__name__
+        accuracies = cross_val_score(model, features, labels, scoring='accuracy', cv=CV)
+        for fold_idx, accuracy in enumerate(accuracies):
+            entries.append((model_name, fold_idx, accuracy))
+    cv_df = pd.DataFrame(entries, columns=['model_name', 'fold_idx', 'accuracy'])
+
+    # Initialize and train the LinearSVC model
+    model = LinearSVC()
+    model.fit(tfidf.transform(X_train), y_train)
+
+    # Predict on the test set
+    y_pred = model.predict(tfidf.transform(X_test))
+
+        # Sample complaint text
+    complaint = complaint_text
+
+    # Predict offenses for the complaint text
+    decision_scores = model.decision_function(tfidf.transform([complaint]))
+
+    # Convert decision scores to probabilities using softmax
+    def softmax(x):
+        exp_x = np.exp(x - np.max(x))
+        return exp_x / exp_x.sum(axis=1, keepdims=True)
+
+    predicted_probabilities = softmax(decision_scores)
+
+    # Get the top 10 predicted offenses' category IDs in descending order of prediction score
+    top_10_offense_indices = np.argsort(-predicted_probabilities)[0, :10]
+    top_10_offense_ids = model.classes_[top_10_offense_indices]
+
+    # Create a dictionary to store the top 10 predicted offenses and their scores
+    top_10_offense_scores = {}
+    for offense_id, probability in zip(top_10_offense_ids, predicted_probabilities[0, top_10_offense_indices]):
+        top_10_offense_scores[offense_id] = round(probability * 100)  # Convert to whole number percentage
+
+    # Calculate the total score for the top predicted offenses
+    total_score = sum(top_10_offense_scores.values())
+
+    # If the total score is less than 100, distribute the remaining score proportionally
+    remaining_score = 100 - total_score
+    if remaining_score > 0:
+        # Calculate the proportion for each offense based on its probability
+        proportions = [probability for _, probability in zip(top_10_offense_ids, predicted_probabilities[0, top_10_offense_indices])]
+        proportion_sum = sum(proportions)
+
+        # Adjust the scores based on proportions
+        for i, offense_id in enumerate(top_10_offense_scores):
+            additional_score = round(proportions[i] / proportion_sum * remaining_score)
+            top_10_offense_scores[offense_id] += additional_score
+            remaining_score -= additional_score
+            if remaining_score == 0:
+                break
+
+    top_10_offense_scores_list = []
+    for offense_id, score in top_10_offense_scores.items():
+        print(f"Offense ID: {offense_id}, Score: {score}%")
+        top_10_offense_scores_list.append({
+            'offense_id': offense_id,
+            'score': score
+        })
+
+
+    return jsonify(top_10_offense_scores=top_10_offense_scores_list)
 
 @app.route('/search_students', methods=['POST'])
 def search_students():
@@ -1448,6 +1551,145 @@ def fetch_sanctions():
     except Exception as e:
         print("Error converting data to JSON:", str(e))
         return jsonify({"error": "An error occurred while processing the data."}), 500
+    
+
+@app.route('/preview_report_file/<string:report_id>' , methods=['GET'])
+def preview_report_file(report_id):
+    db_cursor = None  # Initialize db_cursor to None
+    
+
+    try:
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("SELECT file_form FROM reports WHERE report_id = %s", (report_id,))
+        file_content = db_cursor.fetchone()
+
+        if file_content:
+            file_content = file_content[0]
+
+            response = send_file(
+                io.BytesIO(file_content),
+                mimetype='application/pdf',
+            )
+            
+            response.headers['Content-Disposition'] = f'inline; filename=report_{report_id}.pdf'
+            
+            return response
+
+    except Exception as e:
+        # Handle any exceptions, e.g., log the error
+        pass  # Add your error handling code here
+
+    finally:
+        if db_cursor is not None:
+            
+            db_cursor.close()  # Close the cursor if it's not None
+
+    # Handle the case where the file was not found
+    return "File not found", 404,
+
+
+@app.route('/preview_support_file/<string:report_id>', methods=['GET'])
+def preview_support_file(report_id):
+    db_cursor = None  # Initialize db_cursor to None
+
+    try:
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("SELECT file_support FROM reports WHERE report_id = %s", (report_id,))
+        file_content = db_cursor.fetchone()
+        db_cursor.execute("SELECT file_support_type FROM reports WHERE report_id = %s", (report_id,))
+        file_type = db_cursor.fetchone()
+
+        if file_content:
+            file_content = file_content[0]
+
+            response = send_file(
+                io.BytesIO(file_content),
+                mimetype='application/octet-stream',
+            )
+
+            response.headers['Content-Disposition'] = f'inline; filename=report_{report_id}.pdf'
+
+            return response
+
+    except Exception as e:
+        # Handle any exceptions, e.g., log the error
+        pass  # Add your error handling code here
+
+    finally:
+        if db_cursor is not None:
+            db_cursor.close()  # Close the cursor if it's not None
+
+    # Handle the case where the file was not found
+    return "File not found", 404
+
+@app.route('/preview_report_file1/<string:report_id>' , methods=['GET'])
+def preview_report_file1(report_id):
+    db_cursor = None  # Initialize db_cursor to None
+    
+
+    try:
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("SELECT file_form FROM forms_osd WHERE form_id = %s", (report_id,))
+        file_content = db_cursor.fetchone()
+
+        if file_content:
+            file_content = file_content[0]
+
+            response = send_file(
+                io.BytesIO(file_content),
+                mimetype='application/pdf',
+            )
+            
+            response.headers['Content-Disposition'] = f'inline; filename=report_{report_id}.pdf'
+            
+            return response
+
+    except Exception as e:
+        # Handle any exceptions, e.g., log the error
+        pass  # Add your error handling code here
+
+    finally:
+        if db_cursor is not None:
+            
+            db_cursor.close()  # Close the cursor if it's not None
+
+    # Handle the case where the file was not found
+    return "File not found", 404,
+
+
+@app.route('/preview_support_file1/<string:report_id>' , methods=['GET'])
+def preview_support_file1(report_id):
+    db_cursor = None  # Initialize db_cursor to None
+    
+
+    try:
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("SELECT file_support FROM forms_osd WHERE form_id = %s", (report_id,))
+        file_content = db_cursor.fetchone()
+
+        if file_content:
+            file_content = file_content[0]
+
+            response = send_file(
+                io.BytesIO(file_content),
+                mimetype='application/pdf',
+            )
+            
+            response.headers['Content-Disposition'] = f'inline; filename=report_{report_id}.pdf'
+            
+            return response
+
+    except Exception as e:
+        # Handle any exceptions, e.g., log the error
+        pass  # Add your error handling code here
+
+    finally:
+        if db_cursor is not None:
+            
+            db_cursor.close()  # Close the cursor if it's not None
+
+    # Handle the case where the file was not found
+    return "File not found", 404,
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
