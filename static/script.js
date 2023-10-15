@@ -103,6 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     span1.onclick = function () {
         modal1.style.display = "none";
+        location.reload()
     };
 
     window.onclick = function (event) {
@@ -209,8 +210,6 @@ function closeModal() {
     // Hide the modal
     modal.style.display = 'none';
 }
-
-
 // Add an event listener for the search button in the "Tag Sanction" modal
 document.addEventListener("DOMContentLoaded", function () {
           // Get references to elements in the "Tag Sanction" modal
@@ -244,52 +243,84 @@ document.addEventListener("DOMContentLoaded", function () {
   
               // Make an AJAX request to the server to fetch student information and sanctions
               $.ajax({
-                  type: "POST",
-                  url: "/lookup_student",
-                  data: { username: username },
-                  success: function (data) {
-                      // Update the DOM elements with the student's name and course
-                      studentName.text(data.Name);
-                      studentCourse.text(data.CourseOrPosition);
-                      
-                      // Make another AJAX request to fetch sanctions
-                      $.ajax({
+                type: "POST",
+                url: "/lookup_student",
+                data: { username: username },
+                success: function (data) {
+                    // Update the DOM elements with the student's name and course
+                    studentName.text(data.Name);
+                    studentCourse.text(data.CourseOrPosition);
+                    
+                    // Make another AJAX request to fetch sanctions
+                    $.ajax({
                         type: "POST",
                         url: "/lookup_sanctions",
                         data: { username: username },
                         success: function (response) {
                             console.log("Sanctions data received:", response);
-                            
-                            // Initialize an empty HTML string to store the formatted sanctions
-                            var formattedSanctions = "";
-                            
-                            // Loop through the list of sanctions and format each one
-                            response.sanctions.forEach(function (sanction) {
-                                // Convert the date_time string to a JavaScript Date object
-                                var date = new Date(sanction.date_time);
                     
-                                // Format the date in your desired way (adjust the format as needed)
-                                var formattedDate = date.toLocaleString(); // Example format: "Month Day, Year Hour:Minute:Second"
+                            if (response.sanctions.length === 0) {
+                                // If there are no sanctions, display a message in the modal
+                                studentSanctions.html("No sanctions");
+                            } else {
+                                // Initialize an empty HTML string to store the formatted sanctions
+                                var formattedSanctions = "";
                     
-                                // Append the formatted sanction to the HTML string
-                                formattedSanctions += '<p><strong>Date:</strong> ' + formattedDate + '</p>';
-                                formattedSanctions += '<p><strong>Sanction:</strong> ' + sanction.sanction + '</p>';
-                                formattedSanctions += '<hr>'; // Add a horizontal line to separate sanctions
+                                response.sanctions.forEach(function (sanction) {
+                                    // Convert the date_time string to a JavaScript Date object
+                                    var date = new Date(sanction.date_time);
+                    
+                                    // Format the date in your desired way (adjust the format as needed)
+                                    var formattedDate = date.toLocaleString(); // Example format: "Month Day, Year Hour:Minute:Second"
+                    
+                                    // Create a delete button with a unique ID based on the sanction ID
+                                    var deleteButtonId = "delete-sanction-" + sanction.sanctions_id;
+                                    formattedSanctions += '<hr>';
+                                    formattedSanctions += '<p><strong>Date:</strong> ' + sanction.sanctions_id + '</p>';
+                                    formattedSanctions += '<p><strong>Date:</strong> ' + formattedDate + '</p>';
+                                    formattedSanctions += '<p><strong>Sanction:</strong> ' + sanction.sanction + '</p>';
+                                    formattedSanctions += '<button class="delete-sanction" id="' + deleteButtonId + '">Delete</button>';
+                                    formattedSanctions += '<hr>'; // Add a horizontal line to separate sanctions
+                                });
+                    
+                                // Update the DOM element with the formatted sanctions
+                                studentSanctions.html(formattedSanctions);
+                            }
+                    
+                            // Now, you need to attach a click event to the delete buttons
+                            $(".delete-sanction").click(function () {
+                                var buttonId = $(this).attr("id");
+                                var sanctionId = buttonId.replace("delete-sanction-", "");
+                                console.log(sanctionId); // Extract the sanction ID from the button ID
+                    
+                                // Make an AJAX request to delete the selected sanction (use the sanctionId)
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/delete_sanction",
+                                    data: { sanctionId: sanctionId },
+                                    success: function (response) {
+                                        // Remove the sanction from the UI
+                                        // You can choose to remove the entire .sanction div or just hide it
+                                        // For example:
+                                        $(this).closest(".sanction").remove();
+                                        $("#searchForm").submit();
+                                    },
+                                    error: function (error) {
+                                        console.error("Error deleting sanction:", error);
+                                    }
+                                });
                             });
-                    
-                            // Update the DOM element with the formatted sanctions
-                            studentSanctions.html(formattedSanctions);
                         },
                         error: function (error) {
                             console.error("Error fetching sanctions:", error);
                         }
                     });
-                  },
-                  error: function (error) {
-                      console.error("Error fetching student data:", error);
-                  }
-              });
-          });
+                },
+                error: function (error) {
+                    console.error("Error fetching student data:", error);
+                }
+            });
+        });
 });
 
 $(document).ready(function() {
@@ -380,6 +411,34 @@ function toggleInputFields() {
             formContainer2.style.display = "none";
             formContainer3.style.display = "none";
             formContainer4.style.display = "block";
+         
+        }
+    }
+
+    function toggleInputFields2() {
+        var kindSelect = document.getElementById("forms1");
+        var formContainer5 = document.getElementById("formContainer5");
+        var formContainer6 = document.getElementById("formContainer6");
+        var formContainer7 = document.getElementById("formContainer7");
+       
+    
+        if (kindSelect.value === "Written Warning") {
+            formContainer5.style.display = "block";
+            formContainer6.style.display = "none";
+            formContainer7.style.display = "none";
+          
+        } 
+        
+        else if (kindSelect.value === "Written Reprimand"){
+            formContainer5.style.display = "none";
+            formContainer6.style.display = "block";
+            formContainer7.style.display = "none";
+        }
+        
+        else {
+            formContainer5.style.display = "none";
+            formContainer6.style.display = "none";
+            formContainer7.style.display = "block";
          
         }
     }
@@ -566,13 +625,18 @@ function loadModalContent() {
 
 // JavaScript function to make an AJAX request
 function getAlgorithmResult(complaintText) {
+
+    // Show the loading screen
+    const loadingScreen = document.getElementById("loading-screen");
+    loadingScreen.style.display = "block";
     // Make an AJAX request to the 'algorithm' endpoint
     $.ajax({
         type: "POST",  // Use POST or GET based on your endpoint
         url: "/algorithm/" + encodeURIComponent(complaintText), // Pass the complaint text as a parameter
         success: function (response) {
             // Handle the response here, e.g., display it in a modal
-            openAlgorithmModal(response);
+            loadingScreen.style.display = "none";
+            openAlgorithmModal(response,complaintText);
         },
         error: function (error) {
             // Handle errors, if any
@@ -581,13 +645,22 @@ function getAlgorithmResult(complaintText) {
     });
 }
 
-function openAlgorithmModal(result) {
+function openAlgorithmModal(result,complain) {
     // Display the result in a modal or any other way you prefer
     const modal = document.getElementById("myModal21");
     const offenseList = modal.querySelector("#offense-list");
+    var reportContent1 = modal.querySelector('#reportContent1');
 
     // Clear previous content
     offenseList.innerHTML = '';
+
+    var modalContent = '';
+
+    console.log(complain)
+    
+ 
+    modalContent += '<b>Report Text:</b><br>' + complain + '<br><br>';
+
 
 
     if (result && result.top_10_offense_scores) {
@@ -600,6 +673,8 @@ function openAlgorithmModal(result) {
             offenseList.appendChild(listItem);
         });
     }
+
+    reportContent1.innerHTML = modalContent;
 
     modal.style.display = "block";
 

@@ -58,7 +58,9 @@ app.secret_key = 'your_secret_key'  # Set a secret key for session management
 
 
 pdfkit_options = {
-    'page-size': 'A4',
+    'page-size': 'Custom',
+    'page-width': '215.9mm',  # 8.5 inches converted to millimeters
+    'page-height': '330.2mm',  # 13 inches converted to millimeters
     'encoding': 'UTF-8',
 }
 
@@ -848,6 +850,506 @@ def submit_request():
             flash('Report submitted successfully')
             return redirect('/hello')
 
+@app.route('/submit_written', methods=['POST'])
+def submit_written():
+    pythoncom.CoInitialize()
+    kind = request.form.get('forms')
+    print(kind)
+    if kind == "Written Warning":
+
+        remarks = request.form.get('remarks')
+        norms = request.form.get('norms')
+        courseorposition = session.get('course', '')
+        print(courseorposition)
+        department = request.form.get('department')
+        sanction = request.form.get('sanctions')
+        students= request.form.get('student')
+        complainant= request.form.get('student2')
+        date2= request.form.get('date2')
+        current_datetime = datetime.now()
+        random_code = generate_random_code()
+        current_date = current_datetime.date()
+        formatted_date = current_date.strftime("/%m/%d/%Y")
+        
+        username = session.get('namestudent', '')
+
+        sanction_mapping = [
+    "12.1.1 - attendance, punctuality, cutting classes",
+"12.1.2 - dress code, uniform",
+"12.1.3 - property misuse",
+"12.1.4 - noise disturbance",
+"12.1.5 - posting violation",
+"12.1.6 - notice removal",
+"12.1.7 - littering",
+"12.1.8 - smoking violation",
+"12.1.9 - trespassing",
+"12.1.10 - misconduct",
+"12.1.11 - harassment",
+"12.1.12 - provocation, fight",
+"12.1.13 - PDA",
+"12.1.14 - truancy",
+        ]
+        sanction_mapping1 = [
+"13.1 - repeat offenses",
+"13.2 - insubordination",
+"13.3 - smoking violation",
+"13.4 - alcohol violation",
+"13.5 - intoxication",
+"13.6 - trespassing",
+"13.7 - property misuse",
+"13.13 - abusive behavior",
+"13.14 - unauthorized membership",
+"13.15 - online misconduct",
+"13.16 - vandalism",
+"13.17 - academic disruption",
+"13.18 - solicitation",
+"13.19 - physical harm",
+"13.20 - weapons possession",
+"13.21 - theft",
+"13.22 - bribery",
+"13.23 - sexual misconduct",
+"13.24 - obscenity",
+"13.25 - defamation",
+"13.26 - physical harm",
+"13.27 - falsification",
+"13.28 - disrepute",
+"13.29 - riot",
+"13.30 - destruction of property",
+"13.31 - burglary",
+"13.32 - hazing",
+"13.33 - drugs",
+"13.34 - firearms possession",
+"13.35 - threats",
+"13.36 - felonies",
+"13.37 - moral turpitude",
+        ]
+        sanction_mapping2 = [
+    "14.1 - cheating, mobile phone",
+    "14.2 - cheating, talking",
+    "14.3 - cheating, dictating answers",
+    "14.4 - cheating, notes possession",
+    "14.5 - cheating, outside information",
+    "14.6 - cheating, leakage facilitation",
+    "14.7 - cheating, buying/selling questions",
+    "14.8 - cheating, copying answers",
+    "14.9 - cheating, covert devices",
+    "14.10 - cheating, impersonation",
+    "14.11 - plagiarism",
+    "14.12 - cheating, surrogate attendance",
+    "14.13 - plagiarism",
+    "14.14 - cheating, caught",
+    "14.15 - cheating, aiding"
+        ]
+
+        
+        sanction_number = None
+
+        if sanction in sanction_mapping:
+            sanction_number = "12"
+        elif sanction in sanction_mapping1:
+            sanction_number = "13"
+        elif sanction in sanction_mapping2:
+            sanction_number = "14"
+
+        if department == "CAFAD":
+            Name_Coordinator1 = "CAFAD Coordinator"
+
+        elif department == "CICS":
+            Name_Coordinator1 = "Lovely Rose Tipan Hernandez"
+
+        pdf_filename = 'written warning.docx'
+        doc = Document(pdf_filename)
+
+        
+
+        replace_table_cell_placeholder1(doc.tables[0], 2, 12, formatted_date,"(date)")
+        replace_table_cell_placeholder1(doc.tables[0], 3, 3, students,"(name)")
+        replace_table_cell_placeholder1(doc.tables[0], 6, 7, date2,"(date2)")
+        replace_table_cell_placeholder1(doc.tables[0], 7, 10, remarks,"(complain)")
+        replace_table_cell_placeholder1(doc.tables[0], 6, 10, complainant,"(name1)")
+        replace_table_cell_placeholder1(doc.tables[0], 11, 6, sanction_number,"(section)")
+        replace_table_cell_placeholder1(doc.tables[0], 19, 8, username, "coord")
+        replace_table_cell_placeholder1(doc.tables[0], 22, 2, username, "NAME")
+        replace_table_cell_placeholder1(doc.tables[0], 12, 2, norms, "norms")
+        
+        doc.save("modified_document.docx")
+        pdf_path = os.path.join('modified_document.pdf')
+        convert("modified_document.docx", pdf_path)
+
+    
+
+        file_name = f'{random_code}_Written Warning'
+        with open(pdf_path, "rb") as pdf_file:
+            pdf_data = pdf_file.read()
+
+
+   
+    
+        
+        # Insert the report with file information into the database, including file data
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("INSERT INTO sanctions (sanctions_id,username, course, date_time, sanction, written, written_name) VALUES (%s,%s, %s, %s, %s, %s,%s)",
+                        (random_code,students, courseorposition, current_datetime, sanction, pdf_data,file_name ))
+        db_connection.commit()
+        db_cursor.close()
+        os.remove("modified_document.docx")
+        os.remove("modified_document.pdf")
+        
+        flash('Report submitted successfully')
+        return redirect('/hello')
+        
+    elif kind ==  'Written Reprimand':
+
+        remarks = request.form.get('remarks')
+        norms = request.form.get('norms')
+        courseorposition = session.get('course', '')
+        print(courseorposition)
+        department = request.form.get('department')
+        sanction = request.form.get('sanctions')
+        students= request.form.get('student')
+        complainant= request.form.get('student2')
+        date2= request.form.get('date2')
+        current_datetime = datetime.now()
+        random_code = generate_random_code()
+        current_date = current_datetime.date()
+        formatted_date = current_date.strftime("/%m/%d/%Y")
+        
+        username = session.get('namestudent', '')
+
+        sanction_mapping = [
+    "12.1.1 - attendance, punctuality, cutting classes",
+"12.1.2 - dress code, uniform",
+"12.1.3 - property misuse",
+"12.1.4 - noise disturbance",
+"12.1.5 - posting violation",
+"12.1.6 - notice removal",
+"12.1.7 - littering",
+"12.1.8 - smoking violation",
+"12.1.9 - trespassing",
+"12.1.10 - misconduct",
+"12.1.11 - harassment",
+"12.1.12 - provocation, fight",
+"12.1.13 - PDA",
+"12.1.14 - truancy",
+        ]
+        sanction_mapping1 = [
+"13.1 - repeat offenses",
+"13.2 - insubordination",
+"13.3 - smoking violation",
+"13.4 - alcohol violation",
+"13.5 - intoxication",
+"13.6 - trespassing",
+"13.7 - property misuse",
+"13.13 - abusive behavior",
+"13.14 - unauthorized membership",
+"13.15 - online misconduct",
+"13.16 - vandalism",
+"13.17 - academic disruption",
+"13.18 - solicitation",
+"13.19 - physical harm",
+"13.20 - weapons possession",
+"13.21 - theft",
+"13.22 - bribery",
+"13.23 - sexual misconduct",
+"13.24 - obscenity",
+"13.25 - defamation",
+"13.26 - physical harm",
+"13.27 - falsification",
+"13.28 - disrepute",
+"13.29 - riot",
+"13.30 - destruction of property",
+"13.31 - burglary",
+"13.32 - hazing",
+"13.33 - drugs",
+"13.34 - firearms possession",
+"13.35 - threats",
+"13.36 - felonies",
+"13.37 - moral turpitude",
+        ]
+        sanction_mapping2 = [
+    "14.1 - cheating, mobile phone",
+    "14.2 - cheating, talking",
+    "14.3 - cheating, dictating answers",
+    "14.4 - cheating, notes possession",
+    "14.5 - cheating, outside information",
+    "14.6 - cheating, leakage facilitation",
+    "14.7 - cheating, buying/selling questions",
+    "14.8 - cheating, copying answers",
+    "14.9 - cheating, covert devices",
+    "14.10 - cheating, impersonation",
+    "14.11 - plagiarism",
+    "14.12 - cheating, surrogate attendance",
+    "14.13 - plagiarism",
+    "14.14 - cheating, caught",
+    "14.15 - cheating, aiding"
+        ]
+
+        
+        sanction_number = None
+
+        if sanction in sanction_mapping:
+            sanction_number = "12"
+        elif sanction in sanction_mapping1:
+            sanction_number = "13"
+        elif sanction in sanction_mapping2:
+            sanction_number = "14"
+
+        if department == "CAFAD":
+            Name_Coordinator1 = "CAFAD Coordinator"
+
+        elif department == "CICS":
+            Name_Coordinator1 = "Lovely Rose Tipan Hernandez"
+
+        pdf_filename = 'Written Reprimand.docx'
+        doc = Document(pdf_filename)
+
+        
+
+        replace_table_cell_placeholder1(doc.tables[0], 2, 8, formatted_date,"(date)")
+        replace_table_cell_placeholder1(doc.tables[0], 3, 3, students,"(name)")
+        replace_table_cell_placeholder1(doc.tables[0], 6, 8, sanction_number,"(section)")
+        replace_table_cell_placeholder1(doc.tables[0], 7, 2, norms, "norms")
+        replace_table_cell_placeholder1(doc.tables[0], 15, 2, username, "NAME")
+
+
+        doc.save("modified_document.docx")
+        pdf_path = os.path.join('modified_document.pdf')
+        convert("modified_document.docx", pdf_path)
+
+    
+
+        file_name = f'{random_code}_Written Reprimand'
+        with open(pdf_path, "rb") as pdf_file:
+            pdf_data = pdf_file.read()
+
+
+   
+    
+        
+        # Insert the report with file information into the database, including file data
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("INSERT INTO sanctions (sanctions_id,username, course, date_time, sanction, written, written_name) VALUES (%s,%s, %s, %s, %s, %s,%s)",
+                        (random_code,students, courseorposition, current_datetime, sanction, pdf_data,file_name ))
+        db_connection.commit()
+        db_cursor.close()
+        os.remove("modified_document.docx")
+        os.remove("modified_document.pdf")
+        
+        flash('Report submitted successfully')
+
+
+
+        return redirect('hello')
+    
+
+    else:
+        remarks = request.form.get('remarks')
+        norms = request.form.get('norms')
+        courseorposition = session.get('course', '')
+        print(courseorposition)
+        department = request.form.get('department')
+        sanction = request.form.get('sanctions')
+        students= request.form.get('student')
+        effectivity= request.form.get('effectivity')
+        days= request.form.get('days')
+        current_datetime = datetime.now()
+        random_code = generate_random_code()
+        current_date = current_datetime.date()
+        formatted_date = current_date.strftime("/%m/%d/%Y")
+        
+        username = session.get('namestudent', '')
+
+        sanction_mapping = [
+    "12.1.1 - attendance, punctuality, cutting classes",
+"12.1.2 - dress code, uniform",
+"12.1.3 - property misuse",
+"12.1.4 - noise disturbance",
+"12.1.5 - posting violation",
+"12.1.6 - notice removal",
+"12.1.7 - littering",
+"12.1.8 - smoking violation",
+"12.1.9 - trespassing",
+"12.1.10 - misconduct",
+"12.1.11 - harassment",
+"12.1.12 - provocation, fight",
+"12.1.13 - PDA",
+"12.1.14 - truancy",
+        ]
+        sanction_mapping1 = [
+"13.1 - repeat offenses",
+"13.2 - insubordination",
+"13.3 - smoking violation",
+"13.4 - alcohol violation",
+"13.5 - intoxication",
+"13.6 - trespassing",
+"13.7 - property misuse",
+"13.13 - abusive behavior",
+"13.14 - unauthorized membership",
+"13.15 - online misconduct",
+"13.16 - vandalism",
+"13.17 - academic disruption",
+"13.18 - solicitation",
+"13.19 - physical harm",
+"13.20 - weapons possession",
+"13.21 - theft",
+"13.22 - bribery",
+"13.23 - sexual misconduct",
+"13.24 - obscenity",
+"13.25 - defamation",
+"13.26 - physical harm",
+"13.27 - falsification",
+"13.28 - disrepute",
+"13.29 - riot",
+"13.30 - destruction of property",
+"13.31 - burglary",
+"13.32 - hazing",
+"13.33 - drugs",
+"13.34 - firearms possession",
+"13.35 - threats",
+"13.36 - felonies",
+"13.37 - moral turpitude",
+        ]
+        sanction_mapping2 = [
+    "14.1 - cheating, mobile phone",
+    "14.2 - cheating, talking",
+    "14.3 - cheating, dictating answers",
+    "14.4 - cheating, notes possession",
+    "14.5 - cheating, outside information",
+    "14.6 - cheating, leakage facilitation",
+    "14.7 - cheating, buying/selling questions",
+    "14.8 - cheating, copying answers",
+    "14.9 - cheating, covert devices",
+    "14.10 - cheating, impersonation",
+    "14.11 - plagiarism",
+    "14.12 - cheating, surrogate attendance",
+    "14.13 - plagiarism",
+    "14.14 - cheating, caught",
+    "14.15 - cheating, aiding"
+        ]
+
+        
+        sanction_number = None
+
+        if sanction in sanction_mapping:
+            sanction_number = "12"
+        elif sanction in sanction_mapping1:
+            sanction_number = "13"
+        elif sanction in sanction_mapping2:
+            sanction_number = "14"
+
+        sanction_mapping3 = {
+    "12.1.1 - attendance, punctuality, cutting classes": "12.1.1",
+"12.1.2 - dress code, uniform": "12.1.2",
+"12.1.3 - property misuse": "12.1.3",
+"12.1.4 - noise disturbance": "12.1.4",
+"12.1.5 - posting violation": "12.1.5",
+"12.1.6 - notice removal": "12.1.6",
+"12.1.7 - littering": "12.1.7",
+"12.1.8 - smoking violation": "12.1.8",
+"12.1.9 - trespassing": "12.1.9",
+"12.1.10 - misconduct": "12.1.10",
+"12.1.11 - harassment": "12.1.11",
+"12.1.12 - provocation, fight": "12.1.12",
+"12.1.13 - PDA": "12.1.13",
+"12.1.14 - truancy": "12.1.14",
+"13.1 - repeat offenses": "13.1",
+"13.2 - insubordination": "13.2",
+"13.3 - smoking violation": "13.3",
+"13.4 - alcohol violation": "13.4",
+"13.5 - intoxication": "13.5",
+"13.6 - trespassing": "13.6",
+"13.7 - property misuse": "13.7",
+"13.13 - abusive behavior": "13.13",
+"13.14 - unauthorized membership": "13.14",
+"13.15 - online misconduct": "13.15",
+"13.16 - vandalism": "13.16",
+"13.17 - academic disruption": "13.17",
+"13.18 - solicitation": "13.18",
+"13.19 - physical harm": "13.19",
+"13.20 - weapons possession": "13.20",
+"13.21 - theft": "13.21",
+"13.22 - bribery": "13.22",
+"13.23 - sexual misconduct": "13.23",
+"13.24 - obscenity": "13.24",
+"13.25 - defamation": "13.25",
+"13.26 - physical harm": "13.26",
+"13.27 - falsification": "13.27",
+"13.28 - disrepute": "13.28",
+"13.29 - riot": "13.29",
+"13.30 - destruction of property": "13.30",
+"13.31 - burglary": "13.31",
+"13.32 - hazing": "13.32",
+"13.33 - drugs": "13.33",
+"13.34 - firearms possession": "13.34",
+"13.35 - threats": "13.35",
+"13.36 - felonies": "13.36",
+"13.37 - moral turpitude": "13.37",
+"14.1 - cheating, mobile phone": "14.1",
+"14.2 - cheating, talking": "14.2",
+"14.3 - cheating, dictating answers": "14.3",
+"14.4 - cheating, notes possession": "14.4",
+"14.5 - cheating, outside information": "14.5",
+"14.6 - cheating, leakage facilitation": "14.6",
+"14.7 - cheating, buying/selling questions": "14.7",
+"14.8 - cheating, copying answers": "14.8",
+"14.9 - cheating, covert devices": "14.9",
+"14.10 - cheating, impersonation": "14.10",
+"14.11 - plagiarism": "14.11",
+"14.12 - cheating, surrogate attendance": "14.12",
+"14.13 - plagiarism": "14.13",
+"14.14 - cheating, caught": "14.14",
+"14.15 - cheating, aiding": "14.15"
+    
+}
+        sanction_number1 = sanction_mapping3.get(sanction, "Unknown")
+        
+
+        if department == "CAFAD":
+            Name_Coordinator1 = "CAFAD Coordinator"
+
+        elif department == "CICS":
+            Name_Coordinator1 = "Lovely Rose Tipan Hernandez"
+
+        pdf_filename = 'letter of suspension.docx'
+        doc = Document(pdf_filename)
+
+        
+
+        replace_table_cell_placeholder1(doc.tables[0], 2, 13, formatted_date,"(date)")
+        replace_table_cell_placeholder1(doc.tables[0], 3, 3, students,"(name)")
+        replace_table_cell_placeholder1(doc.tables[0], 13, 6, sanction_number1,"(offense)")
+        replace_table_cell_placeholder1(doc.tables[0], 13, 14, days,"(days)")
+        replace_table_cell_placeholder1(doc.tables[0], 14, 4, effectivity,"wew")
+        replace_table_cell_placeholder1(doc.tables[0], 6, 14, sanction_number,"(section)")
+        replace_table_cell_placeholder1(doc.tables[0], 18, 3, username, "KRAZY")
+        replace_table_cell_placeholder1(doc.tables[0], 7, 2, norms, "norms")
+        
+        doc.save("modified_document.docx")
+        pdf_path = os.path.join('modified_document.pdf')
+        convert("modified_document.docx", pdf_path)
+
+    
+
+        file_name = f'{random_code}_Letter of Suspension'
+        with open(pdf_path, "rb") as pdf_file:
+            pdf_data = pdf_file.read()
+
+
+   
+    
+        
+        # Insert the report with file information into the database, including file data
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("INSERT INTO sanctions (sanctions_id,username, course, date_time, sanction, written, written_name) VALUES (%s,%s, %s, %s, %s, %s,%s)",
+                        (random_code,students, courseorposition, current_datetime, sanction, pdf_data,file_name ))
+        db_connection.commit()
+        db_cursor.close()
+        os.remove("modified_document.docx")
+        os.remove("modified_document.pdf")
+        
+        flash('Report submitted successfully')
+        return redirect('hello')
+
 
 @app.route('/submit_approve', methods=['GET', 'POST'])
 def submit_approve():
@@ -882,6 +1384,27 @@ def submit_reject():
 
     
     return redirect('/request')
+
+@app.route('/delete_sanction', methods=['POST'])
+def delete_sanction():
+    # Get the sanction ID from the request
+    sanction_id = request.form.get('sanctionId')
+    print(sanction_id)
+
+    try:
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("DELETE FROM sanctions WHERE sanctions_id = %s;", (sanction_id,))
+        db_connection.commit()
+        db_cursor.close()
+        return jsonify({"message": "Sanction deleted successfully"})
+    except Exception as e:
+        # Handle the exception, log the error, and return an error response
+        error_message = f"Error deleting sanction: {str(e)}"
+        app.logger.error(error_message)
+        return jsonify({"error": error_message})
+
+# Make sure to import jsonify from Flask
+from flask import jsonify
 
 @app.route('/submit_sanction', methods=['POST'])
 def submit_sanction():
@@ -1102,16 +1625,18 @@ def algorithm(complaint_text):
             if remaining_score == 0:
                 break
 
+    print(complaint)
     top_10_offense_scores_list = []
     for offense_id, score in top_10_offense_scores.items():
         print(f"Offense ID: {offense_id}, Score: {score}%")
         top_10_offense_scores_list.append({
             'offense_id': offense_id,
-            'score': score
+            'score': score,
+            
         })
 
 
-    return jsonify(top_10_offense_scores=top_10_offense_scores_list)
+    return jsonify(top_10_offense_scores=top_10_offense_scores_list, complaints=complaint)
 
 @app.route('/search_students', methods=['POST'])
 def search_students():
@@ -1205,13 +1730,24 @@ def download_form(form_id):
     
         return response
 
-    # Handle the case where the form_id is not found
+        
     return "Form not found", 404
 
+@app.route('/sanctions', methods=['GET', 'POST'])
+def sanctions():
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT * FROM sanctions WHERE username = %s", ("Aedrian Jeao De Torres",))
+    sanctions = db_cursor.fetchall()
+    print(sanctions)
+    db_cursor.close()
+
+   
+    return render_template('homepage.html', sanctions=sanctions)
 
 @app.route('/hello', methods=['GET', 'POST'])
 def homepage():
     username = session.get('username', '')
+
     
     if request.method == 'POST':
         # Handle the POST request (form submission)
@@ -1232,6 +1768,8 @@ def homepage():
     result_coordinators = db_cursor.fetchone()
 
     if result_cics:
+        
+        
         user_source = 'accounts_cics'
         session['source'] = user_source
     elif result_coordinators:
@@ -1248,6 +1786,7 @@ def homepage():
 
     if user_source == 'accounts_cics':
         db_cursor1.execute("SELECT image_data, Name, CourseOrPosition FROM accounts_cics WHERE username = %s", (username,))
+
     elif user_source == 'accounts_coordinators':
         db_cursor1.execute("SELECT image_data, Name, Course FROM accounts_coordinators WHERE username = %s", (username,))
     else:
@@ -1266,6 +1805,13 @@ def homepage():
         name = "Name not found"
         course = "Course/Position not found"
 
+
+     # Retrieve the sanctions data within the homepage route
+    db_cursor_sanctions = db_connection.cursor()
+    db_cursor_sanctions.execute("SELECT * FROM sanctions WHERE username = %s", (name,))
+    sanctions = db_cursor_sanctions.fetchall()
+    db_cursor_sanctions.close()
+
     # Encode the profile picture data as a Base64 string
     if profile_picture_data is not None:
         profile_picture_base64 = base64.b64encode(profile_picture_data).decode('utf-8')
@@ -1273,7 +1819,7 @@ def homepage():
         profile_picture_base64 = None  # Handle the case where there is no profile picture data
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage.html', username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, user_source=user_source)
+    return render_template('homepage.html', username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, user_source=user_source,sanctions=sanctions)
 
 def lookup_student_info(username):
     try:
@@ -1513,14 +2059,14 @@ def lookup_sanctions():
 
         # Perform a database query to search for sanctions based on the username
         db_cursor = db_connection.cursor()
-        db_cursor.execute("SELECT date_time, sanction FROM sanctions WHERE Username LIKE %s", ('%' + name + '%',))
+        db_cursor.execute("SELECT date_time, sanction, sanctions_id FROM sanctions WHERE Username LIKE %s", ('%' + name + '%',))
         search_sanctions = db_cursor.fetchall()
         db_cursor.close()
 
         # Check if any sanctions were found
         if search_sanctions:
             # Convert datetime objects to string representations
-            formatted_sanctions = [{'date_time': str(entry[0]), 'sanction': entry[1]} for entry in search_sanctions]
+            formatted_sanctions = [{'date_time': str(entry[0]), 'sanction': entry[1],'sanctions_id': entry[2]} for entry in search_sanctions]
             return jsonify({'sanctions': formatted_sanctions})
         else:
             return jsonify({'error': 'No sanctions found'})
@@ -1533,25 +2079,36 @@ def logout():
     # Redirect the user to the login page or any other appropriate page
     return redirect('/')
 
-@app.route('/fetch_sanctions', methods=['GET'])
-def fetch_sanctions():
-    student = session.get('namestudent', '')  # Retrieve the username from the session
-    db_cursor = db_connection.cursor()
-    db_cursor.execute("SELECT date_time, sanction FROM sanctions WHERE username = %s", (student,))
-    sanctions_data = db_cursor.fetchall()
-    db_cursor.close()
+@app.route('/preview_written_file/<string:report_id>', methods=['GET'])
+def preview_written_file(report_id):
+    db_cursor = None  # Initialize db_cursor to None
 
-    # Debugging: Print the fetched data
-    print("Fetched Data:", sanctions_data)
-
-    # Convert the data to JSON and return it
     try:
-        json_sanctions = [{"date": str(row[0]), "sanction": row[1]} for row in sanctions_data]
-        return jsonify(json_sanctions)
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("SELECT written FROM sanctions WHERE sanctions_id = %s", (report_id,))
+        file_content = db_cursor.fetchone()
+
+
+        if file_content:
+            file_content = file_content[0]
+
+            response = send_file(
+                io.BytesIO(file_content),
+                mimetype='application/pdf',
+            )
+
+            response.headers['Content-Disposition'] = f'inline; filename=report_{report_id}.pdf'
+
+            return response
     except Exception as e:
-        print("Error converting data to JSON:", str(e))
-        return jsonify({"error": "An error occurred while processing the data."}), 500
-    
+        # Handle any exceptions, e.g., log the error
+        pass  # Add your error handling code here
+    finally:
+        if db_cursor is not None:
+            db_cursor.close()  # Close the cursor if it's not None
+
+    # Handle the case where the file was not found
+    return "File not found", 404
 
 @app.route('/preview_report_file/<string:report_id>' , methods=['GET'])
 def preview_report_file(report_id):
