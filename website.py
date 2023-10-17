@@ -238,7 +238,7 @@ def generate_random_code(length=8):
 
 @app.route('/submit_report', methods=['POST'])
 def submit_report():
-    
+    comtypes.client.CoInitialize()
     kind = request.form.get('forms')
     if kind == "Formal Complaint":
         department = request.form.get('department')
@@ -482,6 +482,7 @@ def submit_report():
 
 @app.route('/submit_request', methods=['GET', 'POST'])
 def submit_request():
+    comtypes.client.CoInitialize()
     kind = request.form.get('forms')
     print(kind)
     if kind == "Temporary Gate Pass":
@@ -849,7 +850,7 @@ def submit_request():
 
 @app.route('/submit_call', methods=['POST'])
 def submit_call():
-
+    comtypes.client.CoInitialize()
     student = request.form.get('student')
     section = request.form.get('section')
     Time = request.form.get('meeting-time')
@@ -955,6 +956,7 @@ def submit_call():
 
 @app.route('/submit_written', methods=['POST'])
 def submit_written():
+    comtypes.client.CoInitialize()
     kind = request.form.get('forms')
     print(kind)
     if kind == "Written Warning":
