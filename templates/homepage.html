@@ -3,6 +3,7 @@
     <link rel="stylesheet" href='/static/style.css' />
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/static/script.js"></script>
 
 
@@ -10,7 +11,7 @@
 </head>
 <body>
     <div class="topnav">
-        <a class="active">Home</a>
+        <a class="active">Dashboard</a>
         {% if user_source == 'accounts_cics'%}
         <a href="/menu">My Reports</a>
         <a href="/request">My Request</a>
@@ -27,6 +28,7 @@
         <a class="notif" href="#" id="notifications-bar" >Notifications</a>
     </div>
 
+    {% if user_source == 'accounts_cics'%}
     <div class="user-profile">
         {% if profile_picture_base64 %}
         <img src="data:image/jpeg;base64,{{ profile_picture_base64 }}" alt="Profile Picture">
@@ -35,9 +37,24 @@
         {% endif %}
         <div class="user-info">
             <h1>{{ name }}</h1>
-            <h2>{{ course }}</h2>
+            <h2>{{ course }} - {{year}}</h2>
         </div>
     </div>
+    {% endif %}
+
+    {% if user_source == 'accounts_coordinators'%}
+    <div class="user-profile">
+        {% if profile_picture_base64 %}
+        <img src="data:image/jpeg;base64,{{ profile_picture_base64 }}" alt="Profile Picture">
+        {% else %}
+        <img src="/static/default_profile.png" alt="Default Profile Picture">
+        {% endif %}
+        <div class="user-info">
+            <h1>{{ name }}</h1>
+            <h2>{{ course }} {{year}}</h2>
+        </div>
+    </div>
+    {% endif %}
 
     <div id="notifications-container" class="notifications">
         
@@ -194,13 +211,95 @@
     <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
     {% if user_source == 'accounts_coordinators' %}
     <button type="button" id="openModalBtn2">Tag Sanction</button>
+   
     {% endif %}
+    {% if user_source == 'accounts_coordinators' %}
+    <button type="button" id="openModalBtn6">Call Student</button>
+    {% endif %}
+
+    <div class="numberofall">
+        <canvas id="myPieChart" width="200" height="200"></canvas>
+
+        </div>
+
+    <div id="myModal6" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModalBtn6">&times;</span>
+        <div class="sanction-content">
+        <h3>Call Student</h3>
+        <form action="/submit_call" method="POST" enctype="multipart/form-data">
+        <label for="student">Name of the Student:</label><br>
+        <input type="text" id="student" name="student"><br><br>
+
+        <label for="section">Section:</label><br>
+        <input type="text" id="section" name="section"><br><br>
+
+
+        <label for="meeting-time">Select a Time:</label>
+        <input type="time" id="meeting-time" name="meeting-time"><br><br>
+
+        <label for="date2">Select a Date:</label>
+            <input type="date" id="date2" name="date2"><br><br>
+
+        <label id="provision1" for="remarks" >Reason:</label><br>
+        <textarea id="remarks" name="remarks" rows="16" cols="50" style="resize: none;" required></textarea><br><br>
+        <input id="submit" type="submit" value="Submit">
+        </form>
+
+
+        
+    </div>
+    
+    <div class="written-content">
+        <h3>Remove Call</h3>
+        {% if call == [] %}
+            <p>You have no sanctions</p>
+            {% else %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>               
+                        <th>Reason</th>
+                        <th>File</th>
+                        <th>Delete Call</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    {% for row in call |sort(attribute='3', reverse=true) %}
+                    <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
+                    <tr>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[3] }}</td>
+                        <td> 
+                            <a href="{{ url_for('preview_call_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
+                        </td>
+                        <td style="text-align: center;">
+                            <form method="POST" action="{{ url_for('delete_call', report_id=row[0]) }}"
+                            onsubmit="return confirm('Are you sure you want to delete this report?');">
+                          <button type="submit" style="background-color:red">X</button>
+                      </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+
+
+        </div>
+    </div>
+</div>
+
 
 <div id="myModal1" class="modal">
     <div class="modal-content">
         <span class="close" id="closeModalBtn1">&times;</span>
         <h3>My Sanctions</h3>
         <div id="table-container">
+            {% if sanctions == [] %}
+            <p>You have no sanctions</p>
+            {% else %}
             <table>
                 <thead>
                     <tr>
@@ -210,6 +309,7 @@
                     </tr>
                 </thead>
                 <tbody>
+    
                     {% for row in sanctions |sort(attribute='3', reverse=true) %}
                     <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
                     <tr>
@@ -222,6 +322,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -383,25 +484,26 @@
 
 <div id="myModal2" class="modal">
     <div class="modal-content">
+        <div class ="sanction-content">
         <span class="close" id="closeModalBtn2">&times;</span>
         <h1>Tag Sanction</h1>
-        <hr>
+       
         <h4>Check Records</h4>
         <form method="POST" action="/search_students" id="searchForm" required>
-            <label for="username">Input Username:</label>
+            <label for="username">Input Sr-Code:</label>
             <input type="text" id="username" name="username" required>
             <input type="submit" value="Search">
         </form>
-        <hr>
+       
         <div id="studentInfo">
             <p>Name: <span id="studentName"></span></p>
             <p>Course: <span id="studentCourse"></span></p>
             <p>Sanctions: <span id="studentSanctions"></span></p>
+        </div>
+        </div>
 
-
-        <hr>
-
-
+       
+        <div class="written-content">
                 <label for="forms1">Forms:</label> 
             <select name="forms1" id="forms1" required onchange="toggleInputFields2()"> 
                 <option value="" selected disabled>Select Form:</option> 
@@ -415,10 +517,10 @@
                 <h3>Written Warning</h3>
                 <form action="/submit_written" method="POST" enctype="multipart/form-data">
 
-            <label for="student">Name of the Student:</label>
+            <label for="student">Name of the Student:</label><br>
             <input type="text" id="student" name="student"><br><br>
 
-            <label for="student2">Name of the Complainant:</label>
+            <label for="student2">Name of the Complainant:</label><br>
             <input type="text" id="student2" name="student2"><br><br>
 
             <label for="date2">Date report received:</label>
@@ -580,6 +682,7 @@
                         </form>
         </div>
 
+
         <div id="formContainer7" style="display: none;">
             <h3>Letter of Suspension</h3>
             <form action="/submit_written" method="POST" enctype="multipart/form-data">
@@ -663,8 +766,13 @@
                     </datalist><br><br>
                     <input id="submit" type="submit" value="Submit">
                     </form>
+                </div>
     </div>
 </div>
+
+
+
+
 
 <div class="flash-messages" id="flash-message">
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -677,6 +785,10 @@
         {% endif %}
     {% endwith %}
 </div>
+
+
+</div>
+
 
    
 </body>

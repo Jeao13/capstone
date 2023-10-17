@@ -850,6 +850,113 @@ def submit_request():
             flash('Report submitted successfully')
             return redirect('/hello')
 
+@app.route('/submit_call', methods=['POST'])
+def submit_call():
+    pythoncom.CoInitialize()
+
+    student = request.form.get('student')
+    section = request.form.get('section')
+    Time = request.form.get('meeting-time')
+    # Parse the input time
+    parsed_time = datetime.strptime(Time, "%H:%M")
+
+    # Convert it to the desired format
+    formatted_time = parsed_time.strftime("%I:%M %p")
+
+    date2 = request.form.get('date2')    
+    remarks = request.form.get('remarks')
+    current_datetime = datetime.now()
+    random_code = generate_random_code()
+    current_date = current_datetime.date()
+    formatted_date = current_date.strftime("/%m/%d/%Y") 
+
+    username = session.get('namestudent', '')
+
+
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT * FROM accounts_cics WHERE Name = %s", (student,))
+    result_cics = db_cursor.fetchone()
+
+    if result_cics:
+        college = 'CICS'
+        db_cursor2 = db_connection.cursor()
+        db_cursor2.execute("SELECT Course FROM accounts_cics WHERE Name = %s", (student,))
+        course1 = db_cursor2.fetchone()
+
+        if course1:
+            course = course1[0]  # Get the first (and only) element of the tuple
+            print(course)  # Now, 'course' is a string
+        else:
+            print("No course found for the student.")
+       
+
+    else:
+        user_source = 'CAFAD'  # Handle the case where the user source is not found
+
+
+    
+
+    pdf_filename = 'call slip.docx'
+    doc = Document(pdf_filename)
+
+    replace_table_cell_placeholder1(doc.tables[0], 2, 3, student,"(name)")
+    replace_table_cell_placeholder1(doc.tables[0], 4, 9, section, "(section)")
+    replace_table_cell_placeholder1(doc.tables[0], 6, 6, formatted_time,"(time)")
+    replace_table_cell_placeholder1(doc.tables[0], 6,3, date2,"(date1)")
+    replace_table_cell_placeholder1(doc.tables[0], 3, 3, college,"(college)")
+    replace_table_cell_placeholder1(doc.tables[0], 4, 3, course, "(program)")
+    replace_table_cell_placeholder1(doc.tables[0], 2, 8, formatted_date, "(date)")
+    replace_table_cell_placeholder1(doc.tables[0], 7, 1, username, "NAME")
+
+    replace_table_cell_placeholder1(doc.tables[1], 2, 3, student,"(name)")
+    replace_table_cell_placeholder1(doc.tables[1], 4, 9, section, "(section)")
+    replace_table_cell_placeholder1(doc.tables[1], 6, 6, formatted_time,"(time)")
+    replace_table_cell_placeholder1(doc.tables[1], 6,3, date2,"(date1)")
+    replace_table_cell_placeholder1(doc.tables[1], 3, 3, college,"(college)")
+    replace_table_cell_placeholder1(doc.tables[1], 4, 3, course, "(program)")
+    replace_table_cell_placeholder1(doc.tables[1], 2, 8, formatted_date, "(date)")
+    replace_table_cell_placeholder1(doc.tables[1], 7, 1, username, "NAME")
+
+    replace_table_cell_placeholder1(doc.tables[2], 2, 3, student,"(name)")
+    replace_table_cell_placeholder1(doc.tables[2], 4, 9, section, "(section)")
+    replace_table_cell_placeholder1(doc.tables[2], 6, 6, formatted_time,"(time)")
+    replace_table_cell_placeholder1(doc.tables[2], 6,3, date2,"(date1)")
+    replace_table_cell_placeholder1(doc.tables[2], 3, 3, college,"(college)")
+    replace_table_cell_placeholder1(doc.tables[2], 4, 3, course, "(program)")
+    replace_table_cell_placeholder1(doc.tables[2], 2, 8, formatted_date, "(date)")
+    replace_table_cell_placeholder1(doc.tables[2], 7, 1, username, "NAME")
+        
+
+
+    doc.save("modified_document.docx")
+    pdf_path = os.path.join('modified_document.pdf')
+    convert("modified_document.docx", pdf_path)
+
+    
+
+    file_name = f'{random_code}_Call Slip'
+    with open(pdf_path, "rb") as pdf_file:
+        pdf_data = pdf_file.read()
+        
+        
+
+    
+    # Insert the report with file information into the database, including file data
+    db_cursor1 = db_connection.cursor()
+    db_cursor1.execute("INSERT INTO callslip (call_id, name, coord,reason, date, time,file, file_name) VALUES (%s, %s, %s, %s, %s,%s,%s,%s)",
+                    (random_code, student, username,remarks, current_date, formatted_time,pdf_data, file_name))
+    db_connection.commit()
+    db_cursor.close()
+    db_cursor1.close()
+    db_cursor2.close()
+    os.remove("modified_document.docx")
+    os.remove("modified_document.pdf")
+
+
+    return redirect('/hello')
+
+
+
 @app.route('/submit_written', methods=['POST'])
 def submit_written():
     pythoncom.CoInitialize()
@@ -860,7 +967,6 @@ def submit_written():
         remarks = request.form.get('remarks')
         norms = request.form.get('norms')
         courseorposition = session.get('course', '')
-        print(courseorposition)
         department = request.form.get('department')
         sanction = request.form.get('sanctions')
         students= request.form.get('student')
@@ -1785,20 +1891,31 @@ def homepage():
     db_cursor1 = db_connection.cursor()
 
     if user_source == 'accounts_cics':
-        db_cursor1.execute("SELECT image_data, Name, CourseOrPosition FROM accounts_cics WHERE username = %s", (username,))
+        db_cursor1.execute("SELECT image_data, Name, Course, Year FROM accounts_cics WHERE username = %s", (username,))
+        role ="student"
 
     elif user_source == 'accounts_coordinators':
         db_cursor1.execute("SELECT image_data, Name, Course FROM accounts_coordinators WHERE username = %s", (username,))
+        role ="coord"
     else:
         # Handle the case where user_source is unknown
-        db_cursor1.execute("SELECT image_data, Name, CourseOrPosition FROM accounts_cics WHERE username = %s", (username,))
+        db_cursor1.execute("SELECT image_data, Name, Course, Year FROM accounts_cics WHERE username = %s", (username,))
 
     result_user_data = db_cursor1.fetchone()
 
-    if result_user_data:
-        profile_picture_data, name, course = result_user_data
+    if role == "student":
+        profile_picture_data, name, course, year = result_user_data
         session['namestudent'] = name
         print(name)
+
+    elif role == "coord":
+        profile_picture_data, name, course = result_user_data
+        
+        year=""
+        session['namestudent'] = name
+        session['courseall'] = course
+        print(name)
+
     else:
         # Handle the case where user data is not found
         profile_picture_data = None
@@ -1812,6 +1929,13 @@ def homepage():
     sanctions = db_cursor_sanctions.fetchall()
     db_cursor_sanctions.close()
 
+    db_cursor_call = db_connection.cursor()
+    db_cursor_call.execute("SELECT * FROM callslip WHERE coord = %s", (name,))
+    call = db_cursor_call.fetchall()
+    db_cursor_call.close()
+
+    
+
     # Encode the profile picture data as a Base64 string
     if profile_picture_data is not None:
         profile_picture_base64 = base64.b64encode(profile_picture_data).decode('utf-8')
@@ -1819,7 +1943,7 @@ def homepage():
         profile_picture_base64 = None  # Handle the case where there is no profile picture data
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage.html', username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, user_source=user_source,sanctions=sanctions)
+    return render_template('homepage.html', username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,sanctions=sanctions,call=call)
 
 def lookup_student_info(username):
     try:
@@ -1827,13 +1951,13 @@ def lookup_student_info(username):
        
 
         # Assuming you have a table called 'students' with columns 'username', 'name', and 'course'
-        query = "SELECT Name, CourseOrPosition FROM accounts_cics WHERE username = %s"
+        query = "SELECT Name, Course FROM accounts_cics WHERE username = %s"
         db_cursor.execute(query, (username,))
         student_data = db_cursor.fetchone()
 
         if student_data:
             student_name = student_data['Name']
-            student_course = student_data['CourseOrPosition']
+            student_course = student_data['Course']
             return student_name, student_course
         else:
             # Return None if the student is not found
@@ -1861,6 +1985,30 @@ def lookup_student():
 
     # Return the result as JSON
     student_data = {'Name': student_name, 'CourseOrPosition': student_course}
+    return jsonify(student_data)
+
+
+# Usage example:
+@app.route('/count', methods=['POST'])
+def count():
+    
+
+    username = session.get('courseall','')
+
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT COUNT(*) FROM reports WHERE course = %s", (username,))
+    result = db_cursor.fetchone()
+
+    db_cursor.execute("SELECT COUNT(*) FROM forms_osd WHERE course = %s", (username,))
+    result1 = db_cursor.fetchone()
+
+    countreports = result[0]
+    countrequest = result1[0]
+
+    print(countreports)
+
+    # Return the result as JSON
+    student_data = {'Reports': countreports, 'Request': countrequest}
     return jsonify(student_data)
 
 @app.route('/download_report_file/<string:report_id>')
@@ -2007,6 +2155,15 @@ def change_report_status1(report_id):
 
     return redirect(url_for('requestpage'))
 
+@app.route('/delete_call/<string:report_id>', methods=['POST'])
+def delete_call(report_id):
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("DELETE FROM callslip WHERE call_id = %s;", (report_id,))
+    db_connection.commit()  # Make sure to commit the changes to the database
+    db_cursor.close()
+
+    return redirect(url_for('homepage'))
+
 @app.route('/delete_report/<string:report_id>', methods=['POST'])
 def delete_report(report_id):
     db_cursor = db_connection.cursor()
@@ -2078,6 +2235,40 @@ def logout():
     
     # Redirect the user to the login page or any other appropriate page
     return redirect('/')
+
+
+@app.route('/preview_call_file/<string:report_id>', methods=['GET'])
+def preview_call_file(report_id):
+    db_cursor = None  # Initialize db_cursor to None
+
+    try:
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("SELECT file FROM callslip WHERE call_id = %s", (report_id,))
+        file_content = db_cursor.fetchone()
+
+
+        if file_content:
+            file_content = file_content[0]
+
+            response = send_file(
+                io.BytesIO(file_content),
+                mimetype='application/pdf',
+            )
+
+            response.headers['Content-Disposition'] = f'inline; filename=report_{report_id}.pdf'
+
+            return response
+    except Exception as e:
+        # Handle any exceptions, e.g., log the error
+        pass  # Add your error handling code here
+    finally:
+        if db_cursor is not None:
+            db_cursor.close()  # Close the cursor if it's not None
+
+    # Handle the case where the file was not found
+    return "File not found", 404
+
+
 
 @app.route('/preview_written_file/<string:report_id>', methods=['GET'])
 def preview_written_file(report_id):

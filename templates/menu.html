@@ -32,7 +32,7 @@
 <body>
 
     <div class="topnav">
-        <a href="/hello">Home</a>
+        <a href="/hello">Dashboard</a>
         {% if user_source == 'accounts_cics' %}
         <a class="active" href="/menu">My Reports</a>
         <a href="/request">My Request</a>
@@ -111,7 +111,7 @@
                         <button type="submit">Change</button>
                     </form>
                     </td>
-                    <td>
+                    <td style="justify-content:center">
                         <!-- Add a form to change the status -->
                         <form method="POST" action="{{ url_for('delete_report', report_id=row[0]) }}"
                               onsubmit="return confirm('Are you sure you want to delete this report?');">

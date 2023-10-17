@@ -203,6 +203,27 @@ function openModal(reportText, reportFileLink, supportingDocumentLink) {
     modal.style.display = 'block';
 }
 
+
+// Add an event listener for the search button in the "Tag Sanction" modal
+document.addEventListener("DOMContentLoaded", function () {
+    // Get references to elements in the "Tag Sanction" modal
+    var modal6 = $("#myModal6");
+    var btn6 = $("#openModalBtn6");
+    var span6 = $("#closeModalBtn6");
+  // Add this line to reference the element for displaying sanctions
+
+    btn6.on("click", function () {
+        modal6.css("display", "block");
+    });
+
+    span6.on("click", function () {
+        modal6.css("display", "none");
+        // Clear the search form and student info when the modal is closed
+      
+    });
+
+});
+
 // JavaScript function to close the modal
 function closeModal() {
     var modal = document.getElementById('reportModal');
@@ -259,33 +280,37 @@ document.addEventListener("DOMContentLoaded", function () {
                         success: function (response) {
                             console.log("Sanctions data received:", response);
                     
-                            if (response.sanctions.length === 0) {
-                                // If there are no sanctions, display a message in the modal
-                                studentSanctions.html("No sanctions");
-                            } else {
+                          
                                 // Initialize an empty HTML string to store the formatted sanctions
                                 var formattedSanctions = "";
                     
-                                response.sanctions.forEach(function (sanction) {
-                                    // Convert the date_time string to a JavaScript Date object
-                                    var date = new Date(sanction.date_time);
-                    
-                                    // Format the date in your desired way (adjust the format as needed)
-                                    var formattedDate = date.toLocaleString(); // Example format: "Month Day, Year Hour:Minute:Second"
-                    
-                                    // Create a delete button with a unique ID based on the sanction ID
-                                    var deleteButtonId = "delete-sanction-" + sanction.sanctions_id;
-                                    formattedSanctions += '<hr>';
-                                    formattedSanctions += '<p><strong>Date:</strong> ' + sanction.sanctions_id + '</p>';
-                                    formattedSanctions += '<p><strong>Date:</strong> ' + formattedDate + '</p>';
-                                    formattedSanctions += '<p><strong>Sanction:</strong> ' + sanction.sanction + '</p>';
-                                    formattedSanctions += '<button class="delete-sanction" id="' + deleteButtonId + '">Delete</button>';
-                                    formattedSanctions += '<hr>'; // Add a horizontal line to separate sanctions
-                                });
-                    
+                                if (Array.isArray(response.sanctions) && response.sanctions.length > 0) {
+                                    // Loop through the array of sanctions
+                                    response.sanctions.forEach(function (sanction) {
+                                        // Convert the date_time string to a JavaScript Date object
+                                        var date = new Date(sanction.date_time);
+                                
+                                        // Format the date in your desired way (adjust the format as needed)
+                                        var formattedDate = date.toLocaleString(); // Example format: "Month Day, Year Hour:Minute:Second"
+                                
+                                        // Create a delete button with a unique ID based on the sanction ID
+                                        var deleteButtonId = "delete-sanction-" + sanction.sanctions_id;
+                                        formattedSanctions += '<hr>';
+                                        formattedSanctions += '<p><strong>Date:</strong> ' + sanction.sanctions_id + '</p>';
+                                        formattedSanctions += '<p><strong>Date:</strong> ' + formattedDate + '</p>';
+                                        formattedSanctions += '<p><strong>Sanction:</strong> ' + sanction.sanction + '</p>';
+                                        formattedSanctions += '<button class="delete-sanction" id="' + deleteButtonId + '">Delete</button>';
+                                        formattedSanctions += '<hr>'; // Add a horizontal line to separate sanctions
+                                    });
+                                } else {
+                                    // Handle the case when there are no sanctions
+                                    formattedSanctions += '<p>No sanctions</p>';
+                                }
+                                
                                 // Update the DOM element with the formatted sanctions
                                 studentSanctions.html(formattedSanctions);
-                            }
+                                
+                           
                     
                             // Now, you need to attach a click event to the delete buttons
                             $(".delete-sanction").click(function () {
@@ -686,3 +711,48 @@ function closeAlgoModal() {
     // Hide the modal
     modal.style.display = 'none';
 }
+
+$(document).ready(function () {
+    // Get references to the modal and button
+    var modal6 = $("#myModal6");
+    var openModalBtn6 = $("#openModalBtn6");
+
+    // Add a click event listener to the button
+    openModalBtn6.on("click", function () {
+        modal6.css("display", "block");
+    });
+    closeModalBtn6.on("click", function () {
+        modal6.css("display", "none");
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Get the canvas element
+    var ctx = document.getElementById("myPieChart").getContext("2d");
+
+    $.ajax({
+        type: "POST",
+        url: "/count",
+        success: function (data) {
+            // Create the data for the pie chart based on the response
+            var chartData = {
+                labels: ["Reports", "Request"],
+                datasets: [
+                    {
+                        data: [data.Reports, data.Request], // Values for each segment
+                        backgroundColor: ["#FF5733", "#33FF57"], // Colors for each segment
+                    },
+                ],  
+            };
+
+            // Create the pie chart
+            var myPieChart = new Chart(ctx, {
+                type: "pie",
+                data: chartData,
+            });
+        },
+        error: function (error) {
+            console.error("Error fetching student data:", error);
+        }
+    });
+});
