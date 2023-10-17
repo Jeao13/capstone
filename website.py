@@ -4,6 +4,7 @@ import base64
 import io
 import os
 import time
+import pythoncom
 import random
 import string
 import base64
@@ -237,7 +238,7 @@ def generate_random_code(length=8):
 
 @app.route('/submit_report', methods=['POST'])
 def submit_report():
-    
+    pythoncom.CoInitialize()
     kind = request.form.get('forms')
     if kind == "Formal Complaint":
         department = request.form.get('department')
@@ -480,6 +481,7 @@ def submit_report():
 
 @app.route('/submit_request', methods=['GET', 'POST'])
 def submit_request():
+    pythoncom.CoInitialize()
     kind = request.form.get('forms')
     print(kind)
     if kind == "Temporary Gate Pass":
@@ -847,7 +849,7 @@ def submit_request():
 
 @app.route('/submit_call', methods=['POST'])
 def submit_call():
-
+    pythoncom.CoInitialize()
     student = request.form.get('student')
     section = request.form.get('section')
     Time = request.form.get('meeting-time')
@@ -953,6 +955,7 @@ def submit_call():
 
 @app.route('/submit_written', methods=['POST'])
 def submit_written():
+    pythoncom.CoInitialize()
     kind = request.form.get('forms')
     print(kind)
     if kind == "Written Warning":
