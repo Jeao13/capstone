@@ -16,7 +16,6 @@ from docx.oxml import OxmlElement
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from docx2pdf import convert
-import pythoncom
 from datetime import datetime
 from lxml import etree
 from flask_sqlalchemy import SQLAlchemy
@@ -239,7 +238,6 @@ def generate_random_code(length=8):
 
 @app.route('/submit_report', methods=['POST'])
 def submit_report():
-    pythoncom.CoInitialize()
     
     kind = request.form.get('forms')
     if kind == "Formal Complaint":
@@ -484,7 +482,6 @@ def submit_report():
 
 @app.route('/submit_request', methods=['GET', 'POST'])
 def submit_request():
-    pythoncom.CoInitialize()
     kind = request.form.get('forms')
     print(kind)
     if kind == "Temporary Gate Pass":
@@ -852,7 +849,6 @@ def submit_request():
 
 @app.route('/submit_call', methods=['POST'])
 def submit_call():
-    pythoncom.CoInitialize()
 
     student = request.form.get('student')
     section = request.form.get('section')
@@ -868,7 +864,7 @@ def submit_call():
     current_datetime = datetime.now()
     random_code = generate_random_code()
     current_date = current_datetime.date()
-    formatted_date = current_date.strftime("/%m/%d/%Y") 
+    formatted_date = current_date.strftime("%m/%d/%Y") 
 
     username = session.get('namestudent', '')
 
@@ -959,7 +955,6 @@ def submit_call():
 
 @app.route('/submit_written', methods=['POST'])
 def submit_written():
-    pythoncom.CoInitialize()
     kind = request.form.get('forms')
     print(kind)
     if kind == "Written Warning":

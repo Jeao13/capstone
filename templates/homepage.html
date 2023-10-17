@@ -217,10 +217,13 @@
     <button type="button" id="openModalBtn6">Call Student</button>
     {% endif %}
 
+    {% if user_source == 'accounts_coordinators' %}
     <div class="numberofall">
         <canvas id="myPieChart" width="200" height="200"></canvas>
 
         </div>
+
+    {% endif %}
 
     <div id="myModal6" class="modal">
     <div class="modal-content">
