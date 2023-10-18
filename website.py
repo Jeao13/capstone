@@ -46,10 +46,10 @@ nsmap = {
 }
 
 db_connection = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="",
-    database="capstoneproject"
+    host="sql12.freesqldatabase.com",
+    user="sql12654013",
+    password="ppMV9KCpSb",
+    database="sql12654013"
 )
 
 
