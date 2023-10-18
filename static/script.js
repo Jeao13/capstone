@@ -756,3 +756,44 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "/check",
+                    success: function (data) {
+                        var dataFound = data.Reports; // Set to true if data is found, otherwise set to false.
+                        console.log(dataFound);
+            
+                        if (dataFound == "true") {
+                            // Data is found, open the modal
+                            var autoOpenModal = document.getElementById("autoOpenModal");
+            
+                            // Close the modal when the close button is clicked
+                                autoOpenModal.style.display = "none";
+            
+                            // You can also add other actions here when the modal is displayed.
+                        }
+                        else{
+                             // Data is found, open the modal
+                             var autoOpenModal = document.getElementById("autoOpenModal");
+                             autoOpenModal.style.display = "block";
+             
+                             // Close the modal when the close button is clicked
+                             var closeAutoOpenModalBtn = document.getElementById("closeAutoOpenModalBtn");
+                             closeAutoOpenModalBtn.onclick = function () {
+                                 autoOpenModal.style.display = "none";
+                             };
+
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error fetching student data:", error);
+                    }
+                });
+
+    
+
+});

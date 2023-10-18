@@ -23,6 +23,10 @@
     <a href="/request">Requests</a>
     {% endif %}
 
+
+
+
+
        
         <a class="logout" href="/logout">Logout</a>
         <a class="notif" href="#" id="notifications-bar" >Notifications</a>
@@ -52,6 +56,18 @@
         <div class="user-info">
             <h1>{{ name }}</h1>
             <h2>{{ course }} {{year}}</h2>
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if user_source == 'accounts_cics'%}
+    <div id="autoOpenModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeAutoOpenModalBtn">&times;</span>
+            <h3>Data in Database</h3>
+            <!-- Content to display when data is present -->
+            <p>Data has been found in the database.</p>
         </div>
     </div>
     {% endif %}
@@ -772,8 +788,6 @@
                 </div>
     </div>
 </div>
-
-
 
 
 

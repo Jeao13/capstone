@@ -4,7 +4,8 @@ import base64
 import io
 import os
 import time
-import pythoncom
+import subprocess
+import platform
 import random
 import string
 import base64
@@ -45,10 +46,10 @@ nsmap = {
 }
 
 db_connection = mysql.connector.connect(
-    host="sql12.freesqldatabase.com",
-    user="sql12654013",
-    password="ppMV9KCpSb",
-    database="sql12654013"
+    host="localhost",
+    user="root",
+    password="",
+    database="capstoneproject"
 )
 
 
@@ -238,7 +239,6 @@ def generate_random_code(length=8):
 
 @app.route('/submit_report', methods=['POST'])
 def submit_report():
-    pythoncom.CoInitialize()
     kind = request.form.get('forms')
     if kind == "Formal Complaint":
         department = request.form.get('department')
@@ -297,9 +297,42 @@ def submit_report():
         replace_table_cell_placeholder1(doc.tables[0], 46, 9, evidence3,"(evidence3)")
 
         doc.save("modified_document.docx")
-         # Convert the Word document to PDF using docx2pdf
-        pdf_path = os.path.join('modified_document.pdf')
-        convert("modified_document.docx", pdf_path)
+                # Check the operating system
+        if platform.system() == "Windows":
+            # Convert the Word document to PDF using LibreOffice on Windows
+            docx_file = 'modified_document.docx'
+            pdf_file = 'modified_document.pdf'
+            pdf_path = os.path.join('modified_document.pdf')
+            libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
+            try:
+                # Use subprocess to call the 'libreoffice' command-line tool
+                convert_command = [
+                    libreoffice_path, '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.'
+                ]
+                subprocess.run(convert_command, check=True)
+
+                # Now, 'modified_document.pdf' contains the converted PDF
+
+            except subprocess.CalledProcessError as e:
+                # Handle the conversion error on Windows
+                flash('Error converting the document to PDF', 'error')
+                return redirect('/error_page')
+        else:
+            # Convert the Word document to PDF using LibreOffice on Linux
+            docx_file = 'modified_document.docx'
+            pdf_file = 'modified_document.pdf'
+            pdf_path = os.path.join('modified_document.pdf')
+            try:
+                # Use subprocess to call the 'soffice' command-line tool
+                convert_command = ['soffice', '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.']
+                subprocess.run(convert_command, check=True)
+
+                # Now, 'modified_document.pdf' contains the converted PDF
+
+            except subprocess.CalledProcessError as e:
+                # Handle the conversion error on Linux
+                flash('Error converting the document to PDF', 'error')
+                return redirect('/error_page')
 
     
 
@@ -308,7 +341,7 @@ def submit_report():
             pdf_data = pdf_file.read()
 
 
-        
+       
             
         
         # Check if the POST request has the file part for the supporting document file
@@ -415,9 +448,43 @@ def submit_report():
     
         
         doc.save("modified_document.docx")
-        pdf_path = os.path.join('modified_document.pdf')
-        convert("modified_document.docx", pdf_path)
 
+                # Check the operating system
+        if platform.system() == "Windows":
+            # Convert the Word document to PDF using LibreOffice on Windows
+            docx_file = 'modified_document.docx'
+            pdf_file = 'modified_document.pdf'
+            pdf_path = os.path.join('modified_document.pdf')
+            libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
+            try:
+                # Use subprocess to call the 'libreoffice' command-line tool
+                convert_command = [
+                    libreoffice_path, '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.'
+                ]
+                subprocess.run(convert_command, check=True)
+
+                # Now, 'modified_document.pdf' contains the converted PDF
+
+            except subprocess.CalledProcessError as e:
+                # Handle the conversion error on Windows
+                flash('Error converting the document to PDF', 'error')
+                return redirect('/error_page')
+        else:
+            # Convert the Word document to PDF using LibreOffice on Linux
+            docx_file = 'modified_document.docx'
+            pdf_file = 'modified_document.pdf'
+            pdf_path = os.path.join('modified_document.pdf')
+            try:
+                # Use subprocess to call the 'soffice' command-line tool
+                convert_command = ['soffice', '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.']
+                subprocess.run(convert_command, check=True)
+
+                # Now, 'modified_document.pdf' contains the converted PDF
+
+            except subprocess.CalledProcessError as e:
+                # Handle the conversion error on Linux
+                flash('Error converting the document to PDF', 'error')
+                return redirect('/error_page')
     
 
         file_name = f'{random_code}_Incident Report'
@@ -481,7 +548,6 @@ def submit_report():
 
 @app.route('/submit_request', methods=['GET', 'POST'])
 def submit_request():
-    pythoncom.CoInitialize()
     kind = request.form.get('forms')
     print(kind)
     if kind == "Temporary Gate Pass":
@@ -531,8 +597,42 @@ def submit_request():
         replace_table_cell_placeholder1(doc.tables[1], 5, 3, program, "(program)")
 
         doc.save("modified_document.docx")
-        pdf_path = os.path.join('modified_document.pdf')
-        convert("modified_document.docx", pdf_path)
+                # Check the operating system
+        if platform.system() == "Windows":
+            # Convert the Word document to PDF using LibreOffice on Windows
+            docx_file = 'modified_document.docx'
+            pdf_file = 'modified_document.pdf'
+            pdf_path = os.path.join('modified_document.pdf')
+            libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
+            try:
+                # Use subprocess to call the 'libreoffice' command-line tool
+                convert_command = [
+                    libreoffice_path, '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.'
+                ]
+                subprocess.run(convert_command, check=True)
+
+                # Now, 'modified_document.pdf' contains the converted PDF
+
+            except subprocess.CalledProcessError as e:
+                # Handle the conversion error on Windows
+                flash('Error converting the document to PDF', 'error')
+                return redirect('/error_page')
+        else:
+            # Convert the Word document to PDF using LibreOffice on Linux
+            docx_file = 'modified_document.docx'
+            pdf_file = 'modified_document.pdf'
+            pdf_path = os.path.join('modified_document.pdf')
+            try:
+                # Use subprocess to call the 'soffice' command-line tool
+                convert_command = ['soffice', '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.']
+                subprocess.run(convert_command, check=True)
+
+                # Now, 'modified_document.pdf' contains the converted PDF
+
+            except subprocess.CalledProcessError as e:
+                # Handle the conversion error on Linux
+                flash('Error converting the document to PDF', 'error')
+                return redirect('/error_page')
 
     
 
@@ -849,7 +949,7 @@ def submit_request():
 
 @app.route('/submit_call', methods=['POST'])
 def submit_call():
-    pythoncom.CoInitialize()
+    
     student = request.form.get('student')
     section = request.form.get('section')
     Time = request.form.get('meeting-time')
@@ -925,8 +1025,42 @@ def submit_call():
 
 
     doc.save("modified_document.docx")
-    pdf_path = os.path.join('modified_document.pdf')
-    convert("modified_document.docx", pdf_path)
+        # Check the operating system
+    if platform.system() == "Windows":
+        # Convert the Word document to PDF using LibreOffice on Windows
+        docx_file = 'modified_document.docx'
+        pdf_file = 'modified_document.pdf'
+        pdf_path = os.path.join('modified_document.pdf')
+        libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
+        try:
+            # Use subprocess to call the 'libreoffice' command-line tool
+            convert_command = [
+                libreoffice_path, '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.'
+            ]
+            subprocess.run(convert_command, check=True)
+
+            # Now, 'modified_document.pdf' contains the converted PDF
+
+        except subprocess.CalledProcessError as e:
+            # Handle the conversion error on Windows
+            flash('Error converting the document to PDF', 'error')
+            return redirect('/error_page')
+    else:
+        # Convert the Word document to PDF using LibreOffice on Linux
+        docx_file = 'modified_document.docx'
+        pdf_file = 'modified_document.pdf'
+        pdf_path = os.path.join('modified_document.pdf')
+        try:
+            # Use subprocess to call the 'soffice' command-line tool
+            convert_command = ['soffice', '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.']
+            subprocess.run(convert_command, check=True)
+
+            # Now, 'modified_document.pdf' contains the converted PDF
+
+        except subprocess.CalledProcessError as e:
+            # Handle the conversion error on Linux
+            flash('Error converting the document to PDF', 'error')
+            return redirect('/error_page')
 
     
 
@@ -955,7 +1089,7 @@ def submit_call():
 
 @app.route('/submit_written', methods=['POST'])
 def submit_written():
-    pythoncom.CoInitialize()
+    
     kind = request.form.get('forms')
     print(kind)
     if kind == "Written Warning":
@@ -1075,8 +1209,42 @@ def submit_written():
         replace_table_cell_placeholder1(doc.tables[0], 12, 2, norms, "norms")
         
         doc.save("modified_document.docx")
-        pdf_path = os.path.join('modified_document.pdf')
-        convert("modified_document.docx", pdf_path)
+                # Check the operating system
+        if platform.system() == "Windows":
+            # Convert the Word document to PDF using LibreOffice on Windows
+            docx_file = 'modified_document.docx'
+            pdf_file = 'modified_document.pdf'
+            pdf_path = os.path.join('modified_document.pdf')
+            libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
+            try:
+                # Use subprocess to call the 'libreoffice' command-line tool
+                convert_command = [
+                    libreoffice_path, '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.'
+                ]
+                subprocess.run(convert_command, check=True)
+
+                # Now, 'modified_document.pdf' contains the converted PDF
+
+            except subprocess.CalledProcessError as e:
+                # Handle the conversion error on Windows
+                flash('Error converting the document to PDF', 'error')
+                return redirect('/error_page')
+        else:
+            # Convert the Word document to PDF using LibreOffice on Linux
+            docx_file = 'modified_document.docx'
+            pdf_file = 'modified_document.pdf'
+            pdf_path = os.path.join('modified_document.pdf')
+            try:
+                # Use subprocess to call the 'soffice' command-line tool
+                convert_command = ['soffice', '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.']
+                subprocess.run(convert_command, check=True)
+
+                # Now, 'modified_document.pdf' contains the converted PDF
+
+            except subprocess.CalledProcessError as e:
+                # Handle the conversion error on Linux
+                flash('Error converting the document to PDF', 'error')
+                return redirect('/error_page')
 
     
 
@@ -1215,8 +1383,42 @@ def submit_written():
 
 
         doc.save("modified_document.docx")
-        pdf_path = os.path.join('modified_document.pdf')
-        convert("modified_document.docx", pdf_path)
+                # Check the operating system
+        if platform.system() == "Windows":
+            # Convert the Word document to PDF using LibreOffice on Windows
+            docx_file = 'modified_document.docx'
+            pdf_file = 'modified_document.pdf'
+            pdf_path = os.path.join('modified_document.pdf')
+            libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
+            try:
+                # Use subprocess to call the 'libreoffice' command-line tool
+                convert_command = [
+                    libreoffice_path, '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.'
+                ]
+                subprocess.run(convert_command, check=True)
+
+                # Now, 'modified_document.pdf' contains the converted PDF
+
+            except subprocess.CalledProcessError as e:
+                # Handle the conversion error on Windows
+                flash('Error converting the document to PDF', 'error')
+                return redirect('/error_page')
+        else:
+            # Convert the Word document to PDF using LibreOffice on Linux
+            docx_file = 'modified_document.docx'
+            pdf_file = 'modified_document.pdf'
+            pdf_path = os.path.join('modified_document.pdf')
+            try:
+                # Use subprocess to call the 'soffice' command-line tool
+                convert_command = ['soffice', '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.']
+                subprocess.run(convert_command, check=True)
+
+                # Now, 'modified_document.pdf' contains the converted PDF
+
+            except subprocess.CalledProcessError as e:
+                # Handle the conversion error on Linux
+                flash('Error converting the document to PDF', 'error')
+                return redirect('/error_page')
 
     
 
@@ -1427,8 +1629,42 @@ def submit_written():
         replace_table_cell_placeholder1(doc.tables[0], 7, 2, norms, "norms")
         
         doc.save("modified_document.docx")
-        pdf_path = os.path.join('modified_document.pdf')
-        convert("modified_document.docx", pdf_path)
+                # Check the operating system
+        if platform.system() == "Windows":
+            # Convert the Word document to PDF using LibreOffice on Windows
+            docx_file = 'modified_document.docx'
+            pdf_file = 'modified_document.pdf'
+            pdf_path = os.path.join('modified_document.pdf')
+            libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
+            try:
+                # Use subprocess to call the 'libreoffice' command-line tool
+                convert_command = [
+                    libreoffice_path, '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.'
+                ]
+                subprocess.run(convert_command, check=True)
+
+                # Now, 'modified_document.pdf' contains the converted PDF
+
+            except subprocess.CalledProcessError as e:
+                # Handle the conversion error on Windows
+                flash('Error converting the document to PDF', 'error')
+                return redirect('/error_page')
+        else:
+            # Convert the Word document to PDF using LibreOffice on Linux
+            docx_file = 'modified_document.docx'
+            pdf_file = 'modified_document.pdf'
+            pdf_path = os.path.join('modified_document.pdf')
+            try:
+                # Use subprocess to call the 'soffice' command-line tool
+                convert_command = ['soffice', '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.']
+                subprocess.run(convert_command, check=True)
+
+                # Now, 'modified_document.pdf' contains the converted PDF
+
+            except subprocess.CalledProcessError as e:
+                # Handle the conversion error on Linux
+                flash('Error converting the document to PDF', 'error')
+                return redirect('/error_page')
 
     
 
@@ -2005,6 +2241,53 @@ def count():
 
     # Return the result as JSON
     student_data = {'Reports': countreports, 'Request': countrequest}
+    return jsonify(student_data)
+
+
+@app.route('/check', methods=['POST'])
+def check():
+    
+
+    username = session.get('namestudent', '')
+ 
+
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT COUNT(*) FROM callslip WHERE name = %s", (username,))
+    result = db_cursor.fetchone()
+
+    checks= result[0]
+
+    if checks <= 1:
+        tf = "true"
+        session['oneshow'] = "true"
+
+    else:
+        tf = "false"
+        session['oneshow'] = "true"
+
+    # Return the result as JSON
+    student_data = {'Reports': tf}
+    return jsonify(student_data)
+
+
+
+@app.route('/check2', methods=['POST'])
+def check2():
+
+    lol="false"
+
+    oneshow = session.get('oneshow', '')
+
+    print(oneshow)
+
+    if oneshow == "true":
+        lol="true"
+
+    else:
+        lol="false"
+
+    # Return the result as JSON
+    student_data = {'show': lol}
     return jsonify(student_data)
 
 @app.route('/download_report_file/<string:report_id>')
