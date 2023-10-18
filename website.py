@@ -324,7 +324,7 @@ def submit_report():
             pdf_path = os.path.join('modified_document.pdf')
             try:
                 # Use subprocess to call the 'soffice' command-line tool
-                convert_command = ['soffice', '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.']
+                convert_command = ['./soffice', '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.']
                 subprocess.run(convert_command, check=True)
 
                 # Now, 'modified_document.pdf' contains the converted PDF
