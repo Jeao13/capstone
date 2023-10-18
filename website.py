@@ -5,6 +5,7 @@ import io
 import os
 import time
 import subprocess
+import json
 import platform
 import random
 import string
@@ -19,7 +20,6 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from docx2pdf import convert
 from datetime import datetime
-from lxml import etree
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 import numpy as np
@@ -46,10 +46,10 @@ nsmap = {
 }
 
 db_connection = mysql.connector.connect(
-    host="sql12.freesqldatabase.com",
-    user="sql12654013",
-    password="ppMV9KCpSb",
-    database="sql12654013"
+    host="localhost",
+    user="root",
+    password="",
+    database="capstoneproject"
 )
 
 
@@ -1770,6 +1770,47 @@ def submit_sanction():
     flash('Report submitted successfully!', 'success')
     return redirect(url_for('homepage'))
 
+
+@app.route('/manage_coord', methods=['GET', 'POST'])
+def manage_coord():
+    # Retrieve the username from the session if it exists
+    username = session.get('username', '')
+    user_role = session.get('role', '')
+    user_source = session.get('source', '')
+
+
+    # Query the database to retrieve reports for the logged-in user
+    db_cursor = db_connection.cursor()
+
+    if user_role == 'accounts_coordinators':
+        # If the user is an accounts coordinator, retrieve the course of the user
+        db_cursor.execute("SELECT course FROM accounts_coordinators WHERE username = %s", (username,))
+        user_course = db_cursor.fetchone()
+
+        if user_course:
+            user_course = user_course[0]  # Extract the course from the result
+
+            # Query reports where the course matches the user's course
+            db_cursor.execute("SELECT * FROM reports WHERE course = %s", (user_course,))
+            reports = db_cursor.fetchall()
+    else:
+        # For other roles, simply retrieve reports for the logged-in user
+        db_cursor.execute("SELECT * FROM reports WHERE username = %s", (username,))
+        reports = db_cursor.fetchall()
+        user_course = ""
+
+    # Close the cursor
+    db_cursor.close()
+
+
+    db_cursor_all = db_connection.cursor()
+    db_cursor_all.execute("SELECT * FROM accounts_coordinators")
+    hakdog = db_cursor_all.fetchall()
+
+    db_cursor_all.close()
+
+    return render_template('manage_coord.html', reports=reports, user_source=user_source, user_course=user_course, hakdog=hakdog)
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     # Retrieve the username from the session if it exists
@@ -2754,6 +2795,36 @@ def preview_support_file1(report_id):
 
     # Handle the case where the file was not found
     return "File not found", 404,
+
+
+@app.route('/update-database', methods=['POST'])
+def update_database():
+    try:
+        # Get the JSON data from the request
+        data = request.get_json()
+
+        id = data.get('id')
+        username = data.get('username')
+        password = data.get('password')
+        profile_pic = data.get('profile_pic')
+        name = data.get('name')
+        course = data.get('course')
+
+        print(id)
+        print(username)
+        print(password)
+        print(profile_pic)
+        print(name)
+        print(course)
+
+        
+        # You can also save this data to a database of your choice.
+        # For example, you can use SQLAlchemy or other database libraries.
+
+        return jsonify({"message": "Database updated successfully"})
+    except Exception as e:
+        # Handle any errors that may occur during the update
+        return jsonify({"error": str(e)})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

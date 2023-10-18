@@ -16,10 +16,18 @@
         {% endif %}
 
         <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
-        {% if user_source == 'accounts_coordinators' %}
+        {% if user_source == 'accounts_coordinators'%}
         <a href="/menu">Reports</a>
         <a href="/request">Requests</a>
         {% endif %}
+
+
+        {% if user_source == 'accounts_head' %}
+        <a href="/menu">Reports</a>
+        <a href="/request">Requests</a>
+        <a href="/manage_coord">Manage Coordinators</a>
+        {% endif %}
+        
         <a class="logout" href="/logout">Logout</a>
         <a class="notif" href="#" id="notifications-bar" >Notifications</a>
     </div>
@@ -31,7 +39,7 @@
     
     {% endif %}
 
-    {% if user_source == 'accounts_coordinators' %}
+    {% if user_source == 'accounts_coordinators' or user_source == 'accounts_head' %}
     <h1>Request</h1>
     <div class="navbar-container">
         

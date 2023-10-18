@@ -17,10 +17,16 @@
         <a href="/request">My Request</a>
     {% endif %}
 
-    <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
+    <!-- or user_source == 'accounts_head' Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
     {% if user_source == 'accounts_coordinators' %}
     <a href="/menu">Reports</a>
     <a href="/request">Requests</a>
+    {% endif %}
+
+    {% if user_source == 'accounts_head' %}
+    <a href="/menu">Reports</a>
+    <a href="/request">Requests</a>
+    <a href="/manage_coord">Manage Coordinators</a>
     {% endif %}
 
 
@@ -46,7 +52,7 @@
     </div>
     {% endif %}
 
-    {% if user_source == 'accounts_coordinators'%}
+    {% if user_source == 'accounts_coordinators' or user_source == 'accounts_head'%}
     <div class="user-profile">
         {% if profile_picture_base64 %}
         <img src="data:image/jpeg;base64,{{ profile_picture_base64 }}" alt="Profile Picture">
@@ -239,11 +245,11 @@
     {% endif %}
 
     <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
-    {% if user_source == 'accounts_coordinators' %}
+    {% if user_source == 'accounts_coordinators' or user_source == 'accounts_head'%}
     <button type="button" id="openModalBtn2">Tag Sanction</button>
    
     {% endif %}
-    {% if user_source == 'accounts_coordinators' %}
+    {% if user_source == 'accounts_coordinators' or user_source == 'accounts_head'%}
     <button type="button" id="openModalBtn6">Call Student</button>
     {% endif %}
 
@@ -517,8 +523,9 @@
 
 <div id="myModal2" class="modal">
     <div class="modal-content">
-        <div class ="sanction-content">
         <span class="close" id="closeModalBtn2">&times;</span>
+        <div class ="sanction-content">
+       
         <h1>Tag Sanction</h1>
        
         <h4>Check Records</h4>

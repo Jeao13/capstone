@@ -413,7 +413,8 @@ function toggleInputFields() {
 
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Function to toggle the visibility of the containers
+
+ 
         function toggleContainer(containerId) {
             // Hide all containers
             document.querySelectorAll('#table-container > div').forEach(function (container) {
@@ -497,3 +498,46 @@ function toggleInputFields() {
         });
     });
 
+    function toggleReadonly(button) {
+        var row = button.parentNode.parentNode;
+        var inputElements = row.getElementsByTagName("input");
+        
+        for (var i = 0; i < inputElements.length; i++) {
+            inputElements[i].readOnly = !inputElements[i].readOnly;
+            if (!inputElements[i].readOnly) {
+                inputElements[i].classList.add("editable"); // Add the 'editable' class when the field is editable
+            } else {
+                inputElements[i].classList.remove("editable"); // Remove the 'editable' class when the field is read-only
+            }
+        }
+    }
+
+    function updateRow(button) {
+        var row = button.parentNode.parentNode;
+        var inputElements = row.getElementsByTagName("input");
+        
+        var data = {};
+        for (var i = 0; i < inputElements.length; i++) {
+            data[inputElements[i].name] = inputElements[i].value;
+        }
+
+        console.log(data[0])
+        
+       // Send data to the server for database update
+       $.ajax({
+        url: '/update-database',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function() {
+            // Database update successful
+            alert('Database updated successfully.');
+        },
+        error: function() {
+            // Database update failed
+            alert('Database update failed.');
+        }
+    });
+
+
+    }

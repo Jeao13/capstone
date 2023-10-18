@@ -1,0 +1,58 @@
+<html>
+<head>
+    <link rel="stylesheet" href='/static/style.css' />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/static/script-request.js"></script>
+    <title>Offense Tags</title>
+</head>
+
+<body>
+
+    <div class="topnav">
+        <a href="/hello">Dashboard</a>
+        {% if user_source == 'accounts_head' %}
+        <a href="/menu">Reports</a>
+        <a href="/request">Requests</a>
+        <a href="/manage_coord">Manage Coordinators</a>
+        {% endif %}
+        <a class="logout" href="/logout">Logout</a>
+        <a class="notif" href="#" id="notifications-bar" >Notifications</a>
+    </div>
+
+
+    <h1>Manage Coordinators</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>               
+                <th>Password</th>
+                <th>Profile Pic</th>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in hakdog|sort(attribute='2', reverse=true) %}
+            <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
+            <tr>
+                <td><input type="text" value="{{ row[1] }}" readonly></td>
+                <td><input type="text" value="{{ row[2] }}" readonly></td>
+                <td><input type="text" value="{{ row[3] }}" readonly></td>
+                <td><input type="text" style="width:80%;"value="{{ row[4] }}" readonly></td>
+                <td><input type="text" value="{{ row[5] }}" readonly></td>
+                <td>
+                    <button onclick="toggleReadonly(this)">Toggle Edit</button>
+                    <button onclick="updateRow(this)">Change</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+   
+
+
+
+</body>
+</html>
