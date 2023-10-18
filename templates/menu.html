@@ -145,12 +145,13 @@
         {% if user_source == 'accounts_cics' %}
         {% for row in reports|sort(attribute='2', reverse=true) %}
         <div class="report">
-            <b>Report ID</b> {{ row[0] }}<br>
-            <b>Date and Time:</b> {{ row[2] }}<br>
-            <button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button>
-            <b>Department:</b> {{ row[4] }}<br>   
-            <b>Status:</b> {{ row[5] }}<br>
-        
+            <b>Report ID:</b> {{ row[0] }}<br>
+                <div class="report_small">
+                    <b>Date and Time:</b> {{ row[2] }}<br>
+                    <button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button>
+                    <b>Department:</b> {{ row[4] }}<br>   
+                    <b>Status:</b> {{ row[5] }}<br>
+                </div>
         </div>
         <hr class="report-separator">
         {% endfor %}
