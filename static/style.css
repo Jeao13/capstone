@@ -85,6 +85,7 @@ body {
   height: 100%;
   overflow: auto; /* Enable scroll if needed */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+
 }
 
 /* Style for the modal content */
@@ -98,6 +99,7 @@ body {
   max-height: 80vh; /* Adjust the maximum height as needed */
   overflow-y: auto; /* Add overflow-y property to enable vertical scrolling */
   margin-bottom: 20px; 
+  border-radius: 10px;
 }
 
 /* Style for the close button */
@@ -122,6 +124,8 @@ body {
   height: 70%;
   resize: none;
 }
+
+
 
 #submit{
   
@@ -175,7 +179,7 @@ td {
 }
 
 .report {
-  font-size: 24px; /* Set the font size to 16px */
+  font-size: 20px; /* Set the font size to 16px */
   margin-bottom: 20px; /* Add margin for spacing */
 }
 
@@ -447,3 +451,10 @@ transform: translate(-50%, -50%);
   width:500px;
   height:500px;
 } 
+
+.call{
+  font-size: small;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+

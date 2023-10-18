@@ -46,10 +46,10 @@ nsmap = {
 }
 
 db_connection = mysql.connector.connect(
-    host="sql12.freesqldatabase.com",
-    user="sql12654013",
-    password="ppMV9KCpSb",
-    database="sql12654013"
+    host="localhost",
+    user="root",
+    password="",
+    database="capstoneproject"
 )
 
 
@@ -1796,6 +1796,13 @@ def index():
         result_coordinators = db_cursor.fetchone()
         db_cursor.close()
 
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("SELECT * FROM accounts_head WHERE username = %s AND password = %s",
+                          (submitted_username, submitted_password))
+        result_head = db_cursor.fetchone()
+        db_cursor.close()
+
+
         if result_cics:
             # User exists in the accounts_cics table, set the role and continue
             session['username'] = submitted_username  # Save the username in the session
@@ -1805,6 +1812,11 @@ def index():
             # User exists in the accounts_coordinators table, set the role and continue
             session['username'] = submitted_username  # Save the username in the session
             session['role'] = 'accounts_coordinators'  # Save the role in the session
+            return redirect(url_for('homepage'))  # Redirect to another page after successful login
+        elif result_head:
+            # User exists in the accounts_coordinators table, set the role and continue
+            session['username'] = submitted_username  # Save the username in the session
+            session['role'] = 'accounts_head'  # Save the role in the session
             return redirect(url_for('homepage'))  # Redirect to another page after successful login
         else:
             # Invalid username or password, set error_message
@@ -2105,13 +2117,20 @@ def homepage():
     db_cursor.execute("SELECT * FROM accounts_coordinators WHERE username = %s", (username,))
     result_coordinators = db_cursor.fetchone()
 
+    db_cursor.execute("SELECT * FROM accounts_head WHERE username = %s", (username,))
+    result_head = db_cursor.fetchone()
+
     if result_cics:
-        
         
         user_source = 'accounts_cics'
         session['source'] = user_source
     elif result_coordinators:
         user_source = 'accounts_coordinators'
+        session['source'] = user_source
+
+    elif result_head:
+        user_source = 'accounts_head'
+        print(user_source)
         session['source'] = user_source
     else:
         user_source = 'unknown'  # Handle the case where the user source is not found
@@ -2129,6 +2148,12 @@ def homepage():
     elif user_source == 'accounts_coordinators':
         db_cursor1.execute("SELECT image_data, Name, Course FROM accounts_coordinators WHERE username = %s", (username,))
         role ="coord"
+
+
+    elif user_source == 'accounts_head':
+        db_cursor1.execute("SELECT image_data, Name, Position FROM accounts_head WHERE username = %s", (username,))
+        role ="head"
+
     else:
         # Handle the case where user_source is unknown
         db_cursor1.execute("SELECT image_data, Name, Course, Year FROM accounts_cics WHERE username = %s", (username,))
@@ -2146,6 +2171,12 @@ def homepage():
         year=""
         session['namestudent'] = name
         session['courseall'] = course
+        print(name)
+
+    elif role == "head":
+        profile_picture_data, name, course = result_user_data
+        year=""
+        session['namestudent'] = name
         print(name)
 
     else:
@@ -2166,6 +2197,12 @@ def homepage():
     call = db_cursor_call.fetchall()
     db_cursor_call.close()
 
+    db_cursor_call_student = db_connection.cursor()
+    db_cursor_call_student.execute("SELECT * FROM callslip WHERE name = %s", (name,))
+    reports = db_cursor_call_student.fetchall()
+    db_cursor_call_student.close()
+
+
     
 
     # Encode the profile picture data as a Base64 string
@@ -2175,7 +2212,7 @@ def homepage():
         profile_picture_base64 = None  # Handle the case where there is no profile picture data
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage.html', username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,sanctions=sanctions,call=call)
+    return render_template('homepage.html', reports=reports,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,sanctions=sanctions,call=call)
 
 def lookup_student_info(username):
     try:

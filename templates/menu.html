@@ -101,15 +101,14 @@
                     <td><button class="view-report-button" onclick="getAlgorithmResult('{{ row[3] }}')">View Report</button></td>
                     <td>
                         <!-- Add a form to change the status -->
-                        <form id="statusChangeForm" method="POST" action="{{ url_for('change_report_status', report_id=row[0]) }}"
-                        onsubmit="return confirmStatusChange('{{ row[0] }}')();">
-                        <select name="new_status">
-                            <option value="On Going">On Going</option>
-                            <option value="Rejected">Rejected</option>
-                            <option value="Case Closed">Case Closed</option>
-                        </select>
-                        <button type="submit">Change</button>
-                    </form>
+                        <form id="statusChangeForm" method="POST" action="{{ url_for('change_report_status', report_id=row[0]) }}" onsubmit="checkStatus()">
+                            <select name="new_status" id="new_status_select">
+                              <option value="On Going">On Going</option>
+                              <option value="Rejected">Rejected</option>
+                              <option value="Case Closed">Case Closed</option>
+                            </select>
+                            <button type="submit">Change</button>
+                          </form>
                     </td>
                     <td style="justify-content:center">
                         <!-- Add a form to change the status -->
@@ -142,6 +141,7 @@
 </div>
 
     <div id="reports-container">
+
         {% if user_source == 'accounts_cics' %}
         {% for row in reports|sort(attribute='2', reverse=true) %}
         <div class="report">
@@ -185,6 +185,7 @@
         </ul>
     </div>
 </div>
+
 
 <div id="loading-screen">
     <div class="loading-spinner"></div>

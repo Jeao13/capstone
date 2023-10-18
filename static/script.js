@@ -797,3 +797,21 @@ document.addEventListener("DOMContentLoaded", function () {
     
 
 });
+
+ function checkStatus() {
+    var select = document.getElementById("new_status_select");
+    var selectedValue = select.options[select.selectedIndex].value;
+    console.log(select)
+
+    if (selectedValue === "Rejected" || selectedValue === "Case Closed") {
+      $('#lop').modal('show');
+    } else {
+      // If a different option is selected, hide the modal
+      $('#lop').modal('hide');
+    }
+  }
+
+  function confirmStatusChange(reportId) {
+    // You can add additional validation or logic here
+    return confirm("Are you sure you want to change the status of report " + reportId + "?");
+  }

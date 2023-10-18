@@ -64,10 +64,24 @@
     {% if user_source == 'accounts_cics'%}
     <div id="autoOpenModal" class="modal">
         <div class="modal-content">
+            <h1>Please Report to OSD Office</h1>
+            <hr>
+
             <span class="close" id="closeAutoOpenModalBtn">&times;</span>
-            <h3>Data in Database</h3>
-            <!-- Content to display when data is present -->
-            <p>Data has been found in the database.</p>
+           
+            {% for row in reports|sort(attribute='2', reverse=true) %}
+
+            <div class="report">
+                <b>Call Slip No.:</b>{{row[0]}}<br>
+                <b>Date:</b> {{ row[4] }}<br>
+                <b>Time:</b> {{ row[5] }}<br>  
+                <b>Reason:</b> {{ row[3] }}<br>
+                <b>Summoned by:</b> {{ row[2] }}<br>
+                <b>Call Slip Form:</b><a href="{{ url_for('preview_call_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a><br>
+            
+            </div>
+            <hr class="report-separator">
+            {% endfor %}
         </div>
     </div>
     {% endif %}
@@ -319,6 +333,13 @@
             {% if sanctions == [] %}
             <p>You have no sanctions</p>
             {% else %}
+ 
+            <label for="department">Type of Sanction:</label>
+            <select name="department" id="department" required> 
+                <option value="Sanctions">Sanctions</option> 
+                <option value="Call Slip">Call Slip</option> 
+                <option value="Notice of Case Dismissal">Notice of Case Dismissal</option> 
+            </select><br><br>
             <table>
                 <thead>
                     <tr>
