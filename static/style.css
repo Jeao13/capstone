@@ -16,7 +16,7 @@ body {
 /* Add a black background color to the top navigation */
 .topnav {
     background-color: #333;
-    overflow: hidden;
+    overflow: auto;
   }
   
   /* Style the links inside the navigation bar */
@@ -102,13 +102,10 @@ body {
 
 /* Style for the close button */
 .close {
-  position: absolute;
-  top: 10px; /* Adjust as needed to position it vertically */
-  left: 10px; /* Adjust as needed to position it horizontally */
-  color: hsl(0, 0%, 99%);
-  font-size: 60px;
+  font-size: 30px;
   font-weight: bold;
   cursor: pointer;
+  float: right;
 }
 
 #report {
@@ -124,7 +121,6 @@ body {
 }
 
 #submit{
-  
   float:right;
 }
 
@@ -260,7 +256,6 @@ td {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 100px;
 }
 
 .nav-item a {
@@ -351,5 +346,4 @@ td {
   font-size: 60px;
   font-weight: bold;
   cursor: pointer;
- 
 }
