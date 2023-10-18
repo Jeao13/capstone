@@ -85,6 +85,7 @@ body {
   height: 100%;
   overflow: auto; /* Enable scroll if needed */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+
 }
 
 /* Style for the modal content */
@@ -98,6 +99,7 @@ body {
   max-height: 80vh; /* Adjust the maximum height as needed */
   overflow-y: auto; /* Add overflow-y property to enable vertical scrolling */
   margin-bottom: 20px; 
+  border-radius: 10px;
 }
 
 /* Style for the close button */
@@ -119,6 +121,8 @@ body {
   height: 70%;
   resize: none;
 }
+
+
 
 #submit{
   float:right;
@@ -171,7 +175,7 @@ td {
 }
 
 .report {
-  font-size: 24px; /* Set the font size to 16px */
+  font-size: 20px; /* Set the font size to 16px */
   margin-bottom: 20px; /* Add margin for spacing */
 }
 
@@ -347,3 +351,104 @@ td {
   font-weight: bold;
   cursor: pointer;
 }
+
+#loading-screen {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  text-align: center;
+}
+
+.loading-spinner {
+  position: relative;
+  top: 50%;
+  left: 48%;
+  transform: translate(-50%, -50%);
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+}
+
+.loading-text {
+  position: relative;
+  top: 48%;
+  left: 49.5%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+.sanction-content {
+  background-color: #a4c591;
+  float:left;
+  padding: 20px;
+  border: 1px solid #888; 
+  width: 45%;
+  height: 60%;
+  overflow-y: auto; /* Add overflow-y property to enable vertical scrolling */
+  margin-bottom: 20px; 
+}
+
+
+.written-content {
+  background-color: #acca9a;
+  float:right;
+  padding: 20px;
+  border: 1px solid #888; 
+  width: 45%;
+  height: 60%;
+  overflow-y: auto; /* Add overflow-y property to enable vertical scrolling */
+  margin-bottom: 20px; 
+}
+
+
+#loadingScreen {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
+
+#loadingText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 24px;
+} 
+
+.numberofall{
+align-content: center;
+position: absolute;
+top: 70%;
+left: 50%;
+transform: translate(-50%, -50%);
+  width:500px;
+  height:500px;
+} 
+
+.call{
+  font-size: small;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+
