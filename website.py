@@ -299,12 +299,7 @@ def submit_report():
 
         doc.save("modified_document.docx")
       
-        username = os.getlogin()
-
-        # Print the username
-        print(username)
-
-        temp_dir = os.path.join('C:\\Users', username, 'AppData', 'Local', 'Temp','modified_document.pdf')
+        
 
         convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
 
@@ -314,12 +309,12 @@ def submit_report():
         # Use upload IO wrapper to upload file only once to the API
         upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
 
-        saved_files = convertapi.convert('pdf', { 'File': upload_io }).save_files(tempfile.gettempdir())
+        saved_files = convertapi.convert('pdf', { 'File': upload_io }).save_files('modified_document.pdf')
 
         print("The PDF saved to %s" % saved_files)
 
 
-        pdfpath = temp_dir
+        pdfpath = os.path.join('modified_document.pdf')
 
         file_name = f'{random_code}_Formal Complaint Letter'
         with open(pdfpath, "rb") as pdf_file:
@@ -348,7 +343,6 @@ def submit_report():
             db_connection.commit()
             
             db_cursor.close()
-            os.remove(pdfpath)
             
             
             
@@ -374,7 +368,6 @@ def submit_report():
             db_connection.commit()
             
             db_cursor.close()
-            os.remove(pdfpath)
             
             
             
