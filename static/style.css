@@ -87,7 +87,10 @@ element.style{
   z-index: 1; /* Sit on top */
   left: 0;
   top: 0;
+  justify-content: center;
+  align-items: center;
   width: 100%;
+  min-height: 100vh;
   height: 100%;
   overflow: auto; /* Enable scroll if needed */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
@@ -96,9 +99,7 @@ element.style{
 
 /* Style for the modal content */
 .modal-content {
-  background-color: #fefefe;
-  margin-left:8.5%;
-  margin-top: 5%; /* 15% from the top and centered */
+  background-color: #fefefe; 
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
