@@ -69,22 +69,22 @@
 
     {% if user_source == 'accounts_cics'%}
     <div id="autoOpenModal" class="modal">
+        
         <div class="modal-content">
+            <span class="close" id="closeAutoOpenModalBtn">&times;</span>
             <h1>Please Report to OSD Office</h1>
             <hr>
-
-            <span class="close" id="closeAutoOpenModalBtn">&times;</span>
-           
             {% for row in reports|sort(attribute='2', reverse=true) %}
 
             <div class="report">
                 <b>Call Slip No.:</b>{{row[0]}}<br>
+                <div class = "call_id">
                 <b>Date:</b> {{ row[4] }}<br>
                 <b>Time:</b> {{ row[5] }}<br>  
                 <b>Reason:</b> {{ row[3] }}<br>
                 <b>Summoned by:</b> {{ row[2] }}<br>
                 <b>Call Slip Form:</b><a href="{{ url_for('preview_call_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a><br>
-            
+                </div>
             </div>
             <hr class="report-separator">
             {% endfor %}
@@ -524,8 +524,6 @@
 <div id="myModal2" class="modal">
     <div class="modal-content">
         <span class="close" id="closeModalBtn2">&times;</span>
-        <div class ="sanction-content">
-       
         <h1>Tag Sanction</h1>
        
         <h4>Check Records</h4>
@@ -829,5 +827,5 @@
 
 
    
-</body>
+    </body>
 </html>
