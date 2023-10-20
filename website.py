@@ -3,6 +3,7 @@ import mysql.connector
 import base64
 import io
 import os
+import tempfile
 import requests
 import convertapi
 import subprocess
@@ -297,39 +298,32 @@ def submit_report():
         replace_table_cell_placeholder1(doc.tables[0], 46, 9, evidence3,"(evidence3)")
 
         doc.save("modified_document.docx")
+      
+        username = os.getlogin()
 
-        # Set your API2Convert API key
-        api_key = 'a316d5632ce6652c10f389d7f56667c9'
+        # Print the username
+        print(username)
 
-        # Define the source DOCX file URL or path
+        temp_dir = os.path.join('C:\\Users', username, 'AppData', 'Local', 'Temp','modified_document.pdf')
+
+        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
+
         source_docx = 'modified_document.docx'
 
-        # Define the target format (in this case, 'pdf')
-        target_format = 'pdf'
 
-        # Define the API2Convert conversion endpoint
-        conversion_url = f'https://api2convert.com/v2/convert?apikey={api_key}'
+        # Use upload IO wrapper to upload file only once to the API
+        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
 
-        # Create a JSON payload with the conversion parameters
-        conversion_data = {
-            'input': source_docx,
-            'outputformat': target_format,
-        }
+        saved_files = convertapi.convert('pdf', { 'File': upload_io }).save_files(tempfile.gettempdir())
 
-        # Send a POST request to initiate the conversion
-        response = requests.post(conversion_url, json=conversion_data)
+        print("The PDF saved to %s" % saved_files)
 
-        if response.status_code == 200:
-            # Conversion request successful
-            response_data = response.json()
-            download_url = response_data['output']
 
-            # You can now download the converted PDF file from the 'download_url'
-            # or process it further as needed.
-            print(f'Converted PDF available for download at: {download_url}')
-        else:
-            # Handle the error
-            print('Conversion request failed. Error:', response.text)
+        pdfpath = temp_dir
+
+        file_name = f'{random_code}_Formal Complaint Letter'
+        with open(pdfpath, "rb") as pdf_file:
+            pdf_data = pdf_file.read()
 
 
             
@@ -349,13 +343,13 @@ def submit_report():
             support_extension = "None"
 
             db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO reports (report_id, course, report,  file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                        (random_code, department, report_text,  file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)",
+                        (random_code, department, report_text, pdf_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
             db_connection.commit()
             
             db_cursor.close()
-            os.remove("modified_document.docx")
-            os.remove("modified_document.pdf")
+            os.remove(pdfpath)
+            
             
             
             flash('The report is submitted', 'success')
@@ -375,12 +369,13 @@ def submit_report():
             
             # Insert the report with file information into the database, including file data
             db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO reports (report_id, course, report,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s)",
-                        (random_code, department, report_text, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
+                        (random_code, department, report_text, pdf_data,file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
             db_connection.commit()
             
             db_cursor.close()
-            os.remove("modified_document.docx")
+            os.remove(pdfpath)
+            
             
             
             flash('The report is submitted', 'success')
