@@ -1919,21 +1919,17 @@ def algorithm(complaint_text):
 
     # 5 Cross-validation
     CV = 5
-    cv_df = pd.DataFrame(index=range(CV * len(models)))
     entries = []
     for model in models:
         model_name = model.__class__.__name__
         accuracies = cross_val_score(model, features, labels, scoring='accuracy', cv=CV)
         for fold_idx, accuracy in enumerate(accuracies):
             entries.append((model_name, fold_idx, accuracy))
-    cv_df = pd.DataFrame(entries, columns=['model_name', 'fold_idx', 'accuracy'])
 
     # Initialize and train the LinearSVC model
     model = LinearSVC(dual=False)
     model.fit(tfidf.transform(X_train), y_train)
 
-    # Predict on the test set
-    y_pred = model.predict(tfidf.transform(X_test))
 
         # Sample complaint text
     complaint = complaint_text
