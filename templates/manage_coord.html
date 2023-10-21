@@ -25,33 +25,52 @@
     <table>
         <thead>
             <tr>
-                <th>Username</th>               
-                <th>Password</th>
+                <th>Coord_Id</th>
                 <th>Profile Pic</th>
+                <th>Username</th>
+                <th>Password</th>
                 <th>Name</th>
                 <th>Course</th>
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody>
-            {% for row in hakdog|sort(attribute='2', reverse=true) %}
-            <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
+        <tbody id="coordinator-table">
+            {% for row in coordinators %}
             <tr>
-                <td><input type="text" value="{{ row[1] }}" readonly></td>
-                <td><input type="text" value="{{ row[2] }}" readonly></td>
-                <td><input type="text" value="{{ row[3] }}" readonly></td>
-                <td><input type="text" style="width:80%;"value="{{ row[4] }}" readonly></td>
-                <td><input type="text" value="{{ row[5] }}" readonly></td>
+                <td data-coord-id="{{ row[0] }}">{{ row[0] }}</td>
+                <td data-pic-id="{{ profile_pictures[row[0]] }}"><img src="{% if profile_pictures.get(row[0]) %}data:image/jpeg;base64,{{ profile_pictures[row[0]] }}{% else %}/static/default_profile.png{% endif %}" alt="Profile Picture" class="pic_coord"></td>
+                <td><input type="text" name="username" value="{{ row[1] }}" readonly></td>
+                <td><input type="text" name="password" value="{{ row[2] }}" readonly></td>
+              
+                <td><input type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly></td>
+                <td><input type="text" name="course" value="{{ row[5] }}" readonly></td>
                 <td>
                     <button onclick="toggleReadonly(this)">Toggle Edit</button>
                     <button onclick="updateRow(this)">Change</button>
+                    <button onclick="openModal3('{{ row[0] }}')">Change Profile Pic</button>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-   
 
+
+
+    <div id="modalContainer" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal6()">&times;</span>
+            <form id="statusChangeForm" method="POST" action="/edit_pic" enctype="multipart/form-data">
+                <label for="file3">Attach the New Profile Pic:</label>
+                <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
+                
+
+
+            <button type="submit">Change</button>
+          
+        </form>
+        </div>
+        
+    </div>
 
 
 </body>

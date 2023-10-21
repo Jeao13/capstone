@@ -491,3 +491,8 @@ transform: translate(-50%, -50%);
 .report_small{
   font-size: 14px;
 }
+
+.pic_coord{
+  width: 200px;
+  height:150px;
+}

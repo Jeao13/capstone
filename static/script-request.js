@@ -471,6 +471,29 @@ function toggleInputFields() {
         // Hide the modal
         modal.style.display = 'none';
     }
+
+    function openModal3(id) {
+        const modal = document.getElementById('modalContainer');
+        modal.style.display = 'block';
+        // Create a new button element
+        const newButton = document.createElement('input');
+        newButton.type = 'hidden';
+        newButton.value = id;
+        newButton.id = 'id';
+        newButton.name = 'id';
+
+        const form = document.getElementById('statusChangeForm');
+        form.appendChild(newButton);
+
+        
+    
+    }
+    function closeModal7() {
+        var modal = document.getElementById('modalContainer');
+    
+        // Hide the modal
+        modal.style.display = 'none';
+    }
     
 
     document.getElementById('statusChangeForm').addEventListener('submit', function (e) {
@@ -513,15 +536,27 @@ function toggleInputFields() {
     }
 
     function updateRow(button) {
+
+       
+
         var row = button.parentNode.parentNode;
+
+        var coordId = row.querySelector("td[data-coord-id]").getAttribute("data-coord-id");
+        var picId = row.querySelector("td[data-pic-id]").getAttribute("data-pic-id");
+        console.log(row)
         var inputElements = row.getElementsByTagName("input");
+        console.log(inputElements)
         
         var data = {};
         for (var i = 0; i < inputElements.length; i++) {
-            data[inputElements[i].name] = inputElements[i].value;
+            var inputElement = inputElements[i];
+            data[inputElement.name] = inputElement.value;
+          
         }
 
-        console.log(data[0])
+        data["coordId"] = coordId;
+        data["picId"] = picId;
+
         
        // Send data to the server for database update
        $.ajax({
@@ -541,3 +576,26 @@ function toggleInputFields() {
 
 
     }
+
+
+    function sortTable() {
+        var table = document.getElementById("coordinator-table");
+        var rows = table.rows;
+        var sortedRows = Array.from(rows).slice(1); // Skip the header row
+        sortedRows.sort((a, b) => {
+            var aCoordId = parseInt(a.querySelector("[data-coord-id]").getAttribute("data-coord-id"));
+            var bCoordId = parseInt(b.querySelector("[data-coord-id]").getAttribute("data-coord-id"));
+            return aCoordId - bCoordId;
+        });
+        // Clear the existing rows in the table
+        while (table.firstChild) {
+            table.removeChild(table.firstChild);
+        }
+        // Append the sorted rows back to the table
+        for (var i = 0; i < sortedRows.length; i++) {
+            table.appendChild(sortedRows[i]);
+        }
+    }
+    
+    // Call the sortTable function to initially sort the table
+    sortTable();

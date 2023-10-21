@@ -47,10 +47,10 @@ nsmap = {
 }
 
 db_connection = mysql.connector.connect(
-    host="sql12.freesqldatabase.com",
-    user="sql12654861",
-    password="L4s5FRPgIF",
-    database="sql12654861"
+    host="localhost",
+    user="root",
+    password="",
+    database="capstoneproject"
 )
 
 
@@ -1764,11 +1764,22 @@ def manage_coord():
 
     db_cursor_all = db_connection.cursor()
     db_cursor_all.execute("SELECT * FROM accounts_coordinators")
-    hakdog = db_cursor_all.fetchall()
-
+    coordinators = db_cursor_all.fetchall()
     db_cursor_all.close()
 
-    return render_template('manage_coord.html', reports=reports, user_source=user_source, user_course=user_course, hakdog=hakdog)
+    # Create a dictionary to hold profile pictures as Base64
+    profile_pictures = {}
+
+    # Fetch the profile pictures and convert them to Base64 if they exist
+    for row in coordinators:
+        coord_id = row[0]  # Assuming the first column is the Coord_Id
+        image_data = row[3]  # Assuming the fourth column is the image_data
+
+        if image_data:
+            profile_picture_base64 = base64.b64encode(image_data).decode('utf-8')
+            profile_pictures[coord_id] = profile_picture_base64
+
+    return render_template('manage_coord.html', reports=reports, user_source=user_source, user_course=user_course, coordinators=coordinators, profile_pictures=profile_pictures)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -1914,26 +1925,22 @@ def algorithm(complaint_text):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
     models = [
-        LinearSVC(),
+        LinearSVC(dual=False),
     ]
 
     # 5 Cross-validation
     CV = 5
-    cv_df = pd.DataFrame(index=range(CV * len(models)))
     entries = []
     for model in models:
         model_name = model.__class__.__name__
         accuracies = cross_val_score(model, features, labels, scoring='accuracy', cv=CV)
         for fold_idx, accuracy in enumerate(accuracies):
             entries.append((model_name, fold_idx, accuracy))
-    cv_df = pd.DataFrame(entries, columns=['model_name', 'fold_idx', 'accuracy'])
 
     # Initialize and train the LinearSVC model
-    model = LinearSVC()
+    model = LinearSVC(dual=False)
     model.fit(tfidf.transform(X_train), y_train)
 
-    # Predict on the test set
-    y_pred = model.predict(tfidf.transform(X_test))
 
         # Sample complaint text
     complaint = complaint_text
@@ -2762,28 +2769,59 @@ def update_database():
         # Get the JSON data from the request
         data = request.get_json()
 
-        id = data.get('id')
+        id = data.get('coordId')
         username = data.get('username')
         password = data.get('password')
-        profile_pic = data.get('profile_pic')
+        profile_pic_base64 = data.get('picId')
         name = data.get('name')
         course = data.get('course')
 
-        print(id)
-        print(username)
-        print(password)
-        print(profile_pic)
-        print(name)
-        print(course)
+        if profile_pic_base64:
+            profile_pic = base64.b64decode(profile_pic_base64)
+        else:
+            profile_pic = None  # Handle the case where there is no profile picture
 
-        
-        # You can also save this data to a database of your choice.
-        # For example, you can use SQLAlchemy or other database libraries.
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("UPDATE accounts_coordinators SET username = %s, password = %s, image_data = %s, name = %s, course = %s WHERE id = %s;", (username, password,profile_pic,name,course,id))
+        db_connection.commit()  # Make sure to commit the changes to the database
+        db_cursor.close()
+
 
         return jsonify({"message": "Database updated successfully"})
     except Exception as e:
         # Handle any errors that may occur during the update
         return jsonify({"error": str(e)})
+
+@app.route('/edit_pic', methods=['POST'])
+def edit_pic():
+    ids = request.form.get('id')
+    print(ids)
+    try:
+        pic = request.files['file3']
+        
+        if pic:
+            # Read the image data from the file
+            image_data = memoryview(pic.read()).tobytes()
+        else:
+            image_data = None  # Handle the case where there is no profile picture
+
+
+
+      
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("UPDATE accounts_coordinators SET image_data = %s WHERE id = %s;", (image_data, ids))
+        db_connection.commit()  # Make sure to commit the changes to the database
+        db_cursor.close()
+
+
+
+        return redirect(url_for('manage_coord'))
+    except Exception as e:
+            # Handle any errors that may occur during the update
+            return jsonify({"error": str(e)})
+
+
+    
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
