@@ -1914,7 +1914,7 @@ def algorithm(complaint_text):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
     models = [
-        LinearSVC(),
+        LinearSVC(dual=False),
     ]
 
     # 5 Cross-validation
@@ -1929,7 +1929,7 @@ def algorithm(complaint_text):
     cv_df = pd.DataFrame(entries, columns=['model_name', 'fold_idx', 'accuracy'])
 
     # Initialize and train the LinearSVC model
-    model = LinearSVC()
+    model = LinearSVC(dual=False)
     model.fit(tfidf.transform(X_train), y_train)
 
     # Predict on the test set
