@@ -442,15 +442,24 @@ function toggleInputFields() {
     });
 
 
-      function openModal1() {
-        const modal = document.getElementById('modalContainer6');
+      function openModal1(id2) {
+        const modal = document.getElementById('modalContainer9');
         modal.style.display = 'block';
+        // Create a new button element
+        const newButton = document.createElement('input');
+        newButton.type = 'hidden';
+        newButton.value = id2;
+        newButton.id = 'id';
+        newButton.name = 'id';
+
+        const form = document.getElementById('statusChangeForm1');
+        form.appendChild(newButton);
 
         
     
     }
-    function closeModal7() {
-        var modal = document.getElementById('modalContainer6');
+    function closeModal11() {
+        var modal = document.getElementById('modalContainer9');
     
         // Hide the modal
         modal.style.display = 'none';
@@ -458,9 +467,18 @@ function toggleInputFields() {
     
     
     
-    function openModal2() {
+    function openModal2(id1) {
         const modal = document.getElementById('modalContainer');
         modal.style.display = 'block';
+        // Create a new button element
+        const newButton = document.createElement('input');
+        newButton.type = 'hidden';
+        newButton.value = id1;
+        newButton.id = 'id';
+        newButton.name = 'id';
+
+        const form = document.getElementById('statusChangeForm2');
+        form.appendChild(newButton);
 
         
     

@@ -158,11 +158,11 @@
                     <td><button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
                     <td>
                     
-                        <button class="view-report-button" onclick="openModal1('{{ row[0] }}')">Approved</button>
-                         <input type="hidden" id="reportId" name="reportId" value="{{ row[0] }}">
+                        <button id="krazyid" class="view-report-button" onclick="openModal1('{{ row[0] }}')">Approved</button>
+                      
                        
-                        <button class="view-report-button" onclick="openModal2('{{ row[0] }}')">Rejected</button>
-                        <input type="hidden" id="reportId" name="reportId" value="{{ row[0] }}">
+                        <button id="idkrazy" class="view-report-button" onclick="openModal2('{{ row[0] }}')">Rejected</button>
+                       
                  
                     </td>
                     <td>
@@ -318,10 +318,10 @@
     </div>
 
     <!-- The Modal -->
-    <div class="modal" id="modalContainer6">
+    <div id="modalContainer9" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal7()">&times;</span>
-             <form id="statusChangeForm" method="POST" action="/submit_approve" enctype="multipart/form-data">
+            <span class="close" onclick="closeModal11()">&times;</span>
+             <form id="statusChangeForm1" method="POST" action="/submit_approve" enctype="multipart/form-data">
             <label id="provision1" for="remarks" >Message:</label><br>
             <textarea id="remarks" name="remarks" rows="16" cols="100" style="resize: none;" ></textarea>
             <label for="file4">Attach the Modified Document:</label>
@@ -348,9 +348,10 @@
     <div id="modalContainer" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal6()">&times;</span>
-            <form id="statusChangeForm" method="POST" action="/submit_reject">
-            <label id="provision1" for="remarks" >Reasons for Rejection:</label><br>
-            <textarea id="remarks" name="remarks" rows="16" cols="100" style="resize: none;" ></textarea>
+            <form id="statusChangeForm2" method="POST" action="/submit_reject">
+            <label id="provision1" for="remarks" >Reasons for Rejection:</label>
+            <textarea id="remarks" name="remarks" rows="5" cols="50" style="resize: none;" ></textarea><br><br>
+           
            
             <button type="submit">Change</button>
           

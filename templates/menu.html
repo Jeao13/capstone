@@ -87,30 +87,30 @@
                 </tr>
             </thead>
             <tbody>
-                {% for row in reports|sort(attribute='2', reverse=true) %}
+                {% for row in reports|sort(attribute='3', reverse=true) %}
                 <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
                 <tr>
-                    <td>{{ row[0] }}</td>
                     <td>{{ row[1] }}</td>
                     <td>{{ row[2] }}</td>
-                    <td>{{ row[4] }}</td>
+                    <td>{{ row[3] }}</td>
                     <td>{{ row[5] }}</td>
+                    <td>{{ row[6] }}</td>
                         <td>
-                            <a href="{{ url_for('preview_report_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
+                            <a href="{{ url_for('preview_report_file', report_id=row[1]) }}" target="_blank">{{ row[8] }}</a>
                         </td>
     
                   
                         <td>
-                            <a href="{{ url_for('preview_support_file', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a>
+                            <a href="{{ url_for('preview_support_file', report_id=row[1]) }}" target="_blank">{{ row[11] }}</a>
                         </td>
                       
                     
                     
-                    <td><button class="view-report-button" onclick="getAlgorithmResult('{{ row[3] }}')">View Report</button></td>
+                    <td><button class="view-report-button" onclick="getAlgorithmResult('{{ row[4] }}')">View Report</button></td>
                     <td>
                         <!-- Add a form to change the status -->
-                        <form id="statusChangeForm" method="POST" action="{{ url_for('change_report_status', report_id=row[0]) }}" onsubmit="checkStatus()">
-                            <select name="new_status" id="new_status_select">
+                        <form id="statusChangeForm" onsubmit="checkStatus('{{ row[0] }}'); return false; ">
+                            <select name="new_status" id="new_status_select_{{ row[0] }}">
                               <option value="On Going">On Going</option>
                               <option value="Rejected">Rejected</option>
                               <option value="Case Closed">Case Closed</option>
@@ -120,7 +120,7 @@
                     </td>
                     <td style="justify-content:center">
                         <!-- Add a form to change the status -->
-                        <form method="POST" action="{{ url_for('delete_report', report_id=row[0]) }}"
+                        <form method="POST" action="{{ url_for('delete_report', report_id=row[1]) }}"
                               onsubmit="return confirm('Are you sure you want to delete this report?');">
                             <button type="submit">Delete</button>
                         </form>
@@ -131,6 +131,61 @@
         </table>
     </div>
 {% endif %}
+
+<div id="rejectModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeRejectModal()">&times;</span>
+        <h1>Notice of Case Disimissal - Reject</h1>
+        <form action="/submit_request" method="POST" enctype="multipart/form-data">
+
+        <label for="student">Name of the Student:</label><br>
+        <input type="text" id="student" name="student"><br><br>
+
+        <label for="srcode">SR-Code of the Student:</label><br>
+        <input type="text" id="srcode" name="srcode"><br><br>
+
+        <label for="section">Year and Section:</label><br>
+        <input type="text" id="section" name="section"><br><br>
+
+        <label for="program">Program:</label><br>
+        <input type="text" id="program" name="program"><br><br>
+        <hr>
+        <h3>Gender</h3>
+
+        <input type="radio" id="male" name="gender" value="male">
+        <label for="male">Male</label><br>
+        
+        <input type="radio" id="female" name="gender" value="female">
+        <label for="female">Female</label><br>
+        <hr>
+        <h3>Indicate Offense</h3>
+        <input type="radio" id="minor" name="offense_type" value="minor">
+        <label for="minor">Minor Offense</label>
+        <input type="text" id="minor_input" name="minor_offense" style="display: none"><br>
+
+        <input type="radio" id="major" name="offense_type" value="major">
+        <label for="major">Major Offense</label>
+        <input type="text" id="major_input" name="major_offense" style="display: none"><br>
+        <hr>
+        <h3>Reason for Dismissal:</h3>
+        <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork">
+        <label for="fieldwork">The complaint is without merit.</label><br>
+        <input type="checkbox" id="prolonged" name="prolonged" value="prolonged" onclick="toggleInput4()">
+        <label for="prolonged">Others, please specify:</label><br>
+        <input type="text" id="specify2" name="specify2" style="display: none"><br>
+        <input type="hidden" name="status" value="Rejected">
+
+        <input id="submit" type="submit" value="Submit">
+    </form>
+    </div>
+</div>
+
+<div id="caseModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeCaseModal()">&times;</span>
+        <p>Notice of Case Disimissal - Case Closed</p>
+    </div>
+</div>
 
 <div id="notifications-container" class="notifications">
         
@@ -153,12 +208,12 @@
         {% if user_source == 'accounts_cics' %}
         {% for row in reports|sort(attribute='2', reverse=true) %}
         <div class="report">
-            <b>Report ID:</b> {{ row[0] }}<br>
+            <b>Report ID:</b> {{ row[1] }}<br>
                 <div class="report_small">
-                    <b>Date and Time:</b> {{ row[2] }}<br>
-                    <button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button>
-                    <b>Department:</b> {{ row[4] }}<br>   
-                    <b>Status:</b> {{ row[5] }}<br>
+                    <b>Date and Time:</b> {{ row[3] }}<br>
+                    <button class="view-report-button" onclick="openModal('{{ row[4] }}')">View Report</button>
+                    <b>Department:</b> {{ row[5] }}<br>   
+                    <b>Status:</b> {{ row[6] }}<br>
                 </div>
         </div>
         <hr class="report-separator">

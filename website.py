@@ -3,11 +3,9 @@ import mysql.connector
 import base64
 import io
 import os
-import tempfile
 import requests
 import convertapi
-import subprocess
-import platform
+import detectlanguage
 import random
 import string
 import base64
@@ -250,6 +248,7 @@ def submit_report():
         section = request.form.get('section')
         number = request.form.get('number')
         email = request.form.get('email')
+        namecomplain = request.form.get('namecomplain') 
         witness1 = request.form.get('witness1')
         witness2 = request.form.get('witness2')
         witness3 = request.form.get('witness3')
@@ -288,6 +287,7 @@ def submit_report():
         replace_table_cell_placeholder1(doc.tables[0], 23, 3, report_text,"(narration)")
         replace_table_cell_placeholder1(doc.tables[0], 30, 3, final,"(final)")
         replace_table_cell_placeholder_with_image(doc.tables[0], 37, 18, pic,"lol")
+        replace_table_cell_placeholder1(doc.tables[0], 37, 18, namecomplain,"(NAME)")
         replace_table_cell_placeholder1(doc.tables[0], 38, 18, number,"(number)")
         replace_table_cell_placeholder1(doc.tables[0], 39, 18, email, "(email)")
         replace_table_cell_placeholder1(doc.tables[0], 40, 6, witness1,"(witness1)")
@@ -381,6 +381,7 @@ def submit_report():
         section = request.form.get('section1')
         designation = request.form.get('designation')
         program = request.form.get('program') 
+        namecomplain = request.form.get('namecomplain') 
         pic = request.files['file3']
         current_datetime = datetime.now()
         current_date = current_datetime.date()
@@ -401,7 +402,8 @@ def submit_report():
         replace_table_cell_placeholder(doc.tables[0], 6, 4, report_text)
         replace_table_cell_placeholder(doc.tables[0], 10, 4, remarks)
         
-        replace_table_cell_placeholder_with_image(doc.tables[0], 14, 1, pic,"(signature)",29)
+        replace_table_cell_placeholder_with_image(doc.tables[0], 14, 1, pic,"(signature)",2)
+        replace_table_cell_placeholder1(doc.tables[0], 14, 1, namecomplain,"Amazing")
         replace_table_cell_placeholder1(doc.tables[0], 14, 1, designation,"(designation)")
         replace_table_cell_placeholder1(doc.tables[0], 14, 1, str(current_date),"lol")
         replace_table_cell_placeholder(doc.tables[0], 2, 8, current_time)
@@ -415,7 +417,8 @@ def submit_report():
         replace_table_cell_placeholder(doc.tables[1], 6, 4, report_text)
         replace_table_cell_placeholder(doc.tables[1], 10, 4, remarks)
         
-        replace_table_cell_placeholder_with_image(doc.tables[1], 14, 1, pic,"(signature)",29)
+        replace_table_cell_placeholder_with_image(doc.tables[1], 14, 1, pic,"(signature)",2)
+        replace_table_cell_placeholder1(doc.tables[1], 14, 1, namecomplain,"Amazing")
         replace_table_cell_placeholder1(doc.tables[1], 14, 1, designation,"(designation)")
         replace_table_cell_placeholder1(doc.tables[1], 14, 1, str(current_date),"lol")
         replace_table_cell_placeholder(doc.tables[1], 2, 8, current_time)
@@ -426,57 +429,35 @@ def submit_report():
         
         doc.save("modified_document.docx")
 
-                # Check the operating system
-        if platform.system() == "Windows":
-            # Convert the Word document to PDF using LibreOffice on Windows
-            docx_file = 'modified_document.docx'
-            pdf_file = 'modified_document.pdf'
-            pdf_path = os.path.join('modified_document.pdf')
-            libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
-            try:
-                # Use subprocess to call the 'libreoffice' command-line tool
-                convert_command = [
-                    libreoffice_path, '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.'
-                ]
-                subprocess.run(convert_command, check=True)
+        
+        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
 
-                # Now, 'modified_document.pdf' contains the converted PDF
+        source_docx = 'modified_document.docx'
 
-            except subprocess.CalledProcessError as e:
-                # Handle the conversion error on Windows
-                flash('Error converting the document to PDF', 'error')
-                return redirect('/error_page')
-        else:
-            # Convert the Word document to PDF using LibreOffice on Linux
-            docx_file = 'modified_document.docx'
-            pdf_file = 'modified_document.pdf'
-            pdf_path = os.path.join('modified_document.pdf')
-            try:
-                # Use subprocess to call the 'soffice' command-line tool
-                convert_command = ['soffice', '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.']
-                subprocess.run(convert_command, check=True)
 
-                # Now, 'modified_document.pdf' contains the converted PDF
+        # Use upload IO wrapper to upload file only once to the API
+        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
 
-            except subprocess.CalledProcessError as e:
-                # Handle the conversion error on Linux
-                flash('Error converting the document to PDF', 'error')
-                return redirect('/error_page')
-    
+        saved_files = convertapi.convert('pdf', { 'File': upload_io }).save_files('modified_document.pdf')
 
-        file_name = f'{random_code}_Incident Report'
-        with open(pdf_path, "rb") as pdf_file:
+        print("The PDF saved to %s" % saved_files)
+
+
+        pdfpath = os.path.join('modified_document.pdf')
+
+        file_name = f'{random_code}_Incident Report Letter'
+        with open(pdfpath, "rb") as pdf_file:
             pdf_data = pdf_file.read()
 
-        
+
             
         
         # Check if the POST request has the file part for the supporting document file
-        if 'file4' not in request.files:
+        if 'file3' not in request.files:
             flash('No supporting document file part')
             return redirect(request.url)
         
-        support_file = request.files['file4']
+        support_file = request.files['file3']
         
         # Check if the user submitted an empty supporting document file input
     
@@ -486,21 +467,18 @@ def submit_report():
             support_extension = "None"
 
             db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                        (random_code, department, report_text,   pdf_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)",
+                        (random_code, department, report_text, pdf_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
             db_connection.commit()
             
             db_cursor.close()
-            os.remove("modified_document.docx")
-            os.remove("modified_document.pdf")
+            
             
             
             flash('The report is submitted', 'success')
             return redirect('/hello')
-            
-        
         else:
-            # Securely get the filenames and file extensions
+           
             support_filename = secure_filename(support_file.filename)
         
             support_extension = os.path.splitext(support_filename)[1]
@@ -512,16 +490,17 @@ def submit_report():
             
             # Insert the report with file information into the database, including file data
             db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                        (random_code, department, report_text,   pdf_data, file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
+                        (random_code, department, report_text, pdf_data,file_name,support_filename, support_extension, support_data, username, current_datetime, "Pending"))
             db_connection.commit()
             
             db_cursor.close()
-            os.remove("modified_document.docx")
-            os.remove("modified_document.pdf")
+            
+            
             
             flash('The report is submitted', 'success')
             return redirect('/hello')
+
 
 @app.route('/submit_request', methods=['GET', 'POST'])
 def submit_request():
@@ -575,49 +554,29 @@ def submit_request():
 
         doc.save("modified_document.docx")
                 # Check the operating system
-        if platform.system() == "Windows":
-            # Convert the Word document to PDF using LibreOffice on Windows
-            docx_file = 'modified_document.docx'
-            pdf_file = 'modified_document.pdf'
-            pdf_path = os.path.join('modified_document.pdf')
-            libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
-            try:
-                # Use subprocess to call the 'libreoffice' command-line tool
-                convert_command = [
-                    libreoffice_path, '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.'
-                ]
-                subprocess.run(convert_command, check=True)
+        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
 
-                # Now, 'modified_document.pdf' contains the converted PDF
+        source_docx = 'modified_document.docx'
 
-            except subprocess.CalledProcessError as e:
-                # Handle the conversion error on Windows
-                flash('Error converting the document to PDF', 'error')
-                return redirect('/error_page')
-        else:
-            # Convert the Word document to PDF using LibreOffice on Linux
-            docx_file = 'modified_document.docx'
-            pdf_file = 'modified_document.pdf'
-            pdf_path = os.path.join('modified_document.pdf')
-            try:
-                # Use subprocess to call the 'soffice' command-line tool
-                convert_command = ['soffice', '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.']
-                subprocess.run(convert_command, check=True)
 
-                # Now, 'modified_document.pdf' contains the converted PDF
+        # Use upload IO wrapper to upload file only once to the API
+        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
 
-            except subprocess.CalledProcessError as e:
-                # Handle the conversion error on Linux
-                flash('Error converting the document to PDF', 'error')
-                return redirect('/error_page')
+        saved_files = convertapi.convert('pdf', { 'File': upload_io }).save_files('modified_document.pdf')
 
-    
+        print("The PDF saved to %s" % saved_files)
 
-        file_name = f'{random_code}_Temporary Gate Pass'
-        with open(pdf_path, "rb") as pdf_file:
+
+        pdfpath = os.path.join('modified_document.pdf')
+
+        file_name = f'{random_code}_Temporary Gate Pass Letter'
+        with open(pdfpath, "rb") as pdf_file:
             pdf_data = pdf_file.read()
+
+
+            
         
-        
+        # Check if the POST request has the file part for the supporting document file
         if 'file5' not in request.files:
             flash('No supporting document file part')
             return redirect(request.url)
@@ -627,29 +586,43 @@ def submit_request():
         # Check if the user submitted an empty supporting document file input
     
         if support_file.filename == '':
-            support_file = None 
-        
-       
-        
-        if support_file:
-            # Securely get the filenames and file extensions
+            support_data = None
+            support_filename = "None"
+            support_extension = "None"
+
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                            (random_code, department,remarks,file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
+            db_connection.commit()
+            
+            db_cursor.close()
+            
+            
+            
+            flash('The report is submitted', 'success')
+            return redirect('/hello')
+        else:
            
             support_filename = secure_filename(support_file.filename)
+        
             support_extension = os.path.splitext(support_filename)[1]
             
-        
+            # Read the file data into memory
+            
             support_data = support_file.read()
+            
             
             # Insert the report with file information into the database, including file data
             db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course, report, file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                            (random_code, department, remarks, file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                    (random_code, department,remarks,file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
             db_connection.commit()
-            db_cursor.close()
-            os.remove("modified_document.docx")
-            os.remove("modified_document.pdf")
             
-            flash('Report submitted successfully')
+            db_cursor.close()
+            
+            
+            
+            flash('The report is submitted', 'success')
             return redirect('/hello')
         
     elif kind == "Request for Non-Wearing of Uniform":
@@ -661,7 +634,7 @@ def submit_request():
         majeure = request.form.get('majeure')
         internship = request.form.get('internship')
         specify = request.form.get('specify')
-        remarks = request.form.get('remarks')
+        remarks = "The details of the report is located in the document"
         department = request.form.get('department')
         specify1 = request.form.get('specifyTextarea')
         print(specify1)
@@ -746,24 +719,31 @@ def submit_request():
         replace_table_cell_placeholder1(doc.tables[0], 4, 10, section,"(section)")
         replace_table_cell_placeholder_with_image(doc.tables[0], 16, 1, pic,"(signature)",29)
 
-        
-
-
-
-
-        
 
         doc.save("modified_document.docx")
-        pdf_path = os.path.join('modified_document.pdf')
-        convert("modified_document.docx", pdf_path)
+        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
 
-    
+        source_docx = 'modified_document.docx'
+
+
+        # Use upload IO wrapper to upload file only once to the API
+        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
+
+        saved_files = convertapi.convert('pdf', { 'File': upload_io }).save_files('modified_document.pdf')
+
+        print("The PDF saved to %s" % saved_files)
+
+
+        pdfpath = os.path.join('modified_document.pdf')
 
         file_name = f'{random_code}_Request for Non-Wearing of Uniform'
-        with open(pdf_path, "rb") as pdf_file:
+        with open(pdfpath, "rb") as pdf_file:
             pdf_data = pdf_file.read()
+
+
+            
         
-        
+        # Check if the POST request has the file part for the supporting document file
         if 'file6' not in request.files:
             flash('No supporting document file part')
             return redirect(request.url)
@@ -773,29 +753,43 @@ def submit_request():
         # Check if the user submitted an empty supporting document file input
     
         if support_file.filename == '':
-            support_file = None 
-        
-       
-        
-        if support_file:
-            # Securely get the filenames and file extensions
+            support_data = None
+            support_filename = "None"
+            support_extension = "None"
+
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                    (random_code, department,remarks,file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
+            db_connection.commit()
+            
+            db_cursor.close()
+            
+            
+            
+            flash('The report is submitted', 'success')
+            return redirect('/hello')
+        else:
            
             support_filename = secure_filename(support_file.filename)
+        
             support_extension = os.path.splitext(support_filename)[1]
             
-        
+            # Read the file data into memory
+            
             support_data = support_file.read()
+            
             
             # Insert the report with file information into the database, including file data
             db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                            (random_code, department,file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                    (random_code, department,remarks,file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
             db_connection.commit()
-            db_cursor.close()
-            os.remove("modified_document.docx")
-            os.remove("modified_document.pdf")
             
-            flash('Report submitted successfully')
+            db_cursor.close()
+            
+            
+            
+            flash('The report is submitted', 'success')
             return redirect('/hello')
 
             #Request for new id 
@@ -806,7 +800,7 @@ def submit_request():
         pregnant = request.form.get('pregnant')    
         specify2 = request.form.get('specify1')
         print(specify2)
-        remarks = request.form.get('remarks')
+        remarks = "The details of the report is located in the document"
         department = request.form.get('department')
         specify3 = request.form.get('specifyTextarea1')
         section = request.form.get('section1')
@@ -880,16 +874,29 @@ def submit_request():
 
 
         doc.save("modified_document.docx")
-        pdf_path = os.path.join('modified_document.pdf')
-        convert("modified_document.docx", pdf_path)
+        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
 
-    
+        source_docx = 'modified_document.docx'
+
+
+        # Use upload IO wrapper to upload file only once to the API
+        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
+
+        saved_files = convertapi.convert('pdf', { 'File': upload_io }).save_files('modified_document.pdf')
+
+        print("The PDF saved to %s" % saved_files)
+
+
+        pdfpath = os.path.join('modified_document.pdf')
 
         file_name = f'{random_code}_Request for New ID'
-        with open(pdf_path, "rb") as pdf_file:
+        with open(pdfpath, "rb") as pdf_file:
             pdf_data = pdf_file.read()
+
+
+            
         
-        
+        # Check if the POST request has the file part for the supporting document file
         if 'file4' not in request.files:
             flash('No supporting document file part')
             return redirect(request.url)
@@ -897,31 +904,44 @@ def submit_request():
         support_file = request.files['file4']
         
         # Check if the user submitted an empty supporting document file input
-    
         if support_file.filename == '':
-            support_file = None 
-        
-       
-        
-        if support_file:
-            # Securely get the filenames and file extensions
+            support_data = None
+            support_filename = "None"
+            support_extension = "None"
+
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                    (random_code, department,remarks,file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
+            db_connection.commit()
+            
+            db_cursor.close()
+            
+            
+            
+            flash('The report is submitted', 'success')
+            return redirect('/hello')
+        else:
            
             support_filename = secure_filename(support_file.filename)
+        
             support_extension = os.path.splitext(support_filename)[1]
             
-        
+            # Read the file data into memory
+            
             support_data = support_file.read()
+            
             
             # Insert the report with file information into the database, including file data
             db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                            (random_code, department,file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                    (random_code, department,remarks,file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
             db_connection.commit()
-            db_cursor.close()
-            os.remove("modified_document.docx")
-            os.remove("modified_document.pdf")
             
-            flash('Report submitted successfully')
+            db_cursor.close()
+            
+            
+            
+            flash('The report is submitted', 'success')
             return redirect('/hello')
 
 @app.route('/submit_call', methods=['POST'])
@@ -1002,47 +1022,23 @@ def submit_call():
 
 
     doc.save("modified_document.docx")
-        # Check the operating system
-    if platform.system() == "Windows":
-        # Convert the Word document to PDF using LibreOffice on Windows
-        docx_file = 'modified_document.docx'
-        pdf_file = 'modified_document.pdf'
-        pdf_path = os.path.join('modified_document.pdf')
-        libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
-        try:
-            # Use subprocess to call the 'libreoffice' command-line tool
-            convert_command = [
-                libreoffice_path, '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.'
-            ]
-            subprocess.run(convert_command, check=True)
+    convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
 
-            # Now, 'modified_document.pdf' contains the converted PDF
+    source_docx = 'modified_document.docx'
 
-        except subprocess.CalledProcessError as e:
-            # Handle the conversion error on Windows
-            flash('Error converting the document to PDF', 'error')
-            return redirect('/error_page')
-    else:
-        # Convert the Word document to PDF using LibreOffice on Linux
-        docx_file = 'modified_document.docx'
-        pdf_file = 'modified_document.pdf'
-        pdf_path = os.path.join('modified_document.pdf')
-        try:
-            # Use subprocess to call the 'soffice' command-line tool
-            convert_command = ['soffice', '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.']
-            subprocess.run(convert_command, check=True)
 
-            # Now, 'modified_document.pdf' contains the converted PDF
+    # Use upload IO wrapper to upload file only once to the API
+    upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
 
-        except subprocess.CalledProcessError as e:
-            # Handle the conversion error on Linux
-            flash('Error converting the document to PDF', 'error')
-            return redirect('/error_page')
+    saved_files = convertapi.convert('pdf', { 'File': upload_io }).save_files('modified_document.pdf')
 
-    
+    print("The PDF saved to %s" % saved_files)
+
+
+    pdfpath = os.path.join('modified_document.pdf')
 
     file_name = f'{random_code}_Call Slip'
-    with open(pdf_path, "rb") as pdf_file:
+    with open(pdfpath, "rb") as pdf_file:
         pdf_data = pdf_file.read()
         
         
@@ -1056,8 +1052,7 @@ def submit_call():
     db_cursor.close()
     db_cursor1.close()
     db_cursor2.close()
-    os.remove("modified_document.docx")
-    os.remove("modified_document.pdf")
+   
 
 
     return redirect('/hello')
@@ -1186,52 +1181,28 @@ def submit_written():
         replace_table_cell_placeholder1(doc.tables[0], 12, 2, norms, "norms")
         
         doc.save("modified_document.docx")
-                # Check the operating system
-        if platform.system() == "Windows":
-            # Convert the Word document to PDF using LibreOffice on Windows
-            docx_file = 'modified_document.docx'
-            pdf_file = 'modified_document.pdf'
-            pdf_path = os.path.join('modified_document.pdf')
-            libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
-            try:
-                # Use subprocess to call the 'libreoffice' command-line tool
-                convert_command = [
-                    libreoffice_path, '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.'
-                ]
-                subprocess.run(convert_command, check=True)
+        
+        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
 
-                # Now, 'modified_document.pdf' contains the converted PDF
+        source_docx = 'modified_document.docx'
 
-            except subprocess.CalledProcessError as e:
-                # Handle the conversion error on Windows
-                flash('Error converting the document to PDF', 'error')
-                return redirect('/error_page')
-        else:
-            # Convert the Word document to PDF using LibreOffice on Linux
-            docx_file = 'modified_document.docx'
-            pdf_file = 'modified_document.pdf'
-            pdf_path = os.path.join('modified_document.pdf')
-            try:
-                # Use subprocess to call the 'soffice' command-line tool
-                convert_command = ['soffice', '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.']
-                subprocess.run(convert_command, check=True)
 
-                # Now, 'modified_document.pdf' contains the converted PDF
+        # Use upload IO wrapper to upload file only once to the API
+        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
 
-            except subprocess.CalledProcessError as e:
-                # Handle the conversion error on Linux
-                flash('Error converting the document to PDF', 'error')
-                return redirect('/error_page')
+        saved_files = convertapi.convert('pdf', { 'File': upload_io }).save_files('modified_document.pdf')
+
+        print("The PDF saved to %s" % saved_files)
+
+
+        pdfpath = os.path.join('modified_document.pdf')
 
     
 
         file_name = f'{random_code}_Written Warning'
-        with open(pdf_path, "rb") as pdf_file:
+        with open(pdfpath, "rb") as pdf_file:
             pdf_data = pdf_file.read()
 
-
-   
-    
         
         # Insert the report with file information into the database, including file data
         db_cursor = db_connection.cursor()
@@ -1239,9 +1210,7 @@ def submit_written():
                         (random_code,students, courseorposition, current_datetime, sanction, pdf_data,file_name ))
         db_connection.commit()
         db_cursor.close()
-        os.remove("modified_document.docx")
-        os.remove("modified_document.pdf")
-        
+   
         flash('Report submitted successfully')
         return redirect('/hello')
         
@@ -1360,29 +1329,25 @@ def submit_written():
 
 
         doc.save("modified_document.docx")
-                # Check the operating system
-        docx_file = 'modified_document.docx'
-        pdf_file = 'modified_document.pdf'
-        pdf_path = os.path.join('modified_document.pdf')
+        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
 
-        try:
-            # Use subprocess to call the 'pandoc' command-line tool
-            convert_command = [
-                'pandoc', docx_file, '-o', pdf_file
-            ]
-            subprocess.run(convert_command, check=True)
+        source_docx = 'modified_document.docx'
 
-            # Now, 'modified_document.pdf' contains the converted PDF
 
-        except subprocess.CalledProcessError as e:
-            # Handle the conversion error
-            flash('Error converting the document to PDF', 'error')
-            return redirect('/error_page')
+        # Use upload IO wrapper to upload file only once to the API
+        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
+
+        saved_files = convertapi.convert('pdf', { 'File': upload_io }).save_files('modified_document.pdf')
+
+        print("The PDF saved to %s" % saved_files)
+
+
+        pdfpath = os.path.join('modified_document.pdf')
 
     
 
         file_name = f'{random_code}_Written Reprimand'
-        with open(pdf_path, "rb") as pdf_file:
+        with open(pdfpath, "rb") as pdf_file:
             pdf_data = pdf_file.read()
 
 
@@ -1395,9 +1360,7 @@ def submit_written():
                         (random_code,students, courseorposition, current_datetime, sanction, pdf_data,file_name ))
         db_connection.commit()
         db_cursor.close()
-        os.remove("modified_document.docx")
-        os.remove("modified_document.pdf")
-        
+     
         flash('Report submitted successfully')
 
 
@@ -1589,46 +1552,25 @@ def submit_written():
         
         doc.save("modified_document.docx")
                 # Check the operating system
-        if platform.system() == "Windows":
-            # Convert the Word document to PDF using LibreOffice on Windows
-            docx_file = 'modified_document.docx'
-            pdf_file = 'modified_document.pdf'
-            pdf_path = os.path.join('modified_document.pdf')
-            libreoffice_path = r'C:\Program Files\LibreOffice\program\soffice.exe'
-            try:
-                # Use subprocess to call the 'libreoffice' command-line tool
-                convert_command = [
-                    libreoffice_path, '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.'
-                ]
-                subprocess.run(convert_command, check=True)
+        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
 
-                # Now, 'modified_document.pdf' contains the converted PDF
+        source_docx = 'modified_document.docx'
 
-            except subprocess.CalledProcessError as e:
-                # Handle the conversion error on Windows
-                flash('Error converting the document to PDF', 'error')
-                return redirect('/error_page')
-        else:
-            # Convert the Word document to PDF using LibreOffice on Linux
-            docx_file = 'modified_document.docx'
-            pdf_file = 'modified_document.pdf'
-            pdf_path = os.path.join('modified_document.pdf')
-            try:
-                # Use subprocess to call the 'soffice' command-line tool
-                convert_command = ['soffice', '--headless', '--convert-to', 'pdf', docx_file, '--outdir', '.']
-                subprocess.run(convert_command, check=True)
 
-                # Now, 'modified_document.pdf' contains the converted PDF
+        # Use upload IO wrapper to upload file only once to the API
+        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
 
-            except subprocess.CalledProcessError as e:
-                # Handle the conversion error on Linux
-                flash('Error converting the document to PDF', 'error')
-                return redirect('/error_page')
+        saved_files = convertapi.convert('pdf', { 'File': upload_io }).save_files('modified_document.pdf')
+
+        print("The PDF saved to %s" % saved_files)
+
+
+        pdfpath = os.path.join('modified_document.pdf')
 
     
 
         file_name = f'{random_code}_Letter of Suspension'
-        with open(pdf_path, "rb") as pdf_file:
+        with open(pdfpath, "rb") as pdf_file:
             pdf_data = pdf_file.read()
 
 
@@ -1641,17 +1583,111 @@ def submit_written():
                         (random_code,students, courseorposition, current_datetime, sanction, pdf_data,file_name ))
         db_connection.commit()
         db_cursor.close()
-        os.remove("modified_document.docx")
-        os.remove("modified_document.pdf")
+    
         
         flash('Report submitted successfully')
         return redirect('hello')
 
 
+@app.route('/submit_notice', methods=['GET', 'POST'])
+def submit_notice():
+    kind = request.form.get('forms')
+    print(kind)
+    
+
+    student = request.form.get('student')
+    srcode = request.form.get('srcode')
+    section = request.form.get('section')
+    program = request.form.get('program')
+    male = request.form.get('male')
+    female = request.form.get('female')
+    minor = request.form.get('minor')
+    minor_input = request.form.get('minor_input')
+    major = request.form.get('major')
+    major_input = request.form.get('major_input')
+    fieldwork = request.form.get('fieldwork')
+    prolonged = request.form.get('prolonged')
+    specify2 = request.form.get('specify2')
+    status = request.form.get('status')
+    current_datetime = datetime.now()
+    random_code = generate_random_code()
+    current_date = current_datetime.date()
+    formatted_date = current_date.strftime("/%m/%d/%Y") 
+
+    student = session.get('namestudent', '') 
+    username = session.get('username', '')
+
+    pdf_filename = 'notice.docx'
+    doc = Document(pdf_filename)
+
+    
+
+    replace_table_cell_placeholder1(doc.tables[0], 2, 3, formatted_date,"(date)")
+    replace_table_cell_placeholder1(doc.tables[0], 14, 1, formatted_date,"(date2)")
+    replace_table_cell_placeholder1(doc.tables[0], 5, 3, program,"(program)")
+    replace_table_cell_placeholder1(doc.tables[0], 3, 3, student,"(name)")
+    replace_table_cell_placeholder1(doc.tables[0], 3, 10, srcode,"(code)")
+    replace_table_cell_placeholder1(doc.tables[0], 3, 11, username,"(code)")
+    replace_table_cell_placeholder1(doc.tables[0], 5, 10, section, "(section)")
+    replace_table_cell_placeholder1(doc.tables[0], 7, 2, minor_input, "(department)")
+    replace_table_cell_placeholder1(doc.tables[0], 5, 3, program, "(program)")
+
+
+    doc.save("modified_document.docx")
+            # Check the operating system
+    convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
+
+    source_docx = 'modified_document.docx'
+
+
+    # Use upload IO wrapper to upload file only once to the API
+    upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
+
+    saved_files = convertapi.convert('pdf', { 'File': upload_io }).save_files('modified_document.pdf')
+
+    print("The PDF saved to %s" % saved_files)
+
+
+    pdfpath = os.path.join('modified_document.pdf')
+
+    file_name = f'{random_code}_Temporary Gate Pass Letter'
+    with open(pdfpath, "rb") as pdf_file:
+        pdf_data = pdf_file.read()
+
+
+        
+    
+    # Check if the POST request has the file part for the supporting document file
+    if 'file5' not in request.files:
+        flash('No supporting document file part')
+        return redirect(request.url)
+    
+    support_file = request.files['file5']
+    
+    # Check if the user submitted an empty supporting document file input
+
+    if support_file.filename == '':
+        support_data = None
+        support_filename = "None"
+        support_extension = "None"
+
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        (random_code, department,remarks,file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
+        db_connection.commit()
+        
+        db_cursor.close()
+        
+        
+        
+        flash('The report is submitted', 'success')
+        return redirect('/hello')
+
+
 @app.route('/submit_approve', methods=['GET', 'POST'])
 def submit_approve():
     remarks = request.form.get('remarks')
-    report_id = session.get('Idreport', '') 
+    report_id = request.form.get('id')
     modified_file = request.files['file4']
     support_data = modified_file.read()
     print(report_id)
@@ -1669,7 +1705,7 @@ def submit_approve():
 @app.route('/submit_reject', methods=['GET', 'POST'])
 def submit_reject():
     remarks = request.form.get('remarks')
-    report_id = session.get('Idreport', '') 
+    report_id = request.form.get('id')
     print(report_id)
     print(remarks)
     status = "Rejected"
@@ -1781,6 +1817,26 @@ def manage_coord():
 
     return render_template('manage_coord.html', reports=reports, user_source=user_source, user_course=user_course, coordinators=coordinators, profile_pictures=profile_pictures)
 
+def verify_recaptcha(recaptcha_response):
+    secret_key = "6Lf6r8MoAAAAAMqOMUNzyQ--QoeMTyeUcSeBHFCO"  # Replace with your actual secret key
+
+    # Send a POST request to the reCAPTCHA verification endpoint
+    response = requests.post(
+        "https://www.google.com/recaptcha/api/siteverify",
+        {
+            "secret": secret_key,
+            "response": recaptcha_response,
+        },
+    )
+
+    result = response.json()
+
+    # Check if reCAPTCHA verification was successful
+    if result.get("success"):
+        return True
+    else:
+        return False
+    
 @app.route('/', methods=['GET', 'POST'])
 def index():
     # Retrieve the username from the session if it exists
@@ -1791,27 +1847,45 @@ def index():
     if request.method == 'POST':
         # Get the submitted username and password
         submitted_username = request.form['username']
-        submitted_password = request.form['lname']  # Assuming password input is named 'lname'
+        submitted_password = request.form['lname']
+        recaptcha_response = request.form['g-recaptcha-response']
 
-        # Query the accounts_cics table to check if the provided username and password exist
-        db_cursor = db_connection.cursor()
-        db_cursor.execute("SELECT * FROM accounts_cics WHERE username = %s AND password = %s",
-                          (submitted_username, submitted_password))
-        result_cics = db_cursor.fetchone()
-        db_cursor.close()
+        # Verify reCAPTCHA response
+        secret_key = '6Lf6r8MoAAAAAMqOMUNzyQ--QoeMTyeUcSeBHFCO'
+        recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify'
+        response = requests.post(recaptcha_url, data={
+            'secret': secret_key,
+            'response': recaptcha_response
+        })
+        result = response.json()
 
-        # Query the account_coordinators table to check if the provided username and password exist
-        db_cursor = db_connection.cursor()
-        db_cursor.execute("SELECT * FROM accounts_coordinators WHERE username = %s AND password = %s",
-                          (submitted_username, submitted_password))
-        result_coordinators = db_cursor.fetchone()
-        db_cursor.close()
+        if result['success']:
+                
+            # Query the accounts_cics table to check if the provided username and password exist
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("SELECT * FROM accounts_cics WHERE username = %s AND password = %s",
+                            (submitted_username, submitted_password))
+            result_cics = db_cursor.fetchone()
+            db_cursor.close()
 
-        db_cursor = db_connection.cursor()
-        db_cursor.execute("SELECT * FROM accounts_head WHERE username = %s AND password = %s",
-                          (submitted_username, submitted_password))
-        result_head = db_cursor.fetchone()
-        db_cursor.close()
+            # Query the account_coordinators table to check if the provided username and password exist
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("SELECT * FROM accounts_coordinators WHERE username = %s AND password = %s",
+                            (submitted_username, submitted_password))
+            result_coordinators = db_cursor.fetchone()
+            db_cursor.close()
+
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("SELECT * FROM accounts_head WHERE username = %s AND password = %s",
+                            (submitted_username, submitted_password))
+            result_head = db_cursor.fetchone()
+            db_cursor.close()
+          
+        else:
+            captcha = "Answer the Captcha"
+            return render_template('index.html', username=username, captcha=captcha)
+
+
 
 
         if result_cics:
@@ -1902,98 +1976,122 @@ def requestpage():
 
     return render_template('request.html', reports=reports, user_source=user_source, user_course=user_course)
 
+def is_english(text):
+    detectlanguage.configuration.api_key = "9ec41ced9e3687060cbe89995e2b3d51"
+
+    try:
+    
+        language_code=detectlanguage.simple_detect(text)
+
+        print(language_code)
+        return language_code 
+    except:
+        return False
+
 
 @app.route('/algorithm/<complaint_text>', methods=['GET', 'POST'])
 def algorithm(complaint_text):
-
-        # Load the dataset
-    df = pd.read_csv("Grievance_News.csv")
-
-    # Create category_id column
-    df['category_id'] = df['offense_tag'].factorize()[0]
-
-        # Text preprocessing and feature extraction
-    tfidf = TfidfVectorizer(sublinear_tf=True, min_df=5, ngram_range=(1, 2), stop_words='english')
-    features = tfidf.fit_transform(df.grievance).toarray()
-    labels = df.category_id
-
-        # Train and evaluate the model
-    X = df['grievance']
-    y = df['offense_tag']
-
-    # Split the data into train and test sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-
-    models = [
-        LinearSVC(dual=False),
-    ]
-
-    # 5 Cross-validation
-    CV = 5
-    entries = []
-    for model in models:
-        model_name = model.__class__.__name__
-        accuracies = cross_val_score(model, features, labels, scoring='accuracy', cv=CV)
-        for fold_idx, accuracy in enumerate(accuracies):
-            entries.append((model_name, fold_idx, accuracy))
-
-    # Initialize and train the LinearSVC model
-    model = LinearSVC(dual=False)
-    model.fit(tfidf.transform(X_train), y_train)
+    
+    if is_english(complaint_text) == 'en':
 
 
-        # Sample complaint text
-    complaint = complaint_text
+        df = pd.read_csv("Grievance_News.csv")
 
-    # Predict offenses for the complaint text
-    decision_scores = model.decision_function(tfidf.transform([complaint]))
+        # Create category_id column
+        df['category_id'] = df['offense_tag'].factorize()[0]
 
-    # Convert decision scores to probabilities using softmax
-    def softmax(x):
-        exp_x = np.exp(x - np.max(x))
-        return exp_x / exp_x.sum(axis=1, keepdims=True)
+            # Text preprocessing and feature extraction
+        tfidf = TfidfVectorizer(sublinear_tf=True, min_df=5, ngram_range=(1, 2), stop_words='english')
+        features = tfidf.fit_transform(df.grievance).toarray()
+        labels = df.category_id
 
-    predicted_probabilities = softmax(decision_scores)
+            # Train and evaluate the model
+        X = df['grievance']
+        y = df['offense_tag']
 
-    # Get the top 10 predicted offenses' category IDs in descending order of prediction score
-    top_10_offense_indices = np.argsort(-predicted_probabilities)[0, :10]
-    top_10_offense_ids = model.classes_[top_10_offense_indices]
+        # Split the data into train and test sets
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-    # Create a dictionary to store the top 10 predicted offenses and their scores
-    top_10_offense_scores = {}
-    for offense_id, probability in zip(top_10_offense_ids, predicted_probabilities[0, top_10_offense_indices]):
-        top_10_offense_scores[offense_id] = round(probability * 100)  # Convert to whole number percentage
+        models = [
+            LinearSVC(dual=False),
+        ]
 
-    # Calculate the total score for the top predicted offenses
-    total_score = sum(top_10_offense_scores.values())
+        # 5 Cross-validation
+        CV = 5
+        entries = []
+        for model in models:
+            model_name = model.__class__.__name__
+            accuracies = cross_val_score(model, features, labels, scoring='accuracy', cv=CV)
+            for fold_idx, accuracy in enumerate(accuracies):
+                entries.append((model_name, fold_idx, accuracy))
 
-    # If the total score is less than 100, distribute the remaining score proportionally
-    remaining_score = 100 - total_score
-    if remaining_score > 0:
-        # Calculate the proportion for each offense based on its probability
-        proportions = [probability for _, probability in zip(top_10_offense_ids, predicted_probabilities[0, top_10_offense_indices])]
-        proportion_sum = sum(proportions)
-
-        # Adjust the scores based on proportions
-        for i, offense_id in enumerate(top_10_offense_scores):
-            additional_score = round(proportions[i] / proportion_sum * remaining_score)
-            top_10_offense_scores[offense_id] += additional_score
-            remaining_score -= additional_score
-            if remaining_score == 0:
-                break
-
-    print(complaint)
-    top_10_offense_scores_list = []
-    for offense_id, score in top_10_offense_scores.items():
-        print(f"Offense ID: {offense_id}, Score: {score}%")
-        top_10_offense_scores_list.append({
-            'offense_id': offense_id,
-            'score': score,
-            
-        })
+        # Initialize and train the LinearSVC model
+        model = LinearSVC(dual=False)
+        model.fit(tfidf.transform(X_train), y_train)
 
 
-    return jsonify(top_10_offense_scores=top_10_offense_scores_list, complaints=complaint)
+            # Sample complaint text
+        complaint = complaint_text
+
+        # Predict offenses for the complaint text
+        decision_scores = model.decision_function(tfidf.transform([complaint]))
+
+        # Convert decision scores to probabilities using softmax
+        def softmax(x):
+            exp_x = np.exp(x - np.max(x))
+            return exp_x / exp_x.sum(axis=1, keepdims=True)
+
+        predicted_probabilities = softmax(decision_scores)
+
+        # Get the top 10 predicted offenses' category IDs in descending order of prediction score
+        top_10_offense_indices = np.argsort(-predicted_probabilities)[0, :10]
+        top_10_offense_ids = model.classes_[top_10_offense_indices]
+
+        # Create a dictionary to store the top 10 predicted offenses and their scores
+        top_10_offense_scores = {}
+        for offense_id, probability in zip(top_10_offense_ids, predicted_probabilities[0, top_10_offense_indices]):
+            top_10_offense_scores[offense_id] = round(probability * 100)  # Convert to whole number percentage
+
+        # Calculate the total score for the top predicted offenses
+        total_score = sum(top_10_offense_scores.values())
+
+        # If the total score is less than 100, distribute the remaining score proportionally
+        remaining_score = 100 - total_score
+        if remaining_score > 0:
+            # Calculate the proportion for each offense based on its probability
+            proportions = [probability for _, probability in zip(top_10_offense_ids, predicted_probabilities[0, top_10_offense_indices])]
+            proportion_sum = sum(proportions)
+
+            # Adjust the scores based on proportions
+            for i, offense_id in enumerate(top_10_offense_scores):
+                additional_score = round(proportions[i] / proportion_sum * remaining_score)
+                top_10_offense_scores[offense_id] += additional_score
+                remaining_score -= additional_score
+                if remaining_score == 0:
+                    break
+
+        print(complaint)
+        top_10_offense_scores_list = []
+        for offense_id, score in top_10_offense_scores.items():
+            print(f"Offense ID: {offense_id}, Score: {score}%")
+            top_10_offense_scores_list.append({
+                'offense_id': offense_id,
+                'score': score,
+                
+            })
+
+
+        type="english"
+
+
+        return jsonify(top_10_offense_scores=top_10_offense_scores_list, complaints=complaint,type=type)
+    
+    else:
+        message="The report is gibberish or not in English Language"
+           
+        type="gibberish"
+
+        return jsonify(message=message, complaints=complaint_text,type=type)
 
 @app.route('/search_students', methods=['POST'])
 def search_students():
@@ -2456,7 +2554,7 @@ def change_report_status(report_id):
     print(new_status)
     print(report_id)
     db_cursor = db_connection.cursor()
-    db_cursor.execute("UPDATE reports SET status = %s WHERE report_id = %s;", (new_status, report_id))
+    db_cursor.execute("UPDATE reports SET status = %s WHERE id = %s;", (new_status, report_id))
     db_connection.commit()  # Make sure to commit the changes to the database
     db_cursor.close()
 

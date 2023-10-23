@@ -173,7 +173,12 @@
                 
                     <label for="file1">Attach Supporting Documents (if you have any):</label>
                     <input type="file" name="file1" id="file1" accept=".png, .jpg, .jpeg, .pdf, .docx">
+                    <hr>
+                    <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork" required>
+                <label for="fieldwork">By clicking this, I hereby certify that the information furnished above is true to my knowledge and conscience.</label><br>
                     <input type="hidden" name="forms" value="Formal Complaint">
+                    <input type="hidden" id = "namecomplain" name="namecomplain" value="{{name}}">
+                  
                     <input id="submit" type="submit" value="Submit">
                 </div>
                 <br>
@@ -221,7 +226,12 @@
                 
                     <label for="file4">Attach Supporting Documents (if you have any):</label>
                     <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx">
+                    <hr>
+                    <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork" required>
+                    <label for="fieldwork">By clicking this, I hereby certify that the information furnished above is true to my knowledge and conscience.</label><br>
+                    <input type="hidden" id = "namecomplain" name="namecomplain" value="{{name}}">
                     <input id="submit" type="submit" value="Submit">
+                    
                 </div>
                 <br>
                
@@ -242,6 +252,11 @@
 
     {% if user_source == 'accounts_cics'%}
     <button type="button" id="openModalBtn3">Request Form</button>
+    {% endif %}
+
+
+    {% if user_source == 'accounts_cics'%}
+    <button type="button" id="openModalBtn3">Call Slip & Notice of Case Dismissal</button>
     {% endif %}
 
     <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
@@ -278,11 +293,11 @@
         <input id="submit" type="submit" value="Submit">
         </form>
 
-
         
     </div>
     
     <div class="written-content">
+         
         <h3>Remove Call</h3>
         {% if call == [] %}
             <p>You have no sanctions</p>
@@ -290,7 +305,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Date</th>               
+                        <th>Date</th> 
+                        <th>Name</th>              
                         <th>Reason</th>
                         <th>File</th>
                         <th>Delete Call</th>
@@ -298,10 +314,11 @@
                 </thead>
                 <tbody>
     
-                    {% for row in call |sort(attribute='3', reverse=true) %}
+                    {% for row in call |sort(attribute='4', reverse=true) %}
                     <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
                     <tr>
                         <td>{{ row[4] }}</td>
+                        <td>{{ row[1] }}</td>
                         <td>{{ row[3] }}</td>
                         <td> 
                             <a href="{{ url_for('preview_call_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
@@ -331,14 +348,7 @@
         <div id="table-container">
             {% if sanctions == [] %}
             <p>You have no sanctions</p>
-            {% else %}
- 
-            <label for="department">Type of Sanction:</label>
-            <select name="department" id="department" required> 
-                <option value="Sanctions">Sanctions</option> 
-                <option value="Call Slip">Call Slip</option> 
-                <option value="Notice of Case Dismissal">Notice of Case Dismissal</option> 
-            </select><br><br>
+            {% else %}  
             <table>
                 <thead>
                     <tr>
@@ -538,7 +548,7 @@
             <p>Course: <span id="studentCourse"></span></p>
             <p>Sanctions: <span id="studentSanctions"></span></p>
         </div>
-        </div>
+       
 
        
         <div class="written-content">
@@ -807,6 +817,7 @@
                 </div>
     </div>
 </div>
+ </div>
 
 
 

@@ -468,6 +468,34 @@ function toggleInputFields() {
         }
     }
 
+    function toggleInputFields3() {
+        var kindSelect = document.getElementById("forms1");
+        var formContainer8 = document.getElementById("formContainer8");
+        var formContainer9 = document.getElementById("formContainer9");
+        var formContainer10 = document.getElementById("formContainer10");
+       
+    
+        if (kindSelect.value === "Written Warning") {
+            formContainer8.style.display = "block";
+            formContainer9.style.display = "none";
+            formContainer10.style.display = "none";
+          
+        } 
+        
+        else if (kindSelect.value === "Written Reprimand"){
+            formContainer8.style.display = "none";
+            formContainer9.style.display = "block";
+            formContainer10.style.display = "none";
+        }
+        
+        else {
+            formContainer8.style.display = "none";
+            formContainer9.style.display = "none";
+            formContainer10.style.display = "block";
+         
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         const searchForm = document.getElementById("searchForm");
         const searchInput = document.getElementById("searchInput");
@@ -682,12 +710,13 @@ function openAlgorithmModal(result,complain) {
     var modalContent = '';
 
     console.log(complain)
+    console.log(result.type)
     
  
     modalContent += '<b>Report Text:</b><br>' + complain + '<br><br>';
 
 
-
+    if(result.type == 'english'){
     if (result && result.top_10_offense_scores) {
         result.top_10_offense_scores.forEach(offense => {
             // Create a list item for each offense and score
@@ -697,6 +726,14 @@ function openAlgorithmModal(result,complain) {
             // Add the list item to the offense list
             offenseList.appendChild(listItem);
         });
+    }}
+
+    else{
+        const listItem = document.createElement('li');
+        listItem.textContent = result.message;
+
+        // Add the list item to the offense list
+        offenseList.appendChild(listItem);
     }
 
     reportContent1.innerHTML = modalContent;
@@ -759,6 +796,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
 
+    document.getElementById("minor").addEventListener("click", function() {
+        document.getElementById("minor_input").style.display = "block";
+        document.getElementById("major_input").style.display = "none";
+    });
+    
+    document.getElementById("major").addEventListener("click", function() {
+        document.getElementById("major_input").style.display = "block";
+        document.getElementById("minor_input").style.display = "none";
+    });
 
                 $.ajax({
                     type: "POST",
@@ -815,3 +861,74 @@ document.addEventListener("DOMContentLoaded", function () {
     // You can add additional validation or logic here
     return confirm("Are you sure you want to change the status of report " + reportId + "?");
   }
+
+  function showRejectModal() {
+    const modal = document.getElementById('rejectModal');
+    modal.style.display = 'block';
+}
+
+// JavaScript function to close the reject modal
+function closeRejectModal() {
+    const modal = document.getElementById('rejectModal');
+    modal.style.display = 'none';
+}
+
+function showCaseModal() {
+    const modal = document.getElementById('caseModal');
+    modal.style.display = 'block';
+}
+
+// JavaScript function to close the reject modal
+function closeCaseModal() {
+    const modal = document.getElementById('caseModal');
+    modal.style.display = 'none';
+}
+
+// JavaScript function to check the selected status
+function checkStatus(id) {
+    const selectElement = document.getElementById('new_status_select_'+id);
+    const selectedValue = selectElement.value;
+
+    ReportId=id
+    console.log(ReportId)
+
+    if (selectedValue === 'Rejected') {
+        showRejectModal();
+        return false; // Prevent the form submission
+    }
+
+    else if (selectedValue === 'Case Closed') {
+        showCaseModal();
+        return false; // Prevent the form submission
+    }
+
+    else if(selectedValue === 'On Going'){
+        $.ajax({
+            type: 'POST',  // Or 'GET' if your server expects a GET request
+            url: '/change_report_status/' + ReportId,  // Replace with your server URL
+            data: { new_status: 'On Going' },  // Send data to the server
+            success: function() {
+                location.reload()
+            },
+            error: function(error) {
+                // Handle errors, if any
+                console.error(error);
+            }
+        });
+        return false; // Prevent the form submission
+    }
+    return true; // Continue with form submission for other status values
+}
+
+
+function toggleInput4() {
+    var checkbox = document.getElementById("prolonged");
+    var input = document.getElementById("specify2");
+    
+    if (checkbox.checked) {
+        input.style.display = "block"; // Show the input field
+    } else {
+        input.style.display = "none"; // Hide the input field
+    }
+}
+

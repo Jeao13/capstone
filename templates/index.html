@@ -1,5 +1,7 @@
 <html>
 <link rel="stylesheet" href='/static/style.css' />
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <body>
 
     <div class="login">
@@ -9,14 +11,23 @@
 
         <form action="/" method="POST">
             <label for="fname">Username:</label><br>
-            <input type="text" id="fname" name="username"><br>
+            <input type="text" id="fname" name="username" required><br>
             <label for="lname">Password:</label><br>
-            <input type="password" id="lname" name="lname"><br>
+            <input type="password" id="lname" name="lname" required><br>
+            <div class="captcha-container">
+            <div class="g-recaptcha" data-sitekey="6Lf6r8MoAAAAALP1tP3pRrAbie3dWG1iRexIkK-a"></div>
+            </div>
+            <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" required>
+        
             <input type="submit" value="Submit">    
         </form>
 
         {% if error_message %}
         <p style="color: red;">{{ error_message }}</p>
+        {% endif %}
+
+        {% if captcha %}
+        <p style="color: red;">{{ captcha }}</p>
         {% endif %}
         
     </div>

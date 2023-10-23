@@ -496,3 +496,10 @@ transform: translate(-50%, -50%);
   width: 200px;
   height:150px;
 }
+
+.captcha-container {
+  margin: auto;
+  padding-top:20px;
+  padding-bottom:20px;
+  width: 60%;
+}
