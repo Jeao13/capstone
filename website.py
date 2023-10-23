@@ -45,10 +45,10 @@ nsmap = {
 }
 
 db_connection = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="",
-    database="capstoneproject"
+    host="bk4eirhsdc6y9ipqvs0h-mysql.services.clever-cloud.com",
+    user="ut5cv46rvwyaoobx",
+    password="aiRzdgEuvx3iJPje78pp",
+    database="bk4eirhsdc6y9ipqvs0h"
 )
 
 
