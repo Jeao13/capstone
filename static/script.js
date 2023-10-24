@@ -795,15 +795,21 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+    var minor_input = document.getElementById("minor_input");
+    var major_input = document.getElementById("major_input");
 
     document.getElementById("minor").addEventListener("click", function() {
         document.getElementById("minor_input").style.display = "block";
+        minor_input.required = true;
         document.getElementById("major_input").style.display = "none";
+        major_input.required = false;
     });
     
     document.getElementById("major").addEventListener("click", function() {
         document.getElementById("major_input").style.display = "block";
+        minor_input.required = false;
         document.getElementById("minor_input").style.display = "none";
+        major_input.required = true;
     });
 
                 $.ajax({
@@ -862,9 +868,17 @@ document.addEventListener("DOMContentLoaded", function () {
     return confirm("Are you sure you want to change the status of report " + reportId + "?");
   }
 
-  function showRejectModal() {
+  function showRejectModal(id) {
     const modal = document.getElementById('rejectModal');
     modal.style.display = 'block';
+    const newButton = document.createElement('input');
+        newButton.type = 'hidden';
+        newButton.value = id;
+        newButton.id = 'id';
+        newButton.name = 'id';
+
+        const form = document.getElementById('noticeform');
+        form.appendChild(newButton);
 }
 
 // JavaScript function to close the reject modal
@@ -873,9 +887,18 @@ function closeRejectModal() {
     modal.style.display = 'none';
 }
 
-function showCaseModal() {
+function showCaseModal(id) {
     const modal = document.getElementById('caseModal');
     modal.style.display = 'block';
+    const newButton = document.createElement('input');
+    newButton.type = 'hidden';
+    newButton.value = id;
+    newButton.id = 'id';
+    newButton.name = 'id';
+
+    const form = document.getElementById('noticeform1');
+    form.appendChild(newButton);
+    
 }
 
 // JavaScript function to close the reject modal
@@ -893,12 +916,12 @@ function checkStatus(id) {
     console.log(ReportId)
 
     if (selectedValue === 'Rejected') {
-        showRejectModal();
+        showRejectModal(id);
         return false; // Prevent the form submission
     }
 
     else if (selectedValue === 'Case Closed') {
-        showCaseModal();
+        showCaseModal(id);
         return false; // Prevent the form submission
     }
 
@@ -922,13 +945,24 @@ function checkStatus(id) {
 
 
 function toggleInput4() {
-    var checkbox = document.getElementById("prolonged");
-    var input = document.getElementById("specify2");
-    
-    if (checkbox.checked) {
-        input.style.display = "block"; // Show the input field
+    var prolongedCheckbox = document.getElementById("prolonged");
+    var specify2Input = document.getElementById("specify2");
+
+    if (prolongedCheckbox.checked) {
+        specify2Input.style.display = "block";
+        specify2Input.required = true; // Make it required
     } else {
-        input.style.display = "none"; // Hide the input field
+        specify2Input.style.display = "none";
+        specify2Input.required = false; // Not required if neither checkbox is checked
     }
 }
 
+function validateCheckboxes() {
+    var fieldworkCheckbox = document.getElementById("fieldwork");
+    var prolongedCheckbox = document.getElementById("prolonged");
+
+    if (!fieldworkCheckbox.checked && !prolongedCheckbox.checked) {
+        alert("Please check at least one checkbox.");
+        return false;
+    }
+}

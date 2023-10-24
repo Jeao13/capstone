@@ -345,6 +345,14 @@
     <div class="modal-content">
         <span class="close" id="closeModalBtn1">&times;</span>
         <h3>My Sanctions</h3>
+
+        <select name="forms" id="forms" required onchange=""> 
+            <option value="" selected disabled>Select Form:</option> 
+            <option value="Temporary Gate Pass">Temporary Gate Pass</option> 
+            <option value="Request for Non-Wearing of Uniform">Request for Non-Wearing of Uniform</option> 
+            <option value="Request for New ID">Request for New ID</option> 
+
+        </select><br><br>
         <div id="table-container">
             {% if sanctions == [] %}
             <p>You have no sanctions</p>
