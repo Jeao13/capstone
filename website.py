@@ -1363,8 +1363,8 @@ def submit_written():
         
         # Insert the report with file information into the database, including file data
         db_cursor = db_connection.cursor()
-        db_cursor.execute("INSERT INTO sanctions (sanctions_id,username, course, date_time, sanction, written, written_name) VALUES (%s,%s, %s, %s, %s, %s,%s)",
-                        (random_code,students, courseorposition, current_datetime, sanction, pdf_data,file_name ))
+        db_cursor.execute("INSERT INTO sanctions (sanctions_id,username, course, date_time, sanction, written, written_name,type) VALUES (%s,%s, %s, %s, %s, %s,%s,%s)",
+                        (random_code,students, courseorposition, current_datetime, sanction, pdf_data,file_name,kind ))
         db_connection.commit()
         db_cursor.close()
    
@@ -1513,8 +1513,8 @@ def submit_written():
         
         # Insert the report with file information into the database, including file data
         db_cursor = db_connection.cursor()
-        db_cursor.execute("INSERT INTO sanctions (sanctions_id,username, course, date_time, sanction, written, written_name) VALUES (%s,%s, %s, %s, %s, %s,%s)",
-                        (random_code,students, courseorposition, current_datetime, sanction, pdf_data,file_name ))
+        db_cursor.execute("INSERT INTO sanctions (sanctions_id,username, course, date_time, sanction, written, written_name,type) VALUES (%s,%s, %s, %s, %s, %s,%s,%s)",
+                    (random_code,students, courseorposition, current_datetime, sanction, pdf_data,file_name,kind ))
         db_connection.commit()
         db_cursor.close()
      
@@ -1736,8 +1736,8 @@ def submit_written():
         
         # Insert the report with file information into the database, including file data
         db_cursor = db_connection.cursor()
-        db_cursor.execute("INSERT INTO sanctions (sanctions_id,username, course, date_time, sanction, written, written_name) VALUES (%s,%s, %s, %s, %s, %s,%s)",
-                        (random_code,students, courseorposition, current_datetime, sanction, pdf_data,file_name ))
+        db_cursor.execute("INSERT INTO sanctions (sanctions_id,username, course, date_time, sanction, written, written_name,type) VALUES (%s,%s, %s, %s, %s, %s,%s,%s)",
+                        (random_code,students, courseorposition, current_datetime, sanction, pdf_data,file_name,kind ))
         db_connection.commit()
         db_cursor.close()
     
@@ -2357,8 +2357,18 @@ def homepage():
      # Retrieve the sanctions data within the homepage route
     db_cursor_sanctions = db_connection.cursor()
     db_cursor_sanctions.execute("SELECT * FROM sanctions WHERE username = %s", (name,))
-    sanctions = db_cursor_sanctions.fetchall()
+    warning = db_cursor_sanctions.fetchall()
     db_cursor_sanctions.close()
+
+    db_cursor_sanctions1 = db_connection.cursor()
+    db_cursor_sanctions1.execute("SELECT * FROM sanctions WHERE username = %s", (name,))
+    reprimand = db_cursor_sanctions1.fetchall()
+    db_cursor_sanctions1.close()
+
+    db_cursor_sanctions2 = db_connection.cursor()
+    db_cursor_sanctions2.execute("SELECT * FROM sanctions WHERE username = %s", (name,))
+    suspension = db_cursor_sanctions2.fetchall()
+    db_cursor_sanctions2.close()
 
     db_cursor_call = db_connection.cursor()
     db_cursor_call.execute("SELECT * FROM callslip WHERE coord = %s", (name,))
@@ -2380,7 +2390,7 @@ def homepage():
         profile_picture_base64 = None  # Handle the case where there is no profile picture data
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage.html', reports=reports,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,sanctions=sanctions,call=call)
+    return render_template('homepage.html', reports=reports,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call)
 
 def lookup_student_info(username):
     try:

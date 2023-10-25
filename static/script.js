@@ -496,6 +496,35 @@ function toggleInputFields() {
         }
     }
 
+    
+    function toggleInputTables() {
+        var kindSelect = document.getElementById("forms3");
+        var formContainer8 = document.getElementById("formContainer8");
+        var formContainer9 = document.getElementById("formContainer9");
+        var formContainer10 = document.getElementById("formContainer10");
+       
+    
+        if (kindSelect.value === "Written Warning") {
+            formContainer8.style.display = "block";
+            formContainer9.style.display = "none";
+            formContainer10.style.display = "none";
+          
+        } 
+        
+        else if (kindSelect.value === "Written Reprimand"){
+            formContainer8.style.display = "none";
+            formContainer9.style.display = "block";
+            formContainer10.style.display = "none";
+        }
+        
+        else {
+            formContainer8.style.display = "none";
+            formContainer9.style.display = "none";
+            formContainer10.style.display = "block";
+         
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         const searchForm = document.getElementById("searchForm");
         const searchInput = document.getElementById("searchInput");

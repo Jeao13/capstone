@@ -345,15 +345,16 @@
     <div class="modal-content">
         <span class="close" id="closeModalBtn1">&times;</span>
         <h3>My Sanctions</h3>
-
-        <select name="forms" id="forms" required onchange=""> 
+<label for="forms3">Sanction type:</label>
+        <select name="forms3" id="forms3" required onchange="toggleInputTables"> 
             <option value="" selected disabled>Select Form:</option> 
-            <option value="Temporary Gate Pass">Temporary Gate Pass</option> 
-            <option value="Request for Non-Wearing of Uniform">Request for Non-Wearing of Uniform</option> 
-            <option value="Request for New ID">Request for New ID</option> 
+            <option value="Written Warning">Written Warning</option> 
+            <option value="Written Reprimand">Written Reprimand</option> 
+            <option value="Letter of Suspension">Letter of Suspension</option> 
 
         </select><br><br>
         <div id="table-container">
+            <h1>Written Warning</h1>
             {% if sanctions == [] %}
             <p>You have no sanctions</p>
             {% else %}  
@@ -367,7 +368,69 @@
                 </thead>
                 <tbody>
     
-                    {% for row in sanctions |sort(attribute='3', reverse=true) %}
+                    {% for row in warning |sort(attribute='3', reverse=true) %}
+                    <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
+                    <tr>
+                        <td>{{ row[3] }}</td>
+                        <td>{{ row[4] }}</td>
+                        <td> 
+                            <a href="{{ url_for('preview_written_file', report_id=row[0]) }}" target="_blank">{{ row[6] }}</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+
+        <div id="table-container1">
+            <h1>Written Reprimand</h1>
+            {% if sanctions == [] %}
+            <p>You have no sanctions</p>
+            {% else %}  
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>               
+                        <th>Sanction</th>
+                        <th>File</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    {% for row in reprimand |sort(attribute='3', reverse=true) %}
+                    <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
+                    <tr>
+                        <td>{{ row[3] }}</td>
+                        <td>{{ row[4] }}</td>
+                        <td> 
+                            <a href="{{ url_for('preview_written_file', report_id=row[0]) }}" target="_blank">{{ row[6] }}</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+
+
+
+        <div id="table-container2">
+            <h1>Letter of Suspension</h1>
+            {% if sanctions == [] %}
+            <p>You have no sanctions</p>
+            {% else %}  
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>               
+                        <th>Sanction</th>
+                        <th>File</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    {% for row in suspension |sort(attribute='3', reverse=true) %}
                     <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
                     <tr>
                         <td>{{ row[3] }}</td>
