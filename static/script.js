@@ -1021,3 +1021,53 @@ function validateCheckboxes() {
     }
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+
+    var questions = document.querySelectorAll('.faq-question');
+    questions.forEach(function(question) {
+        question.addEventListener('click', function() {
+            var answer = this.nextElementSibling;
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+            } else {
+                answer.style.display = 'block';
+            }
+        });
+    });
+
+    const tabLinks = document.querySelectorAll('.sidebar a');
+const tabContents = document.querySelectorAll('.tab-content');
+
+// Add event listeners to the tab links
+tabLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').substring(1);
+
+        // Remove "active" class from all tab content elements
+        tabContents.forEach((content) => {
+            content.classList.remove('active');
+        });
+
+        // Add "active" class to the selected tab content element
+        document.getElementById(targetId).classList.add('active');
+    });
+});
+
+// Automatically show the first tab (Tab 1) on page load
+document.getElementById('tab1').classList.add('active');
+
+});
+
+function activateTab(tab) {
+    // Remove the "active" class from all tabs and reset text color
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach((t) => {
+        t.classList.remove('active');
+        t.querySelector('span').style.color = 'black';
+    });
+
+    // Add the "active" class to the clicked tab and change text color to red
+    tab.classList.add('active');
+    tab.querySelector('span').style.color = 'red';
+}

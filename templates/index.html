@@ -1,36 +1,91 @@
-<html>
-<link rel="stylesheet" href='/static/style.css' />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
+    <!-- Add your other meta tags, links to stylesheets, and scripts here -->
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Include Bootstrap JavaScript (Popper.js and Bootstrap JS) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
 <body>
-
-    <div class="login">
-
-        <img src="static/bsul.png" alt="Image Description">
-        <h1>Grievance System Login</h1>
-
-        <form action="/" method="POST">
-            <label for="fname">Username:</label><br>
-            <input type="text" id="fname" name="username" required><br>
-            <label for="lname">Password:</label><br>
-            <input type="password" id="lname" name="lname" required><br>
-            <div class="captcha-container">
-            <div class="g-recaptcha" data-sitekey="6Lf6r8MoAAAAALP1tP3pRrAbie3dWG1iRexIkK-a"></div>
+    <div class="container-fluid">
+        <div class="row g-0">
+            <div class="col-md-6 bg-image-container">
+                <div class="bg-image">
+                  <img src="static\bsubgs.png" width="800"
+                  alt="Sample image">
+                </div>
             </div>
-            <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" required>
-        
-            <input type="submit" value="Submit">    
-        </form>
+            <div class="col-md-6">
+                <div class="login d-flex align-items-center py-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-9 col-lg-8 mx-auto">
+                                <h3 class="login-heading mb-4">Sign In</h3>
+                                <h4 class="login-head mb-5">Please enter your details</h4>
 
-        {% if error_message %}
-        <p style="color: red;">{{ error_message }}</p>
-        {% endif %}
+                                <div class="divider d-flex align-items-center my-4"></div>
 
-        {% if captcha %}
-        <p style="color: red;">{{ captcha }}</p>
-        {% endif %}
-        
+                                <!-- Sign In Form -->
+                                <form action="/" method="POST">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" id="username" name="username" class="form-control" id="floatingInput" placeholder="Enter your Sr-Code">
+                                        <label for="floatingInput">Sr-Code</label>
+                                    </div>
+
+                                    <div class="form-floating mb-3">
+                                        <input type="password" id="password" name="password" class="form-control" id="floatingPassword" placeholder="Enter your password">
+                                        <label for="floatingPassword">Password</label>
+                                    </div>
+
+                                    <h5 class="login-head5 mb-5">*Password is case sensitive</h5>
+
+                                    <div class="d-grid">
+                                        <button class="btn btn-lg btn-success btn-login fw-bold mb-2" type="submit">Sign in</button>
+                                    </div>
+
+                                    <div class="captcha-container">
+                                        <div class="g-recaptcha" data-sitekey="6Lf6r8MoAAAAALP1tP3pRrAbie3dWG1iRexIkK-a"></div>
+                                    </div>
+                                        <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" required>
+
+                                </form>
+
+                                {% if error_message %}
+                                <div class="center-text">
+                                    <p class="error-message">{{ error_message }}</p>
+                                </div>
+                                {% endif %}
+
+                                {% if captcha %}
+                                <div class="center-text">
+                                <p class="error-message" >{{ captcha }}</p>
+                                </div>
+                                {% endif %}
+
+                                       
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- Copyright -->
+    <footer class="footer">
+        Copyright © 2023. Batangas State University
+    </footer>
+
+         
+    
 </body>
 </html>
+
+

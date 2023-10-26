@@ -1,7 +1,220 @@
 body {
-    background: rgb(238, 227, 227);
-    color: black;
-    font-family: Arial, sans-serif !important
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+}
+
+/* HOME PAGE*/
+/* Container styles with shadow */
+    /* Logo styles */
+.logo {
+      font-size: 26px; /* Adjust font size */
+      margin-left: 10px;     
+      font-weight: normal; /* Remove bold style */
+  }
+
+.cont {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0; /* Remove padding to make navbar take the full width */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Add shadow here */
+  background-color: #fff; /* Optional: Add a background color for the container */
+}
+
+/* Dark gray navbar styles with shadow */
+.logo {
+  font-size: 16px; /* Adjust font size */
+  margin-right: 10px; /* Add margin to the right to create space between logo and text */
+  font-weight: normal; /* Remove bold style */
+}
+
+.navbar {
+  background-color: #333;
+  color: #fff;
+  display: flex;
+  justify-content: flex-start; /* Change to 'flex-start' to move items to the left */
+  align-items: center;
+   /* You can adjust this margin as needed */
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2); /* Add shadow here */
+}
+
+
+/* Image container styles */
+.image-container {
+    background-image: url('static\headi.png'); /* Replace with your background image URL */
+    background-size: cover;
+    background-position: center;
+    height: 150px; /* Adjust the height as needed */
+    position: relative;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
+   
+
+}
+
+ /* Tab navigation styles */
+ .tab-container {
+  display: flex;
+}
+#trackStatusLink {
+  color: black; /* Set the text color to black */
+  text-decoration: none; /* Remove underline if needed */
+  cursor: pointer; /* Change the cursor on hover to indicate it's clickable */
+}
+.tab {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.tab i {
+  font-size: 24px;
+  color: red;
+  margin-right: 5px;
+}
+
+.tab span {
+  color: black; /* Set the initial text color to black */
+}
+
+/* Remove underline from anchor elements inside tabs */
+.tab a {
+  text-decoration: none;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  align-items: center; /* Center-align buttons horizontally */
+  margin-top: 60px; /* Add spacing at the top */
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px; /* Add spacing between button rows */
+  
+}
+
+/* Add margin between the buttons in a row */
+.green-button {
+  width: 250px;
+  height: 60px;
+  margin-right: 100px; /* Add space between buttons */
+}
+.green-button:last-child {
+  margin-right: 0; /* Remove margin from the last button in a row */
+}
+
+.green-button {
+  
+  background-color: #fff;
+  color: #4CAF50; /* Green text color */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2); /* Add box shadow */
+}
+
+.green-button i {
+  font-size: 24px;
+  margin-right: 10px; /* Add space between icon and text */
+}
+
+/* Contact container styles */
+.contact-container {
+  display: flex;
+  align-items: center;
+  margin-top: 20px; /* Add spacing at the top */
+}
+
+/* Contact icon styles */
+.contact-icon {
+  font-size: 24px;
+  margin-right: 10px; /* Add space between icon and text */
+}
+
+/* Contact text styles */
+.contact-text {
+  color: #000; /* Black text color */
+  font-size: 12px;
+  display: flex;
+  align-items: center; /* Align icon and text vertically */
+  margin-right: 20px;
+
+  margin-left: 40px;
+}
+.contact-text1 {
+  color: #000; /* Black text color */
+  font-size: 12px;
+  display: flex;
+  align-items: center; /* Align icon and text vertically */
+  margin-left: 60px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #c50303;
+  text-align: left; /* Center the text */
+  padding: 10px 0; /* Adjust vertical padding and remove horizontal padding */
+  color: white;
+  font-size: 14px;
+}
+
+
+.login {
+  min-height: 100vh;
+}
+
+.bg-image-container {
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-image {
+  
+  background-size: contain; /* Fit image within the container without cropping */
+  background-position: left top; /* Fixed at the top left corner */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  height: 100vh; /* 100% viewport height */
+  width: 100%; /* 100% width within the container */
+}
+
+
+.divider {
+  border-top: 1px solid #ccc;
+  margin: 10px 0; /* Adjust margin as needed */
+}
+
+label {
+  font-size: large; /* Adjust as needed */
+  font-weight: bold;
+}
+
+.login-heading {
+ 
+  font-weight: 900;
+  font-size: 30px; /* Adjust as needed */
+}
+
+.login-head {
+  font-weight: 300;
+  font-size: medium; /* Adjust as needed */
+  color: #333;
+}
+
+.login-head5 {
+  font-weight: 200;
+  font-size: small; /* Adjust as needed */
+  color: #888;
 }
 
 element.style{
@@ -9,30 +222,132 @@ element.style{
 }
 
 
-.login{
-    max-width: 500px;
-    margin-top: 20px;
-    margin: auto;
-    padding-top: 20px;
-    padding-bottom:20px;
-    text-align: center;
-    background: rgb(255, 255, 255);
+
+
+
+/* Center the reCAPTCHA container and position it near the bottom */
+
+.captcha-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+.error-message {
+  font-size: small;
+  text-align: center;
+  color: red;
+  font-weight: bold;
+}
+
+/* Default styles for larger screens */
+.login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+/* Adjust the background image styles for smaller screens */
+.bg-image {
+  background-size: cover; /* Adjust to cover the entire container */
+}
+
+/* Apply custom styles to form elements and center them */
+.form-floating {
+  text-align: center;
+}
+
+.form-floating input[type="text"],
+.form-floating input[type="password"] {
+  width: 100%; /* Expand the input fields to full width */
+  font-size: 16px; /* Adjust as needed */
+  padding: 15px; /* Add some padding for touch devices */
+}
+
+.form-label {
+  font-size: 16px; /* Adjust as needed */
+  font-weight: bold;
+}
+
+.login-heading {
+  font-size: 30px; /* Adjust as needed */
+}
+
+.login-head {
+  font-size: 20px; /* Adjust as needed */
+}
+
+.login-head5 {
+  font-size: 14px; /* Adjust as needed */
+  color: #888;
+}
+
+/* Reduce margins for smaller screens */
+.divider {
+  margin: 5px 0; /* Adjust margin as needed */
+}
+
+/* Smaller footer font size */
+.footer {
+  font-size: 12px;
+}
+
+/* Styles for mobile screens */
+/* Styles for mobile screens */
+@media (max-width: 768px) {
+    .bg-image-container {
+        display: none; /* Hide the background image container */
+    }
+}
+
+  .form-floating input[type="text"],
+  .form-floating input[type="password"] {
+      padding: 10px; /* Reduce padding for smaller screens */
+  }
+
+  .login-heading {
+      font-size: 24px; /* Reduce font size for smaller screens */
+  }
+
+  .login-head {
+      font-size: 16px;
+  }
+
+  .login-head5 {
+      font-size: 12px;
+  }
+
+  .divider {
+      margin: 3px 0; /* Reduce margin for smaller screens */
+  }
+
+  .footer {
+      font-size: 10px;
+  }
+
+  @media (max-width: 768px) {
+    .captcha-container {
+        text-align: center; /* Center the reCAPTCHA container horizontally */
+    }
 }
 
 /* Add a black background color to the top navigation */
 .topnav {
-    background-color: #333;
+    background-color: #bab7b7;
     overflow: hidden;
   }
   
   /* Style the links inside the navigation bar */
   .topnav a {
+    height: 20px;
     float: left;
-    color: #f2f2f2;
+    color: #000000;
     text-align: center;
     padding: 14px 16px; 
     text-decoration: none;
-    font-size: 17px;
+    font-size: 16px;
     display: block;
   }
   
@@ -41,13 +356,30 @@ element.style{
     background-color: #ddd;
     color: black;
   }
+/* profile */
+
+.image-container {
+  background-image: url('static\headi.png'); /* Replace with your background image URL */
+  background-size: cover;
+  background-position: center;
+  height: 150px; /* Adjust the height as needed */
+  position: relative;
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
+ 
+}
+
+
+
 
   .user-profile {
-    display: flex;
-    align-items: center;
-    background-color: #ffffff;
-    margin-top:20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color:transparent;
 }
+           
 
 .user-profile img {
     max-width: 450px; /* Adjust as needed */
@@ -57,9 +389,70 @@ element.style{
 }
 
 .user-info {
-    flex: 1; /* Allow the text to take up remaining space */
+  position: absolute;
+  top: 50%; /* Vertically center the text */
+  left: 20px; /* Add left spacing */
+  transform: translateY(-50%); /* Correct vertical alignment */
+  color: #000000;
+  font-size: 24px;
+  font-weight: bold;
 }
   
+.overlay-text {
+  position: absolute;
+  top: 50%; /* Vertically center the text */
+  left: 20px; /* Add left spacing */
+  transform: translateY(-50%); /* Correct vertical alignment */
+  color: #000000;
+  font-size: 30px;
+  font-weight: bolder;
+  
+}
+
+.overlay-text1 {
+  position: absolute;
+  top: 50%; /* Vertically center the text */
+  left: 20px; /* Add left spacing */
+  transform: translateY(-50%); /* Correct vertical alignment */
+  color: #000000;
+  font-weight: bold;
+  font-size: 25px;
+
+}
+
+ /* Container for reminders */
+ .reminders-container {
+  line-height: 30px;
+  text-align: justify;         
+  padding: 10px 30px 30px 30px;
+  background-color: #fff;
+  
+}
+
+/* Header styles */
+.header {
+  display: flex;
+  align-items: center;
+}
+
+/* Header title styles */
+.header-title {
+  margin-left: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+/* Header icon styles */
+.header-icon {
+  font-size: 24px;
+}
+/* Header icon styles */
+.header-icon1 {
+  margin-left: 10px;
+  font-size: 15px;
+}
+
   /* Add a color to the active/current link */
   .topnav a.active {
     background-color: #04AA6D;
@@ -82,18 +475,15 @@ element.style{
 
  /* Style for the modal container */
  .modal {
-  display: none; /* Hidden by default */
-  position: absolute; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  min-height: 100vh;
-  height: 100%;
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  z-index: 1;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  padding: 20px;
 
 }
 
@@ -503,3 +893,195 @@ transform: translate(-50%, -50%);
   padding-bottom:20px;
   width: 60%;
 }
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+
+
+        /* Overlay styles */
+        .overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color:transparent;
+      }
+
+      /* Text styles on the overlay */
+      .overlay-text {
+          position: absolute;
+          top: 50%; /* Vertically center the text */
+          left: 20px; /* Add left spacing */
+          transform: translateY(-50%); /* Correct vertical alignment */
+          color: #000000;
+          font-size: 24px;
+          font-weight: bold;
+          
+      }
+
+      .overlay-text1 {
+          position: absolute;
+          top: 50%; /* Vertically center the text */
+          left: 20px; /* Add left spacing */
+          transform: translateY(-50%); /* Correct vertical alignment */
+          color: #000000;
+          font-size: 15x;
+       
+      }
+
+      .overlay-text2 {
+          position: absolute;
+          top: 50%; /* Vertically center the text */
+          left: 20px; /* Add left spacing */
+          transform: translateY(-50%); /* Correct vertical alignment */
+          color: #000000;
+          font-size: 15x;
+          font-weight: bold;
+       
+      }
+
+
+      /* Container for reminders */
+      .reminders-container {
+       
+          padding: 20px;
+          background-color: #fff;
+          
+      }
+
+      /* Header styles */
+      .header {
+          display: flex;
+          align-items: center;
+      }
+
+      /* Header title styles */
+      .header-title {
+          font-size: 18px;
+          font-weight: bold;
+          margin-right: 10px;
+      }
+      .header-title1 {
+          margin-top:50px;
+          color:#333;
+          font-size: 18px;
+          font-weight: bold;
+          margin-right: 10px;
+      }
+
+      /* Header icon styles */
+      .header-icon {
+          font-size: 24px;
+      }
+      /* Header icon styles */
+      .header-icon1 {
+          font-size: 12px;
+          margin-right: 20px;
+      }
+
+      /* Tab navigation styles */
+
+     
+      /* Tab navigation styles */
+      .tab-container {
+          display: flex;
+      }
+
+      .tab {
+          display: flex;
+          align-items: center;
+          margin-right: 20px;
+          cursor: pointer;
+      }
+
+      .tab i {
+          font-size: 24px;
+          color: red;
+          margin-right: 5px;
+      }
+
+      .tab span {
+          color: black; /* Set the initial text color to black */
+      }
+
+      /* Remove underline from anchor elements inside tabs */
+      .tab a {
+          text-decoration: none;
+      }
+
+
+
+  .faq-container {
+  width: 100%;
+ 
+}
+
+.faq-question {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  margin-right: 10px;
+  margin-top: 20px;
+  margin-left: 20px;
+  border-bottom: 1px solid #ccc; /* Add a border line below each question */
+  padding-bottom: 10px; /* Adjust the spacing as needed */
+}
+
+.faq-answer {
+  font-size: small;
+  color: #333;
+  margin-top: 10px;
+  margin-left: 20px;
+  display: none;
+}
+
+.dropdown-button {
+  cursor: pointer;
+  padding: 5px;
+ 
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 5px;
+}
+
+/* Style the dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Style the dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+/* Style the dropdown links */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color on hover */
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+/* Show the dropdown content when hovering over the dropdown container */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+

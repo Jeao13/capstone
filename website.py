@@ -1910,7 +1910,7 @@ def index():
     if request.method == 'POST':
         # Get the submitted username and password
         submitted_username = request.form['username']
-        submitted_password = request.form['lname']
+        submitted_password = request.form['password']
         recaptcha_response = request.form['g-recaptcha-response']
 
         # Verify reCAPTCHA response
@@ -1972,6 +1972,12 @@ def index():
 
     return render_template('index.html', username=username, error_message=error_message)
 
+@app.route('/about')
+def about():
+    
+    
+
+    return render_template('about.html')
 
 @app.route('/menu')
 def menu():
@@ -2573,8 +2579,72 @@ def homepage():
     else:
         profile_picture_base64 = None  # Handle the case where there is no profile picture data
 
+
+    username = session.get('username', '')
+    user_role = session.get('role', '')
+    user_source = session.get('source', '')
+
+
+    # Query the database to retrieve reports for the logged-in user
+    db_cursor_reports = db_connection.cursor()
+
+    if user_role == 'accounts_coordinators':
+        # If the user is an accounts coordinator, retrieve the course of the user
+        db_cursor_reports.execute("SELECT course FROM accounts_coordinators WHERE username = %s", (username,))
+        user_course = db_cursor_reports.fetchone()
+
+        if user_course:
+            db_cursor_reports = user_course[0]  # Extract the course from the result
+
+            # Query reports where the course matches the user's course
+            db_cursor_reports.execute("SELECT * FROM reports WHERE course = %s", (user_course,))
+            complaints = db_cursor_reports.fetchall()
+
+    elif user_role == 'accounts_head':
+        db_cursor_reports.execute("SELECT * FROM reports")
+        complaints = db_cursor_reports.fetchall()
+        user_course = ""
+
+    else:
+        # For other roles, simply retrieve reports for the logged-in user
+        db_cursor_reports.execute("SELECT * FROM reports WHERE username = %s", (username,))
+        complaints = db_cursor_reports.fetchall()
+        user_course = ""
+
+    # Close the cursor
+    db_cursor_reports.close()
+
+
+    username = session.get('username', '')
+    user_role = session.get('role', '')
+    user_source = session.get('source', '')
+
+
+    # Query the database to retrieve reports for the logged-in user
+    db_cursor_request = db_connection.cursor()
+
+    if user_role == 'accounts_coordinators':
+        # If the user is an accounts coordinator, retrieve the course of the user
+        db_cursor_request.execute("SELECT course FROM accounts_coordinators WHERE username = %s", (username,))
+        user_course = db_cursor_request.fetchone()
+
+        if user_course:
+            user_course = user_course[0]  # Extract the course from the result
+
+            # Query reports where the course matches the user's course
+            db_cursor_request.execute("SELECT * FROM forms_osd WHERE course = %s", (user_course,))
+            request1 = db_cursor_request.fetchall()
+    else:
+        # For other roles, simply retrieve reports for the logged-in user
+        db_cursor_request.execute("SELECT * FROM forms_osd WHERE username = %s", (username,))
+        request1 = db_cursor_request.fetchall()
+        user_course = ""
+
+    # Close the cursor
+    db_cursor_request.close()
+
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage.html', reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call)
+    return render_template('homepage.html', request1=request1,complaints=complaints,reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call)
 
 def lookup_student_info(username):
     try:

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+     
+    <title>Website with Dark Gray Navbar</title>
+    <style>
+        /* CSS for the main content */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        /* Container styles with shadow */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0; /* Remove padding to make navbar take the full width */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Add shadow here */
+            background-color: #fff; /* Optional: Add a background color for the container */
+        }
+
+        /* Dark gray navbar styles with shadow */
+        .navbar {
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2); /* Add shadow here */
+        }
+
+        .navbar1 {
+            background-color: #afaeae;
+            color: #000000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 30px;
+            box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2); /* Add shadow here */
+        }
+
+        /* Logo styles */
+        .logo {
+            font-size: 16px; /* Adjust font size */
+            margin-right: 400px;
+            font-weight: normal; /* Remove bold style */
+        }
+
+        /* Signout button styles */
+        .signOut {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: auto; /* Pushes the button to the right */
+        }
+
+        /* Icon styles (you may use Font Awesome icons or similar) */
+        .signOut i {
+            margin-right: 5px;
+        }
+
+        /* Image container styles */
+        .image-container {
+            background-image: url('static\headi.png'); /* Replace with your background image URL */
+            background-size: cover;
+            background-position: center;
+            height: 150px; /* Adjust the height as needed */
+            position: relative;
+            box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
+           
+        }
+
+        /* Overlay styles */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color:transparent;
+        }
+
+        /* Text styles on the overlay */
+        .overlay-text {
+            position: absolute;
+            top: 50%; /* Vertically center the text */
+            left: 20px; /* Add left spacing */
+            transform: translateY(-50%); /* Correct vertical alignment */
+            color: #000000;
+            font-size: 24px;
+            font-weight: bold;
+            
+        }
+
+        .overlay-text1 {
+            position: absolute;
+            top: 50%; /* Vertically center the text */
+            left: 20px; /* Add left spacing */
+            transform: translateY(-50%); /* Correct vertical alignment */
+            color: #000000;
+            font-size: 15x;
+         
+        }
+
+        .overlay-text2 {
+            position: absolute;
+            top: 50%; /* Vertically center the text */
+            left: 20px; /* Add left spacing */
+            transform: translateY(-50%); /* Correct vertical alignment */
+            color: #000000;
+            font-size: 15x;
+            font-weight: bold;
+         
+        }
+
+
+        /* Container for reminders */
+        .reminders-container {
+         
+            padding: 20px;
+            background-color: #fff;
+            
+        }
+
+        /* Header styles */
+        .header {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Header title styles */
+        .header-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .header-title1 {
+            margin-top:50px;
+            color:#333;
+            font-size: 18px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* Header icon styles */
+        .header-icon {
+            font-size: 24px;
+        }
+        /* Header icon styles */
+        .header-icon1 {
+            font-size: 12px;
+            margin-right: 20px;
+        }
+
+        /* Tab navigation styles */
+  
+       
+        /* Tab navigation styles */
+        .tab-container {
+            display: flex;
+        }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+
+        .tab i {
+            font-size: 24px;
+            color: red;
+            margin-right: 5px;
+        }
+
+        .tab span {
+            color: black; /* Set the initial text color to black */
+        }
+
+        /* Remove underline from anchor elements inside tabs */
+        .tab a {
+            text-decoration: none;
+        }
+
+
+
+    .faq-container {
+    width: 100%;
+   
+}
+
+.faq-question {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    margin-right: 10px;
+    margin-top: 20px;
+    margin-left: 20px;
+    border-bottom: 1px solid #ccc; /* Add a border line below each question */
+    padding-bottom: 10px; /* Adjust the spacing as needed */
+}
+
+.faq-answer {
+    font-size: small;
+    color: #333;
+    margin-top: 10px;
+    margin-left: 20px;
+    display: none;
+}
+
+.dropdown-button {
+    cursor: pointer;
+    padding: 5px;
+   
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+}
+
+
+  
+
+/* Adjust button width if needed */
+
+
+    </style>
+</head>
+<body>
+ 
+
+       
+        <div class="reminders-container" style="margin-top: 20px; ">
+            <!-- Header -->
+            <div class="header">
+                <!-- Icon -->
+                
+                <!-- Add some space between the icon and title -->
+                <div style="margin-left: 10px;"></div>
+                <!-- Title with divider line -->
+                <div class="header-title1">OSD Profile:</div>
+            </div>
+        
+            <div class="reminders-container">
+                <!-- Reminder content goes here -->
+                <p style="margin-left: 20px; padding-left: 0; line-height: 2; text-align: justify;">
+                    The Office of Student Discipline is one of the student–service offices of this University which implement rules and regulations. It is committed to serve equally, all involved parties in an unbiased and fair manner. OSD aims to cultivate a strong sense of self-discipline within the students in a healthy university environment through disciplinary procedures which are in line with the vision and mission of the university.
+                </p>
+            </div>
+        </div>
+        
+        
+        
+        <div class="header">
+            <!-- Icon -->
+            
+            <!-- Add some space between the icon and title -->
+            <div style="margin-left: 10px;"></div>
+            <!-- Title with divider line -->
+            <div class="header-title1">Services Provided:</div>
+        </div>
+        
+        <ol style="margin-left: 40px; margin-bottom: 20px; padding-left: 0;">
+            <li style="margin-bottom: 10px;">Receive, evaluate, and approve the Request for New ID</li>
+            <li style="margin-bottom: 10px;">Evaluation for the approval and release of the request for non-wearing of school uniform</li>
+            <li style="margin-bottom: 10px;">Provide a temporary gate pass to requesting students</li>
+            <li style="margin-bottom: 10px;">Orientation for incoming student trainees</li>
+            <li style="margin-bottom: 10px;">Orientation/Re-orientation seminar for security personnel</li>
+            <li style="margin-bottom: 10px;">Answer queries regarding student discipline matters</li>
+            <li style="margin-bottom: 10px;">Evaluate the disciplinary proceedings and disciplinary sanctions to erring students to ascertain the proper implementation of disciplinary process</li>
+        </ol>
+        
+        
+
+
+        <div class="header">
+            <!-- Icon -->
+            
+            <!-- Add some space between the icon and title -->
+            <div style="margin-left: 10px;"></div>
+            <!-- Title with divider line -->
+            <div class="header-title1">FAQ's</div>
+        </div>
+
+        <div class="faq-container">
+            <!-- FAQ 1 -->
+            <div class="faq-question">
+                <div>1. What is OSD Grievance System?</div>
+                <button class="dropdown-button">▼</button>
+            </div>
+            <div class="faq-answer">
+                OSD Grievance System is a web-based platform for handling student discipline complaints and document requests.
+            </div>
+        
+            <!-- FAQ 2 -->
+            <div class="faq-question">
+                <div>2. Who can use the system?</div>
+                <button class="dropdown-button">▼</button>
+            </div>
+            <div class="faq-answer">
+                The system is accessible to students, teaching personnel, and non-teaching personnel.
+            </div>
+        
+            <!-- FAQ 3 -->
+            <div class="faq-question">
+                <div>3. How can I file a complaint?</div>
+                <button class="dropdown-button">▼</button>
+            </div>
+            <div class="faq-answer">
+                Log in, click "Lodge Complaint," and fill out the complaint form.
+            </div>
+        
+            <!-- FAQ 4 -->
+            <div class="faq-question">
+                <div>4. How can I track my complaints and document requests?</div>
+                <button class="dropdown-button">▼</button>
+            </div>
+            <div class = "faq-answer">
+                Use the user dashboard for real-time updates and notifications.
+            </div>
+        
+            <!-- FAQ 5 -->
+            <div class="faq-question">
+                <div>5. Where can I get the required forms?</div>
+                <button class="dropdown-button">▼</button>
+            </div>
+            <div class="faq-answer">
+                Access and submit forms directly through the platform.
+            </div>
+        
+            <!-- FAQ 6 -->
+            <div class="faq-question">
+                <div>6. Is my data safe in this system?</div>
+                <button class="dropdown-button">▼</button>
+            </div>
+            <div class="faq-answer">
+                Yes, we prioritize data security and use robust measures to protect your information.
+            </div>
+        
+            <!-- FAQ 7 -->
+            <div class="faq-question">
+                <div>7. Can I request documents here?</div>
+                <button class="dropdown-button">▼</button>
+            </div>
+            <div class="faq-answer">
+                Absolutely, you can submit document requests through the system.
+            </div>
+        </div>
+            
+
+        <script>
+            var questions = document.querySelectorAll('.faq-question');
+            questions.forEach(function(question) {
+                question.addEventListener('click', function() {
+                    var answer = this.nextElementSibling;
+                    if (answer.style.display === 'block') {
+                        answer.style.display = 'none';
+                    } else {
+                        answer.style.display = 'block';
+                    }
+                });
+            });
+            </script>
+    <script>
+        // Function to activate the clicked tab and change text color
+        function activateTab(tab) {
+            // Remove the "active" class from all tabs and reset text color
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach((t) => {
+                t.classList.remove('active');
+                t.querySelector('span').style.color = 'black';
+            });
+
+            // Add the "active" class to the clicked tab and change text color to red
+            tab.classList.add('active');
+            tab.querySelector('span').style.color = 'red';
+        }
+    </script>
+</body>
+</html>
