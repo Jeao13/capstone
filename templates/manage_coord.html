@@ -46,7 +46,7 @@
                 <td><input type="text" name="course" value="{{ row[5] }}" readonly></td>
                 <td>
                     <button onclick="toggleReadonly(this)">Toggle Edit</button>
-                    <button onclick="updateRow(this)">Change</button>
+                    <button id="changebutton" onclick="updateRow(this)" disabled>Change</button>
                     <button onclick="openModal3('{{ row[0] }}')">Change Profile Pic</button>
                 </td>
             </tr>

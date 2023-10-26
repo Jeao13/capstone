@@ -1,3 +1,33 @@
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const tabLinks = document.querySelectorAll('.sidebar a');
+const tabContents = document.querySelectorAll('.tab-content');
+
+// Add event listeners to the tab links
+tabLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').substring(1);
+
+        // Remove "active" class from all tab content elements
+        tabContents.forEach((content) => {
+            content.classList.remove('active');
+        });
+
+        // Add "active" class to the selected tab content element
+        document.getElementById(targetId).classList.add('active');
+    });
+});
+
+// Automatically show the first tab (Tab 1) on page load
+document.getElementById('tab1').classList.add('active');
+
+
+
+
+});
+
 // script.js
 document.addEventListener("DOMContentLoaded", function () {
     var modal = document.getElementById("myModal");
@@ -204,33 +234,6 @@ function openModal(reportText, reportFileLink, supportingDocumentLink) {
 }
 
 
-// Add an event listener for the search button in the "Tag Sanction" modal
-document.addEventListener("DOMContentLoaded", function () {
-    // Get references to elements in the "Tag Sanction" modal
-    var modal6 = $("#myModal6");
-    var btn6 = $("#openModalBtn6");
-    var span6 = $("#closeModalBtn6");
-  // Add this line to reference the element for displaying sanctions
-
-    btn6.on("click", function () {
-        modal6.css("display", "block");
-    });
-
-    span6.on("click", function () {
-        modal6.css("display", "none");
-        // Clear the search form and student info when the modal is closed
-      
-    });
-
-});
-
-// JavaScript function to close the modal
-function closeModal() {
-    var modal = document.getElementById('reportModal');
-
-    // Hide the modal
-    modal.style.display = 'none';
-}
 // Add an event listener for the search button in the "Tag Sanction" modal
 document.addEventListener("DOMContentLoaded", function () {
           // Get references to elements in the "Tag Sanction" modal
@@ -1020,4 +1023,111 @@ function validateCheckboxes() {
         return false;
     }
 }
+
+function coordedit(id) {
+    const modal = document.getElementById('modalContainer');
+    modal.style.display = 'block';
+    // Create a new button element
+    const newButton = document.createElement('input');
+    newButton.type = 'hidden';
+    newButton.value = id;
+    newButton.id = 'id';
+    newButton.name = 'id';
+
+    const form = document.getElementById('statusChangeForm');
+    form.appendChild(newButton);
+
+    
+
+}
+function closeModal6() {
+    var modal = document.getElementById('modalContainer');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
+
+
+function toggleReadonly1(button) {
+    var row = button.parentNode.parentNode;
+    var inputElements = row.getElementsByTagName("input");
+    var changebutton = document.getElementById("changebutton1");
+
+    
+    for (var i = 0; i < inputElements.length; i++) {
+        inputElements[i].readOnly = !inputElements[i].readOnly;
+        if (!inputElements[i].readOnly) {
+            inputElements[i].classList.add("editable"); 
+            changebutton.disabled = false;// Add the 'editable' class when the field is editable
+        } else {
+            inputElements[i].classList.remove("editable"); 
+            changebutton.disabled = true;// Remove the 'editable' class when the field is read-only
+        }
+    }
+}
+
+
+function updateRow1(button) {
+
+
+    var row = button.parentNode.parentNode;
+
+    var coordId = row.querySelector("td[data-coord-id]").getAttribute("data-coord-id");
+    var picId = row.querySelector("td[data-pic-id]").getAttribute("data-pic-id");
+    console.log(row)
+    var inputElements = row.getElementsByTagName("input");
+    console.log(inputElements)
+    
+    var data = {};
+    for (var i = 0; i < inputElements.length; i++) {
+        var inputElement = inputElements[i];
+        data[inputElement.name] = inputElement.value;
+      
+    }
+
+    data["coordId"] = coordId;
+    data["picId"] = picId;
+
+    
+   // Send data to the server for database update
+   $.ajax({
+    url: '/update-database1',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(data),
+    success: function() {
+        // Database update successful
+        alert('Database updated successfully.');
+    },
+    error: function() {
+        // Database update failed
+        alert('Database update failed.');
+    }
+});
+
+
+}
+
+
+function sortTable() {
+    var table = document.getElementById("coordinator-table");
+    var rows = table.rows;
+    var sortedRows = Array.from(rows).slice(1); // Skip the header row
+    sortedRows.sort((a, b) => {
+        var aCoordId = parseInt(a.querySelector("[data-coord-id]").getAttribute("data-coord-id"));
+        var bCoordId = parseInt(b.querySelector("[data-coord-id]").getAttribute("data-coord-id"));
+        return aCoordId - bCoordId;
+    });
+    // Clear the existing rows in the table
+    while (table.firstChild) {
+        table.removeChild(table.firstChild);
+    }
+    // Append the sorted rows back to the table
+    for (var i = 0; i < sortedRows.length; i++) {
+        table.appendChild(sortedRows[i]);
+    }
+}
+
+// Call the sortTable function to initially sort the table
+sortTable();
 

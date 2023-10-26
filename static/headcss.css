@@ -1,0 +1,605 @@
+.sidebar {
+    height: 500px;
+    width: 150px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #e2e2e2;
+    margin-top: 170px;
+    margin-left:20px;
+    padding: 20px;/* Initially hide the sidebar */
+    text-decoration: none;
+}
+
+.header {
+    height: 60px;
+    width: 100%;
+    display: flex;
+    justify-content:left;
+    padding-left:20px;
+    font-weight: bold;
+    top: 0;
+    left: 0;
+    color: white;
+    background-color: #000000;
+    text-align: center;
+    align-items: center;
+}
+
+.name {
+    height: 60px;
+    width: 100%;
+    display: flex;
+    justify-content:left;
+    padding-left:20px;
+    font-size: 30px;
+    font-weight: bold;
+    top: 0;
+    left: 0;
+    background-color: #a8a8a8;
+    text-align: center;
+    align-items: center;
+
+}
+.header img{
+    width:70px;
+    height:60px;
+   
+  
+}
+
+.name img{
+    width:70px;
+    height:60px;
+   
+  
+}
+
+.sidebar h2 {
+    color: #000000;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin-bottom: 10px;
+}
+
+/* Define the content styles */
+.content {
+    margin-top: 40px;
+    margin-left: 260px; /* Adjust for the sidebar width */
+    padding: 20px;
+    position: relative;
+    width: 82%;
+    background-color: #e2e2e2;
+    height: 70vh;
+}
+
+/* Style links in the sidebar */
+.sidebar a {
+    color: #000000;
+    text-decoration: none;
+}
+
+/* Add CSS to hide sidebar in mobile view */
+.sidebar-toggle {
+    display: block; /* Show the button by default */
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+body {
+    background: rgb(238, 227, 227);
+    color: black;
+    font-family: Arial, sans-serif !important
+}
+
+element.style{
+  margin:auto;
+}
+
+
+.login{
+    max-width: 500px;
+    margin-top: 20px;
+    margin: auto;
+    padding-top: 20px;
+    padding-bottom:20px;
+    text-align: center;
+    background: rgb(255, 255, 255);
+}
+
+/* Add a black background color to the top navigation */
+.topnav {
+    background-color: #333;
+    overflow: hidden;
+  }
+  
+  /* Style the links inside the navigation bar */
+  .topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px; 
+    text-decoration: none;
+    font-size: 17px;
+    display: block;
+  }
+  
+  /* Change the color of links on hover */
+  .topnav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+
+  .user-profile {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    margin-top:20px;
+}
+
+.user-profile img {
+    max-width: 450px; /* Adjust as needed */
+    margin-right: 10px; /* Add some spacing between the image and text */
+    padding-left:30px;
+    padding-top:40px;
+}
+
+.user-info {
+    flex: 1; /* Allow the text to take up remaining space */
+}
+  
+  /* Add a color to the active/current link */
+  .topnav a.active {
+    background-color: #04AA6D;
+    color: white;
+  }
+  
+  .topnav a.notif {
+    float:right;
+  }
+
+  .header a.logout {
+    float:right;
+  }
+
+  
+  .user-profile img {
+    width: 200px; /* Set the desired width */
+    height: 200px; /* Set the desired height */
+}
+
+ /* Style for the modal container */
+ .modal {
+  display: none; /* Hidden by default */
+  position: absolute; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  height: 100%;
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+
+}
+
+/* Style for the modal content */
+.modal-content {
+  background-color: #fefefe; 
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-height: 80vh; /* Adjust the maximum height as needed */
+  overflow-y: auto; /* Add overflow-y property to enable vertical scrolling */
+  margin-bottom: 20px; 
+  border-radius: 10px;
+}
+
+/* Style for the close button */
+.close {
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  float: right;
+}
+
+#report {
+  padding-top:20px;
+  margin-top:20px;
+  padding-left:15px;
+  padding-right:15px;
+  vertical-align: top;
+  font-size: 16px; 
+  width: 98%;
+  height: 70%;
+  resize: none;
+}
+
+
+
+#submit{
+  float:right;
+}
+
+form textarea {
+  /* Set the desired number of rows with !important */
+
+  /* Set other textarea styles as needed */
+  width: 100%;
+  resize: none; /* Optional: Disable textarea resizing */
+  /* Additional styles... */
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/* Define styles for table headers (th) */
+th {
+  border: 1px solid #000000;
+  padding: 8px;
+  text-align: left;
+}
+
+/* Define styles for table cells (td) */
+td {
+  border: 1px solid #000000;
+  padding: 8px;
+  text-align: left;
+}
+
+.view-report-button {
+  float: right;
+  margin-right: 10px;
+}
+
+#reports-container{
+  background-color: white;
+  margin:5px;
+  padding: 5px;
+  border: 1px solid #000000;
+  width: 50%;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.report-separator {
+  border-top: 1px solid #ccc; /* Style the separator as a horizontal line */
+  margin-bottom: 20px; /* Add margin to create spacing between reports */
+}
+
+.report {
+  font-size: 20px; /* Set the font size to 16px */
+  margin-bottom: 20px; /* Add margin for spacing */
+}
+
+#file {
+  margin-top:20px;
+}
+
+#form{
+  font-size: 14px;
+}
+
+#support{
+  font-size: 14px;
+}
+
+.notifications {
+  display: none; /* Initially hidden */
+  position: absolute;
+  top: 50px; /* Adjust the top position as needed */
+  right: 20px; /* Adjust the right position as needed */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 999; /* Ensure it appears above other elements */
+  width: 15%;
+  height: 30%;
+}
+
+
+.status-change-confirmation {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fefefe;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  z-index: 9999; /* Ensure it's above other content */
+}
+
+.flash-messages {
+  position: fixed;
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Center using translate */
+  z-index: 1000;
+}
+
+.flash-message {
+  padding: 10px;
+  margin: 10px;
+  border-radius: 4px;
+  text-align: center; /* Center text inside the message */
+}
+
+.success {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.error {
+  background-color: #f44336;
+  color: white;
+}
+
+.navbar1 {
+  width: 800px;
+  height: 100px; /* Adjust the height as needed */
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.nav-item {
+  width: 90px;
+  height: 100px; /* Adjust the height to match .navbar1 */
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-item a {
+  text-decoration: none;
+  color: #000000;
+  font-size: 14px;
+}
+
+.nav-item1 {
+  width: 90px;
+  height: 100px; /* Adjust the height to match .navbar1 */
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 100px;
+}
+
+.nav-item1 a {
+  text-decoration: none;
+  color: #000000;
+  font-size: 14px;
+}
+.navbar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
+}
+
+#char-count {
+  position: absolute;
+  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  right: 5px; /* Adjust the distance from the right as needed */
+  font-size: 12px; /* Adjust the font size as needed */
+  color: #999; /* Adjust the color as needed */
+}
+
+#char-count1 {
+  position: absolute;
+  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  right: 5px; /* Adjust the distance from the right as needed */
+  font-size: 12px; /* Adjust the font size as needed */
+  color: #999; /* Adjust the color as needed */
+}
+
+#char-count2 {
+  position: absolute;
+  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  right: 5px; /* Adjust the distance from the right as needed */
+  font-size: 12px; /* Adjust the font size as needed */
+  color: #999; /* Adjust the color as needed */
+}
+
+#char-count3 {
+  position: absolute;
+  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  right: 5px; /* Adjust the distance from the right as needed */
+  font-size: 12px; /* Adjust the font size as needed */
+  color: #999; /* Adjust the color as needed */
+}
+
+#char-count4 {
+  position: absolute;
+  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  right: 5px; /* Adjust the distance from the right as needed */
+  font-size: 12px; /* Adjust the font size as needed */
+  color: #999; /* Adjust the color as needed */
+}
+
+ /* Style for the modal container */
+ .modal {
+  display: none; /* Hidden by default */
+  position: absolute; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Style for the modal content */
+.modal-content {
+  background-color: #fefefe;
+  padding: 20px;
+  width: 60%;
+  max-height: 80vh; /* Adjust the maximum height as needed */
+  overflow-y: auto; /* Add overflow-y property to enable vertical scrolling */
+  border-radius: 10px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#closeModal {
+    margin-top: 10px;
+    background-color: #008CBA;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    float: right;
+}
+
+
+
+/* CSS for the close button */
+.close-button {
+  position: absolute;
+  top: 10px; /* Adjust as needed to position it vertically */
+  left: 10px; /* Adjust as needed to position it horizontally */
+  color: hsl(0, 0%, 99%);
+  font-size: 60px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#loading-screen {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  text-align: center;
+}
+
+.loading-spinner {
+  position: relative;
+  top: 50%;
+  left: 48%;
+  transform: translate(-50%, -50%);
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+}
+
+.loading-text {
+  position: relative;
+  top: 48%;
+  left: 49.5%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+.sanction-content {
+  padding: 20px;
+  height: 60%;
+  overflow-y: auto; /* Add overflow-y property to enable vertical scrolling */
+  margin-bottom: 20px; 
+}
+
+
+.written-content {
+  padding: 20px;
+  height: 60%;
+  margin-bottom: 20px; 
+}
+
+
+#loadingScreen {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
+
+#loadingText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 24px;
+} 
+
+.numberofall{
+align-content: center;
+position: absolute;
+top: 70%;
+left: 50%;
+transform: translate(-50%, -50%);
+  width:500px;
+  height:500px;
+} 
+
+.call{
+  font-size: 14px;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.editable {
+  background-color: white; /* Set the background color for editable fields */
+}
+
+.call_id{
+  font-size: 14px;
+}
+
+.report_small{
+  font-size: 14px;
+}
+
+.pic_coord{
+  width: 200px;
+  height:150px;
+}
+
+.captcha-container {
+  margin: auto;
+  padding-top:20px;
+  padding-bottom:20px;
+  width: 60%;
+}

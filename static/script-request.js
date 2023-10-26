@@ -542,20 +542,23 @@ function toggleInputFields() {
     function toggleReadonly(button) {
         var row = button.parentNode.parentNode;
         var inputElements = row.getElementsByTagName("input");
+        var changebutton = document.getElementById("changebutton");
+
         
         for (var i = 0; i < inputElements.length; i++) {
             inputElements[i].readOnly = !inputElements[i].readOnly;
             if (!inputElements[i].readOnly) {
-                inputElements[i].classList.add("editable"); // Add the 'editable' class when the field is editable
+                inputElements[i].classList.add("editable"); 
+                changebutton.disabled = false;// Add the 'editable' class when the field is editable
             } else {
-                inputElements[i].classList.remove("editable"); // Remove the 'editable' class when the field is read-only
+                inputElements[i].classList.remove("editable"); 
+                changebutton.disabled = true;// Remove the 'editable' class when the field is read-only
             }
         }
     }
 
     function updateRow(button) {
 
-       
 
         var row = button.parentNode.parentNode;
 

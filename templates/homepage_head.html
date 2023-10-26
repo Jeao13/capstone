@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href='/static/headcss.css' />
+    <script src="/static/script-head.js"></script>
+</head>
+<body>
+    <div class="header"> <img src="/static/bsul.png" alt="Default Profile Picture"><h1>Office of Student Discipline - Grievance System Portal</h1>    <a class="logout" href="/logout">Logout</a></div>
+    <div class="name">{% if profile_picture_base64 %}
+        <img src="data:image/jpeg;base64,{{ profile_picture_base64 }}" alt="Profile Picture">
+        {% else %}
+        <img src="/static/default_profile.png" alt="Default Profile Picture">
+        {% endif %} {{ name }}</div>
+    <div class="sidebar">
+        <ul>
+            <li><a href="#tab1">Dashboard</a></li>
+            <li><a href="#tab2">Complaints</a></li>
+            <li><a href="#tab5">Sanctions</a></li>
+            <li><a href="#tab6">Reports</a></li>
+            <li><a href="#tab7">Manage Coordinators</a></li>
+            <li><a href="#tab8">Manage Users</a></li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <div id="tab1" class="tab-content active"><h1>Dashboard</h1></div>
+        <div id="tab2" class="tab-content"><h1>Complaints</h1>
+
+            <form id="searchForm">
+                <input type="text" id="searchInput" name="searchQuery" placeholder="Search...">
+                <button type="submit">Search</button>
+            </form>
+        
+            <form method="POST" action="{{ url_for('delete_all_report2')}}"
+                                      onsubmit="return confirm('Are you sure you want to delete all this report?');">
+                                    <button type="submit">Delete All Report</button>
+                                </form>
+            {% if user_source == 'accounts_head' %}
+            <label for="department1">Sort Department:</label> 
+            <select name="department1" id="department1">
+                <option value="" selected disabled>Select the Department:</option> 
+                <option value="CAFAD">CAFAD</option> 
+                <option value="CICS">CICS</option> 
+                <option value="CIT">CIT</option> 
+                <option value="COE">COE</option> 
+            </select><br><br>
+            {% endif %}
+        
+            <div id="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Report ID</th>               
+                            <th>Complainant's Username</th>
+                            <th>Date and Time</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                            <th>Attached Form</th>
+                            <th>Attached Supporting Document</th>
+                            <th>Action</th>
+                            <th>Change Status</th>
+                            <th>Delete Report</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in reports3|sort(attribute='3', reverse=true) %}
+                        <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
+                        <tr>
+                            <td>{{ row[1] }}</td>
+                            <td>{{ row[2] }}</td>
+                            <td>{{ row[3] }}</td>
+                            <td>{{ row[5] }}</td>
+                            <td>{{ row[6] }}</td>
+                                <td>
+                                    <a href="{{ url_for('preview_report_file', report_id=row[1]) }}" target="_blank">{{ row[8] }}</a>
+                                </td>
+            
+                          
+                                <td>
+                                    <a href="{{ url_for('preview_support_file', report_id=row[1]) }}" target="_blank">{{ row[11] }}</a>
+                                </td>
+                              
+                            
+                            
+                            <td><button class="view-report-button" onclick="getAlgorithmResult('{{ row[4] }}')">View Report</button></td>
+                            <td>
+                                <!-- Add a form to change the status -->
+                                <form id="statusChangeForm" onsubmit="checkStatus('{{ row[0] }}'); return false; ">
+                                    <select name="new_status" id="new_status_select_{{ row[0] }}">
+                                      <option value="On Going">On Going</option>
+                                      <option value="Rejected">Rejected</option>
+                                      <option value="Case Closed">Case Closed</option>
+                                    </select>
+                                    <button type="submit">Change</button>
+                                  </form>
+                            </td>
+                            <td style="justify-content:center">
+                                <!-- Add a form to change the status -->
+                                <form method="POST" action="{{ url_for('delete_report', report_id=row[1]) }}"
+                                      onsubmit="return confirm('Are you sure you want to delete this report?');">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        
+        
+        
+        
+        </div>    
+        <div id="tab5" class="tab-content"><h1>Sanctions</h1>
+       
+            <h4>Check Records</h4>
+            <form method="POST" action="/search_students" id="searchForm" required>
+                <label for="username">Input Sr-Code:</label>
+                <input type="text" id="username" name="username" required>
+                <input type="submit" value="Search">
+            </form>
+           
+            <div id="studentInfo">
+                <p>Name: <span id="studentName"></span></p>
+                <p>Course: <span id="studentCourse"></span></p>
+                <p>Sanctions: <span id="studentSanctions"></span></p>
+            </div>
+           
+    
+           <hr>
+            <div class="written-content">
+                    <label for="forms1">Forms:</label> 
+                <select name="forms1" id="forms1" required onchange="toggleInputFields2()"> 
+                    <option value="" selected disabled>Select Form:</option> 
+                    <option value="Written Warning">Written Warning</option> 
+                    <option value="Written Reprimand">Written Reprimand</option> 
+                    <option value="Letter of Suspension">Letter of Suspension</option> 
+        
+                </select><br><br>
+    
+                <div id="formContainer5" style="display: none;">
+                    <h3>Written Warning</h3>
+                    <form action="/submit_written" method="POST" enctype="multipart/form-data">
+    
+                <label for="student">Name of the Student:</label><br>
+                <input type="text" id="student" name="student"><br><br>
+    
+                <label for="student2">Name of the Complainant:</label><br>
+                <input type="text" id="student2" name="student2"><br><br>
+    
+                <label for="date2">Date report received:</label>
+                <input type="date" id="date2" name="date2"><br><br>
+    
+                    <label id="provision1" for="remarks" >What did the respondent do?:</label>
+                    <textarea id="remarks" name="remarks" rows="16" cols="20" required ></textarea><br><br>
+    
+                    <label id="provision1" for="norms" >What happen in the investigation?:</label>
+                    <textarea id="norms" name="norms" rows="16" cols="20" required ></textarea><br><br>
+    
+                    <input list="sanctions" id="sanctionsInput" name="sanctions" placeholder="Select Section:">
+                    <datalist id="sanctions">
+                        <option value="12.1.1 - attendance, punctuality, cutting classes">12.1.1 - attendance, punctuality, cutting classes</option> 
+                        <option value="12.1.2 - dress code, uniform">12.1.2 - dress code, uniform</option> 
+                        <option value="12.1.3 - property misuse">12.1.3 - property misuse</option> 
+                        <option value="12.1.4 - noise disturbance">12.1.4 - noise disturbance</option>
+                        <option value="12.1.5 - posting violation">12.1.5 - posting violation</option> 
+                        <option value="12.1.6 - notice removal">12.1.6 - notice removal</option> 
+                        <option value="12.1.7 - littering">12.1.7 - littering</option> 
+                        <option value="12.1.8 - smoking violation">12.1.8 - smoking violation</option>
+                        <option value="12.1.9 - trespassing">12.1.9 - trespassing</option> 
+                        <option value="12.1.10 - misconduct">12.1.10 - misconduct</option> 
+                        <option value="12.1.11 - harassment">12.1.11 - harassment</option> 
+                        <option value="12.1.12 - provocation, fight">12.1.12 - provocation, fight</option> 
+                        <option value="12.1.13 - PDA">12.1.13 - PDA</option> 
+                        <option value="12.1.14 - truancy">12.1.14 - truancy</option> 
+                        <option value="13.1 - repeat offenses">13.1 - repeat offenses</option> 
+                        <option value="13.2 - insubordination">13.2 - insubordination</option>
+                        <option value="13.3 - smoking violation">13.3 - smoking violation</option> 
+                        <option value="13.4 - alcohol violation">13.4 - alcohol violation</option> 
+                        <option value="13.5 - intoxication">13.5 - intoxication</option> 
+                        <option value="13.6 - trespassing">13.6 - trespassing</option>
+                        <option value="13.7 - property misuse">13.7 - property misuse</option> 
+                        <option value="13.13 - abusive behavior">13.13 - abusive behavior</option> 
+                        <option value="13.14 - unauthorized membership">13.14 - unauthorized membership</option> 
+                        <option value="13.15 - online misconduct">13.15 - online misconduct</option>
+                        <option value="13.16 - vandalism">13.16 - vandalism</option> 
+                        <option value="13.17 - academic disruption">13.17 - academic disruption</option> 
+                        <option value="13.18 - solicitation">13.18 - solicitation</option> 
+                        <option value="13.19 - physical harm">13.19 - physical harm</option>
+                        <option value="13.20 - weapons possession">13.20 - weapons possession</option> 
+                        <option value="13.21 - theft">13.21 - theft</option> 
+                        <option value="13.22 - bribery">13.22 - bribery</option> 
+                        <option value="13.23 - sexual misconduct">13.23 - sexual misconduct</option>
+                        <option value="13.24 - obscenity">13.24 - obscenity</option> 
+                        <option value="13.25 - defamation">13.25 - defamation</option> 
+                        <option value="13.26 - physical harm">13.26 - physical harm</option> 
+                        <option value="13.27 - falsification">13.27 - falsification</option>
+                        <option value="13.28 - disrepute">13.28 - disrepute</option> 
+                        <option value="13.29 - riot">13.29 - riot</option> 
+                        <option value="13.30 - destruction of property">13.30 - destruction of property</option> 
+                        <option value="13.31 - burglary">13.31 - burglary</option> 
+                        <option value="13.32 - hazing">13.32 - hazing</option> 
+                        <option value="13.33 - drugs">13.33 - drugs</option> 
+                        <option value="13.34 - firearms possession">13.34 - firearms possession</option> 
+                        <option value="13.35 - threats">13.35 - threats</option> 
+                        <option value="13.36 - felonies">13.36 - felonies</option> 
+                        <option value="13.37 - moral turpitude">13.37 - moral turpitude</option> 
+                        <option value="14.1 - cheating, mobile phone">14.1 - cheating, mobile phone</option> 
+                        <option value="14.2 - cheating, talking">14.2 - cheating, talking</option> 
+                        <option value="14.3 - cheating, dictating answers">14.3 - cheating, dictating answers</option> 
+                        <option value="14.4 - cheating, notes possession">14.4 - cheating, notes possession</option> 
+                        <option value="14.5 - cheating, outside information">14.5 - cheating, outside information</option> 
+                        <option value="14.6 - cheating, leakage facilitation">14.6 - cheating, leakage facilitation</option> 
+                        <option value="14.7 - cheating, buying/selling questions">14.7 - cheating, buying/selling questions</option> 
+                        <option value="14.8 - cheating, copying answers">14.8 - cheating, copying answers</option> 
+                        <option value="14.9 - cheating, covert devices">14.9 - cheating, covert devices</option> 
+                        <option value="14.10 - cheating, impersonation">14.10 - cheating, impersonation</option> 
+                        <option value="14.11 - plagiarism">14.11 - plagiarism</option> 
+                        <option value="14.12 - cheating, surrogate attendance">14.12 - cheating, surrogate attendance</option> 
+                        <option value="14.13 - plagiarism">14.13 - plagiarism</option> 
+                        <option value="14.14 - cheating, caught">14.14 - cheating, caught</option> 
+                        <option value="14.15 - cheating, aiding">14.15 - cheating, aiding</option> 
+        
+                    </datalist><br><br>
+                    <input type="hidden" name="forms" value="Written Warning">
+                    <input id="submit" type="submit" value="Submit">
+                    </form>
+                </div>
+                
+                <div id="formContainer6" style="display: none;">
+    
+                    <h3>Written Reprimand</h3>
+                    <form action="/submit_written" method="POST" enctype="multipart/form-data">
+                        <label for="student">Name of the Student:</label>
+                        <input type="text" id="student" name="student"><br><br>
+            
+                            <label id="provision1" for="norms" >What happen in the investigation?:</label>
+                            <textarea id="norms" name="norms" rows="16" cols="20" required ></textarea><br><br>
+            
+                            <input list="sanctions" id="sanctionsInput" name="sanctions" placeholder="Select Section:">
+                            <datalist id="sanctions">
+                                <option value="12.1.1 - attendance, punctuality, cutting classes">12.1.1 - attendance, punctuality, cutting classes</option> 
+                                <option value="12.1.2 - dress code, uniform">12.1.2 - dress code, uniform</option> 
+                                <option value="12.1.3 - property misuse">12.1.3 - property misuse</option> 
+                                <option value="12.1.4 - noise disturbance">12.1.4 - noise disturbance</option>
+                                <option value="12.1.5 - posting violation">12.1.5 - posting violation</option> 
+                                <option value="12.1.6 - notice removal">12.1.6 - notice removal</option> 
+                                <option value="12.1.7 - littering">12.1.7 - littering</option> 
+                                <option value="12.1.8 - smoking violation">12.1.8 - smoking violation</option>
+                                <option value="12.1.9 - trespassing">12.1.9 - trespassing</option> 
+                                <option value="12.1.10 - misconduct">12.1.10 - misconduct</option> 
+                                <option value="12.1.11 - harassment">12.1.11 - harassment</option> 
+                                <option value="12.1.12 - provocation, fight">12.1.12 - provocation, fight</option> 
+                                <option value="12.1.13 - PDA">12.1.13 - PDA</option> 
+                                <option value="12.1.14 - truancy">12.1.14 - truancy</option> 
+                                <option value="13.1 - repeat offenses">13.1 - repeat offenses</option> 
+                                <option value="13.2 - insubordination">13.2 - insubordination</option>
+                                <option value="13.3 - smoking violation">13.3 - smoking violation</option> 
+                                <option value="13.4 - alcohol violation">13.4 - alcohol violation</option> 
+                                <option value="13.5 - intoxication">13.5 - intoxication</option> 
+                                <option value="13.6 - trespassing">13.6 - trespassing</option>
+                                <option value="13.7 - property misuse">13.7 - property misuse</option> 
+                                <option value="13.13 - abusive behavior">13.13 - abusive behavior</option> 
+                                <option value="13.14 - unauthorized membership">13.14 - unauthorized membership</option> 
+                                <option value="13.15 - online misconduct">13.15 - online misconduct</option>
+                                <option value="13.16 - vandalism">13.16 - vandalism</option> 
+                                <option value="13.17 - academic disruption">13.17 - academic disruption</option> 
+                                <option value="13.18 - solicitation">13.18 - solicitation</option> 
+                                <option value="13.19 - physical harm">13.19 - physical harm</option>
+                                <option value="13.20 - weapons possession">13.20 - weapons possession</option> 
+                                <option value="13.21 - theft">13.21 - theft</option> 
+                                <option value="13.22 - bribery">13.22 - bribery</option> 
+                                <option value="13.23 - sexual misconduct">13.23 - sexual misconduct</option>
+                                <option value="13.24 - obscenity">13.24 - obscenity</option> 
+                                <option value="13.25 - defamation">13.25 - defamation</option> 
+                                <option value="13.26 - physical harm">13.26 - physical harm</option> 
+                                <option value="13.27 - falsification">13.27 - falsification</option>
+                                <option value="13.28 - disrepute">13.28 - disrepute</option> 
+                                <option value="13.29 - riot">13.29 - riot</option> 
+                                <option value="13.30 - destruction of property">13.30 - destruction of property</option> 
+                                <option value="13.31 - burglary">13.31 - burglary</option> 
+                                <option value="13.32 - hazing">13.32 - hazing</option> 
+                                <option value="13.33 - drugs">13.33 - drugs</option> 
+                                <option value="13.34 - firearms possession">13.34 - firearms possession</option> 
+                                <option value="13.35 - threats">13.35 - threats</option> 
+                                <option value="13.36 - felonies">13.36 - felonies</option> 
+                                <option value="13.37 - moral turpitude">13.37 - moral turpitude</option> 
+                                <option value="14.1 - cheating, mobile phone">14.1 - cheating, mobile phone</option> 
+                                <option value="14.2 - cheating, talking">14.2 - cheating, talking</option> 
+                                <option value="14.3 - cheating, dictating answers">14.3 - cheating, dictating answers</option> 
+                                <option value="14.4 - cheating, notes possession">14.4 - cheating, notes possession</option> 
+                                <option value="14.5 - cheating, outside information">14.5 - cheating, outside information</option> 
+                                <option value="14.6 - cheating, leakage facilitation">14.6 - cheating, leakage facilitation</option> 
+                                <option value="14.7 - cheating, buying/selling questions">14.7 - cheating, buying/selling questions</option> 
+                                <option value="14.8 - cheating, copying answers">14.8 - cheating, copying answers</option> 
+                                <option value="14.9 - cheating, covert devices">14.9 - cheating, covert devices</option> 
+                                <option value="14.10 - cheating, impersonation">14.10 - cheating, impersonation</option> 
+                                <option value="14.11 - plagiarism">14.11 - plagiarism</option> 
+                                <option value="14.12 - cheating, surrogate attendance">14.12 - cheating, surrogate attendance</option> 
+                                <option value="14.13 - plagiarism">14.13 - plagiarism</option> 
+                                <option value="14.14 - cheating, caught">14.14 - cheating, caught</option> 
+                                <option value="14.15 - cheating, aiding">14.15 - cheating, aiding</option> 
+                
+                            </datalist><br><br>
+                            <input type="hidden" name="forms" value="Written Reprimand">
+                            <input id="submit" type="submit" value="Submit">
+                            </form>
+            </div>
+    
+    
+            <div id="formContainer7" style="display: none;">
+                <h3>Letter of Suspension</h3>
+                <form action="/submit_written" method="POST" enctype="multipart/form-data">
+                    <label for="student">Name of the Student:</label>
+                    <input type="text" id="student" name="student"><br><br>
+    
+                    <label for="days">Days of Suspension:</label>
+                    <input type="number" id="days" name="days" pattern="[0-9]*" inputmode="numeric"><br><br>
+        
+                    <label for="effectivity">Effectivity:</label>
+                    <input type="text" id="effectivity" name="effectivity"><br><br>
+        
+        
+                        <label id="provision1" for="norms" >What happen in the investigation?:</label>
+                        <textarea id="norms" name="norms" rows="16" cols="20" required ></textarea><br><br>
+        
+                        <input list="sanctions" id="sanctionsInput" name="sanctions" placeholder="Select Section:">
+                        <datalist id="sanctions">
+                            <option value="12.1.1 - attendance, punctuality, cutting classes">12.1.1 - attendance, punctuality, cutting classes</option> 
+                            <option value="12.1.2 - dress code, uniform">12.1.2 - dress code, uniform</option> 
+                            <option value="12.1.3 - property misuse">12.1.3 - property misuse</option> 
+                            <option value="12.1.4 - noise disturbance">12.1.4 - noise disturbance</option>
+                            <option value="12.1.5 - posting violation">12.1.5 - posting violation</option> 
+                            <option value="12.1.6 - notice removal">12.1.6 - notice removal</option> 
+                            <option value="12.1.7 - littering">12.1.7 - littering</option> 
+                            <option value="12.1.8 - smoking violation">12.1.8 - smoking violation</option>
+                            <option value="12.1.9 - trespassing">12.1.9 - trespassing</option> 
+                            <option value="12.1.10 - misconduct">12.1.10 - misconduct</option> 
+                            <option value="12.1.11 - harassment">12.1.11 - harassment</option> 
+                            <option value="12.1.12 - provocation, fight">12.1.12 - provocation, fight</option> 
+                            <option value="12.1.13 - PDA">12.1.13 - PDA</option> 
+                            <option value="12.1.14 - truancy">12.1.14 - truancy</option> 
+                            <option value="13.1 - repeat offenses">13.1 - repeat offenses</option> 
+                            <option value="13.2 - insubordination">13.2 - insubordination</option>
+                            <option value="13.3 - smoking violation">13.3 - smoking violation</option> 
+                            <option value="13.4 - alcohol violation">13.4 - alcohol violation</option> 
+                            <option value="13.5 - intoxication">13.5 - intoxication</option> 
+                            <option value="13.6 - trespassing">13.6 - trespassing</option>
+                            <option value="13.7 - property misuse">13.7 - property misuse</option> 
+                            <option value="13.13 - abusive behavior">13.13 - abusive behavior</option> 
+                            <option value="13.14 - unauthorized membership">13.14 - unauthorized membership</option> 
+                            <option value="13.15 - online misconduct">13.15 - online misconduct</option>
+                            <option value="13.16 - vandalism">13.16 - vandalism</option> 
+                            <option value="13.17 - academic disruption">13.17 - academic disruption</option> 
+                            <option value="13.18 - solicitation">13.18 - solicitation</option> 
+                            <option value="13.19 - physical harm">13.19 - physical harm</option>
+                            <option value="13.20 - weapons possession">13.20 - weapons possession</option> 
+                            <option value="13.21 - theft">13.21 - theft</option> 
+                            <option value="13.22 - bribery">13.22 - bribery</option> 
+                            <option value="13.23 - sexual misconduct">13.23 - sexual misconduct</option>
+                            <option value="13.24 - obscenity">13.24 - obscenity</option> 
+                            <option value="13.25 - defamation">13.25 - defamation</option> 
+                            <option value="13.26 - physical harm">13.26 - physical harm</option> 
+                            <option value="13.27 - falsification">13.27 - falsification</option>
+                            <option value="13.28 - disrepute">13.28 - disrepute</option> 
+                            <option value="13.29 - riot">13.29 - riot</option> 
+                            <option value="13.30 - destruction of property">13.30 - destruction of property</option> 
+                            <option value="13.31 - burglary">13.31 - burglary</option> 
+                            <option value="13.32 - hazing">13.32 - hazing</option> 
+                            <option value="13.33 - drugs">13.33 - drugs</option> 
+                            <option value="13.34 - firearms possession">13.34 - firearms possession</option> 
+                            <option value="13.35 - threats">13.35 - threats</option> 
+                            <option value="13.36 - felonies">13.36 - felonies</option> 
+                            <option value="13.37 - moral turpitude">13.37 - moral turpitude</option> 
+                            <option value="14.1 - cheating, mobile phone">14.1 - cheating, mobile phone</option> 
+                            <option value="14.2 - cheating, talking">14.2 - cheating, talking</option> 
+                            <option value="14.3 - cheating, dictating answers">14.3 - cheating, dictating answers</option> 
+                            <option value="14.4 - cheating, notes possession">14.4 - cheating, notes possession</option> 
+                            <option value="14.5 - cheating, outside information">14.5 - cheating, outside information</option> 
+                            <option value="14.6 - cheating, leakage facilitation">14.6 - cheating, leakage facilitation</option> 
+                            <option value="14.7 - cheating, buying/selling questions">14.7 - cheating, buying/selling questions</option> 
+                            <option value="14.8 - cheating, copying answers">14.8 - cheating, copying answers</option> 
+                            <option value="14.9 - cheating, covert devices">14.9 - cheating, covert devices</option> 
+                            <option value="14.10 - cheating, impersonation">14.10 - cheating, impersonation</option> 
+                            <option value="14.11 - plagiarism">14.11 - plagiarism</option> 
+                            <option value="14.12 - cheating, surrogate attendance">14.12 - cheating, surrogate attendance</option> 
+                            <option value="14.13 - plagiarism">14.13 - plagiarism</option> 
+                            <option value="14.14 - cheating, caught">14.14 - cheating, caught</option> 
+                            <option value="14.15 - cheating, aiding">14.15 - cheating, aiding</option> 
+            
+                        </datalist><br><br>
+                        <input id="submit" type="submit" value="Submit">
+                        </form>
+                    </div>
+        </div>
+
+        <div id="rejectModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeRejectModal()">&times;</span>
+                <h1>Notice of Case Disimissal - Reject</h1>
+                <form id="noticeform" action="/submit_notice" method="POST" enctype="multipart/form-data">
+        
+                    <label for="complainant">Name of Complainant:</label><br>
+                    <input type="text" id="complainant" name="complainant" required><br><br>
+            
+                    <hr>
+            
+                    <label for="student">Name of the Student:</label><br>
+                    <input type="text" id="student" name="student" required><br><br>
+            
+                    <label for="srcode">SR-Code of the Student:</label><br>
+                    <input type="text" id="srcode" name="srcode" required><br><br>
+            
+                    <label for="section">Year and Section:</label><br>
+                    <input type="text" id="section" name="section" required><br><br>
+            
+                    <label for="department">Program:</label> 
+                    <select name="department" id="department" required>
+                        <option value="" selected disabled>Select the Department:</option> 
+                        <option value="CAFAD">CAFAD</option> 
+                        <option value="CICS">CICS</option> 
+                        <option value="CIT">CIT</option> 
+                        <option value="COE">COE</option> 
+                    </select><br><br>
+            
+                    <hr>
+                    <h3>Gender</h3>
+            
+                    <input type="radio" id="male" name="gender" value="male" required>
+                    <label for="male">Male</label><br>
+                    
+                    <input type="radio" id="female" name="gender" value="female">
+                    <label for="female">Female</label><br>
+                    <hr>
+                    <h3>Indicate Offense</h3>
+                    <input type="radio" id="minor" name="offense_type" value="minor" required>
+                    <label for="minor">Minor Offense</label>
+                    <input type="text" id="minor_input" name="minor_offense" style="display: none"><br>
+            
+                    <input type="radio" id="major" name="offense_type" value="major">
+                    <label for="major">Major Offense</label>
+                    <input type="text" id="major_input" name="major_offense" style="display: none"><br>
+                    <hr>
+                    <h3>Reason for Dismissal:</h3>
+                    <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork">
+                    <label for="fieldwork">The complaint is without merit.</label><br>
+                    <input type="checkbox" id="prolonged" name="prolonged" value="prolonged" onclick="toggleInput4()">
+                    <label for="prolonged">Others, please specify:</label><br>
+                    <input type="text" id="specify2" name="specify2" style="display: none" required><br>
+                    <input type="hidden" name="status" value="Case Closed">
+                        
+                    <button onclick="validateCheckboxes()">Submit</button>
+                </form>
+            </div>
+        </div>
+        
+        <div id="caseModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeCaseModal()">&times;</span>
+                <h1>Notice of Case Disimissal - Case Closed</h1>
+                <form id="noticeform1" action="/submit_notice" method="POST" enctype="multipart/form-data">
+        
+                    <label for="complainant">Name of Complainant:</label><br>
+                    <input type="text" id="complainant" name="complainant" required><br><br>
+            
+                    <hr>
+            
+                    <label for="student">Name of the Student:</label><br>
+                    <input type="text" id="student" name="student" required><br><br>
+            
+                    <label for="srcode">SR-Code of the Student:</label><br>
+                    <input type="text" id="srcode" name="srcode" required><br><br>
+            
+                    <label for="section">Year and Section:</label><br>
+                    <input type="text" id="section" name="section" required><br><br>
+            
+                    <label for="department">Program:</label> 
+                    <select name="department" id="department" required>
+                        <option value="" selected disabled>Select the Department:</option> 
+                        <option value="CAFAD">CAFAD</option> 
+                        <option value="CICS">CICS</option> 
+                        <option value="CIT">CIT</option> 
+                        <option value="COE">COE</option> 
+                    </select><br><br>
+            
+                    <hr>
+                    <h3>Gender</h3>
+            
+                    <input type="radio" id="male" name="gender" value="male" required>
+                    <label for="male">Male</label><br>
+                    
+                    <input type="radio" id="female" name="gender" value="female">
+                    <label for="female">Female</label><br>
+                    <hr>
+                    <h3>Indicate Offense</h3>
+                    <input type="radio" id="minor" name="offense_type" value="minor" required>
+                    <label for="minor">Minor Offense</label>
+                    <select name="department" id="department">
+                        <option value="" selected disabled>Select the Department:</option> 
+                        <option value="CAFAD">CAFAD</option> 
+                        <option value="CICS">CICS</option> 
+                        <option value="CIT">CIT</option> 
+                        <option value="COE">COE</option> 
+                    </select><br><br>
+                    <input type="text" id="minor_input" name="minor_offense" style="display: none"><br>
+            
+                    <input type="radio" id="major" name="offense_type" value="major">
+                    <label for="major">Major Offense</label>
+                    <input type="text" id="major_input" name="major_offense" style="display: none"><br>
+                    <hr>
+                    <h3>Reason for Dismissal:</h3>
+                    <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork">
+                    <label for="fieldwork">The complaint is without merit.</label><br>
+                    <input type="checkbox" id="prolonged" name="prolonged" value="prolonged" onclick="toggleInput4()">
+                    <label for="prolonged">Others, please specify:</label><br>
+                    <input type="text" id="specify2" name="specify2" style="display: none"><br>
+                    <input type="hidden" name="status" value="Case Closed">
+            
+                    <button onclick="validateCheckboxes()">Submit</button>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+        <div id="tab6" class="tab-content"><h1>Reports</h1></div>
+        <div id="tab7" class="tab-content"> <h1>Manage Coordinators</h1>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Coord_Id</th>
+                        <th>Profile Pic</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Name</th>
+                        <th>Course</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="coordinator-table">
+                    {% for row in coordinators %}
+                    <tr>
+                        <td data-coord-id="{{ row[0] }}">{{ row[0] }}</td>
+                        <td data-pic-id="{{ profile_pictures[row[0]] }}"><img src="{% if profile_pictures.get(row[0]) %}data:image/jpeg;base64,{{ profile_pictures[row[0]] }}{% else %}/static/default_profile.png{% endif %}" alt="Profile Picture" class="pic_coord"></td>
+                        <td><input type="text" name="username" value="{{ row[1] }}" readonly></td>
+                        <td><input type="text" name="password" value="{{ row[2] }}" readonly></td>
+                      
+                        <td><input type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly></td>
+                        <td><input type="text" name="course" value="{{ row[5] }}" readonly></td>
+                        <td>
+                            <button onclick="toggleReadonly(this)">Toggle Edit</button>
+                            <button id="changebutton" onclick="updateRow(this)" disabled>Change</button>
+                            <button>Change Profile Pic</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>    
+           </div>
+        <div id="tab8" class="tab-content"><h1>Manage User</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Coord_Id</th>
+                        <th>Profile Pic</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Name</th>
+                        <th>Course</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="coordinator-table">
+                    {% for row in cics %}
+                    <tr>
+                        <td data-coord-id="{{ row[0] }}">{{ row[0] }}</td>
+                        <td data-pic-id="{{ profile_pictures[row[0]] }}"><img src="{% if profile_pictures.get(row[0]) %}data:image/jpeg;base64,{{ profile_pictures[row[0]] }}{% else %}/static/default_profile.png{% endif %}" alt="Profile Picture" class="pic_coord"></td>
+                        <td><input type="text" name="username" value="{{ row[1] }}" readonly></td>
+                        <td><input type="text" name="password" value="{{ row[2] }}" readonly></td>
+                      
+                        <td><input type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly></td>
+                        <td><input type="text" name="course" value="{{ row[5] }}" readonly></td>
+                        <td>
+                            <button onclick="toggleReadonly1(this)">Toggle Edit</button>
+                            <button id="changebutton1" onclick="updateRow1(this)" disabled>Change</button>
+                            <button onclick="coordedit('{{ row[0] }}')">Change Profile Pic</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div id="modalContainer" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal6()">&times;</span>
+                    <form id="statusChangeForm" method="POST" action="/edit_pic" enctype="multipart/form-data">
+                        <label for="file3">Attach the New Profile Pic:</label>
+                        <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
+                        
+        
+        
+                    <button type="submit">Change</button>
+                  
+                </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+  
+
+</body>
+</html>

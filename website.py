@@ -1965,7 +1965,7 @@ def index():
             # User exists in the accounts_coordinators table, set the role and continue
             session['username'] = submitted_username  # Save the username in the session
             session['role'] = 'accounts_head'  # Save the role in the session
-            return redirect(url_for('homepage'))  # Redirect to another page after successful login
+            return redirect(url_for('homepage_head'))  # Redirect to another page after successful login
         else:
             # Invalid username or password, set error_message
             error_message = 'Invalid username or password'
@@ -1995,6 +1995,12 @@ def menu():
             # Query reports where the course matches the user's course
             db_cursor.execute("SELECT * FROM reports WHERE course = %s", (user_course,))
             reports = db_cursor.fetchall()
+
+    elif user_role == 'accounts_head':
+        db_cursor.execute("SELECT * FROM reports")
+        reports = db_cursor.fetchall()
+        user_course = ""
+
     else:
         # For other roles, simply retrieve reports for the logged-in user
         db_cursor.execute("SELECT * FROM reports WHERE username = %s", (username,))
@@ -2262,6 +2268,172 @@ def sanctions():
    
     return render_template('homepage.html', sanctions=sanctions)
 
+
+
+@app.route('/head', methods=['GET', 'POST'])
+def homepage_head():
+    username = session.get('username', '')
+
+    
+    if request.method == 'POST':
+        # Handle the POST request (form submission)
+        username = request.form['username']
+        # Save the username in the session
+        session['username'] = username
+
+        
+
+    # Determine the user source (accounts_cics or accounts_coordinators) and set the user_source variable
+   
+
+    db_cursor = db_connection.cursor()
+
+    db_cursor.execute("SELECT * FROM accounts_head WHERE username = %s", (username,))
+    result_head = db_cursor.fetchone()
+
+    if result_head:
+        user_source = 'accounts_head'
+        print(user_source)
+        session['source'] = user_source
+    else:
+        user_source = 'unknown'  # Handle the case where the user source is not found
+
+    # Close the cursor
+    db_cursor.close()
+
+    # Retrieve the profile picture path, name, and course for the logged-in user from the database
+    db_cursor1 = db_connection.cursor()
+
+    if  user_source == 'accounts_head':
+        db_cursor1.execute("SELECT image_data, Name, Position FROM accounts_head WHERE username = %s", (username,))
+        role ="head"
+
+    else:
+        # Handle the case where user_source is unknown
+        db_cursor1.execute("SELECT image_data, Name, Course, Year FROM accounts_cics WHERE username = %s", (username,))
+
+    result_user_data = db_cursor1.fetchone()
+
+    if role == "head":
+        profile_picture_data, name, course = result_user_data
+        year=""
+        session['namestudent'] = name
+        print(name)
+
+    else:
+        # Handle the case where user data is not found
+        profile_picture_data = None
+        name = "Name not found"
+        course = "Course/Position not found"
+
+
+     # Retrieve the sanctions data within the homepage route
+    db_cursor_sanctions = db_connection.cursor()
+    db_cursor_sanctions.execute("SELECT * FROM sanctions WHERE username = %s AND type = %s", (name,'Written Warning'))
+    warning = db_cursor_sanctions.fetchall()
+    db_cursor_sanctions.close()
+
+    db_cursor_sanctions1 = db_connection.cursor()
+    db_cursor_sanctions1.execute("SELECT * FROM sanctions WHERE username = %s AND type= %s", (name,"Written Reprimand"))
+    reprimand = db_cursor_sanctions1.fetchall()
+    db_cursor_sanctions1.close()
+
+    db_cursor_sanctions2 = db_connection.cursor()
+    db_cursor_sanctions2.execute("SELECT * FROM sanctions WHERE username = %s AND type = %s", (name,"Letter of Suspension"))
+    suspension = db_cursor_sanctions2.fetchall()
+    db_cursor_sanctions2.close()
+
+    db_cursor_call = db_connection.cursor()
+    db_cursor_call.execute("SELECT * FROM callslip WHERE coord = %s", (name,))
+    call = db_cursor_call.fetchall()
+    db_cursor_call.close()
+
+    db_cursor_call_student = db_connection.cursor()
+    db_cursor_call_student.execute("SELECT * FROM callslip WHERE name = %s", (name,))
+    reports = db_cursor_call_student.fetchall()
+    db_cursor_call_student.close()
+
+
+    db_cursor_notice_student = db_connection.cursor()
+    db_cursor_notice_student.execute("SELECT * FROM notice_case WHERE name = %s", (name,))
+    reports1 = db_cursor_notice_student.fetchall()
+    db_cursor_notice_student.close()
+
+    db_cursor_notice_complain = db_connection.cursor()
+    db_cursor_notice_complain.execute("SELECT * FROM notice_case WHERE complainant = %s", (name,))
+    reports2 = db_cursor_notice_complain.fetchall()
+    db_cursor_notice_complain.close()
+
+
+
+    
+
+    # Encode the profile picture data as a Base64 string
+    if profile_picture_data is not None:
+        profile_picture_base64 = base64.b64encode(profile_picture_data).decode('utf-8')
+    else:
+        profile_picture_base64 = None
+
+    username = session.get('username', '')
+    user_role = session.get('role', '')
+    user_source = session.get('source', '')
+
+
+    # Query the database to retrieve reports for the logged-in user
+    db_cursor_get = db_connection.cursor()
+
+    if user_role == 'accounts_coordinators':
+        # If the user is an accounts coordinator, retrieve the course of the user
+        db_cursor_get.execute("SELECT course FROM accounts_coordinators WHERE username = %s", (username,))
+        user_course = db_cursor_get.fetchone()
+
+        if user_course:
+            user_course = user_course[0]  # Extract the course from the result
+
+            # Query reports where the course matches the user's course
+            db_cursor_get.execute("SELECT * FROM reports WHERE course = %s", (user_course,))
+            reports3 = db_cursor_get.fetchall()
+
+    elif user_role == 'accounts_head':
+        db_cursor_get.execute("SELECT * FROM reports")
+        reports3 = db_cursor_get.fetchall()
+        user_course = ""
+
+    else:
+        # For other roles, simply retrieve reports for the logged-in user
+        db_cursor_get.execute("SELECT * FROM reports WHERE username = %s", (username,))
+        reports3 = db_cursor_get.fetchall()
+        user_course = ""
+
+    # Close the cursor
+    db_cursor_get.close()  
+
+    db_cursor_all = db_connection.cursor()
+    db_cursor_all.execute("SELECT * FROM accounts_coordinators")
+    coordinators = db_cursor_all.fetchall()
+    db_cursor_all.close()
+
+     # Create a dictionary to hold profile pictures as Base64
+    profile_pictures1 = {}
+
+    # Fetch the profile pictures and convert them to Base64 if they exist
+    for row in coordinators:
+        coord_id = row[0]  # Assuming the first column is the Coord_Id
+        image_data = row[3]  # Assuming the fourth column is the image_data
+
+        if image_data:
+            profile_picture_base64 = base64.b64encode(image_data).decode('utf-8')
+            profile_pictures1[coord_id] = profile_picture_base64
+
+    db_cursor_all_cics = db_connection.cursor()
+    db_cursor_all_cics.execute("SELECT * FROM accounts_cics")
+    cics = db_cursor_all_cics.fetchall()
+    db_cursor_all_cics.close()
+    
+
+    # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
+    return render_template('homepage_head.html',coordinators=coordinators,reports3=reports3, reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call,profile_pictures=profile_pictures1,cics=cics)
+
 @app.route('/hello', methods=['GET', 'POST'])
 def homepage():
     username = session.get('username', '')
@@ -2356,17 +2528,17 @@ def homepage():
 
      # Retrieve the sanctions data within the homepage route
     db_cursor_sanctions = db_connection.cursor()
-    db_cursor_sanctions.execute("SELECT * FROM sanctions WHERE username = %s", (name,))
+    db_cursor_sanctions.execute("SELECT * FROM sanctions WHERE username = %s AND type = %s", (name,'Written Warning'))
     warning = db_cursor_sanctions.fetchall()
     db_cursor_sanctions.close()
 
     db_cursor_sanctions1 = db_connection.cursor()
-    db_cursor_sanctions1.execute("SELECT * FROM sanctions WHERE username = %s", (name,))
+    db_cursor_sanctions1.execute("SELECT * FROM sanctions WHERE username = %s AND type= %s", (name,"Written Reprimand"))
     reprimand = db_cursor_sanctions1.fetchall()
     db_cursor_sanctions1.close()
 
     db_cursor_sanctions2 = db_connection.cursor()
-    db_cursor_sanctions2.execute("SELECT * FROM sanctions WHERE username = %s", (name,))
+    db_cursor_sanctions2.execute("SELECT * FROM sanctions WHERE username = %s AND type = %s", (name,"Letter of Suspension"))
     suspension = db_cursor_sanctions2.fetchall()
     db_cursor_sanctions2.close()
 
@@ -2381,6 +2553,18 @@ def homepage():
     db_cursor_call_student.close()
 
 
+    db_cursor_notice_student = db_connection.cursor()
+    db_cursor_notice_student.execute("SELECT * FROM notice_case WHERE name = %s", (name,))
+    reports1 = db_cursor_notice_student.fetchall()
+    db_cursor_notice_student.close()
+
+    db_cursor_notice_complain = db_connection.cursor()
+    db_cursor_notice_complain.execute("SELECT * FROM notice_case WHERE complainant = %s", (name,))
+    reports2 = db_cursor_notice_complain.fetchall()
+    db_cursor_notice_complain.close()
+
+
+
     
 
     # Encode the profile picture data as a Base64 string
@@ -2390,7 +2574,7 @@ def homepage():
         profile_picture_base64 = None  # Handle the case where there is no profile picture data
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage.html', reports=reports,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call)
+    return render_template('homepage.html', reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call)
 
 def lookup_student_info(username):
     try:
@@ -2676,6 +2860,7 @@ def delete_report1(report_id):
 
     return redirect(url_for('requestpage'))
 
+
 @app.route('/delete_all_report1/<string:report_id>/<string:status>', methods=['POST'])
 def delete_all_report1(report_id, status):
     if status == "Result":
@@ -2702,6 +2887,16 @@ def delete_all_report(report_id):
     db_cursor.close()
 
     return redirect(url_for('menu'))
+
+
+@app.route('/delete_all_report2/', methods=['POST'])
+def delete_all_report2():
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("DELETE FROM reports")
+    db_connection.commit()  # Make sure to commit the changes to the database
+    db_cursor.close()
+
+    return redirect(url_for('homepage_head'))
 
 @app.route('/lookup_sanctions', methods=['POST'])
 def lookup_sanctions():
@@ -2749,7 +2944,38 @@ def preview_call_file(report_id):
                 mimetype='application/pdf',
             )
 
-            response.headers['Content-Disposition'] = f'inline; filename=report_{report_id}.pdf'
+            response.headers['Content-Disposition'] = f'inline; filename=Call Slip_{report_id}.pdf'
+
+            return response
+    except Exception as e:
+        # Handle any exceptions, e.g., log the error
+        pass  # Add your error handling code here
+    finally:
+        if db_cursor is not None:
+            db_cursor.close()  # Close the cursor if it's not None
+
+    # Handle the case where the file was not found
+    return "File not found", 404
+
+@app.route('/preview_notice_file/<string:report_id>', methods=['GET'])
+def preview_notice_file(report_id):
+    db_cursor = None  # Initialize db_cursor to None
+
+    try:
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("SELECT file FROM notice_case WHERE notice_id = %s", (report_id,))
+        file_content = db_cursor.fetchone()
+
+
+        if file_content:
+            file_content = file_content[0]
+
+            response = send_file(
+                io.BytesIO(file_content),
+                mimetype='application/pdf',
+            )
+
+            response.headers['Content-Disposition'] = f'inline; filename=Case Dismisal_{report_id}.pdf'
 
             return response
     except Exception as e:
@@ -2963,6 +3189,37 @@ def update_database():
         # Handle any errors that may occur during the update
         return jsonify({"error": str(e)})
 
+
+
+@app.route('/update-database1', methods=['POST'])
+def update_database1():
+    try:
+        # Get the JSON data from the request
+        data = request.get_json()
+
+        id = data.get('coordId')
+        username = data.get('username')
+        password = data.get('password')
+        profile_pic_base64 = data.get('picId')
+        name = data.get('name')
+        course = data.get('course')
+
+        if profile_pic_base64:
+            profile_pic = base64.b64decode(profile_pic_base64)
+        else:
+            profile_pic = None  # Handle the case where there is no profile picture
+
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("UPDATE accounts_cics SET username = %s, password = %s, image_data = %s, name = %s, course = %s WHERE id = %s;", (username, password,profile_pic,name,course,id))
+        db_connection.commit()  # Make sure to commit the changes to the database
+        db_cursor.close()
+
+
+        return jsonify({"message": "Database updated successfully"})
+    except Exception as e:
+        # Handle any errors that may occur during the update
+        return jsonify({"error": str(e)})
+
 @app.route('/edit_pic', methods=['POST'])
 def edit_pic():
     ids = request.form.get('id')
@@ -2986,7 +3243,37 @@ def edit_pic():
 
 
 
-        return redirect(url_for('manage_coord'))
+        return redirect(url_for('homepage_head'))
+    except Exception as e:
+            # Handle any errors that may occur during the update
+            return jsonify({"error": str(e)})
+
+
+
+@app.route('/edit_pic1', methods=['POST'])
+def edit_pic1():
+    ids = request.form.get('id')
+    print(ids)
+    try:
+        pic = request.files['file3']
+        
+        if pic:
+            # Read the image data from the file
+            image_data = memoryview(pic.read()).tobytes()
+        else:
+            image_data = None  # Handle the case where there is no profile picture
+
+
+
+      
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("UPDATE accounts_cics SET image_data = %s WHERE id = %s;", (image_data, ids))
+        db_connection.commit()  # Make sure to commit the changes to the database
+        db_cursor.close()
+
+
+
+        return redirect(url_for('homepage_head'))
     except Exception as e:
             # Handle any errors that may occur during the update
             return jsonify({"error": str(e)})

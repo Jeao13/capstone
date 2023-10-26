@@ -58,7 +58,7 @@
     <h1>My Reports</h1>
     {% endif %}
 
-    {% if user_source == 'accounts_coordinators' or user_source == 'accounts_head' %}
+    {% if user_source == 'accounts_head' or user_source == 'accounts_coordinators' %}
     <h1>Reports</h1>
 
     <form id="searchForm">
@@ -70,6 +70,17 @@
                               onsubmit="return confirm('Are you sure you want to delete all this report?');">
                             <button type="submit">Delete All Report</button>
                         </form>
+    {% if user_source == 'accounts_head' %}
+    <label for="department1">Sort Department:</label> 
+    <select name="department1" id="department1">
+        <option value="" selected disabled>Select the Department:</option> 
+        <option value="CAFAD">CAFAD</option> 
+        <option value="CICS">CICS</option> 
+        <option value="CIT">CIT</option> 
+        <option value="COE">COE</option> 
+    </select><br><br>
+    {% endif %}
+
     <div id="table-container">
         <table>
             <thead>
@@ -281,7 +292,7 @@
         {% for row in reports|sort(attribute='2', reverse=true) %}
         <div class="report">
             <b>Report ID:</b> {{ row[1] }}<br>
-                <div class="report_small">
+                <div class="report_small">x`
                     <b>Date and Time:</b> {{ row[3] }}<br>
                     <button class="view-report-button" onclick="openModal('{{ row[4] }}')">View Report</button>
                     <b>Department:</b> {{ row[5] }}<br>   

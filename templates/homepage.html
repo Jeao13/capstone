@@ -72,7 +72,7 @@
         
         <div class="modal-content">
             <span class="close" id="closeAutoOpenModalBtn">&times;</span>
-            <h1>Please Report to OSD Office</h1>
+            <h1 style="color:red;">Please Report to OSD Office</h1>
             <hr>
             {% for row in reports|sort(attribute='2', reverse=true) %}
 
@@ -241,8 +241,9 @@
     </div>
 
 
-
+    {% if user_source == 'accounts_coordinators' or user_source == 'accounts_cics'%}
     <button type="button" id="openModalBtn">File Report</button>
+    {% endif %}
 
     
     <!-- Conditionally show the "My Sanctions" button based on user source -->
@@ -252,11 +253,6 @@
 
     {% if user_source == 'accounts_cics'%}
     <button type="button" id="openModalBtn3">Request Form</button>
-    {% endif %}
-
-
-    {% if user_source == 'accounts_cics'%}
-    <button type="button" id="openModalBtn3">Call Slip & Notice of Case Dismissal</button>
     {% endif %}
 
     <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
@@ -344,19 +340,21 @@
 <div id="myModal1" class="modal">
     <div class="modal-content">
         <span class="close" id="closeModalBtn1">&times;</span>
-        <h3>My Sanctions</h3>
+        <h1>My Sanctions</h1>
 <label for="forms3">Sanction type:</label>
-        <select name="forms3" id="forms3" required onchange="toggleInputTables"> 
+        <select name="forms3" id="forms3" required onchange="toggleInputTables()"> 
             <option value="" selected disabled>Select Form:</option> 
             <option value="Written Warning">Written Warning</option> 
             <option value="Written Reprimand">Written Reprimand</option> 
             <option value="Letter of Suspension">Letter of Suspension</option> 
+            <option value="Call Slip">Call Slip</option> 
+            <option value="Notice of Case Dismissal">Notice of Case Dismissal</option> 
 
         </select><br><br>
-        <div id="table-container">
-            <h1>Written Warning</h1>
-            {% if sanctions == [] %}
-            <p>You have no sanctions</p>
+        <div id="table-container" style="display:none;">
+            <h3>Written Warning</h3>
+            {% if warning == [] %}
+            <p>You have no Written Warning</p>
             {% else %}  
             <table>
                 <thead>
@@ -383,10 +381,10 @@
             {% endif %}
         </div>
 
-        <div id="table-container1">
-            <h1>Written Reprimand</h1>
-            {% if sanctions == [] %}
-            <p>You have no sanctions</p>
+        <div id="table-container1" style="display:none;">
+            <h3>Written Reprimand</h3>
+            {% if reprimand == [] %}
+            <p>You have no Written Reprimand</p>
             {% else %}  
             <table>
                 <thead>
@@ -415,10 +413,10 @@
 
 
 
-        <div id="table-container2">
-            <h1>Letter of Suspension</h1>
-            {% if sanctions == [] %}
-            <p>You have no sanctions</p>
+        <div id="table-container2" style="display:none;">
+            <h3>Letter of Suspension</h3>
+            {% if suspension == [] %}
+            <p>You have no Letter of Suspension</p>
             {% else %}  
             <table>
                 <thead>
@@ -444,6 +442,105 @@
             </table>
             {% endif %}
         </div>
+
+        <div id="table-container3" style="display:none;">
+            <h3>Call Slip</h3>
+            {% if reports == [] %}
+            <p>You have no Call Slip</p>
+            {% else %}  
+            {% for row in reports|sort(attribute='2', reverse=true) %}
+            <div class="report">
+                <b>Call Slip No.:</b>{{row[0]}}<br>
+                <div class = "call_id">
+                <b>Date:</b> {{ row[4] }}<br>
+                <b>Time:</b> {{ row[5] }}<br>  
+                <b>Reason:</b> {{ row[3] }}<br>
+                <b>Summoned by:</b> {{ row[2] }}<br>
+                <b>Call Slip Form:</b><a href="{{ url_for('preview_call_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a><br>
+                </div>
+            </div>
+            <hr class="report-separator">
+            {% endfor %}
+            {% endif %}
+        </div>
+           
+
+
+
+        <div id="table-container4" style="display:none;">
+            <h3>Notice of Case Dismissal - Subject of Complain</h3>
+            {% if reports1 == [] %}
+            <p>You have no Case Dismissal - Subject of Complain</p>
+            {% else %}  
+            <table>
+                <thead>
+                    <tr>
+                        <th>Notice_ID</th>
+                        <th>Complainant</th>               
+                        <th>Issued by</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>File</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    {% for row in reports1 |sort(attribute='3', reverse=true) %}
+                    <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[3] }}</td>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[5] }}</td>
+                        <td> 
+                            <a href="{{ url_for('preview_notice_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                 
+                </tbody>
+            </table>
+            {% endif %}
+
+            <hr>
+
+            <h3>Notice of Case Dismissal - Complainant</h3>
+            {% if reports2 == [] %}
+            <p>You have no Case Dismissal - Complainant</p>
+            {% else %}  
+            <table>
+                <thead>
+                    <tr>
+                        <th>Notice_ID</th>
+                        <th>Complainant</th>               
+                        <th>Issued by</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>File</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    {% for row in reports2 |sort(attribute='3', reverse=true) %}
+                    <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[3] }}</td>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[5] }}</td>
+                        <td> 
+                            <a href="{{ url_for('preview_notice_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                 
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+
     </div>
 </div>
 
@@ -621,7 +718,7 @@
         </div>
        
 
-       
+       <hr>
         <div class="written-content">
                 <label for="forms1">Forms:</label> 
             <select name="forms1" id="forms1" required onchange="toggleInputFields2()"> 
