@@ -15,6 +15,8 @@
 </head>
 <body>
 
+
+
     <div class="cont">
         <!-- Dark gray navbar with logo -->
         <div class="navbar navbar-expand-lg">
@@ -53,7 +55,7 @@
         <a class="notif" href="#" id="notifications-bar" >Notifications</a>
     </div>
 
-    {% if user_source == 'accounts_cics'%}
+    {% if user_source == 'accounts_cics' or user_source == 'accounts_coordinators'%}
     <div class="image-container">
         <img src="static\headi.png" style="width: 100%; height: 180%;" alt="Background Image">
         <div class="user-profile">
@@ -73,19 +75,6 @@
     </div>
     {% endif %}
 
-    {% if user_source == 'accounts_coordinators' or user_source == 'accounts_head'%}
-    <div class="user-profile">
-        {% if profile_picture_base64 %}
-        <img src="data:image/jpeg;base64,{{ profile_picture_base64 }}" alt="Profile Picture">
-        {% else %}
-        <img src="/static/default_profile.png" alt="Default Profile Picture">
-        {% endif %}
-        <div class="user-info">
-            <h1>{{ name }}</h1>
-            <h2>{{ course }} {{year}}</h2>
-        </div>
-    </div>
-    {% endif %}
 
     <!-- Container for reminders -->
     <div class="reminders-container "style="margin-top: 150px;">           
@@ -242,8 +231,7 @@
                     <input type="text" id="evidence3" name="evidence3"><br>
                     <hr>
                 
-                    <label for="file9">Attach Your Signature with Printed Name:</label>
-                    <input type="file" name="file9" id="file9" accept=".png, .jpg, .jpeg">
+                    
                 
                     <label for="file1">Attach Supporting Documents (if you have any):</label>
                     <input type="file" name="file1" id="file1" accept=".png, .jpg, .jpeg, .pdf, .docx">
@@ -353,7 +341,7 @@
 
 
 <div id="tab2" class="tab-content">
-    
+    {% if user_source == 'accounts_cics'  %}
     {% for row in complaints|sort(attribute='2', reverse=true) %}
     <div class="report">
         <b>Report ID:</b> {{ row[1] }}<br>
@@ -365,7 +353,110 @@
             </div>
     </div>
     <hr class="report-separator">
-    {% endfor %}</div>
+    {% endfor %}
+    {% endif %}
+
+       <!-- The Modal -->
+       <div class="modal" id="reportModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="reportContent"></div>
+        </div>
+    </div>
+
+    {% if user_source == 'accounts_head' or user_source == 'accounts_coordinators' %}
+    <h1>Reports</h1>
+
+    <form id="searchForm">
+        <input type="text" id="searchInput" name="searchQuery" placeholder="Search...">
+        <button type="submit">Search</button>
+    </form>
+
+    <form method="POST" action="{{ url_for('delete_all_report', report_id=user_course)}}"
+                              onsubmit="return confirm('Are you sure you want to delete all this report?');">
+                            <button type="submit">Delete All Report</button>
+                        </form>
+    {% if user_source == 'accounts_head' %}
+    <label for="department1">Sort Department:</label> 
+    <select name="department1" id="department1">
+        <option value="" selected disabled>Select the Department:</option> 
+        <option value="CAFAD">CAFAD</option> 
+        <option value="CICS">CICS</option> 
+        <option value="CIT">CIT</option> 
+        <option value="COE">COE</option> 
+    </select><br><br>
+    {% endif %}
+
+    <div id="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Report ID</th>               
+                    <th>Complainant's Username</th>
+                    <th>Date and Time</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                    <th>Attached Form</th>
+                    <th>Attached Supporting Document</th>
+                    <th>Action</th>
+                    <th>Change Status</th>
+                    <th>Delete Report</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in reports|sort(attribute='3', reverse=true) %}
+                <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
+                <tr>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[5] }}</td>
+                    <td>{{ row[6] }}</td>
+                        <td>
+                            <a href="{{ url_for('preview_report_file', report_id=row[1]) }}" target="_blank">{{ row[8] }}</a>
+                        </td>
+    
+                  
+                        <td>
+                            <a href="{{ url_for('preview_support_file', report_id=row[1]) }}" target="_blank">{{ row[11] }}</a>
+                        </td>
+                      
+                    
+                    
+                    <td><button class="view-report-button" onclick="getAlgorithmResult('{{ row[4] }}')">View Report</button></td>
+                    <td>
+                        <!-- Add a form to change the status -->
+                        <form id="statusChangeForm" onsubmit="checkStatus('{{ row[0] }}'); return false; ">
+                            <select name="new_status" id="new_status_select_{{ row[0] }}">
+                              <option value="On Going">On Going</option>
+                              <option value="Rejected">Rejected</option>
+                              <option value="Case Closed">Case Closed</option>
+                            </select>
+                            <button type="submit">Change</button>
+                          </form>
+                    </td>
+                    <td style="justify-content:center">
+                        <!-- Add a form to change the status -->
+                        <form method="POST" action="{{ url_for('delete_report', report_id=row[1]) }}"
+                              onsubmit="return confirm('Are you sure you want to delete this report?');">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+
+
+
+
+
+
+
+
+</div>
 
 
 <div id="tab3" class="tab-content"> <div class="navbar-container">
@@ -384,7 +475,7 @@
         <div class="report">
             <b>Report ID</b> {{ row[0] }}<br>
             <b>Date and Time:</b> {{ row[2] }}<br>
-            <button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button>
+            <button class="view-report-button" onclick="openModal1('{{ row[3] }}')">View Report</button>
             <b>Department:</b> {{ row[4] }}<br>   
             <b>Status:</b> {{ row[5] }}<br>
         </div>
@@ -399,7 +490,7 @@
         <div class="report">
             <b>Report ID</b> {{ row[0] }}<br>
             <b>Date and Time:</b> {{ row[2] }}<br>
-            <button class="view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button>
+            <button class="view-report-button" onclick="openModal1('{{ row[3] }}')">View Report</button>
             <b>Department:</b> {{ row[4] }}<br>   
             <b>Status:</b> {{ row[5] }}<br>
         </div>
@@ -413,7 +504,7 @@
         <div class="report">
             <b>Report ID</b> {{ row[0] }}<br>
             <b>Date and Time:</b> {{ row[2] }}<br>
-            <button class="view-report-button" onclick="openModal('{{ row[12] }}')">View Remarks</button>
+            <button class="view-report-button" onclick="openModal1('{{ row[12] }}')">View Remarks</button>
             <b>Department:</b> {{ row[4] }}<br>   
             <b>Status:</b> {{ row[5] }}<br>
         </div>
@@ -426,6 +517,49 @@
 
 
 </div></div>
+
+<!-- The Modal -->
+<div id="modalContainer9" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal11()">&times;</span>
+         <form id="statusChangeForm1" method="POST" action="/submit_approve" enctype="multipart/form-data">
+        <label id="provision1" for="remarks" >Message:</label><br>
+        <textarea id="remarks" name="remarks" rows="16" cols="100" style="resize: none;" ></textarea>
+        <label for="file4">Attach the Modified Document:</label>
+        <input type="file" name="file4" id="file4" accept=".pdf"><br><br>
+        <button type="submit">Change</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="reportModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="reportContent"></div>
+    </div>
+</div>
+
+<div class="modal" id="reportModal5">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal5()">&times;</span>
+        <div id="reportContent5"></div>
+    </div>
+</div>
+
+<div id="modalContainer" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal6()">&times;</span>
+        <form id="statusChangeForm2" method="POST" action="/submit_reject">
+        <label id="provision1" for="remarks" >Reasons for Rejection:</label>
+        <textarea id="remarks" name="remarks" rows="5" cols="50" style="resize: none;" ></textarea><br><br>
+       
+       
+        <button type="submit">Change</button>
+      
+    </form>
+    </div>
+    
+</div>
 
 
 

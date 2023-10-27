@@ -1111,13 +1111,12 @@ def submit_call():
 
     # Convert it to the desired format
     formatted_time = parsed_time.strftime("%I:%M %p")
-    current_time = time.now()
 
     date2 = request.form.get('date2')    
     remarks = request.form.get('remarks')
     current_datetime = datetime.now()
     random_code = generate_random_code()
-    current_date = current_datetime.date()
+    current_date = current_datetime.date()  
     formatted_date = current_date.strftime("%m/%d/%Y") 
 
     username = session.get('namestudent', '')
@@ -2435,10 +2434,28 @@ def homepage_head():
     db_cursor_all_cics.execute("SELECT * FROM accounts_cics")
     cics = db_cursor_all_cics.fetchall()
     db_cursor_all_cics.close()
+
+
+    db_cursor_all_coords = db_connection.cursor()
+    db_cursor_all_coords.execute("SELECT * FROM accounts_coordinators")
+    coordinators = db_cursor_all_coords.fetchall()
+    db_cursor_all_coords.close()
+
+    # Create a dictionary to hold profile pictures as Base64
+    profile_pictures = {}
+
+    # Fetch the profile pictures and convert them to Base64 if they exist
+    for row in coordinators:
+        coord_id = row[0]  # Assuming the first column is the Coord_Id
+        image_data = row[3]  # Assuming the fourth column is the image_data
+
+        if image_data:
+            profile_picture_base64 = base64.b64encode(image_data).decode('utf-8')
+            profile_pictures[coord_id] = profile_picture_base64
     
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage_head.html',coordinators=coordinators,reports3=reports3, reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call,profile_pictures=profile_pictures1,cics=cics)
+    return render_template('homepage_head.html',profile_pictures=profile_pictures,coordinators=coordinators,reports3=reports3, reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call,profile_pictures1=profile_pictures1,cics=cics)
 
 @app.route('/hello', methods=['GET', 'POST'])
 def homepage():
@@ -2548,6 +2565,12 @@ def homepage():
     suspension = db_cursor_sanctions2.fetchall()
     db_cursor_sanctions2.close()
 
+    db_cursor_sanctions3 = db_connection.cursor()
+    db_cursor_sanctions3.execute("SELECT * FROM sanctions WHERE username = %s ", (name,))
+    sanctions = db_cursor_sanctions3.fetchall()
+    db_cursor_sanctions3.close()
+
+
     db_cursor_call = db_connection.cursor()
     db_cursor_call.execute("SELECT * FROM callslip WHERE coord = %s", (name,))
     call = db_cursor_call.fetchall()
@@ -2594,7 +2617,7 @@ def homepage():
         user_course = db_cursor_reports.fetchone()
 
         if user_course:
-            db_cursor_reports = user_course[0]  # Extract the course from the result
+            user_course = user_course[0]  # Extract the course from the result
 
             # Query reports where the course matches the user's course
             db_cursor_reports.execute("SELECT * FROM reports WHERE course = %s", (user_course,))
@@ -2644,7 +2667,7 @@ def homepage():
     db_cursor_request.close()
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage.html', request1=request1,complaints=complaints,reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call)
+    return render_template('homepage.html', sanctions=sanctions,request1=request1,complaints=complaints,reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call)
 
 def lookup_student_info(username):
     try:

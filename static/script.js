@@ -1,5 +1,7 @@
 // script.js
 document.addEventListener("DOMContentLoaded", function () {
+
+    
     var modal = document.getElementById("myModal");
     var btn = document.getElementById("openModalBtn");
     var span = document.getElementById("closeModalBtn");
@@ -182,6 +184,30 @@ window.onload = function() {
 function openModal(reportText, reportFileLink, supportingDocumentLink) {
     var modal = document.getElementById('reportModal');
     var reportContent = document.getElementById('reportContent');
+
+    // Construct the HTML content for the modal
+    var modalContent = '<b>Report Text:</b><br>' + reportText + '<br><br>';
+
+    if (reportFileLink) {
+        modalContent += '<b>Attached Report File:</b><br>';
+        modalContent += '<a href="' + reportFileLink + '" target="_blank">Download Report File</a><br>';
+    }
+
+    if (supportingDocumentLink) {
+        modalContent += '<b>Attached Supporting Document:</b><br>';
+        modalContent += '<a href="' + supportingDocumentLink + '" target="_blank">Download Supporting Document</a>';
+    }
+
+    // Set the modal content
+    reportContent.innerHTML = modalContent;
+
+    // Show the modal
+    modal.style.display = 'block';
+}
+
+function openModal1(reportText, reportFileLink, supportingDocumentLink) {
+    var modal = document.getElementById('reportModal5');
+    var reportContent = document.getElementById('reportContent5');
 
     // Construct the HTML content for the modal
     var modalContent = '<b>Report Text:</b><br>' + reportText + '<br><br>';
@@ -1023,6 +1049,10 @@ function validateCheckboxes() {
 
 document.addEventListener('DOMContentLoaded', function () {
 
+    
+
+ 
+
     var questions = document.querySelectorAll('.faq-question');
     questions.forEach(function(question) {
         question.addEventListener('click', function() {
@@ -1071,3 +1101,71 @@ function activateTab(tab) {
     tab.classList.add('active');
     tab.querySelector('span').style.color = 'red';
 }
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Function to toggle the visibility of the containers
+    function toggleContainer(reportsContainerId) {
+        // Hide all containers
+        document.querySelectorAll('#reports-container > div').forEach(function (container) {
+            container.style.display = 'none';
+        });
+    
+        // Show the selected container
+        const selectedContainer = document.getElementById(reportsContainerId);
+        if (selectedContainer) {
+            selectedContainer.style.display = 'block';
+        }
+    }
+    
+    // Add click event listeners to navbar items
+    document.querySelectorAll('.nav-item').forEach(function (navItem) {
+        navItem.addEventListener('click', function (event) {
+            event.preventDefault();
+            const targetId = navItem.getAttribute('data-target');
+            toggleContainer(targetId);
+        });
+    });
+    
+    // Initially show the "Pending" container
+    toggleContainer('pending');
+
+    
+    
+    });
+
+
+
+    function openModal5(reportText, reportFileLink, supportingDocumentLink) {
+        var modal = document.getElementById('reportModal5');
+        var reportContent = document.getElementById('reportContent5');
+    
+        // Construct the HTML content for the modal
+        var modalContent = '<b>Reason of Rejection:</b><br>' + reportText + '<br><br>';
+    
+        if (reportFileLink) {
+            modalContent += '<b>Attached Report File:</b><br>';
+            modalContent += '<a href="' + reportFileLink + '" target="_blank">Download Report File</a><br>';
+        }
+    
+        if (supportingDocumentLink) {
+            modalContent += '<b>Attached Supporting Document:</b><br>';
+            modalContent += '<a href="' + supportingDocumentLink + '" target="_blank">Download Supporting Document</a>';
+        }
+    
+        // Set the modal content
+        reportContent.innerHTML = modalContent;
+    
+        // Show the modal
+        modal.style.display = 'block';
+    }
+    
+    // JavaScript function to close the modal
+    function closeModal5() {
+        var modal = document.getElementById('reportModal5');
+    
+        // Hide the modal
+        modal.style.display = 'none';
+    }
+
+    

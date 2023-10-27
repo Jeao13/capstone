@@ -1048,10 +1048,72 @@ function closeModal6() {
 }
 
 
-function toggleReadonly1(button) {
+
+function toggleReadonly(button,id) {
+    var changebutton = document.getElementById("changebutton_"+id);
     var row = button.parentNode.parentNode;
     var inputElements = row.getElementsByTagName("input");
-    var changebutton = document.getElementById("changebutton1");
+
+    
+    for (var i = 0; i < inputElements.length; i++) {
+        inputElements[i].readOnly = !inputElements[i].readOnly;
+        if (!inputElements[i].readOnly) {
+            inputElements[i].classList.add("editable");
+            changebutton.disabled = false; // Enable the button when the field is editable
+        } else {
+            inputElements[i].classList.remove("editable");
+            changebutton.disabled = true; // Disable the button when the field is read-only
+        }
+    }
+}
+
+function updateRow(button) {
+
+
+    var row = button.parentNode.parentNode;
+
+    var coordId = row.querySelector("td[data-coord-id]").getAttribute("data-coord-id");
+    var picId = row.querySelector("td[data-pic-id]").getAttribute("data-pic-id");
+    console.log(row)
+    var inputElements = row.getElementsByTagName("input");
+    console.log(inputElements)
+    
+    var data = {};
+    for (var i = 0; i < inputElements.length; i++) {
+        var inputElement = inputElements[i];
+        data[inputElement.name] = inputElement.value;
+      
+    }
+
+    data["coordId"] = coordId;
+    data["picId"] = picId;
+
+    
+   // Send data to the server for database update
+   $.ajax({
+    url: '/update-database',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(data),
+    success: function() {
+        // Database update successful
+        alert('Database updated successfully.');
+    },
+    error: function() {
+        // Database update failed
+        alert('Database update failed.');
+    }
+});
+
+
+}
+
+
+
+function toggleReadonly1(button,id) {
+    var row = button.parentNode.parentNode;
+    var inputElements = row.getElementsByTagName("input");
+    var changebutton = document.getElementById("changebutton1_"+id);
 
     
     for (var i = 0; i < inputElements.length; i++) {
