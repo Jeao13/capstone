@@ -5,17 +5,30 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/static/script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 
-    <title>Offense Tags</title>
+
+<title>Offense Tags</title>
 </head>
 <body>
+
+    <div class="cont">
+        <!-- Dark gray navbar with logo -->
+        <div class="navbar navbar-expand-lg">
+            <img src="static\bsul.png" width="49" alt="" class="d-inline-block align-middle mr-3">
+            <div class="logo">Office of Student Discipline - Grievance System</div>
+        </div>
+
+        
+       
+
+       
+
+
     <div class="topnav">
-        <a class="active">Dashboard</a>
-        {% if user_source == 'accounts_cics'%}
-        <a href="/menu">My Reports</a>
-        <a href="/request">My Request</a>
-    {% endif %}
+        
+        
 
     <!-- or user_source == 'accounts_head' Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
     {% if user_source == 'accounts_coordinators' %}
@@ -31,23 +44,29 @@
 
 
 
-
-
-       
-        <a class="logout" href="/logout">Logout</a>
+      
+    <a class="logout" href="/logout">
+        <i class="fas fa-sign-out-alt"></i> Sign Out
+      </a>
         <a class="notif" href="#" id="notifications-bar" >Notifications</a>
     </div>
 
     {% if user_source == 'accounts_cics'%}
-    <div class="user-profile">
+    <div class="image-container">
+        <img src="static\headi.png" style="width: 100%; height: 180%;" alt="Background Image">
+        <div class="user-profile">
+        
         {% if profile_picture_base64 %}
         <img src="data:image/jpeg;base64,{{ profile_picture_base64 }}" alt="Profile Picture">
         {% else %}
         <img src="/static/default_profile.png" alt="Default Profile Picture">
         {% endif %}
         <div class="user-info">
-            <h1>{{ name }}</h1>
-            <h2>{{ course }} - {{year}}</h2>
+            <div class="overlay-text" style="position: absolute; top: 50px; left: 250px; white-space: nowrap;">{{ name }}</div>
+            <div class="overlay-text1" style="position: absolute; top: 80px;  bottom: 10px; left: 250px; white-space: nowrap;">{{ course }} - {{year}}</div>
+         
+        </div>
+        
         </div>
     </div>
     {% endif %}
@@ -65,6 +84,61 @@
         </div>
     </div>
     {% endif %}
+
+    <!-- Container for reminders -->
+    <div class="reminders-container "style="margin-top: 150px;">           
+        <!-- Header -->
+        <div class="header">
+            <!-- Icon -->
+            <div class="header-icon"><i class="fa-solid fa-bell"></i></div>
+            <!-- Add some space between the icon and title -->
+            <div style="margin-left: 10px;"></div>
+            <!-- Title with divider line -->
+            <div class="header-title">Reminders</div>
+        </div>
+
+        <div style=" margin-top: 15px; border-bottom: 1px solid #ccc;"></div>
+
+
+        <!-- Reminder content goes here -->
+        <div class="reminders-container">
+            <!-- Reminder content goes here -->
+            <ul style="list-style-type: disc; margin-left: 20px; padding-left: 0;">
+                <li style="margin-bottom: 10px;">Remember to submit your grievance promptly after experiencing an issue. Timely reporting helps us address concerns efficiently.</li>
+                <li style="margin-bottom: 10px;">Provide clear and detailed information about your grievance. The more specific you are, the easier it is for us to investigate and resolve the issue.</li>
+                <li style="margin-bottom: 10px;">If you've submitted a grievance or document request, feel free to follow up on its status through the system. Keeping track of your report ensures timely resolution.</li>
+                <li style="margin-bottom: 10px;">If you need assistance or have questions about using the grievance system, don't hesitate to contact through following channels.</li>
+            </ul>
+        </div>
+
+      
+
+
+
+
+
+
+        <div class="tab-container">
+            <div class="tab" onclick="activateTab(this)">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </div>
+            <div class="tab" onclick="activateTab(this)">
+                <i class="fas fa-search"></i>
+                <span><a href="#tab1" id="trackStatusLink">Track Status</a></span>
+            </div>
+            
+            <div class="tab" onclick="activateTab(this)">
+                <i class="fas fa-info-circle"></i>
+                <span><a href="#tab2" id="trackStatusLink"></a>About</span>
+            </div>
+            <div class="tab" onclick="activateTab(this)">
+                <i class="fas fa-file-alt"></i>
+                <span><a href="#tab3" id="trackStatusLink"></a>Forms</span>
+            </div>
+        </div>
+        <div style="border-bottom: 1px solid #ccc;"></div>
+
 
 
     {% if user_source == 'accounts_cics'%}
@@ -241,22 +315,50 @@
     </div>
 
 
+    <div class="button-container">
+        <div class="button-row">
+            <button class="green-button" id="openModalBtn">
+                <i class="fas fa-file-alt"></i>
+                <span>Lodge Complaint</span>
+            </button>
 
-    <button type="button" id="openModalBtn">File Report</button>
+            <button class="green-button" id="openModalBtn3">
+                <i class="fas fa-file-alt"></i>
+                <span>Request Documents</span>
+            </button>
+
+               
+        </div>
+    </div>
+       
+    <div class="button-container">
+        <div class="button-row">
+            <button class="green-button" id="openModalBtn1">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Sanctions</span>
+            </button>
+            <button class="green-button" id="openModalBtn3">
+            <i class="fas fa-bell"></i>
+            <span>Notifications</span>
+        </button>
+
+
+    </div>
+</div>
 
     
     <!-- Conditionally show the "My Sanctions" button based on user source -->
     {% if user_source == 'accounts_cics'%}
-    <button type="button" id="openModalBtn1">My Sanctions</button>
+   
     {% endif %}
 
     {% if user_source == 'accounts_cics'%}
-    <button type="button" id="openModalBtn3">Request Form</button>
+   
     {% endif %}
 
 
     {% if user_source == 'accounts_cics'%}
-    <button type="button" id="openModalBtn3">Call Slip & Notice of Case Dismissal</button>
+   
     {% endif %}
 
     <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
@@ -818,7 +920,46 @@
     </div>
 </div>
  </div>
+ <div class="contact-container" style = "margin-top: 40px;" >
+    <!-- Header -->
+    <div class="header">
+      <!-- Icon -->
+  
+      <div class="header-icon"><i class="fa-solid fa-phone" style="color: red;"></i></div>
+      <div style="margin-left: 10px;"></div>
+      <!-- Title with divider line -->
+      <div class="header-title">Contact and Email</div>
+  </div>
 
+      
+</div>
+<div style="border-bottom: 1px solid #ccc;"></div>
+
+<div class="contact-text">
+  <p>Office of Student Discipline - Alangilan Campus</p>
+</div>
+
+<div style="border-bottom: 1px solid #ccc;"></div>
+
+<div class="contact-text1">
+  <div class="header-icon1"><i class="fa-solid fa-phone" style="color: rgb(0, 0, 0);"></i></div>
+  <p>425-0139 loc. 2147</p>
+
+  
+ 
+</div>
+<div class="contact-text1">  
+  <div class="header-icon1"><i class="fa-solid fa-envelope" style="color: rgb(0, 0, 0);"></i></div>        
+  <p>osd.alangilan@g.batstate-u.edu.ph</p>
+  
+
+  
+</div>
+
+
+
+
+</div>
 
 
 <div class="flash-messages" id="flash-message">

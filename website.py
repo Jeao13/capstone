@@ -17,7 +17,7 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-from docx2pdf import convert
+
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
@@ -45,10 +45,10 @@ nsmap = {
 }
 
 db_connection = mysql.connector.connect(
-    host="bk4eirhsdc6y9ipqvs0h-mysql.services.clever-cloud.com",
-    user="ut5cv46rvwyaoobx",
-    password="aiRzdgEuvx3iJPje78pp",
-    database="bk4eirhsdc6y9ipqvs0h"
+    host="localhost",
+    user="root",
+    password="",
+    database="capstoneproject"
 )
 
 
@@ -1589,99 +1589,7 @@ def submit_written():
         return redirect('hello')
 
 
-@app.route('/submit_notice', methods=['GET', 'POST'])
-def submit_notice():
-    kind = request.form.get('forms')
-    print(kind)
-    
 
-    student = request.form.get('student')
-    srcode = request.form.get('srcode')
-    section = request.form.get('section')
-    program = request.form.get('program')
-    male = request.form.get('male')
-    female = request.form.get('female')
-    minor = request.form.get('minor')
-    minor_input = request.form.get('minor_input')
-    major = request.form.get('major')
-    major_input = request.form.get('major_input')
-    fieldwork = request.form.get('fieldwork')
-    prolonged = request.form.get('prolonged')
-    specify2 = request.form.get('specify2')
-    status = request.form.get('status')
-    current_datetime = datetime.now()
-    random_code = generate_random_code()
-    current_date = current_datetime.date()
-    formatted_date = current_date.strftime("/%m/%d/%Y") 
-
-    student = session.get('namestudent', '') 
-    username = session.get('username', '')
-
-    pdf_filename = 'notice.docx'
-    doc = Document(pdf_filename)
-
-    
-
-    replace_table_cell_placeholder1(doc.tables[0], 2, 3, formatted_date,"(date)")
-    replace_table_cell_placeholder1(doc.tables[0], 14, 1, formatted_date,"(date2)")
-    replace_table_cell_placeholder1(doc.tables[0], 5, 3, program,"(program)")
-    replace_table_cell_placeholder1(doc.tables[0], 3, 3, student,"(name)")
-    replace_table_cell_placeholder1(doc.tables[0], 3, 10, srcode,"(code)")
-    replace_table_cell_placeholder1(doc.tables[0], 3, 11, username,"(code)")
-    replace_table_cell_placeholder1(doc.tables[0], 5, 10, section, "(section)")
-    replace_table_cell_placeholder1(doc.tables[0], 7, 2, minor_input, "(department)")
-    replace_table_cell_placeholder1(doc.tables[0], 5, 3, program, "(program)")
-
-
-    doc.save("modified_document.docx")
-            # Check the operating system
-    convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
-
-    source_docx = 'modified_document.docx'
-
-
-    # Use upload IO wrapper to upload file only once to the API
-    upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
-
-    saved_files = convertapi.convert('pdf', { 'File': upload_io }).save_files('modified_document.pdf')
-
-    print("The PDF saved to %s" % saved_files)
-
-
-    pdfpath = os.path.join('modified_document.pdf')
-
-    file_name = f'{random_code}_Temporary Gate Pass Letter'
-    with open(pdfpath, "rb") as pdf_file:
-        pdf_data = pdf_file.read()
-
-
-        
-    
-    # Check if the POST request has the file part for the supporting document file
-    if 'file5' not in request.files:
-        flash('No supporting document file part')
-        return redirect(request.url)
-    
-    support_file = request.files['file5']
-    
-    # Check if the user submitted an empty supporting document file input
-
-    if support_file.filename == '':
-        support_data = None
-        support_filename = "None"
-        support_extension = "None"
-
-        db_cursor = db_connection.cursor()
-        db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                        (random_code, department,remarks,file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime,"Pending"))
-        db_connection.commit()
-        
-        db_cursor.close()
-        
-        
-        
-        flash('The report is submitted', 'success')
-        return redirect('/hello')
 
 
 @app.route('/submit_approve', methods=['GET', 'POST'])
@@ -1847,7 +1755,7 @@ def index():
     if request.method == 'POST':
         # Get the submitted username and password
         submitted_username = request.form['username']
-        submitted_password = request.form['lname']
+        submitted_password = request.form['password']
         recaptcha_response = request.form['g-recaptcha-response']
 
         # Verify reCAPTCHA response

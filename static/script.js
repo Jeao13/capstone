@@ -932,3 +932,27 @@ function toggleInput4() {
     }
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+    const tabLinks = document.querySelectorAll('.sidebar a');
+const tabContents = document.querySelectorAll('.tab-content');
+
+// Add event listeners to the tab links
+tabLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').substring(1);
+
+        // Remove "active" class from all tab content elements
+        tabContents.forEach((content) => {
+            content.classList.remove('active');
+        });
+
+        // Add "active" class to the selected tab content element
+        document.getElementById(targetId).classList.add('active');
+    });
+});
+
+// Automatically show the first tab (Tab 1) on page load
+document.getElementById('tab1').classList.add('active');
+
+});
