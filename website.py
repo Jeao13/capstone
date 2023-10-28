@@ -46,12 +46,20 @@ nsmap = {
 }
 
 
-db_connection = mysql.connector.connect(
-    host="bpqsxicgc77tgxxe5sia-mysql.services.clever-cloud.com",
-    user="uxtiwfla65brtbf1",
-    password="ZvvUudkkFmfmmmxLqv2",
-    database="bpqsxicgc77tgxxe5sia"
-)
+db_config = {
+    'host': 'bpqsxicgc77tgxxe5sia-mysql.services.clever-cloud.com',
+    'user': 'uxtiwfla65brtbf1',
+    'password': 'ZvvUudkkFmfmmmxLqv2',
+    'database': 'bpqsxicgc77tgxxe5sia',
+    'port': 21099
+}
+
+# Create a connection to the database
+try:
+    db_connection = mysql.connector.connect(**db_config)
+    print("Connected to the database")
+except mysql.connector.Error as err:
+    print(f"Error: {err}")
 
 
 app = Flask(__name__)
