@@ -47,10 +47,10 @@ nsmap = {
 
 
 db_connection = mysql.connector.connect(
-    host="bk4eirhsdc6y9ipqvs0h-mysql.services.clever-cloud.com",
-    user="ut5cv46rvwyaoobx",
-    password="aiRzdgEuvx3iJPje78pp",
-    database="bk4eirhsdc6y9ipqvs0h"
+    host="bvazqxt1h1zv1e3hod7z-mysql.services.clever-cloud.com",
+    user="uazurlrelza13cbp",
+    password="RyuDkyVDKTa7SfaMrg5",
+    database="bvazqxt1h1zv1e3hod7z"
 )
 
 
