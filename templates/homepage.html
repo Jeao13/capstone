@@ -1,5 +1,7 @@
 <html>
 <head>
+    <title>OSD GRIEVANCE SYSTEM</title>
+    <link rel="icon" href="/static/logo.ico" type="image/x-icon"/>
     <link rel="stylesheet" href='/static/style.css' />
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -10,8 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
 
 
-
-<title>Offense Tags</title>
 </head>
 <body>
 
@@ -32,30 +32,38 @@
 
     <div class="topnav">
         
-        
-
-    <!-- or user_source == 'accounts_head' Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
-    {% if user_source == 'accounts_coordinators' %}
-    <a href="/menu">Reports</a>
-    <a href="/request">Requests</a>
-    {% endif %}
-
-    {% if user_source == 'accounts_head' %}
-    <a href="/menu">Reports</a>
-    <a href="/request">Requests</a>
-    <a href="/manage_coord">Manage Coordinators</a>
-    {% endif %}
-
-
-
+    
       
     <a class="logout" href="/logout">
         <i class="fas fa-sign-out-alt"></i> Sign Out
       </a>
-        <a class="notif" href="#" id="notifications-bar" >Notifications</a>
+      <div class="containerx">
+        <a class="notif" href="#" id="toggleLink"><i class="fas fa-bell"></i></a><br>
+        <div id="notifications-container" class="notifications">
+            {% if user_source == 'accounts_cics' %}
+            {% if notif == [] %}
+            <b>You have no notifications</b>
+            {% else %}
+            {% for row in notif%}
+            <div class="report">
+                <button class="delete-button" onclick="deleteNotification(this, '{{ row[0] }}')">Delete</button>
+                <b></b> {{ row[2] }}<br>
+                    <div class="report_small">
+                        <b>Date:</b> {{ row[4] }}<br>
+                        <b>Time:</b> {{ row[3] }}<br>
+                     
+                    </div>
+            </div>
+            <hr class="report-separator">
+            {% endfor %}
+            {% endif %}
+        {% endif %}
+          
+        </div>
+    </div>
     </div>
 
-    {% if user_source == 'accounts_cics' or user_source == 'accounts_coordinators'%}
+    {% if user_source == 'accounts_cics' or user_source == 'accounts_cafad' or user_source == 'accounts_coe' or user_source == 'accounts_cit' or user_source == 'accounts_coordinators'%}
     <div class="image-container">
         <img src="static\headi.png" style="width: 100%; height: 180%;" alt="Background Image">
         <div class="user-profile">
@@ -67,8 +75,13 @@
         {% endif %}
         <div class="user-info">
             <div class="overlay-text" style="position: absolute; top: 50px; left: 250px; white-space: nowrap;">{{ name }}</div>
+            {% if user_source == 'accounts_cics' or user_source == 'accounts_cafad' or user_source == 'accounts_coe' or user_source == 'accounts_cit' %}
             <div class="overlay-text1" style="position: absolute; top: 80px;  bottom: 10px; left: 250px; white-space: nowrap;">{{ course }} - {{year}}</div>
-         
+            {% endif %}
+            {% if user_source == 'accounts_coordinators'%}
+            <div class="overlay-text1" style="position: absolute; top: 80px;  bottom: 10px; left: 250px; white-space: nowrap;">{{ course }} Coordinator</div>
+            {% endif %}
+
         </div>
         
         </div>
@@ -113,10 +126,12 @@
             <div class="sidebar">
                 <span><a href="#tab1" id="trackStatusLink"><i class="fas fa-home"></i> Home</a></span>
                 <span class="dropdown">
-                    <a href="#" id="trackStatusLink"><i class="fas fa-search"></i> Track Status</a>
+                    <a href="#" id="trackStatusLink" style="pointer-events: none;"><i class="fas fa-search"></i> Track Status ▼</a>
                     <div class="dropdown-content">
                         <a href="#tab2">Complaints</a>
+                        {% if roles == "student" or roles == "Student" %}
                         <a href="#tab3">Request</a>
+                        {%endif%}
                     </div>
                 </span>
                 <span><a href="#tab4" id="trackStatusLink"><i class="fas fa-info-circle"></i> About</a></span>
@@ -155,9 +170,7 @@
     </div>
     {% endif %}
 
-    <div id="notifications-container" class="notifications">
-        
-    </div>
+ 
 
     <div id="myModal" class="modal">
         <div class="modal-content">
@@ -231,7 +244,8 @@
                     <input type="text" id="evidence3" name="evidence3"><br>
                     <hr>
                 
-                    
+                    <label for="file9">Attach Your Signature with Printed Name:</label>
+                    <input type="file" name="file9" id="file9" accept=".png, .jpg, .jpeg"required>
                 
                     <label for="file1">Attach Supporting Documents (if you have any):</label>
                     <input type="file" name="file1" id="file1" accept=".png, .jpg, .jpeg, .pdf, .docx">
@@ -306,15 +320,17 @@
         <div id="tab1" class="tab-content active">
     <div class="button-container">
         <div class="button-row">
+            
             <button class="green-button" id="openModalBtn">
                 <i class="fas fa-file-alt"></i>
                 <span>Lodge Complaint</span>
             </button>
-
+            {% if roles == "student" or roles == "Student" %}
             <button class="green-button" id="openModalBtn3">
                 <i class="fas fa-file-alt"></i>
                 <span>Request Documents</span>
             </button>
+            {%endif%}
 
                
         </div>
@@ -324,15 +340,12 @@
        
     <div class="button-container">
         <div class="button-row">
+            {% if roles == "student" or roles == "Student" %}
             <button class="green-button" id="openModalBtn1">
                 <i class="fas fa-exclamation-triangle"></i>
                 <span>Sanctions</span>
             </button>
-            <button class="green-button" id="openModalBtn4">
-            <i class="fas fa-bell"></i>
-            <span>Notifications</span>
-        </button>
-
+            {%endif%}
 
     </div>
 </div>
@@ -793,6 +806,16 @@
     <div class="modal-content">
         <span class="close" id="closeModalBtn1">&times;</span>
         <h3>My Sanctions</h3>
+       
+        <label for="forms3">Kind of Forms:</label>
+       
+        <select name="forms3" id="forms3" required onchange="toggleInputTables()"> 
+            <option value="" selected disabled>Select a Forms Type</option>
+            <option value="Sanctions">Sanctions</option> 
+            <option value="Complaint">Notice of Case Dismissal - Subject of Complaint</option> 
+            <option value="Complainant">Notice of Case Dismissal - Complainant</option> 
+        </select><br>
+        <hr> 
         <div id="table-container">
             {% if sanctions == [] %}
             <p>You have no sanctions</p>
@@ -802,7 +825,7 @@
                     <tr>
                         <th>Date</th>               
                         <th>Sanction</th>
-                        <th>File</th>
+                      
                     </tr>
                 </thead>
                 <tbody>
@@ -812,9 +835,77 @@
                     <tr>
                         <td>{{ row[3] }}</td>
                         <td>{{ row[4] }}</td>
+                    
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+        <div id="table-container1" style="display:none;">
+            <h3>Notice of Case Dismissal - Subject of Complaint</h3>
+            {% if reports1 == [] %}
+            <p>You have no sanctions</p>
+            {% else %}  
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>               
+                        <th>Subject of Complaint</th>
+                        <th>Complainant</th>
+                        <th>File</th>
+                        <th>Status</th>
+                      
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    {% for row in reports1 |sort(attribute='3', reverse=true) %}
+                    <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
+                    <tr>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[1] }}</td>
                         <td> 
-                            <a href="{{ url_for('preview_written_file', report_id=row[0]) }}" target="_blank">{{ row[6] }}</a>
+                            <a href="{{ url_for('preview_notice_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
                         </td>
+                        <td>{{ row[8] }}</td>
+                    
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+        <div id="table-container2" style="display:none;">
+            <h3>Notice of Case Dismissal - Complainant</h3>
+            {% if reports2 == [] %}
+            <p>You have no sanctions</p>
+            {% else %}  
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>               
+                        <th>Subject of Complaint</th>
+                        <th>Complainant</th>
+                        <th>File</th>
+                        <th>Status</th>
+                      
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    {% for row in reports2 |sort(attribute='3', reverse=true) %}
+                    <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
+                    <tr>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td> 
+                            <a href="{{ url_for('preview_notice_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
+                        </td>
+                        <td>{{ row[8] }}</td>
+                    
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -985,7 +1076,7 @@
         <h1>Tag Sanction</h1>
        
         <h4>Check Records</h4>
-        <form method="POST" action="/search_students" id="searchForm" required>
+        <form method="POST" action="/search_students" id="searchSrcode" required>
             <label for="username">Input Sr-Code:</label>
             <input type="text" id="username" name="username" required>
             <input type="submit" value="Search">
@@ -1190,6 +1281,8 @@
     
                 <label for="effectivity">Effectivity:</label>
                 <input type="text" id="effectivity" name="effectivity"><br><br>
+
+
     
     
                     <label id="provision1" for="norms" >What happen in the investigation?:</label>

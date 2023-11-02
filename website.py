@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash,send_file,jsonify,make_response
+from flask import Flask, render_template, request, redirect, url_for, session, flash,send_file,jsonify,make_response,Response
 import mysql.connector
 import base64
 import io
@@ -53,6 +53,9 @@ db_connection = mysql.connector.connect(
 )
 
 
+
+
+
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
 
@@ -63,6 +66,15 @@ pdfkit_options = {
     'page-height': '330.2mm',  # 13 inches converted to millimeters
     'encoding': 'UTF-8',
 }
+
+def notifs(user_id,message):
+
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("INSERT INTO notifications (user_id  ,message) VALUES (%s, %s)",
+                    (user_id, message)) 
+    db_connection.commit()
+    
+    db_cursor.close()
 
 
 
@@ -243,19 +255,25 @@ def submit_notice():
     print(kind)
     
     id = request.form.get('id')
+    code = request.form.get('code')
     student = request.form.get('student')
     complainant = request.form.get('complainant')
     srcode = request.form.get('srcode')
     section = request.form.get('section')
     program = request.form.get('department')
     gender = request.form.get('gender')
-    minor = request.form.get('minor')
-    minor_input = request.form.get('minor_offense')
-    major = request.form.get('major')
-    major_input = request.form.get('major_offense')
-    fieldwork = request.form.get('fieldwork')
-    prolonged = request.form.get('prolonged')
-    specify2 = request.form.get('specify2')
+    offense = request.form.get('offense_type')
+    offense1 = request.form.get('offense_type1')
+    minor_input1 = request.form.get('sanctionsInputminor')
+    minor_input2 = request.form.get('sanctionsInputminor1')
+    major_input1 = request.form.get('sanctionsInputmajor')
+    major_input2= request.form.get('sanctionsInputmajor1')
+    fieldwork1 = request.form.get('fieldwork')
+    prolonged1 = request.form.get('prolonged')
+    fieldwork2 = request.form.get('fieldwork1')
+    prolonged2 = request.form.get('prolonged1')
+    specify3 = request.form.get('specify2')
+    specify4 = request.form.get('specify3')
     statusreport = request.form.get('status')
     current_datetime = datetime.now()
     random_code = generate_random_code()
@@ -263,11 +281,25 @@ def submit_notice():
     formatted_date = current_date.strftime("/%m/%d/%Y")
     current_time = datetime.now()
 
+    specify2 = specify3 or specify4
+
+
+                                                                                                                                                                                                                                   
+    minor_input = minor_input1 or minor_input2
+    major_input = major_input1 or major_input2
+
+    if minor_input:
+        major_input=""
+
+    else:
+        minor_input=""
+
 # Format the current time as "hh:mm AM/PM"
     formatted_time = current_time.strftime("%I:%M %p")
     
     # Convert it to the desired format
     username = session.get('username', '')
+
 
     if program == "CAFAD":
             Name_Coordinator = "CAFAD Coordinator"
@@ -283,25 +315,34 @@ def submit_notice():
         status1 = "checked"
         status = "not"
 
-    if minor == "minor":
+    if offense == "minor":
         status2 = "checked"
+        status3 = "not"
     else:
+        status3 = "checked"
         status2 = "not"
 
-    if major == "major":
-        status3 = "checked"
-    else:
+    if offense1 == "minor":
+        status2 = "checked"
         status3 = "not"
+    else:
+        status3 = "checked"
+        status2 = "not"
 
-    if fieldwork == "fieldwork":
+    if fieldwork1 == "fieldwork":
         status4 = "checked"
+        status5 = "not"
     else:
         status4 = "not"
-
-    if prolonged == "prolonged":
         status5 = "checked"
-    else:
+
+    if fieldwork2 == "fieldwork1":
+        status4 = "checked"
         status5 = "not"
+    else:
+        status4 = "not"
+        status5 = "checked"
+
 
 
     pdf_filename = 'notice.docx'
@@ -350,7 +391,7 @@ def submit_notice():
 
     doc.save("modified_document.docx")
             # Check the operating system
-    convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
+    convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
 
     source_docx = 'modified_document.docx'
 
@@ -364,10 +405,12 @@ def submit_notice():
 
 
     pdfpath = os.path.join('modified_document.pdf')
+    convertapi.convert('encrypt', {'File': pdfpath,'UserPassword': random_code,'OwnerPassword': 'hornbill'}, from_format = 'pdf').save_files('modified_document.pdf')
 
     file_name = f'{random_code}_Notice of Case Dismissal'
     with open(pdfpath, "rb") as pdf_file:
         pdf_data = pdf_file.read()
+
 
 
         
@@ -376,8 +419,8 @@ def submit_notice():
 
 
     db_cursor = db_connection.cursor()
-    db_cursor.execute("INSERT INTO notice_case (notice_id  ,complainant, name, coord, date, time, file, file_name) VALUES (%s, %s,%s, %s, %s, %s, %s, %s)",
-                    (random_code, complainant,student,Name_Coordinator, current_date, formatted_time, pdf_data, file_name))
+    db_cursor.execute("INSERT INTO notice_case (notice_id  ,complainant, name, coord, date, time, file, file_name,status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s,%s)",
+                    (random_code, complainant,student,Name_Coordinator, current_date, formatted_time, pdf_data, file_name,statusreport))
     db_connection.commit()
     
     db_cursor.close()
@@ -388,13 +431,14 @@ def submit_notice():
     db_cursor_status.close()   
             
     flash('The report is submitted', 'success')
-    return redirect('/menu')
+    return redirect('/head')
 
 
 
 @app.route('/submit_report', methods=['POST'])
 def submit_report():
     kind = request.form.get('forms')
+    role = request.form.get('role')
     if kind == "Formal Complaint":
         department = request.form.get('department')
         provision = request.form.get('provision')
@@ -457,7 +501,7 @@ def submit_report():
       
         
 
-        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
+        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
 
         source_docx = 'modified_document.docx'
 
@@ -465,12 +509,14 @@ def submit_report():
         # Use upload IO wrapper to upload file only once to the API
         upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
 
-        saved_files = convertapi.convert('pdf', { 'File': upload_io }).save_files('modified_document.pdf')
+        saved_files = convertapi.convert('pdf', { 'File': upload_io}).save_files('modified_document.pdf')
 
         print("The PDF saved to %s" % saved_files)
 
 
         pdfpath = os.path.join('modified_document.pdf')
+
+        convertapi.convert('encrypt', {'File': pdfpath,'UserPassword': random_code,'OwnerPassword': 'hornbill'}, from_format = 'pdf').save_files('modified_document.pdf')
 
         file_name = f'{random_code}_Formal Complaint Letter'
         with open(pdfpath, "rb") as pdf_file:
@@ -503,7 +549,11 @@ def submit_report():
             
             
             flash('The report is submitted', 'success')
-            return redirect('/hello')
+
+            if role == "coord":
+                return redirect('/head')
+            else:
+                return redirect('/hello')
             
         
         else:
@@ -528,7 +578,10 @@ def submit_report():
             
             
             flash('The report is submitted', 'success')
-            return redirect('/hello')
+            if role == "coord":
+                return redirect('/head')
+            else:
+                return redirect('/hello')
     else:
         department = request.form.get('department')
         remarks = request.form.get('remarks')
@@ -586,7 +639,7 @@ def submit_report():
         doc.save("modified_document.docx")
 
         
-        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
+        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
 
         source_docx = 'modified_document.docx'
 
@@ -600,6 +653,8 @@ def submit_report():
 
 
         pdfpath = os.path.join('modified_document.pdf')
+
+        convertapi.convert('encrypt', {'File': pdfpath,'UserPassword': random_code,'OwnerPassword': 'hornbill'}, from_format = 'pdf').save_files('modified_document.pdf')
 
         file_name = f'{random_code}_Incident Report Letter'
         with open(pdfpath, "rb") as pdf_file:
@@ -632,7 +687,10 @@ def submit_report():
             
             
             flash('The report is submitted', 'success')
-            return redirect('/hello')
+            if role == "coord":
+                return redirect('/head')
+            else:
+                return redirect('/hello')
         else:
            
             support_filename = secure_filename(support_file.filename)
@@ -655,7 +713,10 @@ def submit_report():
             
             
             flash('The report is submitted', 'success')
-            return redirect('/hello')
+            if role == "coord":
+                return redirect('/head')
+            else:
+                return redirect('/hello')
 
 
 @app.route('/submit_request', methods=['GET', 'POST'])
@@ -710,7 +771,7 @@ def submit_request():
 
         doc.save("modified_document.docx")
                 # Check the operating system
-        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
+        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
 
         source_docx = 'modified_document.docx'
 
@@ -724,6 +785,8 @@ def submit_request():
 
 
         pdfpath = os.path.join('modified_document.pdf')
+
+        convertapi.convert('encrypt', {'File': pdfpath,'UserPassword': random_code,'OwnerPassword': 'hornbill'}, from_format = 'pdf').save_files('modified_document.pdf')
 
         file_name = f'{random_code}_Temporary Gate Pass Letter'
         with open(pdfpath, "rb") as pdf_file:
@@ -877,7 +940,7 @@ def submit_request():
 
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
+        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
 
         source_docx = 'modified_document.docx'
 
@@ -891,6 +954,8 @@ def submit_request():
 
 
         pdfpath = os.path.join('modified_document.pdf')
+
+        convertapi.convert('encrypt', {'File': pdfpath,'UserPassword': random_code,'OwnerPassword': 'hornbill'}, from_format = 'pdf').save_files('modified_document.pdf')
 
         file_name = f'{random_code}_Request for Non-Wearing of Uniform'
         with open(pdfpath, "rb") as pdf_file:
@@ -1030,7 +1095,7 @@ def submit_request():
 
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
+        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
 
         source_docx = 'modified_document.docx'
 
@@ -1044,6 +1109,8 @@ def submit_request():
 
 
         pdfpath = os.path.join('modified_document.pdf')
+
+        convertapi.convert('encrypt', {'File': pdfpath,'UserPassword': random_code,'OwnerPassword': 'hornbill'}, from_format = 'pdf').save_files('modified_document.pdf')
 
         file_name = f'{random_code}_Request for New ID'
         with open(pdfpath, "rb") as pdf_file:
@@ -1126,13 +1193,75 @@ def submit_call():
     db_cursor.execute("SELECT * FROM accounts_cics WHERE Name = %s", (student,))
     result_cics = db_cursor.fetchone()
 
+    db_cursor.execute("SELECT * FROM accounts_cafad WHERE Name = %s", (student,))
+    result_cafad = db_cursor.fetchone()
+
+    db_cursor.execute("SELECT * FROM accounts_coe WHERE Name = %s", (student,))
+    result_coe = db_cursor.fetchone()
+
+    db_cursor.execute("SELECT * FROM accounts_cit WHERE Name = %s", (student,))
+    result_cit = db_cursor.fetchone()
+
     if result_cics:
         college = 'CICS'
         db_cursor2 = db_connection.cursor()
         db_cursor2.execute("SELECT Course FROM accounts_cics WHERE Name = %s", (student,))
         course1 = db_cursor2.fetchone()
+        db_cursor3 = db_connection.cursor()
+        db_cursor3.execute("SELECT Username FROM accounts_cics WHERE Name = %s", (student,))
+        srcode1 = db_cursor3.fetchone()
 
         if course1:
+            srcode = srcode1[0]
+            course = course1[0]  # Get the first (and only) element of the tuple
+            print(course)  # Now, 'course' is a string
+        else:
+            print("No course found for the student.")
+
+    elif result_cafad:
+        college = 'CAFAD'
+        db_cursor2 = db_connection.cursor()
+        db_cursor2.execute("SELECT Course FROM accounts_cafad WHERE Name = %s", (student,))
+        course1 = db_cursor2.fetchone()
+        db_cursor3 = db_connection.cursor()
+        db_cursor3.execute("SELECT Username FROM accounts_cafad WHERE Name = %s", (student,))
+        srcode1 = db_cursor3.fetchone()
+
+        if course1:
+            srcode = srcode1[0]
+            course = course1[0]  # Get the first (and only) element of the tuple
+            print(course)  # Now, 'course' is a string
+        else:
+            print("No course found for the student.")
+
+    elif result_coe:
+        college = 'COE'
+        db_cursor2 = db_connection.cursor()
+        db_cursor2.execute("SELECT Course FROM accounts_coe WHERE Name = %s", (student,))
+        course1 = db_cursor2.fetchone()
+        db_cursor3 = db_connection.cursor()
+        db_cursor3.execute("SELECT Username FROM accounts_coe WHERE Name = %s", (student,))
+        srcode1 = db_cursor3.fetchone()
+
+        if course1:
+            srcode = srcode1[0]
+            course = course1[0]  # Get the first (and only) element of the tuple
+            print(course)  # Now, 'course' is a string
+        else:
+            print("No course found for the student.")
+
+
+    elif result_cit:
+        college = 'CIT'
+        db_cursor2 = db_connection.cursor()
+        db_cursor2.execute("SELECT Course FROM accounts_cit WHERE Name = %s", (student,))
+        course1 = db_cursor2.fetchone()
+        db_cursor3 = db_connection.cursor()
+        db_cursor3.execute("SELECT Username FROM accounts_cit WHERE Name = %s", (student,))
+        srcode1 = db_cursor3.fetchone()
+
+        if course1:
+            srcode = srcode1[0]
             course = course1[0]  # Get the first (and only) element of the tuple
             print(course)  # Now, 'course' is a string
         else:
@@ -1178,7 +1307,7 @@ def submit_call():
 
 
     doc.save("modified_document.docx")
-    convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
+    convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
 
     source_docx = 'modified_document.docx'
 
@@ -1192,15 +1321,19 @@ def submit_call():
 
 
     pdfpath = os.path.join('modified_document.pdf')
+    convertapi.convert('encrypt', {'File': pdfpath,'UserPassword': random_code,'OwnerPassword': 'hornbill'}, from_format = 'pdf').save_files('modified_document.pdf')
 
     file_name = f'{random_code}_Call Slip'
     with open(pdfpath, "rb") as pdf_file:
         pdf_data = pdf_file.read()
+
+
+    
         
         
 
     
-    # Insert the report with file information into the database, including file data
+    notifs(srcode,"You have a new call slip")
     db_cursor1 = db_connection.cursor()
     db_cursor1.execute("INSERT INTO callslip (call_id, name, coord,reason, date, time,file, file_name) VALUES (%s, %s, %s, %s, %s,%s,%s,%s)",
                     (random_code, student, username,remarks, current_date, formatted_time,pdf_data, file_name))
@@ -1211,7 +1344,7 @@ def submit_call():
    
 
 
-    return redirect('/hello')
+    return redirect('/head')
 
 
 
@@ -1236,6 +1369,45 @@ def submit_written():
         formatted_date = current_date.strftime("/%m/%d/%Y")
         
         username = session.get('namestudent', '')
+
+
+        db_cursor1 = db_connection.cursor()
+        db_cursor1.execute("SELECT Username FROM accounts_cics WHERE Name = %s;", (students,))
+        result_cics = db_cursor1.fetchone()
+        
+        db_cursor1 = db_connection.cursor()
+        db_cursor1.execute("SELECT Username FROM accounts_cafad WHERE Name = %s;", (students,))
+        result_cafad = db_cursor1.fetchone()
+
+        db_cursor1 = db_connection.cursor()
+        db_cursor1.execute("SELECT Username FROM accounts_coe WHERE Name = %s;", (students,))
+        result_coe = db_cursor1.fetchone()
+
+        db_cursor1 = db_connection.cursor()
+        db_cursor1.execute("SELECT Username FROM accounts_cit WHERE Name = %s;", (students,))
+        result_cit = db_cursor1.fetchone()
+
+        if result_cics:
+            srcode = result_cics[0]
+
+        elif result_cafad:
+            srcode = result_cafad[0]
+
+        elif result_coe:
+            srcode = result_coe[0]
+
+        elif result_cit:
+            srcode = result_cit[0]
+
+
+        print(srcode+"lol")
+
+        
+
+
+        notifs(srcode, "You have a new sanction")
+
+        db_cursor1.close()
 
         sanction_mapping = [
     "12.1.1 - attendance, punctuality, cutting classes",
@@ -1338,7 +1510,7 @@ def submit_written():
         
         doc.save("modified_document.docx")
         
-        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
+        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
 
         source_docx = 'modified_document.docx'
 
@@ -1352,6 +1524,7 @@ def submit_written():
 
 
         pdfpath = os.path.join('modified_document.pdf')
+        convertapi.convert('encrypt', {'File': pdfpath,'UserPassword': random_code,'OwnerPassword': 'hornbill'}, from_format = 'pdf').save_files('modified_document.pdf')
 
     
 
@@ -1368,7 +1541,7 @@ def submit_written():
         db_cursor.close()
    
         flash('Report submitted successfully')
-        return redirect('/hello')
+        return redirect('/head')
         
     elif kind ==  'Written Reprimand':
 
@@ -1387,6 +1560,42 @@ def submit_written():
         formatted_date = current_date.strftime("/%m/%d/%Y")
         
         username = session.get('namestudent', '')
+
+        db_cursor1 = db_connection.cursor()
+        db_cursor1.execute("SELECT Username FROM accounts_cics WHERE Name = %s;", (students,))
+        result_cics = db_cursor1.fetchone()
+        
+        db_cursor1 = db_connection.cursor()
+        db_cursor1.execute("SELECT Username FROM accounts_cafad WHERE Name = %s;", (students,))
+        result_cafad = db_cursor1.fetchone()
+
+        db_cursor1 = db_connection.cursor()
+        db_cursor1.execute("SELECT Username FROM accounts_coe WHERE Name = %s;", (students,))
+        result_coe = db_cursor1.fetchone()
+
+        db_cursor1 = db_connection.cursor()
+        db_cursor1.execute("SELECT Username FROM accounts_cit WHERE Name = %s;", (students,))
+        result_cit = db_cursor1.fetchone()
+
+        if result_cics:
+            srcode = result_cics[0]
+
+        elif result_cafad:
+            srcode = result_cafad[0]
+
+        elif result_coe:
+            srcode = result_coe[0]
+
+        elif result_cit:
+            srcode = result_cit[0]
+
+
+        print(srcode+"lol")
+
+        
+
+
+        notifs(srcode, "You have a new sanction")
 
         sanction_mapping = [
     "12.1.1 - attendance, punctuality, cutting classes",
@@ -1485,7 +1694,7 @@ def submit_written():
 
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
+        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
 
         source_docx = 'modified_document.docx'
 
@@ -1499,6 +1708,7 @@ def submit_written():
 
 
         pdfpath = os.path.join('modified_document.pdf')
+        convertapi.convert('encrypt', {'File': pdfpath,'UserPassword': random_code,'OwnerPassword': 'hornbill'}, from_format = 'pdf').save_files('modified_document.pdf')
 
     
 
@@ -1521,7 +1731,7 @@ def submit_written():
 
 
 
-        return redirect('hello')
+        return redirect('/head')
     
 
     else:
@@ -1533,6 +1743,9 @@ def submit_written():
         sanction = request.form.get('sanctions')
         students= request.form.get('student')
         effectivity= request.form.get('effectivity')
+        checked= request.form.get('checked')
+        verified= request.form.get('verified')
+        parent= request.form.get('parent')
         days= request.form.get('days')
         current_datetime = datetime.now()
         random_code = generate_random_code()
@@ -1540,6 +1753,42 @@ def submit_written():
         formatted_date = current_date.strftime("/%m/%d/%Y")
         
         username = session.get('namestudent', '')
+
+        db_cursor1 = db_connection.cursor()
+        db_cursor1.execute("SELECT Username FROM accounts_cics WHERE Name = %s;", (students,))
+        result_cics = db_cursor1.fetchone()
+        
+        db_cursor1 = db_connection.cursor()
+        db_cursor1.execute("SELECT Username FROM accounts_cafad WHERE Name = %s;", (students,))
+        result_cafad = db_cursor1.fetchone()
+
+        db_cursor1 = db_connection.cursor()
+        db_cursor1.execute("SELECT Username FROM accounts_coe WHERE Name = %s;", (students,))
+        result_coe = db_cursor1.fetchone()
+
+        db_cursor1 = db_connection.cursor()
+        db_cursor1.execute("SELECT Username FROM accounts_cit WHERE Name = %s;", (students,))
+        result_cit = db_cursor1.fetchone()
+
+        if result_cics:
+            srcode = result_cics[0]
+
+        elif result_cafad:
+            srcode = result_cafad[0]
+
+        elif result_coe:
+            srcode = result_coe[0]
+
+        elif result_cit:
+            srcode = result_cit[0]
+
+
+        print(srcode+"lol")
+
+        
+
+
+        notifs(srcode, "You have a new sanction")
 
         sanction_mapping = [
     "12.1.1 - attendance, punctuality, cutting classes",
@@ -1704,11 +1953,17 @@ def submit_written():
         replace_table_cell_placeholder1(doc.tables[0], 14, 4, effectivity,"wew")
         replace_table_cell_placeholder1(doc.tables[0], 6, 14, sanction_number,"(section)")
         replace_table_cell_placeholder1(doc.tables[0], 18, 3, username, "KRAZY")
+        replace_table_cell_placeholder1(doc.tables[0], 18, 5, checked, "FERSON")
+        replace_table_cell_placeholder1(doc.tables[0], 18, 16, verified, "TEST")
+        replace_table_cell_placeholder1(doc.tables[0], 20, 5, students, "STUDENT")
+        replace_table_cell_placeholder1(doc.tables[0], 20, 16, verified, "PARENT")
+
+        
         replace_table_cell_placeholder1(doc.tables[0], 7, 2, norms, "norms")
         
         doc.save("modified_document.docx")
                 # Check the operating system
-        convertapi.api_secret = 'AO4dTsDzcwipm3Kd'
+        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
 
         source_docx = 'modified_document.docx'
 
@@ -1722,6 +1977,7 @@ def submit_written():
 
 
         pdfpath = os.path.join('modified_document.pdf')
+        convertapi.convert('encrypt', {'File': pdfpath,'UserPassword': random_code,'OwnerPassword': 'hornbill'}, from_format = 'pdf').save_files('modified_document.pdf')
 
     
 
@@ -1742,7 +1998,7 @@ def submit_written():
     
         
         flash('Report submitted successfully')
-        return redirect('hello')
+        return redirect('head')
 
 
 
@@ -1811,6 +2067,7 @@ def submit_sanction():
         # Get the current date and time
         current_datetime = datetime.now()
         # Get the username from the session
+
        
 
         # Insert the values into the database
@@ -1819,7 +2076,6 @@ def submit_sanction():
                           (name, course, current_datetime, sanction))
         db_connection.commit()
         db_cursor.close()
-
         # Optionally, you can redirect to a success page or perform other actions
         
         return redirect(url_for('homepage'))
@@ -1898,6 +2154,16 @@ def verify_recaptcha(recaptcha_response):
         return True
     else:
         return False
+
+
+tables = [
+    'accounts_cics',
+    'accounts_cafad',
+    'accounts_coe',
+    'accounts_cit',
+    'accounts_coordinators',
+    'accounts_head'
+]
     
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -1923,52 +2189,31 @@ def index():
 
         if result['success']:
                 
-            # Query the accounts_cics table to check if the provided username and password exist
-            db_cursor = db_connection.cursor()
-            db_cursor.execute("SELECT * FROM accounts_cics WHERE username = %s AND password = %s",
-                            (submitted_username, submitted_password))
-            result_cics = db_cursor.fetchone()
-            db_cursor.close()
+            for table in tables:
+                query = "SELECT * FROM {} WHERE username = %s AND password = %s".format(table)
+                db_cursor = db_connection.cursor()
+                db_cursor.execute(query, (submitted_username, submitted_password))
+                result = db_cursor.fetchone()
+                db_cursor.close()
 
-            # Query the account_coordinators table to check if the provided username and password exist
-            db_cursor = db_connection.cursor()
-            db_cursor.execute("SELECT * FROM accounts_coordinators WHERE username = %s AND password = %s",
-                            (submitted_username, submitted_password))
-            result_coordinators = db_cursor.fetchone()
-            db_cursor.close()
+                if result:
+                    # User exists in the table, set the role and continue
+                    session['username'] = submitted_username
+                    session['role'] = table
+                    if 'head' in table:
+                        return redirect(url_for('homepage_head'))
 
-            db_cursor = db_connection.cursor()
-            db_cursor.execute("SELECT * FROM accounts_head WHERE username = %s AND password = %s",
-                            (submitted_username, submitted_password))
-            result_head = db_cursor.fetchone()
-            db_cursor.close()
+                    elif 'coordinator' in table:
+                        return redirect(url_for('homepage_head'))
+
+                    else:
+                        return redirect(url_for('homepage'))
           
         else:
             captcha = "Answer the Captcha"
+            username = ""
             return render_template('index.html', username=username, captcha=captcha)
-
-
-
-
-        if result_cics:
-            # User exists in the accounts_cics table, set the role and continue
-            session['username'] = submitted_username  # Save the username in the session
-            session['role'] = 'accounts_cics'  # Save the role in the session
-            return redirect(url_for('homepage'))  # Redirect to another page after successful login
-        elif result_coordinators:
-            # User exists in the accounts_coordinators table, set the role and continue
-            session['username'] = submitted_username  # Save the username in the session
-            session['role'] = 'accounts_coordinators'  # Save the role in the session
-            return redirect(url_for('homepage'))  # Redirect to another page after successful login
-        elif result_head:
-            # User exists in the accounts_coordinators table, set the role and continue
-            session['username'] = submitted_username  # Save the username in the session
-            session['role'] = 'accounts_head'  # Save the role in the session
-            return redirect(url_for('homepage_head'))  # Redirect to another page after successful login
-        else:
-            # Invalid username or password, set error_message
-            error_message = 'Invalid username or password'
-
+        
     return render_template('index.html', username=username, error_message=error_message)
 
 @app.route('/about')
@@ -2296,8 +2541,18 @@ def homepage_head():
     db_cursor.execute("SELECT * FROM accounts_head WHERE username = %s", (username,))
     result_head = db_cursor.fetchone()
 
+    db_cursor = db_connection.cursor()
+
+    db_cursor.execute("SELECT * FROM accounts_coordinators WHERE username = %s", (username,))
+    result_coordinator = db_cursor.fetchone()
+
     if result_head:
         user_source = 'accounts_head'
+        print(user_source)
+        session['source'] = user_source
+
+    elif result_coordinator:
+        user_source = 'accounts_coordinator'
         print(user_source)
         session['source'] = user_source
     else:
@@ -2315,11 +2570,18 @@ def homepage_head():
 
     else:
         # Handle the case where user_source is unknown
-        db_cursor1.execute("SELECT image_data, Name, Course, Year FROM accounts_cics WHERE username = %s", (username,))
-
+        db_cursor1.execute("SELECT image_data, name, course FROM accounts_coordinators WHERE username = %s", (username,))
+        role ="coordinator"
+    
     result_user_data = db_cursor1.fetchone()
 
     if role == "head":
+        profile_picture_data, name, course = result_user_data
+        year=""
+        session['namestudent'] = name
+        print(name)
+
+    elif role == "coordinator":
         profile_picture_data, name, course = result_user_data
         year=""
         session['namestudent'] = name
@@ -2375,7 +2637,7 @@ def homepage_head():
 
     # Encode the profile picture data as a Base64 string
     if profile_picture_data is not None:
-        profile_picture_base64 = base64.b64encode(profile_picture_data).decode('utf-8')
+        profile_picture_base643 = base64.b64encode(profile_picture_data).decode('utf-8')
     else:
         profile_picture_base64 = None
 
@@ -2386,6 +2648,7 @@ def homepage_head():
 
     # Query the database to retrieve reports for the logged-in user
     db_cursor_get = db_connection.cursor()
+    db_cursor_get1 = db_connection.cursor()
 
     if user_role == 'accounts_coordinators':
         # If the user is an accounts coordinator, retrieve the course of the user
@@ -2398,11 +2661,16 @@ def homepage_head():
             # Query reports where the course matches the user's course
             db_cursor_get.execute("SELECT * FROM reports WHERE course = %s", (user_course,))
             reports3 = db_cursor_get.fetchall()
+            db_cursor_get1.execute("SELECT * FROM forms_osd WHERE course = %s", (user_course,))
+            reports4 = db_cursor_get1.fetchall()
 
     elif user_role == 'accounts_head':
         db_cursor_get.execute("SELECT * FROM reports")
         reports3 = db_cursor_get.fetchall()
+        db_cursor_get1.execute("SELECT * FROM forms_osd")
+        reports4 = db_cursor_get1.fetchall()
         user_course = ""
+    
 
     else:
         # For other roles, simply retrieve reports for the logged-in user
@@ -2412,28 +2680,76 @@ def homepage_head():
 
     # Close the cursor
     db_cursor_get.close()  
+    db_cursor_get1.close() 
 
-    db_cursor_all = db_connection.cursor()
-    db_cursor_all.execute("SELECT * FROM accounts_coordinators")
-    coordinators = db_cursor_all.fetchall()
-    db_cursor_all.close()
+
 
      # Create a dictionary to hold profile pictures as Base64
-    profile_pictures1 = {}
-
-    # Fetch the profile pictures and convert them to Base64 if they exist
-    for row in coordinators:
-        coord_id = row[0]  # Assuming the first column is the Coord_Id
-        image_data = row[3]  # Assuming the fourth column is the image_data
-
-        if image_data:
-            profile_picture_base64 = base64.b64encode(image_data).decode('utf-8')
-            profile_pictures1[coord_id] = profile_picture_base64
-
+    
     db_cursor_all_cics = db_connection.cursor()
     db_cursor_all_cics.execute("SELECT * FROM accounts_cics")
     cics = db_cursor_all_cics.fetchall()
     db_cursor_all_cics.close()
+
+    profile_pictures1 = {}
+
+    # Fetch the profile pictures and convert them to Base64 if they exist
+    for row in cics:
+        student_id = row[0]  # Assuming the first column is the Coord_Id
+        image_data = row[3]  # Assuming the fourth column is the image_data
+
+        if image_data:
+            profile_picture_base64 = base64.b64encode(image_data).decode('utf-8')
+            profile_pictures1[student_id] = profile_picture_base64
+
+
+    db_cursor_all_cafad = db_connection.cursor()
+    db_cursor_all_cafad.execute("SELECT * FROM accounts_cafad")
+    cafad = db_cursor_all_cafad.fetchall()
+    db_cursor_all_cafad.close()
+
+    profile_pictures2 = {}
+
+    # Fetch the profile pictures and convert them to Base64 if they exist
+    for row in cafad:
+        student_id = row[0]  # Assuming the first column is the Coord_Id
+        image_data = row[3]  # Assuming the fourth column is the image_data
+
+        if image_data:
+            profile_picture_base64 = base64.b64encode(image_data).decode('utf-8')
+            profile_pictures2[student_id] = profile_picture_base64
+
+    db_cursor_all_coe = db_connection.cursor()
+    db_cursor_all_coe.execute("SELECT * FROM accounts_coe")
+    coe = db_cursor_all_coe.fetchall()
+    db_cursor_all_coe.close()
+
+    profile_pictures3 = {}
+
+    # Fetch the profile pictures and convert them to Base64 if they exist
+    for row in coe:
+        student_id = row[0]  # Assuming the first column is the Coord_Id
+        image_data = row[3]  # Assuming the fourth column is the image_data
+
+        if image_data:
+            profile_picture_base64 = base64.b64encode(image_data).decode('utf-8')
+            profile_pictures3[student_id] = profile_picture_base64
+
+    db_cursor_all_cit = db_connection.cursor()
+    db_cursor_all_cit.execute("SELECT * FROM accounts_cit")
+    cit = db_cursor_all_cit.fetchall()
+    db_cursor_all_cit.close()
+
+    profile_pictures4 = {}
+
+    # Fetch the profile pictures and convert them to Base64 if they exist
+    for row in cit:
+        student_id = row[0]  # Assuming the first column is the Coord_Id
+        image_data = row[3]  # Assuming the fourth column is the image_data
+
+        if image_data:
+            profile_picture_base64 = base64.b64encode(image_data).decode('utf-8')
+            profile_pictures4[student_id] = profile_picture_base64
 
 
     db_cursor_all_coords = db_connection.cursor()
@@ -2455,7 +2771,7 @@ def homepage_head():
     
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage_head.html',profile_pictures=profile_pictures,coordinators=coordinators,reports3=reports3, reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call,profile_pictures1=profile_pictures1,cics=cics)
+    return render_template('homepage_head.html',request=reports4,profile_pictures=profile_pictures,coordinators=coordinators,reports3=reports3, reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base643, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call,profile_pictures1=profile_pictures1,profile_pictures2=profile_pictures2,profile_pictures3=profile_pictures3,profile_pictures4=profile_pictures4,cics=cics,cafad=cafad,coe=coe,cit=cit)
 
 @app.route('/hello', methods=['GET', 'POST'])
 def homepage():
@@ -2477,6 +2793,18 @@ def homepage():
     db_cursor.execute("SELECT * FROM accounts_cics WHERE username = %s", (username,))
     result_cics = db_cursor.fetchone()
 
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT * FROM accounts_cafad WHERE username = %s", (username,))
+    result_cafad = db_cursor.fetchone()
+    
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT * FROM accounts_coe WHERE username = %s", (username,))
+    result_coe = db_cursor.fetchone()
+
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT * FROM accounts_cit WHERE username = %s", (username,))
+    result_cit = db_cursor.fetchone()
+
     db_cursor.execute("SELECT * FROM accounts_coordinators WHERE username = %s", (username,))
     result_coordinators = db_cursor.fetchone()
 
@@ -2487,6 +2815,19 @@ def homepage():
         
         user_source = 'accounts_cics'
         session['source'] = user_source
+
+    elif result_cafad:
+        user_source = 'accounts_cafad'
+        session['source'] = user_source
+
+    elif result_coe:
+        user_source = 'accounts_coe'
+        session['source'] = user_source
+
+    elif result_cit:
+        user_source = 'accounts_cit'
+        session['source'] = user_source
+
     elif result_coordinators:
         user_source = 'accounts_coordinators'
         session['source'] = user_source
@@ -2505,7 +2846,19 @@ def homepage():
     db_cursor1 = db_connection.cursor()
 
     if user_source == 'accounts_cics':
-        db_cursor1.execute("SELECT image_data, Name, Course, Year FROM accounts_cics WHERE username = %s", (username,))
+        db_cursor1.execute("SELECT image_data, Name, Course, Year,role FROM accounts_cics WHERE username = %s", (username,))
+        role ="student"
+
+    elif user_source == 'accounts_cafad':
+        db_cursor1.execute("SELECT image_data, Name, Course, Year,role FROM accounts_cafad WHERE username = %s", (username,))
+        role ="student"
+
+    elif user_source == 'accounts_coe':
+        db_cursor1.execute("SELECT image_data, Name, Course, Year,role FROM accounts_coe WHERE username = %s", (username,))
+        role ="student"
+
+    elif user_source == 'accounts_cit':
+        db_cursor1.execute("SELECT image_data, Name, Course, Year,role FROM accounts_cit WHERE username = %s", (username,))
         role ="student"
 
     elif user_source == 'accounts_coordinators':
@@ -2524,7 +2877,7 @@ def homepage():
     result_user_data = db_cursor1.fetchone()
 
     if role == "student":
-        profile_picture_data, name, course, year = result_user_data
+        profile_picture_data, name, course, year, roles= result_user_data
         session['namestudent'] = name
         print(name)
 
@@ -2666,8 +3019,28 @@ def homepage():
     # Close the cursor
     db_cursor_request.close()
 
+
+    db_cursor_notif = db_connection.cursor()
+    db_cursor_notif.execute("SELECT * FROM notifications WHERE user_id = %s", (username,))
+    results_notif = db_cursor_notif.fetchall()
+
+    notifs = []  # Create an empty list to store your notifications
+
+    for result_notif in results_notif:
+        id, user_id, message, created_at, readit = result_notif
+        date_string = created_at.strftime("%Y-%m-%d %H:%M:%S")
+        date_obj = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S")
+
+        formatted_date = date_obj.strftime("%Y-%m-%d")
+        formatted_time = date_obj.strftime("%I:%M %p")
+
+        notif = (id, user_id, message, formatted_time, formatted_date, readit)
+        notifs.append(notif)  # Append each notification to the list
+
+    db_cursor_notif.close()
+
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage.html', sanctions=sanctions,request1=request1,complaints=complaints,reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call)
+    return render_template('homepage.html', roles=roles,notif=notifs,sanctions=sanctions,request1=request1,complaints=complaints,reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call)
 
 def lookup_student_info(username):
     try:
@@ -2722,9 +3095,6 @@ def count():
     db_cursor = db_connection.cursor()
     db_cursor.execute("SELECT COUNT(*) FROM reports WHERE course = %s", (username,))
     result = db_cursor.fetchone()
-
-    db_cursor.execute("SELECT COUNT(*) FROM forms_osd WHERE course = %s", (username,))
-    result1 = db_cursor.fetchone()
 
     countreports = result[0]
     countrequest = result1[0]
@@ -2903,6 +3273,22 @@ def change_report_status(report_id):
     new_status = request.form['new_status']
     print(new_status)
     print(report_id)
+
+    db_cursor1 = db_connection.cursor()
+    db_cursor1.execute("SELECT report_id FROM reports WHERE id = %s;", (report_id,))
+    result = db_cursor1.fetchone()
+    results = result[0]
+
+    db_cursor2 = db_connection.cursor()
+    db_cursor2.execute("SELECT username FROM reports WHERE id = %s;", (report_id,))
+    result1 = db_cursor2.fetchone()
+    results1 = result1[0]
+
+    notifs(results1,"Your Report ID."+results+" has change status")
+
+    db_cursor1.close()
+    db_cursor2.close()
+    
     db_cursor = db_connection.cursor()
     db_cursor.execute("UPDATE reports SET status = %s WHERE id = %s;", (new_status, report_id))
     db_connection.commit()  # Make sure to commit the changes to the database
@@ -2910,13 +3296,24 @@ def change_report_status(report_id):
 
     flash('Status has been successfully changed', 'success')
 
-    return redirect(url_for('menu'))
+    return redirect(url_for('homepage_head'))
 
 @app.route('/change_report_status1/<string:report_id>', methods=['POST'])
 def change_report_status1(report_id):
     new_status = request.form['new_status']
     print(new_status)
     print(report_id)
+
+
+    db_cursor2 = db_connection.cursor()
+    db_cursor2.execute("SELECT username FROM forms_osd WHERE form_id = %s;", (report_id,))
+    result1 = db_cursor2.fetchone()
+    results1 = result1[0]
+
+    notifs(results1,"Your Report ID."+report_id+" has change status")
+
+    db_cursor2.close()
+
     db_cursor = db_connection.cursor()
     db_cursor.execute("UPDATE forms_osd SET status = %s WHERE form_id = %s;", (new_status, report_id))
     db_connection.commit()  # Make sure to commit the changes to the database
@@ -2924,7 +3321,7 @@ def change_report_status1(report_id):
 
     flash('Status has been successfully changed', 'success')
 
-    return redirect(url_for('requestpage'))
+    return redirect(url_for('homepage_head'))
 
 @app.route('/delete_call/<string:report_id>', methods=['POST'])
 def delete_call(report_id):
@@ -2942,7 +3339,7 @@ def delete_report(report_id):
     db_connection.commit()  # Make sure to commit the changes to the database
     db_cursor.close()
 
-    return redirect(url_for('menu'))
+    return redirect(url_for('homepage_head'))
 
 @app.route('/delete_report1/<string:report_id>', methods=['POST'])
 def delete_report1(report_id):
@@ -2991,6 +3388,21 @@ def delete_all_report2():
 
     return redirect(url_for('homepage_head'))
 
+
+@app.route('/delete-notification', methods=['POST'])
+def delete_notification():
+    
+    notification_id = request.form.get('id')
+    print(notification_id)
+
+ 
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("DELETE FROM notifications WHERE id = %s", (notification_id,))
+    db_connection.commit()
+    db_cursor.close()
+
+    return 'Notification deleted successfully'
+
 @app.route('/lookup_sanctions', methods=['POST'])
 def lookup_sanctions():
     if request.method == 'POST':
@@ -2998,14 +3410,14 @@ def lookup_sanctions():
 
         # Perform a database query to search for sanctions based on the username
         db_cursor = db_connection.cursor()
-        db_cursor.execute("SELECT date_time, sanction, sanctions_id FROM sanctions WHERE Username LIKE %s", ('%' + name + '%',))
+        db_cursor.execute("SELECT date_time, sanction, sanctions_id, written_name FROM sanctions WHERE Username LIKE %s", ('%' + name + '%',))
         search_sanctions = db_cursor.fetchall()
         db_cursor.close()
 
         # Check if any sanctions were found
         if search_sanctions:
             # Convert datetime objects to string representations
-            formatted_sanctions = [{'date_time': str(entry[0]), 'sanction': entry[1],'sanctions_id': entry[2]} for entry in search_sanctions]
+            formatted_sanctions = [{'date_time': str(entry[0]), 'sanction': entry[1],'sanctions_id': entry[2] ,'written_name': entry[3]} for entry in search_sanctions]
             return jsonify({'sanctions': formatted_sanctions})
         else:
             return jsonify({'error': 'No sanctions found'})
@@ -3312,6 +3724,97 @@ def update_database1():
     except Exception as e:
         # Handle any errors that may occur during the update
         return jsonify({"error": str(e)})
+
+
+
+@app.route('/update-database2', methods=['POST'])
+def update_database2():
+    try:
+        # Get the JSON data from the request
+        data = request.get_json()
+
+        id = data.get('coordId')
+        username = data.get('username')
+        password = data.get('password')
+        profile_pic_base64 = data.get('picId')
+        name = data.get('name')
+        course = data.get('course')
+
+        if profile_pic_base64:
+            profile_pic = base64.b64decode(profile_pic_base64)
+        else:
+            profile_pic = None  # Handle the case where there is no profile picture
+
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("UPDATE accounts_cit SET username = %s, password = %s, image_data = %s, name = %s, course = %s WHERE id = %s;", (username, password,profile_pic,name,course,id))
+        db_connection.commit()  # Make sure to commit the changes to the database
+        db_cursor.close()
+
+
+        return jsonify({"message": "Database updated successfully"})
+    except Exception as e:
+        # Handle any errors that may occur during the update
+        return jsonify({"error": str(e)})
+    
+
+@app.route('/update-database3', methods=['POST'])
+def update_database3():
+    try:
+        # Get the JSON data from the request
+        data = request.get_json()
+
+        id = data.get('coordId')
+        username = data.get('username')
+        password = data.get('password')
+        profile_pic_base64 = data.get('picId')
+        name = data.get('name')
+        course = data.get('course')
+
+        if profile_pic_base64:
+            profile_pic = base64.b64decode(profile_pic_base64)
+        else:
+            profile_pic = None  # Handle the case where there is no profile picture
+
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("UPDATE accounts_cafad SET username = %s, password = %s, image_data = %s, name = %s, course = %s WHERE id = %s;", (username, password,profile_pic,name,course,id))
+        db_connection.commit()  # Make sure to commit the changes to the database
+        db_cursor.close()
+
+
+        return jsonify({"message": "Database updated successfully"})
+    except Exception as e:
+        # Handle any errors that may occur during the update
+        return jsonify({"error": str(e)})
+    
+@app.route('/update-database4', methods=['POST'])
+def update_database4():
+    try:
+        # Get the JSON data from the request
+        data = request.get_json()
+
+        id = data.get('coordId')
+        username = data.get('username')
+        password = data.get('password')
+        profile_pic_base64 = data.get('picId')
+        name = data.get('name')
+        course = data.get('course')
+
+        if profile_pic_base64:
+            profile_pic = base64.b64decode(profile_pic_base64)
+        else:
+            profile_pic = None  # Handle the case where there is no profile picture
+
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("UPDATE accounts_coe SET username = %s, password = %s, image_data = %s, name = %s, course = %s WHERE id = %s;", (username, password,profile_pic,name,course,id))
+        db_connection.commit()  # Make sure to commit the changes to the database
+        db_cursor.close()
+
+
+        return jsonify({"message": "Database updated successfully"})
+    except Exception as e:
+        # Handle any errors that may occur during the update
+        return jsonify({"error": str(e)})
+
 
 @app.route('/edit_pic', methods=['POST'])
 def edit_pic():

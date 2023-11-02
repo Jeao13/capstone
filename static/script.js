@@ -1,7 +1,21 @@
-// script.js
+function disableScroll() {
+    // Get the current scroll position
+    var scrollX = window.scrollX || window.pageXOffset;
+    var scrollY = window.scrollY || window.pageYOffset;
+    
+    // Save the current scroll position
+    window.onscroll = function () {
+        window.scrollTo(scrollX, scrollY);
+    };
+}
+
+// Enable scrolling
+function enableScroll() {
+    window.onscroll = null;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
 
-    
     var modal = document.getElementById("myModal");
     var btn = document.getElementById("openModalBtn");
     var span = document.getElementById("closeModalBtn");
@@ -15,6 +29,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const charCount3 = document.getElementById("char-count3");
     const textarea4 = document.getElementById("remarks");
     const charCount4 = document.getElementById("char-count4");
+
+
 
     textarea.addEventListener("input", function() {
         const remainingChars = 250 - textarea.value.length;
@@ -68,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     btn.onclick = function () {
         var targetScrollPosition = modal.offsetTop;
-
+        
         // Scroll the page downward to the modal
         window.scrollTo(0, targetScrollPosition);
 
@@ -78,15 +94,20 @@ document.addEventListener("DOMContentLoaded", function () {
         modal.style.top = "50%";
         modal.style.left = "50%";
         modal.style.transform = "translate(-50%, -50%)";
+        disableScroll();
+
     };
 
     span.onclick = function () {
         modal.style.display = "none";
+        enableScroll()
     };
 
     window.onclick = function (event) {
         if (event.target == modal) {
             modal.style.display = "none";
+            enableScroll()
+            
         }
     };
     
@@ -100,17 +121,29 @@ document.addEventListener("DOMContentLoaded", function () {
     var span1 = document.getElementById("closeModalBtn1");
 
     btn1.onclick = function () {
+        var targetScrollPosition = modal1.offsetTop;
+        
+        // Scroll the page downward to the modal
+        window.scrollTo(0, targetScrollPosition);
+
         modal1.style.display = "block";
+
+        // Scroll the modal to the center of the viewport
+        modal1.style.top = "50%";
+        modal1.style.left = "50%";
+        modal1.style.transform = "translate(-50%, -50%)";
+        disableScroll();
     };
 
     span1.onclick = function () {
         modal1.style.display = "none";
-        location.reload()
+        enableScroll();
     };
 
     window.onclick = function (event) {
         if (event.target == modal1) {
             modal1.style.display = "none";
+            enableScroll();
         }
     };
 });
@@ -145,16 +178,29 @@ document.addEventListener("DOMContentLoaded", function () {
     var span3 = document.getElementById("closeModalBtn3");
 
     btn3.onclick = function () {
+        var targetScrollPosition = modal3.offsetTop;
+        
+        // Scroll the page downward to the modal
+        window.scrollTo(0, targetScrollPosition);
+
         modal3.style.display = "block";
+
+        // Scroll the modal to the center of the viewport
+        modal3.style.top = "50%";
+        modal3.style.left = "50%";
+        modal3.style.transform = "translate(-50%, -50%)";
+        disableScroll();
     };
 
     span3.onclick = function () {
         modal3.style.display = "none";
+        enableScroll();
     };
 
     window.onclick = function (event) {
         if (event.target == modal3) {
             modal3.style.display = "none";
+            enableScroll();
         }
     };
 });
@@ -184,6 +230,12 @@ window.onload = function() {
 function openModal(reportText, reportFileLink, supportingDocumentLink) {
     var modal = document.getElementById('reportModal');
     var reportContent = document.getElementById('reportContent');
+    modal.style.display = 'block';
+
+    modal.style.top = "50%";
+    modal.style.left = "50%";
+    modal.style.transform = "translate(-50%, -50%)";
+    disableScroll();
 
     // Construct the HTML content for the modal
     var modalContent = '<b>Report Text:</b><br>' + reportText + '<br><br>';
@@ -202,7 +254,8 @@ function openModal(reportText, reportFileLink, supportingDocumentLink) {
     reportContent.innerHTML = modalContent;
 
     // Show the modal
-    modal.style.display = 'block';
+    
+
 }
 
 function openModal1(reportText, reportFileLink, supportingDocumentLink) {
@@ -256,6 +309,7 @@ function closeModal() {
 
     // Hide the modal
     modal.style.display = 'none';
+    enableScroll()
 }
 // Add an event listener for the search button in the "Tag Sanction" modal
 document.addEventListener("DOMContentLoaded", function () {
@@ -403,14 +457,6 @@ $(document).ready(function() {
     });
 });
 
-$(document).ready(function() {
-    // When the "Notifications" bar is clicked
-    $("#notifications-bar").click(function() {
-        // Toggle the visibility of the notifications container
-        $("#notifications-container").toggle();
-    });
-});
-
 function confirmStatusChange(reportId) {
     var confirmation = confirm('Are you sure you want to change the status of report ' + reportId + '?');
     return confirmation;
@@ -528,50 +574,29 @@ function toggleInputFields() {
         var tablecontainer = document.getElementById("table-container");
         var tablecontainer1 = document.getElementById("table-container1");
         var tablecontainer2 = document.getElementById("table-container2");
-        var tablecontainer3 = document.getElementById("table-container3");
-        var tablecontainer4 = document.getElementById("table-container4");
+
        
     
-        if (kindSelect.value === "Written Warning") {
+        if (kindSelect.value === "Sanctions") {
             tablecontainer.style.display = "block";
             tablecontainer1.style.display = "none";
             tablecontainer2.style.display = "none";
-            tablecontainer3.style.display = "none";
-            tablecontainer4.style.display = "none";
+
           
         } 
         
-        else if (kindSelect.value === "Written Reprimand"){
+        else if (kindSelect.value === "Complaint"){
             tablecontainer.style.display = "none";
             tablecontainer1.style.display = "block";
             tablecontainer2.style.display = "none";
-            tablecontainer3.style.display = "none";
-            tablecontainer4.style.display = "none";
+  
         }
 
-        else if (kindSelect.value === "Call Slip") {
-            tablecontainer.style.display = "none";
-            tablecontainer1.style.display = "none";
-            tablecontainer2.style.display = "none";
-            tablecontainer3.style.display = "block";
-            tablecontainer4.style.display = "none";
-          
-        } 
-        
-        else if (kindSelect.value === "Notice of Case Dismissal"){
-            tablecontainer.style.display = "none";
-            tablecontainer1.style.display = "none";
-            tablecontainer2.style.display = "none";
-            tablecontainer3.style.display = "none";
-            tablecontainer4.style.display = "block";
-        }
-        
         else {
             tablecontainer.style.display = "none";
             tablecontainer1.style.display = "none";
             tablecontainer2.style.display = "block";
-            tablecontainer3.style.display = "none";
-            tablecontainer4.style.display = "none";
+
          
         }
     }
@@ -908,6 +933,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Close the modal when the close button is clicked
                     autoOpenModal.style.display = "none";
+                  
 
                 // You can also add other actions here when the modal is displayed.
             }
@@ -915,11 +941,13 @@ document.addEventListener("DOMContentLoaded", function () {
                  // Data is found, open the modal
                  var autoOpenModal = document.getElementById("autoOpenModal");
                  autoOpenModal.style.display = "block";
+                 disableScroll()
  
                  // Close the modal when the close button is clicked
                  var closeAutoOpenModalBtn = document.getElementById("closeAutoOpenModalBtn");
                  closeAutoOpenModalBtn.onclick = function () {
                      autoOpenModal.style.display = "none";
+                     enableScroll()
                  };
 
             }
@@ -1168,4 +1196,46 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.style.display = 'none';
     }
 
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Get references to the link and the container
+    const toggleLink = document.getElementById('toggleLink');
+    const container = document.getElementById('notifications-container');
+
+    // Add a click event listener to the link
+    toggleLink.addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent the link from navigating
+
+        // Toggle the visibility of the container
+        if (container.style.display === 'none' || container.style.display === '') {
+            container.style.display = 'block';
+      
+        } else {
+            container.style.display = 'none';
+        }
+    });
+});
+
+function deleteNotification(button, notificationId) {
+    $.ajax({
+        url: '/delete-notification',
+        type: 'POST',
+        data: { id: notificationId },
+        success: function() {
+            // Notification deleted successfully, you can remove it from the UI
+            var notificationElement = button.parentNode.parentNode; // Go up two levels to remove the entire notification
+            notificationElement.parentNode.removeChild(notificationElement);
+        },
+        error: function() {
+            // Handle the error case
+            alert('Failed to delete the notification.');
+        }
+    });
+}
+
+    
+    
+    
+    
+    
     

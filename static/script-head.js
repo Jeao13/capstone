@@ -1,6 +1,316 @@
+function w3_open() {
+    document.getElementById("main").style.marginLeft = "10%";
+    document.getElementById("mySidebar").style.width = "15%";
+    document.getElementById("mySidebar").style.display = "block";
+    document.getElementById("openNav").style.display = 'none';
+  }
+  function w3_close() {
+    document.getElementById("main").style.marginLeft = "0%";
+    document.getElementById("mySidebar").style.display = "none";
+    document.getElementById("openNav").style.display = "inline-block";
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+
+    var ctx = document.getElementById('chart').getContext('2d');
+
+    // Define your data for the pie chart
+    var data = {
+        labels: ['Total Number of Complaints', 'Total Pending of Complaints', 'Total On-Going of Complaints','Total Rejected of Complaints', 'Total Resolved of Complaints'],
+        datasets: [{
+            data: [30, 40, 30,40, 30], // Values for each segment
+            backgroundColor: ['red', 'green', 'blue','yellow', 'orange'], // Colors for each segment
+        }], 
+    };
+
+    // Create the pie chart
+    var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: data,
+    });
+
+    var ctx1 = document.getElementById('chart1').getContext('2d');
+
+    // Define your data for the pie chart
+    var data = {
+        labels: ['Total Number of Complaints', 'Total Pending of Complaints', 'Total On-Going of Complaints','Total Rejected of Complaints', 'Total Resolved of Complaints'],
+        datasets: [{
+            data: [30, 40, 30,40, 30], // Values for each segment
+            backgroundColor: ['red', 'green', 'blue','yellow', 'orange'], // Colors for each segment
+        }], 
+    };
+
+    // Create the pie chart
+    var myPieChart = new Chart(ctx1, {
+        type: 'pie',
+        data: data,
+    });
+
+    const departmentSelect = document.getElementById("department1");
+        const tableBody = document.querySelector("table tbody");
+        const rows = tableBody.querySelectorAll("tr");
+
+        departmentSelect.addEventListener("change", function() {
+            const selectedDepartment = departmentSelect.value;
+
+            // Loop through the table rows and hide/show based on department
+            rows.forEach(function(row) {
+                const departmentColumn = row.querySelector("td:nth-child(4)"); // Adjust the index based on your table structure
+                const department = departmentColumn.textContent.trim();
+
+                if (selectedDepartment === "All" || department === selectedDepartment) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+
+    const searchButton = document.getElementById("searchButton");
+        const searchInput = document.getElementById("searchInput");
+    
+        searchButton.addEventListener("click", function () {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const tableContainer = document.getElementById("table-container");
+            const table = tableContainer.querySelector("table");
+            const tableRows = table.querySelectorAll("tbody tr");
+    
+            tableRows.forEach(function (row) {
+                const rowText = row.textContent.toLowerCase();
+                if (rowText.includes(searchTerm)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+
+        const searchButton1 = document.getElementById("searchButton1");
+        const searchInput1 = document.getElementById("searchInput1");
+    
+        searchButton1.addEventListener("click", function () {
+            const searchTerm = searchInput1.value.toLowerCase().trim();
+            const tableContainer = document.getElementById("cics-table");
+            const table = tableContainer.querySelector("table");
+            const tableRows = table.querySelectorAll("tbody tr");
+    
+            tableRows.forEach(function (row) {
+                const rowText = row.textContent.toLowerCase();
+                if (rowText.includes(searchTerm)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+
+        const searchButton2 = document.getElementById("searchButton2");
+        const searchInput2 = document.getElementById("searchInput2");
+    
+        searchButton2.addEventListener("click", function () {
+            const searchTerm = searchInput2.value.toLowerCase().trim();
+            const tableContainer = document.getElementById("cit-table");
+            const table = tableContainer.querySelector("table");
+            const tableRows = table.querySelectorAll("tbody tr");
+    
+            tableRows.forEach(function (row) {
+                const rowText = row.textContent.toLowerCase();
+                if (rowText.includes(searchTerm)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+
+        const searchButton3 = document.getElementById("searchButton3");
+        const searchInput3= document.getElementById("searchInput3");
+    
+        searchButton3.addEventListener("click", function () {
+            const searchTerm = searchInput3.value.toLowerCase().trim();
+            const tableContainer = document.getElementById("cafad-table");
+            const table = tableContainer.querySelector("table");
+            const tableRows = table.querySelectorAll("tbody tr");
+    
+            tableRows.forEach(function (row) {
+                const rowText = row.textContent.toLowerCase();
+                if (rowText.includes(searchTerm)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+
+        const searchButton4 = document.getElementById("searchButton4");
+        const searchInput4 = document.getElementById("searchInput4");
+    
+        searchButton4.addEventListener("click", function () {
+            const searchTerm = searchInput2.value.toLowerCase().trim();
+            const tableContainer = document.getElementById("coe-table");
+            const table = tableContainer.querySelector("table");
+            const tableRows = table.querySelectorAll("tbody tr");
+    
+            tableRows.forEach(function (row) {
+                const rowText = row.textContent.toLowerCase();
+                if (rowText.includes(searchTerm)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+
+
+
+    var minor_input = document.getElementById("sanctionsInputminor");
+    var major_input = document.getElementById("sanctionsInputmajor");
+
+    document.getElementById("minor").addEventListener("click", function() {
+        document.getElementById("sanctionsInputminor").style.display = "block";
+        minor_input.required = true;
+        document.getElementById("sanctionsInputmajor").style.display = "none";
+        major_input.value="";
+        major_input.required = false;
+    });
+    
+    document.getElementById("major").addEventListener("click", function() {
+        document.getElementById("sanctionsInputmajor").style.display = "block";
+        minor_input.required = false;
+        document.getElementById("sanctionsInputminor").style.display = "none";
+        minor_input.value="";
+        major_input.required = true;
+    });
+
+
+    var minor_input1 = document.getElementById("sanctionsInputminor1");
+    var major_input1 = document.getElementById("sanctionsInputmajor1");
+
+    document.getElementById("minor1").addEventListener("click", function() {
+        document.getElementById("sanctionsInputminor1").style.display = "block";
+        minor_input1.required = true;
+        document.getElementById("sanctionsInputmajor1").style.display = "none";
+        major_input1.value="";
+        major_input1.required = false;
+    });
+    
+    document.getElementById("major1").addEventListener("click", function() {
+        document.getElementById("sanctionsInputmajor1").style.display = "block";
+        minor_input1.required = false;
+        document.getElementById("sanctionsInputminor1").style.display = "none";
+        minor_input1.value="";
+        major_input1.required = true;
+    });
+
+    function toggleContainer(containerId) {
+        
+        document.querySelectorAll('#table-container > div').forEach(function (container) {
+            container.style.display = 'none';
+        });
+
+        // Show the selected container
+        const selectedContainer = document.getElementById(containerId);
+        if (selectedContainer) {
+            selectedContainer.style.display = 'block';
+        }
+    }
+
+    // Add click event listeners to navbar items
+    document.querySelectorAll('.nav-item1').forEach(function (navItem) {
+        navItem.addEventListener('click', function (event) {
+            event.preventDefault();
+            const targetId = navItem.getAttribute('data-target');
+            toggleContainer(targetId);
+            console.log("try")
+        });
+    });
+
+    // Initially show the "Pending" container
+    toggleContainer('pending');
+
+
+    
+});
+
+function openModal1(id2) {
+    const modal = document.getElementById('modalContainer9');
+    modal.style.display = 'block';
+    // Create a new button element
+    const newButton = document.createElement('input');
+    newButton.type = 'hidden';
+    newButton.value = id2;
+    newButton.id = 'id';
+    newButton.name = 'id';
+
+    const form = document.getElementById('statusChangeForm1');
+    form.appendChild(newButton);
+
+    
+
+}
+function closeModal11() {
+    var modal = document.getElementById('modalContainer9');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
+
+
+
+function openModal2(id1) {
+    const modal = document.getElementById('modalContainer');
+    modal.style.display = 'block';
+    // Create a new button element
+    const newButton = document.createElement('input');
+    newButton.type = 'hidden';
+    newButton.value = id1;
+    newButton.id = 'id';
+    newButton.name = 'id';
+
+    const form = document.getElementById('statusChangeForm2');
+    form.appendChild(newButton);
+
+    
+
+}
+function closeModal6() {
+    var modal = document.getElementById('modalContainer');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
+
+function openModal3(id) {
+    const modal = document.getElementById('modalContainer');
+    modal.style.display = 'block';
+    // Create a new button element
+    const newButton = document.createElement('input');
+    newButton.type = 'hidden';
+    newButton.value = id;
+    newButton.id = 'id';
+    newButton.name = 'id';
+
+    const form = document.getElementById('statusChangeForm');
+    form.appendChild(newButton);
+
+    
+
+}
+function closeModal7() {
+    var modal = document.getElementById('modalContainer');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
+
+
+
+
+
 
 
 document.addEventListener('DOMContentLoaded', function () {
+
     const tabLinks = document.querySelectorAll('.sidebar a');
 const tabContents = document.querySelectorAll('.tab-content');
 
@@ -240,7 +550,7 @@ document.addEventListener("DOMContentLoaded", function () {
           var modal2 = $("#myModal2");
           var btn2 = $("#openModalBtn2");
           var span2 = $("#closeModalBtn2");
-          var searchForm = $("#searchForm");
+          var searchForm = $("#searchSrCode");
           var studentName = $("#studentName");
           var studentCourse = $("#studentCourse");
           var studentSanctions = $("#studentSanctions"); // Add this line to reference the element for displaying sanctions
@@ -295,14 +605,20 @@ document.addEventListener("DOMContentLoaded", function () {
                                 
                                         // Format the date in your desired way (adjust the format as needed)
                                         var formattedDate = date.toLocaleString(); // Example format: "Month Day, Year Hour:Minute:Second"
+
+                                        var sanitizedSanctionsId = encodeURIComponent(sanction.sanctions_id);
+
+                                        var previewUrl = "/preview_written_file/" + sanitizedSanctionsId;
                                 
                                         // Create a delete button with a unique ID based on the sanction ID
-                                        var deleteButtonId = "delete-sanction-" + sanction.sanctions_id;
+                                        var deleteButtonId = "delete-button-" + sanction.sanctions_id;
                                         formattedSanctions += '<hr>';
+                                        formattedSanctions += '<button class="delete-button" id="' + deleteButtonId + '">X</button>';
                                         formattedSanctions += '<p><strong>Sanction Id:</strong> ' + sanction.sanctions_id + '</p>';
-                                        formattedSanctions += '<p><strong>Date:</strong> ' + formattedDate + '</p>';
+                                        formattedSanctions += '<p><strong>Date and Time:</strong> ' + formattedDate + '</p>';
                                         formattedSanctions += '<p><strong>Sanction:</strong> ' + sanction.sanction + '</p>';
-                                        formattedSanctions += '<button class="delete-sanction" id="' + deleteButtonId + '">Delete</button>';
+                                        formattedSanctions += '<p><strong>File:</strong> <a href="' + previewUrl + '" target="_blank">' + sanction.written_name + '</a>';
+                                      
                                         formattedSanctions += '<hr>'; // Add a horizontal line to separate sanctions
                                     });
                                 } else {
@@ -316,9 +632,9 @@ document.addEventListener("DOMContentLoaded", function () {
                            
                     
                             // Now, you need to attach a click event to the delete buttons
-                            $(".delete-sanction").click(function () {
+                            $(".delete-button").click(function () {
                                 var buttonId = $(this).attr("id");
-                                var sanctionId = buttonId.replace("delete-sanction-", "");
+                                var sanctionId = buttonId.replace("delete-button-", "");
                                 console.log(sanctionId); // Extract the sanction ID from the button ID
                     
                                 // Make an AJAX request to delete the selected sanction (use the sanctionId)
@@ -331,7 +647,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         // You can choose to remove the entire .sanction div or just hide it
                                         // For example:
                                         $(this).closest(".sanction").remove();
-                                        $("#searchForm").submit();
+                                        $("#searchSrCode").submit();
                                     },
                                     error: function (error) {
                                         console.error("Error deleting sanction:", error);
@@ -553,27 +869,50 @@ function toggleInputFields() {
         }
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const searchForm = document.getElementById("searchForm");
-        const searchInput = document.getElementById("searchInput");
-        const tableRows = document.querySelectorAll("table tbody tr");
+    function toggleInputTables1() {
+        var kindSelect = document.getElementById("departmentx");
+        var tablecontainer = document.getElementById("cics-table");
+        var tablecontainer1 = document.getElementById("cit-table");
+        var tablecontainer2 = document.getElementById("cafad-table");
+        var tablecontainer3 = document.getElementById("coe-table");
     
-        // Add an event listener to the form submit
-        searchForm.addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent the default form submission behavior
-            const searchTerm = searchInput.value.toLowerCase().trim();
+       
     
-            // Loop through the table rows and check if they match the search term
-            tableRows.forEach(function (row) {
-                const rowText = row.textContent.toLowerCase();
-                if (rowText.includes(searchTerm)) {
-                    row.style.display = ""; // Show the row
-                } else {
-                    row.style.display = "none"; // Hide the row
-                }
-            });
-        });
-    });
+        if (kindSelect.value === "CICS") {
+            tablecontainer.style.display = "block";
+            tablecontainer1.style.display = "none";
+            tablecontainer2.style.display = "none";
+            tablecontainer3.style.display = "none";
+   
+          
+        } 
+        
+        else if (kindSelect.value === "CIT"){
+            tablecontainer.style.display = "none";
+            tablecontainer1.style.display = "block";
+            tablecontainer2.style.display = "none";
+            tablecontainer3.style.display = "none";
+    
+        }
+
+        else if (kindSelect.value === "CAFAD") {
+            tablecontainer.style.display = "none";
+            tablecontainer1.style.display = "none";
+            tablecontainer2.style.display = "block";
+            tablecontainer3.style.display = "none";
+  
+          
+        } 
+        
+        
+        else {
+            tablecontainer.style.display = "none";
+            tablecontainer1.style.display = "none";
+            tablecontainer2.style.display = "none";
+            tablecontainer3.style.display = "block";
+         
+        }
+    }
 
 $(document).ready(function() {
     // When the page is loaded, check the initial state of the checkbox
@@ -735,7 +1074,6 @@ function loadModalContent() {
 
 // JavaScript function to make an AJAX request
 function getAlgorithmResult(complaintText) {
-
     // Show the loading screen
     const loadingScreen = document.getElementById("loading-screen");
     loadingScreen.style.display = "block";
@@ -851,25 +1189,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    var minor_input = document.getElementById("minor_input");
-    var major_input = document.getElementById("major_input");
-
-    document.getElementById("minor").addEventListener("click", function() {
-        document.getElementById("minor_input").style.display = "block";
-        minor_input.required = true;
-        document.getElementById("major_input").style.display = "none";
-        major_input.required = false;
-    });
-    
-    document.getElementById("major").addEventListener("click", function() {
-        document.getElementById("major_input").style.display = "block";
-        minor_input.required = false;
-        document.getElementById("minor_input").style.display = "none";
-        major_input.required = true;
-    });
-
-});
 
 document.addEventListener("DOMContentLoaded", function () {
     $.ajax({
@@ -907,25 +1226,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
- function checkStatus() {
-    var select = document.getElementById("new_status_select");
-    var selectedValue = select.options[select.selectedIndex].value;
-    console.log(select)
-
-    if (selectedValue === "Rejected" || selectedValue === "Case Closed") {
-      $('#lop').modal('show');
-    } else {
-      // If a different option is selected, hide the modal
-      $('#lop').modal('hide');
-    }
-  }
-
-  function confirmStatusChange(reportId) {
-    // You can add additional validation or logic here
-    return confirm("Are you sure you want to change the status of report " + reportId + "?");
-  }
-
-  function showRejectModal(id) {
+  function showRejectModal(id,code) {
     const modal = document.getElementById('rejectModal');
     modal.style.display = 'block';
     const newButton = document.createElement('input');
@@ -933,6 +1234,12 @@ document.addEventListener("DOMContentLoaded", function () {
         newButton.value = id;
         newButton.id = 'id';
         newButton.name = 'id';
+
+    const newButton1 = document.createElement('input');
+        newButton1.type = 'hidden';
+        newButton1.value = code;
+        newButton1.id = 'code';
+        newButton1.name = 'code';
 
         const form = document.getElementById('noticeform');
         form.appendChild(newButton);
@@ -944,7 +1251,7 @@ function closeRejectModal() {
     modal.style.display = 'none';
 }
 
-function showCaseModal(id) {
+function showCaseModal(id,code) {
     const modal = document.getElementById('caseModal');
     modal.style.display = 'block';
     const newButton = document.createElement('input');
@@ -952,6 +1259,14 @@ function showCaseModal(id) {
     newButton.value = id;
     newButton.id = 'id';
     newButton.name = 'id';
+
+
+    const newButton1 = document.createElement('input');
+    newButton1.type = 'hidden';
+    newButton1.value = code;
+    newButton1.id = 'code';
+    newButton1.name = 'code';
+
 
     const form = document.getElementById('noticeform1');
     form.appendChild(newButton);
@@ -965,7 +1280,7 @@ function closeCaseModal() {
 }
 
 // JavaScript function to check the selected status
-function checkStatus(id) {
+function checkStatus(id,code) {
     const selectElement = document.getElementById('new_status_select_'+id);
     const selectedValue = selectElement.value;
 
@@ -973,12 +1288,12 @@ function checkStatus(id) {
     console.log(ReportId)
 
     if (selectedValue === 'Rejected') {
-        showRejectModal(id);
+        showRejectModal(id,code);
         return false; // Prevent the form submission
     }
 
     else if (selectedValue === 'Case Closed') {
-        showCaseModal(id);
+        showCaseModal(id,code);
         return false; // Prevent the form submission
     }
 
@@ -1010,9 +1325,25 @@ function toggleInput4() {
         specify2Input.required = true; // Make it required
     } else {
         specify2Input.style.display = "none";
-        specify2Input.required = false; // Not required if neither checkbox is checked
+        specify2Input.required = false;
+        specify2Input.value=""; // Not required if neither checkbox is checked
     }
 }
+
+function toggleInput5() {
+    var prolongedCheckbox1 = document.getElementById("prolonged1");
+    var specify3Input = document.getElementById("specify3");
+
+    if (prolongedCheckbox1.checked) {
+        specify3Input.style.display = "block";
+        specify3Input.required = true; // Make it required
+    } else {
+        specify3Input.style.display = "none";
+        specify3Input.required = false;
+        specify3Input.value=""; // Not required if neither checkbox is checked
+    }
+}
+
 
 function validateCheckboxes() {
     var fieldworkCheckbox = document.getElementById("fieldwork");
@@ -1024,8 +1355,18 @@ function validateCheckboxes() {
     }
 }
 
+function validateCheckboxes1() {
+    var fieldworkCheckbox1 = document.getElementById("fieldwork1");
+    var prolongedCheckbox1 = document.getElementById("prolonged1");
+
+    if (!fieldworkCheckbox1.checked && !prolongedCheckbox1.checked) {
+        alert("Please check at least one checkbox.");
+        return false;
+    }
+}
+
 function coordedit(id) {
-    const modal = document.getElementById('modalContainer');
+    const modal = document.getElementById('modalContainery');
     modal.style.display = 'block';
     // Create a new button element
     const newButton = document.createElement('input');
@@ -1034,14 +1375,39 @@ function coordedit(id) {
     newButton.id = 'id';
     newButton.name = 'id';
 
-    const form = document.getElementById('statusChangeForm');
+    const form = document.getElementById('statusChangeFormy');
     form.appendChild(newButton);
 
     
 
 }
 function closeModal6() {
-    var modal = document.getElementById('modalContainer');
+    var modal = document.getElementById('modalContainery');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
+
+
+function coordedit1(id) {
+    const modal = document.getElementById('modalContainerx');
+    console.log(id)
+    modal.style.display = 'block';
+    // Create a new button element
+    const newButton = document.createElement('input');
+    newButton.type = 'hidden';
+    newButton.value = id;
+    newButton.id = 'id';
+    newButton.name = 'id';
+
+    const form = document.getElementById('statusChangeFormx');
+    form.appendChild(newButton);
+
+    
+
+}
+function closeModal7() {
+    var modal = document.getElementById('modalContainerx');
 
     // Hide the modal
     modal.style.display = 'none';
@@ -1131,7 +1497,7 @@ function toggleReadonly1(button,id) {
 
 function updateRow1(button) {
 
-
+console.log("check");
     var row = button.parentNode.parentNode;
 
     var coordId = row.querySelector("td[data-coord-id]").getAttribute("data-coord-id");
@@ -1170,6 +1536,186 @@ function updateRow1(button) {
 
 }
 
+function toggleReadonly2(button,id) {
+    var row = button.parentNode.parentNode;
+    var inputElements = row.getElementsByTagName("input");
+    var changebutton = document.getElementById("changebutton2_"+id);
+
+    
+    for (var i = 0; i < inputElements.length; i++) {
+        inputElements[i].readOnly = !inputElements[i].readOnly;
+        if (!inputElements[i].readOnly) {
+            inputElements[i].classList.add("editable"); 
+            changebutton.disabled = false;// Add the 'editable' class when the field is editable
+        } else {
+            inputElements[i].classList.remove("editable"); 
+            changebutton.disabled = true;// Remove the 'editable' class when the field is read-only
+        }
+    }
+}
+
+
+function updateRow2(button) {
+
+console.log("check");
+    var row = button.parentNode.parentNode;
+
+    var coordId = row.querySelector("td[data-coord-id]").getAttribute("data-coord-id");
+    var picId = row.querySelector("td[data-pic-id]").getAttribute("data-pic-id");
+    console.log(row)
+    var inputElements = row.getElementsByTagName("input");
+    console.log(inputElements)
+    
+    var data = {};
+    for (var i = 0; i < inputElements.length; i++) {
+        var inputElement = inputElements[i];
+        data[inputElement.name] = inputElement.value;
+      
+    }
+
+    data["coordId"] = coordId;
+    data["picId"] = picId;
+
+    
+   // Send data to the server for database update
+   $.ajax({
+    url: '/update-database2',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(data),
+    success: function() {
+        // Database update successful
+        alert('Database updated successfully.');
+    },
+    error: function() {
+        // Database update failed
+        alert('Database update failed.');
+    }
+});
+
+
+}
+
+function toggleReadonly3(button,id) {
+    var row = button.parentNode.parentNode;
+    var inputElements = row.getElementsByTagName("input");
+    var changebutton = document.getElementById("changebutton3_"+id);
+
+    
+    for (var i = 0; i < inputElements.length; i++) {
+        inputElements[i].readOnly = !inputElements[i].readOnly;
+        if (!inputElements[i].readOnly) {
+            inputElements[i].classList.add("editable"); 
+            changebutton.disabled = false;// Add the 'editable' class when the field is editable
+        } else {
+            inputElements[i].classList.remove("editable"); 
+            changebutton.disabled = true;// Remove the 'editable' class when the field is read-only
+        }
+    }
+}
+
+
+function updateRow3(button) {
+
+console.log("check");
+    var row = button.parentNode.parentNode;
+
+    var coordId = row.querySelector("td[data-coord-id]").getAttribute("data-coord-id");
+    var picId = row.querySelector("td[data-pic-id]").getAttribute("data-pic-id");
+    console.log(row)
+    var inputElements = row.getElementsByTagName("input");
+    console.log(inputElements)
+    
+    var data = {};
+    for (var i = 0; i < inputElements.length; i++) {
+        var inputElement = inputElements[i];
+        data[inputElement.name] = inputElement.value;
+      
+    }
+
+    data["coordId"] = coordId;
+    data["picId"] = picId;
+
+    
+   // Send data to the server for database update
+   $.ajax({
+    url: '/update-database3',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(data),
+    success: function() {
+        // Database update successful
+        alert('Database updated successfully.');
+    },
+    error: function() {
+        // Database update failed
+        alert('Database update failed.');
+    }
+});
+
+
+}
+
+function toggleReadonly4(button,id) {
+    var row = button.parentNode.parentNode;
+    var inputElements = row.getElementsByTagName("input");
+    var changebutton = document.getElementById("changebutton4_"+id);
+
+    
+    for (var i = 0; i < inputElements.length; i++) {
+        inputElements[i].readOnly = !inputElements[i].readOnly;
+        if (!inputElements[i].readOnly) {
+            inputElements[i].classList.add("editable"); 
+            changebutton.disabled = false;// Add the 'editable' class when the field is editable
+        } else {
+            inputElements[i].classList.remove("editable"); 
+            changebutton.disabled = true;// Remove the 'editable' class when the field is read-only
+        }
+    }
+}
+
+
+function updateRow4(button) {
+
+console.log("check");
+    var row = button.parentNode.parentNode;
+
+    var coordId = row.querySelector("td[data-coord-id]").getAttribute("data-coord-id");
+    var picId = row.querySelector("td[data-pic-id]").getAttribute("data-pic-id");
+    console.log(row)
+    var inputElements = row.getElementsByTagName("input");
+    console.log(inputElements)
+    
+    var data = {};
+    for (var i = 0; i < inputElements.length; i++) {
+        var inputElement = inputElements[i];
+        data[inputElement.name] = inputElement.value;
+      
+    }
+
+    data["coordId"] = coordId;
+    data["picId"] = picId;
+
+    
+   // Send data to the server for database update
+   $.ajax({
+    url: '/update-database4',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(data),
+    success: function() {
+        // Database update successful
+        alert('Database updated successfully.');
+    },
+    error: function() {
+        // Database update failed
+        alert('Database update failed.');
+    }
+});
+
+
+}
+
 
 function sortTable() {
     var table = document.getElementById("coordinator-table");
@@ -1192,4 +1738,69 @@ function sortTable() {
 
 // Call the sortTable function to initially sort the table
 sortTable();
+
+function openModal5(reportText, reportFileLink, supportingDocumentLink) {
+    var modal = document.getElementById('reportModal5');
+    var reportContent = document.getElementById('reportContent5');
+
+    // Construct the HTML content for the modal
+    var modalContent = '<b>Reason of Rejection:</b><br>' + reportText + '<br><br>';
+
+    if (reportFileLink) {
+        modalContent += '<b>Attached Report File:</b><br>';
+        modalContent += '<a href="' + reportFileLink + '" target="_blank">Download Report File</a><br>';
+    }
+
+    if (supportingDocumentLink) {
+        modalContent += '<b>Attached Supporting Document:</b><br>';
+        modalContent += '<a href="' + supportingDocumentLink + '" target="_blank">Download Supporting Document</a>';
+    }
+
+    // Set the modal content
+    reportContent.innerHTML = modalContent;
+
+    // Show the modal
+    modal.style.display = 'block';
+}
+
+// JavaScript function to close the modal
+function closeModal5() {
+    var modal = document.getElementById('reportModal5');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
+
+function openModal(reportText, reportFileLink, supportingDocumentLink) {
+    var modal = document.getElementById('reportModal');
+    var reportContent = document.getElementById('reportContent');
+
+    // Construct the HTML content for the modal
+    var modalContent = '<b>Report Text:</b><br>' + reportText + '<br><br>';
+
+    if (reportFileLink) {
+        modalContent += '<b>Attached Report File:</b><br>';
+        modalContent += '<a href="' + reportFileLink + '" target="_blank">Download Report File</a><br>';
+    }
+
+    if (supportingDocumentLink) {
+        modalContent += '<b>Attached Supporting Document:</b><br>';
+        modalContent += '<a href="' + supportingDocumentLink + '" target="_blank">Download Supporting Document</a>';
+    }
+
+    // Set the modal content
+    reportContent.innerHTML = modalContent;
+
+    // Show the modal
+    modal.style.display = 'block';
+}
+
+// JavaScript function to close the modal
+function closeModal() {
+    var modal = document.getElementById('reportModal');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
+
 

@@ -1,12 +1,11 @@
 .sidebar {
     height: 500px;
     width: 150px;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     background-color: #e2e2e2;
     margin-top: 170px;
-    margin-left:20px;
     padding: 20px;/* Initially hide the sidebar */
     text-decoration: none;
 }
@@ -59,6 +58,7 @@
     color: #000000;
 }
 
+
 .sidebar ul {
     list-style: none;
     padding: 0;
@@ -71,12 +71,14 @@
 /* Define the content styles */
 .content {
     margin-top: 40px;
-    margin-left: 260px; /* Adjust for the sidebar width */
+    margin-left: 150px; /* Adjust for the sidebar width */
     padding: 20px;
     position: relative;
     width: 82%;
     background-color: #e2e2e2;
     height: 70vh;
+    overflow: auto;
+    
 }
 
 /* Style links in the sidebar */
@@ -92,6 +94,7 @@
 
 .tab-content {
     display: none;
+    background-color: #e2e2e2;
 }
 
 .tab-content.active {
@@ -602,4 +605,27 @@ transform: translate(-50%, -50%);
   padding-top:20px;
   padding-bottom:20px;
   width: 60%;
+}
+
+
+.delete-button {
+  position: absolute;
+  right: 200px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+
+}
+
+.chart-container-wrapper {
+  display: flex;
+  justify-content: space-between; /* Or 'space-around' for some space around the charts */
+  align-items: center; /* Vertically center align the charts */
+  width: 50%;
+}
+
+.chart-container {
+  flex: 0 0 20vw; /* Set the desired width, e.g., 20vw */
+  text-align: center; /* Center align the content */
+  margin-left: 20%;
 }
