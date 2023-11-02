@@ -45,12 +45,21 @@ nsmap = {
     'm': 'http://schemas.openxmlformats.org/officeDocument/2006/math',
 }
 
-db_connection = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="",
-    database="capstoneproject"
-)
+
+db_config = {
+    'host': 'bpqsxicgc77tgxxe5sia-mysql.services.clever-cloud.com',
+    'user': 'uxtiwfla65brtbf1',
+    'password': 'ZvvUudkkFmfmmmxLqv2',
+    'database': 'bpqsxicgc77tgxxe5sia',
+    'port': 21099
+}
+
+# Create a connection to the database
+try:
+    db_connection = mysql.connector.connect(**db_config)
+    print("Connected to the database")
+except mysql.connector.Error as err:
+    print(f"Error: {err}")
 
 
 
