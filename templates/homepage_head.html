@@ -57,17 +57,54 @@
       
         <div id="tab1" class="tab-content active">
             <h1>Dashboard</h1>
+            {% if user_source == 'accounts_coordinator' %}
             <div class="chart-container-wrapper">
                 <div class="chart-container">
                     <h2>Chart 1</h2>
                     <canvas id="chart"></canvas>
                 </div>
-        
+
                 <div class="chart-container">
                     <h2>Chart 2</h2>
                     <canvas id="chart1"></canvas>
                 </div>
             </div>
+            {% endif %}
+            {% if user_source == 'accounts_head' %}
+
+             <div class="chart-container-wrapper">
+                <div class="chart-container">
+                    <h2>Chart 1</h2>
+                    <canvas id="chart2"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h2>Chart 2</h2>
+                    <canvas id="chart3"></canvas>
+                </div>
+            </div>
+
+           
+            <button type="button" id="searchButton" onclick="openModal6()" style="float:right;">Generate Report</button>
+          
+            {% endif %}
+
+            <div class="modal" id="reportModal6">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal12()">&times;</span>
+                    <form id="noticeform" action="/generate_report" method="POST" enctype="multipart/form-data">
+                    <h3>From</h3>
+                    <input type="date" id="form" name="form" required><br><br>
+                    <h3>To</h3>
+                    <input type="date" id="to" name="to" required><br><br>
+                    <button type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+   
+
+           
+
         </div>
         <div id="tab2" class="tab-content"><h1>Complaints</h1>
 
@@ -76,7 +113,7 @@
                 <button type="button" id="searchButton">Search</button>
             </form>
         
-            <form method="POST" action="{{ url_for('delete_all_report2')}}"
+            <form method="POST" action="{{ url_for('delete_all_report2') }}"
                                       onsubmit="return confirm('Are you sure you want to delete all this report?');">
                                     <button type="submit">Delete All Report</button>
                                 </form>

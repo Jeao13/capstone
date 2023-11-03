@@ -12,45 +12,13 @@ function w3_open() {
 
   document.addEventListener('DOMContentLoaded', function () {
 
-    var ctx = document.getElementById('chart').getContext('2d');
-
-    // Define your data for the pie chart
-    var data = {
-        labels: ['Total Number of Complaints', 'Total Pending of Complaints', 'Total On-Going of Complaints','Total Rejected of Complaints', 'Total Resolved of Complaints'],
-        datasets: [{
-            data: [30, 40, 30,40, 30], // Values for each segment
-            backgroundColor: ['red', 'green', 'blue','yellow', 'orange'], // Colors for each segment
-        }], 
-    };
-
-    // Create the pie chart
-    var myPieChart = new Chart(ctx, {
-        type: 'pie',
-        data: data,
-    });
-
-    var ctx1 = document.getElementById('chart1').getContext('2d');
-
-    // Define your data for the pie chart
-    var data = {
-        labels: ['Total Number of Complaints', 'Total Pending of Complaints', 'Total On-Going of Complaints','Total Rejected of Complaints', 'Total Resolved of Complaints'],
-        datasets: [{
-            data: [30, 40, 30,40, 30], // Values for each segment
-            backgroundColor: ['red', 'green', 'blue','yellow', 'orange'], // Colors for each segment
-        }], 
-    };
-
-    // Create the pie chart
-    var myPieChart = new Chart(ctx1, {
-        type: 'pie',
-        data: data,
-    });
 
     const departmentSelect = document.getElementById("department1");
         const tableBody = document.querySelector("table tbody");
         const rows = tableBody.querySelectorAll("tr");
 
         departmentSelect.addEventListener("change", function() {
+            console.log("wow")
             const selectedDepartment = departmentSelect.value;
 
             // Loop through the table rows and hide/show based on department
@@ -229,6 +197,143 @@ function w3_open() {
     toggleContainer('pending');
 
 
+        var ctx2 = document.getElementById('chart2').getContext('2d');
+        
+            $.ajax({
+                type: "POST",
+                url: "/count1",
+                success: function (data) {
+        
+                    console.log(data.Reports)
+                    // Create the data for the pie chart based on the response
+                    var chartData = {
+                        labels: ['Total Number of Complaints', 'Total Pending of Complaints', 'Total On-Going of Complaints','Total Rejected of Complaints', 'Total Resolved of Complaints'],
+                        datasets: [
+                            {
+                                data: [data.Reports, data.Pending, data.Ongoing, data.Rejected, data.CaseClosed], // Values for each segment
+                                backgroundColor: ["#FF5733", "#33FF57","#FF5733", "#33FF57", "#33FF57"], // Colors for each segment
+                            },
+                        ],  
+                    };
+        
+                    // Create the pie chart
+                    var myPieChart = new Chart(ctx2, {
+                        type: "pie",
+                        data: chartData,
+                    });
+                },
+                error: function (error) {
+                    console.error("Error fetching student data:", error);
+                }
+            });
+      
+        
+           // Add a delay of 2 seconds (2000 milliseconds) before running the next section
+        setTimeout(function() {
+            // Second section of code
+            var ctx3 = document.getElementById('chart3').getContext('2d');
+        
+            $.ajax({
+                type: "POST",
+                url: "/countrequest1",
+                success: function (data) {
+                    console.log(data.Reports)
+                    // Create the data for the pie chart based on the response
+                    var chartData = {
+                        labels: ['Total Number of Request', 'Total Pending of Request', 'Total On-Going of Request','Total Rejected of Request', 'Total Resolved of Request'],
+                        datasets: [
+                            {
+                                data: [data.Reports, data.Pending, data.Ongoing, data.Rejected, data.CaseClosed],
+                                backgroundColor: ["#FF5733", "#33FF57","#FF5733", "#33FF57", "#33FF57"],
+                            },
+                        ],
+                    };
+        
+                    // Create the pie chart
+                    var myPieChart = new Chart(ctx3, {
+                        type: "pie",
+                        data: chartData,
+                    });
+                },
+                error: function (error) {
+                    console.error("Error fetching student data:", error);
+                }
+            });
+        }, 500);
+
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+
+    var ctx = document.getElementById('chart').getContext('2d');
+
+    $.ajax({
+        type: "POST",
+        url: "/count",
+        success: function (data) {
+
+            console.log(data.Reports)
+            // Create the data for the pie chart based on the response
+            var chartData = {
+                labels: ['Total Number of Complaints', 'Total Pending of Complaints', 'Total On-Going of Complaints','Total Rejected of Complaints', 'Total Resolved of Complaints'],
+                datasets: [
+                    {
+                        data: [data.Reports, data.Pending, data.Ongoing, data.Rejected, data.CaseClosed], // Values for each segment
+                        backgroundColor: ["#FF5733", "#33FF57","#FF5733", "#33FF57", "#33FF57"], // Colors for each segment
+                    },
+                ],  
+            };
+
+            // Create the pie chart
+            var myPieChart = new Chart(ctx, {
+                type: "pie",
+                data: chartData,
+            });
+        },
+        error: function (error) {
+            console.error("Error fetching student data:", error);
+        }
+    });
+
+   // Add a delay of 2 seconds (2000 milliseconds) before running the next section
+setTimeout(function() {
+    // Second section of code
+    var ctx1 = document.getElementById('chart1').getContext('2d');
+
+    $.ajax({
+        type: "POST",
+        url: "/countrequest",
+        success: function (data) {
+            console.log(data.Reports)
+            // Create the data for the pie chart based on the response
+            var chartData = {
+                labels: ['Total Number of Request', 'Total Pending of Request', 'Total On-Going of Request','Total Rejected of Request', 'Total Resolved of Request'],
+                datasets: [
+                    {
+                        data: [data.Reports, data.Pending, data.Ongoing, data.Rejected, data.CaseClosed],
+                        backgroundColor: ["#FF5733", "#33FF57","#FF5733", "#33FF57", "#33FF57"],
+                    },
+                ],
+            };
+
+            // Create the pie chart
+            var myPieChart = new Chart(ctx1, {
+                type: "pie",
+                data: chartData,
+            });
+        },
+        error: function (error) {
+            console.error("Error fetching student data:", error);
+        }
+    });
+}, 500);
+
+
+
+    
+
+    
+
     
 });
 
@@ -250,6 +355,29 @@ function openModal1(id2) {
 }
 function closeModal11() {
     var modal = document.getElementById('modalContainer9');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
+
+function openModal6() {
+    const modal = document.getElementById('reportModal6');
+    modal.style.display = 'block';
+    // Create a new button element
+    const newButton = document.createElement('input');
+    newButton.type = 'hidden';
+    newButton.value = id2;
+    newButton.id = 'id';
+    newButton.name = 'id';
+
+    const form = document.getElementById('statusChangeForm1');
+    form.appendChild(newButton);
+
+    
+
+}
+function closeModal12() {
+    var modal = document.getElementById('reportModal6');
 
     // Hide the modal
     modal.style.display = 'none';

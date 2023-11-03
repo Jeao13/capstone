@@ -47,11 +47,10 @@ nsmap = {
 
 
 db_config = {
-    'host': 'bpqsxicgc77tgxxe5sia-mysql.services.clever-cloud.com',
-    'user': 'uxtiwfla65brtbf1',
-    'password': 'ZvvUudkkFmfmmmxLqv2',
-    'database': 'bpqsxicgc77tgxxe5sia',
-    'port': 21099
+    'host': 'localhost',
+    'user': 'root',
+    'password': '',
+    'database': 'capstoneproject',
 }
 
 # Create a connection to the database
@@ -441,6 +440,325 @@ def submit_notice():
             
     flash('The report is submitted', 'success')
     return redirect('/head')
+
+
+
+
+
+
+@app.route('/generate_report', methods=['GET', 'POST'])
+def generate_report():
+  
+    form = request.form.get('form')
+    to = request.form.get('to')
+
+    print(form)
+    print(to)
+  
+    current_datetime = datetime.now()
+    random_code = generate_random_code()
+    current_date = current_datetime.date()
+    formatted_date = current_date.strftime("/%m/%d/%Y")
+    current_time = datetime.now()
+
+
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s;", (form, to))
+    result = db_cursor.fetchone()
+    db_cursor.close
+
+    db_cursor9 = db_connection.cursor()
+    db_cursor9.execute("SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s;",(form,to))
+    result9 = db_cursor9.fetchone()
+    db_cursor9.close
+
+    db_cursor1 = db_connection.cursor()
+    db_cursor1.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form,to,"Pending",))
+    result1 = db_cursor1.fetchone()
+    db_cursor1.close
+
+    db_cursor2 = db_connection.cursor()
+    db_cursor2.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form,to,"Ongoing",))
+    result2 = db_cursor2.fetchone()
+    db_cursor2.close
+
+    db_cursor3 = db_connection.cursor()
+    db_cursor3.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form,to,"Rejected",))
+    result3 = db_cursor3.fetchone()
+    db_cursor3.close
+
+    db_cursor4 = db_connection.cursor()
+    db_cursor4.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form,to,"Case Closed",))
+    result4 = db_cursor4.fetchone()
+    db_cursor4.close
+
+    db_cursor5 = db_connection.cursor()
+    db_cursor5.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form,to,"COE",))
+    result5 = db_cursor5.fetchone()
+    db_cursor5.close
+
+    db_cursor6 = db_connection.cursor()
+    db_cursor6.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form,to,"CICS",))
+    result6 = db_cursor6.fetchone()
+    db_cursor6.close
+
+    db_cursor7 = db_connection.cursor()
+    db_cursor7.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form,to,"CAFAD",))
+    result7 = db_cursor7.fetchone()
+    db_cursor7.close
+
+    db_cursor8 = db_connection.cursor()
+    db_cursor8.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form,to,"CIT",))
+    result8 = db_cursor8.fetchone()
+    db_cursor8.close
+
+    db_cursor10 = db_connection.cursor()
+    db_cursor10.execute("SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form,to,"COE",))
+    result10 = db_cursor10.fetchone()
+    db_cursor10.close
+
+    db_cursor11 = db_connection.cursor()
+    db_cursor11.execute("SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form,to,"CICS",))
+    result11 = db_cursor11.fetchone()
+    db_cursor11.close
+
+    db_cursor12 = db_connection.cursor()
+    db_cursor12.execute("SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form,to,"CAFAD",))
+    result12 = db_cursor12.fetchone()
+    db_cursor12.close
+
+    db_cursor13 = db_connection.cursor()
+    db_cursor13.execute("SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form,to,"CIT",))
+    result13 = db_cursor13.fetchone()
+    db_cursor13.close
+
+    db_cursor14 = db_connection.cursor()
+    db_cursor14.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"COE","Rejected"))
+    result14 = db_cursor14.fetchone()
+    db_cursor14.close
+
+    db_cursor15 = db_connection.cursor()
+    db_cursor15.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"COE","Case Closed"))
+    result15 = db_cursor15.fetchone()
+    db_cursor15.close
+
+    db_cursor16 = db_connection.cursor()
+    db_cursor16.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"CICS","Rejected"))
+    result16 = db_cursor16.fetchone()
+    db_cursor16.close
+
+    db_cursor17 = db_connection.cursor()
+    db_cursor17.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"CICS","Case Closed"))
+    result17 = db_cursor17.fetchone()
+    db_cursor17.close
+
+    db_cursor18 = db_connection.cursor()
+    db_cursor18.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"CAFAD","Rejected"))
+    result18 = db_cursor18.fetchone()
+    db_cursor18.close
+
+    db_cursor19 = db_connection.cursor()
+    db_cursor19.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"CAFAD","Case Closed"))
+    result19 = db_cursor19.fetchone()
+    db_cursor19.close
+
+    db_cursor20 = db_connection.cursor()
+    db_cursor20.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"CIT","Rejected"))
+    result20 = db_cursor20.fetchone()
+    db_cursor20.close
+
+    db_cursor21 = db_connection.cursor()
+    db_cursor21.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"CIT","Case Closed"))
+    result21 = db_cursor21.fetchone()
+    db_cursor21.close
+
+    db_cursor22 = db_connection.cursor()
+    db_cursor22.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form,to,"Rejected",))
+    result22 = db_cursor22.fetchone()
+    db_cursor22.close
+
+    db_cursor23 = db_connection.cursor()
+    db_cursor23.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form,to,"Case Closed",))
+    result23 = db_cursor23.fetchone()
+    db_cursor23.close
+
+    db_cursor24 = db_connection.cursor()
+    db_cursor24.execute("SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"COE","Rejected"))
+    result24 = db_cursor24.fetchone()
+    db_cursor24.close
+
+    db_cursor25 = db_connection.cursor()
+    db_cursor25.execute("SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"COE","Approved"))
+    result25 = db_cursor25.fetchone()
+    db_cursor25.close
+
+    db_cursor26 = db_connection.cursor()
+    db_cursor26.execute("SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"CICS","Rejected"))
+    result26 = db_cursor26.fetchone()
+    db_cursor26.close
+
+    db_cursor27 = db_connection.cursor()
+    db_cursor27.execute("SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"CICS","Approved"))
+    result27 = db_cursor27.fetchone()
+    db_cursor27.close
+
+    db_cursor28 = db_connection.cursor()
+    db_cursor28.execute("SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"CAFAD","Rejected"))
+    result28 = db_cursor28.fetchone()
+    db_cursor28.close
+
+    db_cursor29 = db_connection.cursor()
+    db_cursor29.execute("SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"CAFAD","Approved"))
+    result29 = db_cursor29.fetchone()
+    db_cursor29.close
+
+    db_cursor30 = db_connection.cursor()
+    db_cursor30.execute("SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"CIT","Rejected"))
+    result30 = db_cursor30.fetchone()
+    db_cursor30.close
+
+    db_cursor31 = db_connection.cursor()
+    db_cursor31.execute("SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form,to,"CIT","Approved"))
+    result31 = db_cursor31.fetchone()
+    db_cursor31.close
+
+    db_cursor32 = db_connection.cursor()
+    db_cursor32.execute("SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form,to,"Rejected"))
+    result32 = db_cursor32.fetchone()
+    db_cursor32.close
+
+    db_cursor33 = db_connection.cursor()
+    db_cursor33.execute("SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form,to,"Approved"))
+    result33 = db_cursor33.fetchone()
+    db_cursor33.close
+
+
+
+    countreports = str(result[0])
+    countpending = str(result1[0])
+    countongoing = str(result2[0])
+    countrejected = str(result3[0])
+    countcaseclosed = str(result4[0])
+    count1 = str(result5[0])
+    count2 = str(result6[0])
+    count3 = str(result7[0])
+    count4 = str(result8[0])
+    countrequest = str(result9[0])
+    request1 = str(result10[0])
+    request2 = str(result11[0])
+    request3 = str(result12[0])
+    request4 = str(result13[0])
+    reject1 = str(result14[0])
+    reject2 = str(result16[0])
+    reject3 = str(result18[0])
+    reject4 = str(result19[0])
+    closed1 = str(result15[0])
+    closed2 = str(result17[0])
+    closed3 = str(result19[0])
+    closed4 = str(result21[0])
+    totalreject = str(result22[0])
+    totalcaseclosed = str(result23[0])
+    creject1 = str(result24[0])
+    creject2 = str(result26[0])
+    creject3 = str(result28[0])
+    creject4 = str(result30[0])
+    cclosed1 = str(result25[0])
+    cclosed2 = str(result27[0])
+    cclosed3 = str(result29[0])
+    cclosed4 = str(result31[0])
+    ctotalreject = str(result32[0])
+    ctotalcaseclosed = str(result33[0])
+   
+
+
+   
+
+    pdf_filename = 'reports.docx'
+    doc = Document(pdf_filename)
+
+
+    replace_placeholder(doc,"(date)", form)
+    replace_placeholder(doc,"(date1)", to)
+    replace_table_cell_placeholder1(doc.tables[0], 1, 1, count1,"coe")
+    replace_table_cell_placeholder1(doc.tables[0], 2, 1, count2,"CICS")
+    replace_table_cell_placeholder1(doc.tables[0], 3, 1, count3,"cafad")
+    replace_table_cell_placeholder1(doc.tables[0], 4, 1, count4,"cit")
+    replace_table_cell_placeholder1(doc.tables[0], 5, 1, countreports,"total")
+    replace_table_cell_placeholder1(doc.tables[0], 1, 2, request1, "(coe1)")
+    replace_table_cell_placeholder1(doc.tables[0], 2, 2, request2, "(cics1)")
+    replace_table_cell_placeholder1(doc.tables[0], 3, 2, request3, "(cafad1)")
+    replace_table_cell_placeholder1(doc.tables[0], 4, 2, request4, "(cit1)")
+    replace_table_cell_placeholder1(doc.tables[0], 5, 2, countrequest, "(total1)")
+
+
+    replace_table_cell_placeholder1(doc.tables[1], 1, 1, count1,"(coe2)")
+    replace_table_cell_placeholder1(doc.tables[1], 2, 1, count2,"CICS")
+    replace_table_cell_placeholder1(doc.tables[1], 3, 1, count3,"CAFAD")
+    replace_table_cell_placeholder1(doc.tables[1], 4, 1, count4,"CIT")
+    replace_table_cell_placeholder1(doc.tables[1], 5, 1, countreports,"(total)")
+    replace_table_cell_placeholder1(doc.tables[1], 1, 2, reject1,"(coe2)")
+    replace_table_cell_placeholder1(doc.tables[1], 2, 2, reject2,"CICS")
+    replace_table_cell_placeholder1(doc.tables[1], 3, 2, reject3,"CAFAD")
+    replace_table_cell_placeholder1(doc.tables[1], 4, 2, reject4,"CIT")
+    replace_table_cell_placeholder1(doc.tables[1], 5, 2, totalreject,"(total)")
+    replace_table_cell_placeholder1(doc.tables[1], 1, 3, closed1,"(coe2)")
+    replace_table_cell_placeholder1(doc.tables[1], 2, 3, closed2,"CICS")
+    replace_table_cell_placeholder1(doc.tables[1], 3, 3, closed3,"CAFAD")
+    replace_table_cell_placeholder1(doc.tables[1], 4, 3, closed4,"CIT")
+    replace_table_cell_placeholder1(doc.tables[1], 5, 3, totalcaseclosed,"(total)")
+
+    replace_table_cell_placeholder1(doc.tables[2], 1, 1, request1,"(coe2)")
+    replace_table_cell_placeholder1(doc.tables[2], 2, 1, request2,"CICS")
+    replace_table_cell_placeholder1(doc.tables[2], 3, 1, request3,"CAFAD")
+    replace_table_cell_placeholder1(doc.tables[2], 4, 1, request4,"CIT")
+    replace_table_cell_placeholder1(doc.tables[2], 5, 1, countrequest,"(total)")
+    replace_table_cell_placeholder1(doc.tables[2], 1, 2, creject1,"(coe2)")
+    replace_table_cell_placeholder1(doc.tables[2], 2, 2, creject2,"CICS")
+    replace_table_cell_placeholder1(doc.tables[2], 3, 2, creject3,"CAFAD")
+    replace_table_cell_placeholder1(doc.tables[2], 4, 2, creject4,"CIT")
+    replace_table_cell_placeholder1(doc.tables[2], 5, 2, ctotalreject,"(total)")
+    replace_table_cell_placeholder1(doc.tables[2], 1, 3, cclosed1,"(coe2)")
+    replace_table_cell_placeholder1(doc.tables[2], 2, 3, cclosed2,"CICS")
+    replace_table_cell_placeholder1(doc.tables[2], 3, 3, cclosed3,"CAFAD")
+    replace_table_cell_placeholder1(doc.tables[2], 4, 3, cclosed4,"CIT")
+    replace_table_cell_placeholder1(doc.tables[2], 5, 3, ctotalcaseclosed,"(total)")
+
+
+
+
+    doc.save("modified_document.docx")
+            # Check the operating system
+    convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
+
+    source_docx = 'modified_document.docx'
+
+
+    # Use upload IO wrapper to upload file only once to the API
+    upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
+
+    saved_files = convertapi.convert('pdf', { 'File': upload_io }).save_files('modified_document.pdf')
+
+    print("The PDF saved to %s" % saved_files)
+
+
+    pdfpath = os.path.join('modified_document.pdf')
+    convertapi.convert('encrypt', {'File': pdfpath,'UserPassword': random_code,'OwnerPassword': 'hornbill'}, from_format = 'pdf').save_files('modified_document.pdf')
+
+    file_name = f'{random_code}_Reports.pdf'
+    with open(pdfpath, "rb") as pdf_file:
+        pdf_data = pdf_file.read()
+
+
+    response = Response(pdf_data, content_type='application/pdf')
+    response.headers['Content-Disposition'] = f'attachment; filename="{file_name}"'
+
+    flash('The report is submitted', 'success')
+
+    return response
+
+
+
+ 
 
 
 
@@ -2594,6 +2912,7 @@ def homepage_head():
         profile_picture_data, name, course = result_user_data
         year=""
         session['namestudent'] = name
+        session['courseall'] = course
         print(name)
 
     else:
@@ -3104,16 +3423,190 @@ def count():
     db_cursor = db_connection.cursor()
     db_cursor.execute("SELECT COUNT(*) FROM reports WHERE course = %s", (username,))
     result = db_cursor.fetchone()
+    db_cursor.close
+
+    db_cursor1 = db_connection.cursor()
+    db_cursor1.execute("SELECT COUNT(*) FROM reports WHERE course = %s AND status = %s", (username,"Pending",))
+    result1 = db_cursor1.fetchone()
+    db_cursor1.close
+
+    db_cursor2 = db_connection.cursor()
+    db_cursor2.execute("SELECT COUNT(*) FROM reports WHERE course = %s AND status = %s", (username,"Ongoing"))
+    result2 = db_cursor2.fetchone()
+    db_cursor2.close
+
+    db_cursor3 = db_connection.cursor()
+    db_cursor3.execute("SELECT COUNT(*) FROM reports WHERE course = %s AND status = %s", (username,"Rejected"))
+    result3 = db_cursor3.fetchone()
+    db_cursor3.close
+
+    db_cursor4 = db_connection.cursor()
+    db_cursor4.execute("SELECT COUNT(*) FROM reports WHERE course = %s AND status = %s", (username,"Case Closed"))
+    result4 = db_cursor4.fetchone()
+    db_cursor4.close
+
+
+    
 
     countreports = result[0]
-    countrequest = result1[0]
+    countpending = result1[0]
+    countongoing = result2[0]
+    countrejected = result3[0]
+    countcaseclosed = result4[0]
+
+
+    print(countreports)
+ 
+
+    # Return the result as JSON
+    student_data = {'Reports': countreports, 'Pending': countpending,'Ongoing': countongoing,'Rejected': countrejected, 'Caseclosed':countcaseclosed}
+    return jsonify(student_data)
+
+
+@app.route('/countrequest', methods=['POST'])
+def countrequest():
+    
+
+    username = session.get('courseall','')
+
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT COUNT(*) FROM forms_osd WHERE course = %s", (username,))
+    result = db_cursor.fetchone()
+    db_cursor.close
+
+    db_cursor1 = db_connection.cursor()
+    db_cursor1.execute("SELECT COUNT(*) FROM forms_osd WHERE course = %s AND status = %s", (username,"Pending",))
+    result1 = db_cursor1.fetchone()
+    db_cursor1.close
+
+    db_cursor2 = db_connection.cursor()
+    db_cursor2.execute("SELECT COUNT(*) FROM forms_osd WHERE course = %s AND status = %s", (username,"Ongoing"))
+    result2 = db_cursor2.fetchone()
+    db_cursor2.close
+
+    db_cursor3 = db_connection.cursor()
+    db_cursor3.execute("SELECT COUNT(*) FROM forms_osd WHERE course = %s AND status = %s", (username,"Rejected"))
+    result3 = db_cursor3.fetchone()
+    db_cursor3.close
+
+    db_cursor4 = db_connection.cursor()
+    db_cursor4.execute("SELECT COUNT(*) FROM forms_osd WHERE course = %s AND status = %s", (username,"Rejected"))
+    result4 = db_cursor4.fetchone()
+    db_cursor4.close
+
+
+    
+
+    countreports = result[0]
+    countpending = result1[0]
+    countongoing = result2[0]
+    countrejected = result3[0]
+    countcaseclosed = result4[0]
+
 
     print(countreports)
 
     # Return the result as JSON
-    student_data = {'Reports': countreports, 'Request': countrequest}
+    student_data = {'Reports': countreports, 'Pending': countpending,'Ongoing': countongoing,'Rejected': countrejected,'Caseclosed':countcaseclosed}
     return jsonify(student_data)
 
+
+@app.route('/count1', methods=['POST'])
+def count1():
+    
+
+
+   
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT COUNT(*) FROM reports")
+    result = db_cursor.fetchone()
+    db_cursor.close
+
+    db_cursor1 = db_connection.cursor()
+    db_cursor1.execute("SELECT COUNT(*) FROM reports WHERE status = %s", ("Pending",))
+    result1 = db_cursor1.fetchone()
+    db_cursor1.close
+
+    db_cursor2 = db_connection.cursor()
+    db_cursor2.execute("SELECT COUNT(*) FROM reports WHERE status = %s", ("Ongoing",))
+    result2 = db_cursor2.fetchone()
+    db_cursor2.close
+
+    db_cursor3 = db_connection.cursor()
+    db_cursor3.execute("SELECT COUNT(*) FROM reports WHERE status = %s", ("Rejected",))
+    result3 = db_cursor3.fetchone()
+    db_cursor3.close
+
+    db_cursor4 = db_connection.cursor()
+    db_cursor4.execute("SELECT COUNT(*) FROM reports WHERE status = %s", ("Case Closed",))
+    result4 = db_cursor4.fetchone()
+    db_cursor4.close
+
+
+
+
+    
+
+    countreports = result[0]
+    countpending = result1[0]
+    countongoing = result2[0]
+    countrejected = result3[0]
+    countcaseclosed = result4[0]
+
+
+    print(countreports)
+ 
+
+    # Return the result as JSON
+    student_data = {'Reports': countreports, 'Pending': countpending,'Ongoing': countongoing,'Rejected': countrejected, 'Caseclosed':countcaseclosed}
+    return jsonify(student_data)
+
+
+@app.route('/countrequest1', methods=['POST'])
+def countrequest1():
+    
+
+
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("SELECT COUNT(*) FROM forms_osd")
+    result = db_cursor.fetchone()
+    db_cursor.close
+
+    db_cursor1 = db_connection.cursor()
+    db_cursor1.execute("SELECT COUNT(*) FROM forms_osd WHERE status = %s", ("Pending",))
+    result1 = db_cursor1.fetchone()
+    db_cursor1.close
+
+    db_cursor2 = db_connection.cursor()
+    db_cursor2.execute("SELECT COUNT(*) FROM forms_osd WHERE status = %s", ("Ongoing",))
+    result2 = db_cursor2.fetchone()
+    db_cursor2.close
+
+    db_cursor3 = db_connection.cursor()
+    db_cursor3.execute("SELECT COUNT(*) FROM forms_osd WHERE status = %s", ("Rejected",))
+    result3 = db_cursor3.fetchone()
+    db_cursor3.close
+
+    db_cursor4 = db_connection.cursor()
+    db_cursor4.execute("SELECT COUNT(*) FROM forms_osd WHERE status = %s", ("Case Closed",))
+    result4 = db_cursor4.fetchone()
+    db_cursor4.close
+
+
+    
+
+    countreports = result[0]
+    countpending = result1[0]
+    countongoing = result2[0]
+    countrejected = result3[0]
+    countcaseclosed = result4[0]
+
+
+    print(countreports)
+
+    # Return the result as JSON
+    student_data = {'Reports': countreports, 'Pending': countpending,'Ongoing': countongoing,'Rejected': countrejected,'Caseclosed':countcaseclosed}
+    return jsonify(student_data)
 
 @app.route('/check', methods=['POST'])
 def check():
