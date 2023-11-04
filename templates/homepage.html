@@ -46,8 +46,8 @@
             {% else %}
             {% for row in notif%}
             <div class="report">
-                <button class="delete-button" onclick="deleteNotification(this, '{{ row[0] }}')">Delete</button>
-                <b></b> {{ row[2] }}<br>
+                <button class="delete-button" onclick="deleteNotification(this, '{{ row[0] }}')">X</button>
+                <b>{{ row[2] }}</b> <br>
                     <div class="report_small">
                         <b>Date:</b> {{ row[4] }}<br>
                         <b>Time:</b> {{ row[3] }}<br>
@@ -703,22 +703,23 @@
 
 
 </div>
+
+
+
+    <div id="tab5" class="tab-content">
+    <h2>Student Handbook</h2>
+    <hr>
+    <a href="{{ url_for('download_handbook') }}" target="_blank">Open Student Handbook</a>
+    <h2>Office of Student Disciine</h2>
+    <hr>
+    <a href="{{ url_for('download_manual') }}" target="_blank">Open Student Manual</a>
+
+
+    </div>
 </div>
 
     
-    <!-- Conditionally show the "My Sanctions" button based on user source -->
-    {% if user_source == 'accounts_cics'%}
-   
-    {% endif %}
-
-    {% if user_source == 'accounts_cics'%}
-   
-    {% endif %}
-
-
-    {% if user_source == 'accounts_cics'%}
-   
-    {% endif %}
+ 
 
     <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
     {% if user_source == 'accounts_coordinators' or user_source == 'accounts_head'%}

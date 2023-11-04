@@ -612,6 +612,7 @@ td {
   z-index: 999; /* Ensure it appears above other elements */
   width: 18%;
   margin-top:2%;
+  overflow: auto;
 
   height: 30%;
 }
@@ -1115,13 +1116,13 @@ transform: translate(-50%, -50%);
 }
 
 .report {
-  position: static;
+  position: relative;
+  overflow: auto;
 }
 
 .delete-button {
-  position: absolute;
-  top: 5px;
-  right: 5px;
+
+  float:right;
   font-weight: bold;
   font-size: 16px;
 

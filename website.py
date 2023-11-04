@@ -75,6 +75,11 @@ pdfkit_options = {
     'encoding': 'UTF-8',
 }
 
+@app.route('/get_data_endpoint', methods=['GET'])
+def get_data(x):
+    data = x
+    return jsonify(data)
+
 def notifs(user_id,message):
 
     db_cursor = db_connection.cursor()
@@ -399,7 +404,7 @@ def submit_notice():
 
     doc.save("modified_document.docx")
             # Check the operating system
-    convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
+    convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
 
     source_docx = 'modified_document.docx'
 
@@ -728,7 +733,7 @@ def generate_report():
 
     doc.save("modified_document.docx")
             # Check the operating system
-    convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
+    convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
 
     source_docx = 'modified_document.docx'
 
@@ -828,7 +833,7 @@ def submit_report():
       
         
 
-        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
+        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
 
         source_docx = 'modified_document.docx'
 
@@ -966,7 +971,7 @@ def submit_report():
         doc.save("modified_document.docx")
 
         
-        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
+        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
 
         source_docx = 'modified_document.docx'
 
@@ -1098,7 +1103,7 @@ def submit_request():
 
         doc.save("modified_document.docx")
                 # Check the operating system
-        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
+        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
 
         source_docx = 'modified_document.docx'
 
@@ -1267,7 +1272,7 @@ def submit_request():
 
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
+        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
 
         source_docx = 'modified_document.docx'
 
@@ -1422,7 +1427,7 @@ def submit_request():
 
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
+        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
 
         source_docx = 'modified_document.docx'
 
@@ -1634,7 +1639,7 @@ def submit_call():
 
 
     doc.save("modified_document.docx")
-    convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
+    convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
 
     source_docx = 'modified_document.docx'
 
@@ -1688,7 +1693,7 @@ def submit_written():
         department = request.form.get('department')
         sanction = request.form.get('sanctions')
         students= request.form.get('student')
-        complainant= request.form.get('student2')
+ 
         date2= request.form.get('date2')
         current_datetime = datetime.now()
         random_code = generate_random_code()
@@ -1837,7 +1842,7 @@ def submit_written():
         
         doc.save("modified_document.docx")
         
-        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
+        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
 
         source_docx = 'modified_document.docx'
 
@@ -2021,7 +2026,7 @@ def submit_written():
 
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
+        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
 
         source_docx = 'modified_document.docx'
 
@@ -2290,7 +2295,7 @@ def submit_written():
         
         doc.save("modified_document.docx")
                 # Check the operating system
-        convertapi.api_secret = '21Ryy2KNdW9H5Ze8'
+        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
 
         source_docx = 'modified_document.docx'
 
@@ -2834,6 +2839,57 @@ def download_form(form_id):
         
     return "Form not found", 404
 
+
+
+@app.route('/download_handbook')
+def download_handbook():
+    db_cursor = db_connection.cursor()
+
+    # Retrieve the file data for the given form_id from your database
+    db_cursor.execute("SELECT filename, file_data FROM files WHERE id = %s", ("11",))
+    result = db_cursor.fetchone()
+
+    if result is not None:
+        filename, file_data = result
+
+        # Serve the file as a downloadable attachment
+        response = send_file(
+            io.BytesIO(file_data),
+            as_attachment=True,
+            mimetype='application/pdf',
+            download_name=filename + '.pdf'
+            )
+    
+        return response
+
+        
+    return "Form not found", 404
+
+
+@app.route('/download_manual')
+def download_manual():
+    db_cursor = db_connection.cursor()
+
+    # Retrieve the file data for the given form_id from your database
+    db_cursor.execute("SELECT filename, file_data FROM files WHERE id = %s", ("12",))
+    result = db_cursor.fetchone()
+
+    if result is not None:
+        filename, file_data = result
+
+        # Serve the file as a downloadable attachment
+        response = send_file(
+            io.BytesIO(file_data),
+            as_attachment=True,
+            mimetype='application/pdf',
+            download_name=filename + '.pdf'
+            )
+    
+        return response
+
+        
+    return "Form not found", 404
+
 @app.route('/sanctions', methods=['GET', 'POST'])
 def sanctions():
     db_cursor = db_connection.cursor()
@@ -2910,6 +2966,7 @@ def homepage_head():
 
     elif role == "coordinator":
         profile_picture_data, name, course = result_user_data
+       
         year=""
         session['namestudent'] = name
         session['courseall'] = course
@@ -2979,7 +3036,7 @@ def homepage_head():
     db_cursor_get1 = db_connection.cursor()
 
     if user_role == 'accounts_coordinators':
-        # If the user is an accounts coordinator, retrieve the course of the user
+        isCoordinator = "yes"
         db_cursor_get.execute("SELECT course FROM accounts_coordinators WHERE username = %s", (username,))
         user_course = db_cursor_get.fetchone()
 
@@ -2993,6 +3050,7 @@ def homepage_head():
             reports4 = db_cursor_get1.fetchall()
 
     elif user_role == 'accounts_head':
+        isCoordinator = "no"
         db_cursor_get.execute("SELECT * FROM reports")
         reports3 = db_cursor_get.fetchall()
         db_cursor_get1.execute("SELECT * FROM forms_osd")
@@ -3099,7 +3157,7 @@ def homepage_head():
     
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage_head.html',request=reports4,profile_pictures=profile_pictures,coordinators=coordinators,reports3=reports3, reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base643, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call,profile_pictures1=profile_pictures1,profile_pictures2=profile_pictures2,profile_pictures3=profile_pictures3,profile_pictures4=profile_pictures4,cics=cics,cafad=cafad,coe=coe,cit=cit)
+    return render_template('homepage_head.html',isCoordinator=isCoordinator, request=reports4,profile_pictures=profile_pictures,coordinators=coordinators,reports3=reports3, reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base643, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call,profile_pictures1=profile_pictures1,profile_pictures2=profile_pictures2,profile_pictures3=profile_pictures3,profile_pictures4=profile_pictures4,cics=cics,cafad=cafad,coe=coe,cit=cit)
 
 @app.route('/hello', methods=['GET', 'POST'])
 def homepage():

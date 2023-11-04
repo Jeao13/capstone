@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+
     <title>OSD HEAD GRIEVANCE SYSTEM</title>
     <link rel="icon" href="/static/logo.ico" type="image/x-icon"/>
 <head>
@@ -8,7 +8,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
 </head>
+
 <body>
     <div class="header"> <img src="/static/bsul.png" alt="Default Profile Picture"><h1>Office of Student Discipline - Grievance System Portal</h1>    <a class="logout" style="color:red; margin-left:45%;" href="/logout">Logout</a></div>  
   
@@ -38,8 +40,6 @@
             <li><a href="#tab5">Sanctions</a></li>
             <li><a href="#tab9">Lodge Complaint</a></li>
             <li><a href="#tab10">Call Student</a></li>
-            
-            <li><a href="#tab6">Reports</a></li>
             {% if user_source == 'accounts_head'%}
             <li><a href="#tab7">Manage Coordinators</a></li>
             <li><a href="#tab8">Manage Users</a></li>
@@ -58,7 +58,11 @@
         <div id="tab1" class="tab-content active">
             <h1>Dashboard</h1>
             {% if user_source == 'accounts_coordinator' %}
+
+        
+
             <div class="chart-container-wrapper">
+
                 <div class="chart-container">
                     <h2>Chart 1</h2>
                     <canvas id="chart"></canvas>
@@ -68,11 +72,18 @@
                     <h2>Chart 2</h2>
                     <canvas id="chart1"></canvas>
                 </div>
+            
             </div>
+
+
+             
             {% endif %}
+
             {% if user_source == 'accounts_head' %}
 
-             <div class="chart-container-wrapper">
+            
+            <div class="chart-container-wrapper">
+
                 <div class="chart-container">
                     <h2>Chart 1</h2>
                     <canvas id="chart2"></canvas>
@@ -82,7 +93,10 @@
                     <h2>Chart 2</h2>
                     <canvas id="chart3"></canvas>
                 </div>
+            
             </div>
+          
+          
 
            
             <button type="button" id="searchButton" onclick="openModal6()" style="float:right;">Generate Report</button>
@@ -110,11 +124,10 @@
 
             <form id="searchForm">
                 <input type="text" id="searchInput" name="searchQuery" placeholder="Search...">
-                <button type="button" id="searchButton">Search</button>
+                <button type="button" id="searchButtonx">Search</button>
             </form>
         
-            <form method="POST" action="{{ url_for('delete_all_report2') }}"
-                                      onsubmit="return confirm('Are you sure you want to delete all this report?');">
+            <form method="POST" action="{{ url_for('delete_all_report2') }}" onsubmit="return confirm('Are you sure you want to delete all this report?');">
                                     <button type="submit">Delete All Report</button>
                                 </form>
             {% if user_source == 'accounts_head' %}
@@ -128,7 +141,7 @@
             </select><br><br>
             {% endif %}
         
-            <div id="table-container">
+            <div id="table-containers">
                 <table>
                     <thead>
                         <tr>

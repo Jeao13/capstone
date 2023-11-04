@@ -1197,42 +1197,53 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Get references to the link and the container
-    const toggleLink = document.getElementById('toggleLink');
-    const container = document.getElementById('notifications-container');
-
-    // Add a click event listener to the link
-    toggleLink.addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent the link from navigating
-
-        // Toggle the visibility of the container
-        if (container.style.display === 'none' || container.style.display === '') {
-            container.style.display = 'block';
-      
-        } else {
-            container.style.display = 'none';
-        }
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get references to the link and the container
+        const toggleLink = document.getElementById('toggleLink');
+        const container = document.getElementById('notifications-container');
+    
+        // Add a click event listener to the link
+        toggleLink.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent the link from navigating
+    
+            // Toggle the visibility of the container
+            if (container.style.display === 'none' || container.style.display === '') {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+            }
+        });
     });
-});
+    
+    function deleteNotification(button, notificationId) {
+        $.ajax({
+            url: '/delete-notification',
+            type: 'POST',
+            data: { id: notificationId },
+            success: function() {
+                // Notification deleted successfully, you can remove it from the UI
+                var notificationElement = button.parentNode; // No need to go up two levels
+                notificationElement.parentNode.removeChild(notificationElement);
+            },
+            error: function() {
+                // Handle the error case
+                alert('Failed to delete the notification.');
+            }
+        });
+    }
 
-function deleteNotification(button, notificationId) {
-    $.ajax({
-        url: '/delete-notification',
-        type: 'POST',
-        data: { id: notificationId },
-        success: function() {
-            // Notification deleted successfully, you can remove it from the UI
-            var notificationElement = button.parentNode.parentNode; // Go up two levels to remove the entire notification
-            notificationElement.parentNode.removeChild(notificationElement);
-        },
-        error: function() {
-            // Handle the error case
-            alert('Failed to delete the notification.');
-        }
-    });
-}
 
+    function openModal6() {
+        const modal = document.getElementById('reportModal20');
+        modal.style.display = 'block';  
+    
+    }
+    function closeModal20() {
+        var modal = document.getElementById('reportModal20');
+    
+        // Hide the modal
+        modal.style.display = 'none';
+    }
     
     
     

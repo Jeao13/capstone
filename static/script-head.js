@@ -12,6 +12,168 @@ function w3_open() {
 
   document.addEventListener('DOMContentLoaded', function () {
 
+    function toggleContainer(containerId) {
+    
+        document.querySelectorAll('#table-container > div').forEach(function (container) {
+            container.style.display = 'none';
+        });
+
+        // Show the selected container
+        const selectedContainer = document.getElementById(containerId);
+        if (selectedContainer) {
+            selectedContainer.style.display = 'block';
+        }
+    }
+    
+// Add click event listeners to navbar items
+document.querySelectorAll('.nav-item1').forEach(function (navItem) {
+    navItem.addEventListener('click', function (event) {
+        event.preventDefault();
+        const targetId = navItem.getAttribute('data-target');
+        toggleContainer(targetId);
+        console.log("try")
+    });
+});
+
+// Initially show the "Pending" container
+toggleContainer('pending');
+});
+
+  document.addEventListener('DOMContentLoaded', function () {
+
+    var minor_input = document.getElementById("sanctionsInputminor");
+    var major_input = document.getElementById("sanctionsInputmajor");
+
+    document.getElementById("minor").addEventListener("click", function() {
+        document.getElementById("sanctionsInputminor").style.display = "block";
+        minor_input.required = true;
+        document.getElementById("sanctionsInputmajor").style.display = "none";
+        major_input.value="";
+        major_input.required = false;
+    });
+    
+    document.getElementById("major").addEventListener("click", function() {
+        document.getElementById("sanctionsInputmajor").style.display = "block";
+        minor_input.required = false;
+        document.getElementById("sanctionsInputminor").style.display = "none";
+        minor_input.value="";
+        major_input.required = true;
+    });
+
+
+    var minor_input1 = document.getElementById("sanctionsInputminor1");
+    var major_input1 = document.getElementById("sanctionsInputmajor1");
+
+    document.getElementById("minor1").addEventListener("click", function() {
+        document.getElementById("sanctionsInputminor1").style.display = "block";
+        minor_input1.required = true;
+        document.getElementById("sanctionsInputmajor1").style.display = "none";
+        major_input1.value="";
+        major_input1.required = false;
+    });
+    
+    document.getElementById("major1").addEventListener("click", function() {
+        document.getElementById("sanctionsInputmajor1").style.display = "block";
+        minor_input1.required = false;
+        document.getElementById("sanctionsInputminor1").style.display = "none";
+        minor_input1.value="";
+        major_input1.required = true;
+    });
+
+
+
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+
+    const searchButton = document.getElementById("searchButtonx");
+    const searchInput = document.getElementById("searchInput");
+
+    searchButton.addEventListener("click", function () {
+        console.log("wow")
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const tableContainer = document.getElementById("table-containers");
+        const table = tableContainer.querySelector("table");
+        const tableBody = table.querySelector("tbody");
+        const tableRows = tableBody.querySelectorAll("tr");
+    
+        tableRows.forEach(function (row) {
+            const rowText = row.textContent.toLowerCase();
+            if (rowText.includes(searchTerm)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
+});
+
+  document.addEventListener('DOMContentLoaded', function () {
+
+    var ctx = document.getElementById('chart').getContext('2d');
+console.log("test")
+
+$.ajax({
+type: "POST",
+url: "/count",
+success: function (data) {
+
+    console.log(data.Reports)
+    // Create the data for the pie chart based on the response
+    var chartData = {
+        labels: ['Total Number of Complaints', 'Total Pending of Complaints', 'Total On-Going of Complaints','Total Rejected of Complaints', 'Total Resolved of Complaints'],
+        datasets: [
+            {
+                data: [data.Reports, data.Pending, data.Ongoing, data.Rejected, data.CaseClosed], // Values for each segment
+                backgroundColor: ["#FF5733", "#33FF57","#FF5733", "#33FF57", "#33FF57"], // Colors for each segment
+            },
+        ],  
+    };
+
+    // Create the pie chart
+    var myPieChart = new Chart(ctx, {
+        type: "pie",
+        data: chartData,
+    });
+},
+error: function (error) {
+    console.error("Error fetching student data:", error);
+}
+});
+
+// Add a delay of 2 seconds (2000 milliseconds) before running the next section
+setTimeout(function() {
+// Second section of code
+var ctx1 = document.getElementById('chart1').getContext('2d');
+
+$.ajax({
+type: "POST",
+url: "/countrequest",
+success: function (data) {
+    console.log(data.Reports)
+    // Create the data for the pie chart based on the response
+    var chartData = {
+        labels: ['Total Number of Request', 'Total Pending of Request', 'Total On-Going of Request','Total Rejected of Request', 'Total Resolved of Request'],
+        datasets: [
+            {
+                data: [data.Reports, data.Pending, data.Ongoing, data.Rejected, data.CaseClosed],
+                backgroundColor: ["#FF5733", "#33FF57","#FF5733", "#33FF57", "#33FF57"],
+            },
+        ],
+    };
+
+    // Create the pie chart
+    var myPieChart = new Chart(ctx1, {
+        type: "pie",
+        data: chartData,
+    });
+},
+error: function (error) {
+    console.error("Error fetching student data:", error);
+}
+});
+}, 500);
+
 
     const departmentSelect = document.getElementById("department1");
         const tableBody = document.querySelector("table tbody");
@@ -34,29 +196,13 @@ function w3_open() {
             });
         });
 
-    const searchButton = document.getElementById("searchButton");
-        const searchInput = document.getElementById("searchInput");
-    
-        searchButton.addEventListener("click", function () {
-            const searchTerm = searchInput.value.toLowerCase().trim();
-            const tableContainer = document.getElementById("table-container");
-            const table = tableContainer.querySelector("table");
-            const tableRows = table.querySelectorAll("tbody tr");
-    
-            tableRows.forEach(function (row) {
-                const rowText = row.textContent.toLowerCase();
-                if (rowText.includes(searchTerm)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            });
-        });
+       
 
         const searchButton1 = document.getElementById("searchButton1");
         const searchInput1 = document.getElementById("searchInput1");
     
         searchButton1.addEventListener("click", function () {
+            console.log("wow")
             const searchTerm = searchInput1.value.toLowerCase().trim();
             const tableContainer = document.getElementById("cics-table");
             const table = tableContainer.querySelector("table");
@@ -128,148 +274,17 @@ function w3_open() {
                 }
             });
         });
+     
 
+});
 
+document.addEventListener('DOMContentLoaded', function () {
 
-    var minor_input = document.getElementById("sanctionsInputminor");
-    var major_input = document.getElementById("sanctionsInputmajor");
-
-    document.getElementById("minor").addEventListener("click", function() {
-        document.getElementById("sanctionsInputminor").style.display = "block";
-        minor_input.required = true;
-        document.getElementById("sanctionsInputmajor").style.display = "none";
-        major_input.value="";
-        major_input.required = false;
-    });
-    
-    document.getElementById("major").addEventListener("click", function() {
-        document.getElementById("sanctionsInputmajor").style.display = "block";
-        minor_input.required = false;
-        document.getElementById("sanctionsInputminor").style.display = "none";
-        minor_input.value="";
-        major_input.required = true;
-    });
-
-
-    var minor_input1 = document.getElementById("sanctionsInputminor1");
-    var major_input1 = document.getElementById("sanctionsInputmajor1");
-
-    document.getElementById("minor1").addEventListener("click", function() {
-        document.getElementById("sanctionsInputminor1").style.display = "block";
-        minor_input1.required = true;
-        document.getElementById("sanctionsInputmajor1").style.display = "none";
-        major_input1.value="";
-        major_input1.required = false;
-    });
-    
-    document.getElementById("major1").addEventListener("click", function() {
-        document.getElementById("sanctionsInputmajor1").style.display = "block";
-        minor_input1.required = false;
-        document.getElementById("sanctionsInputminor1").style.display = "none";
-        minor_input1.value="";
-        major_input1.required = true;
-    });
-
-    function toggleContainer(containerId) {
+    var ctx2 = document.getElementById('chart2').getContext('2d');
         
-        document.querySelectorAll('#table-container > div').forEach(function (container) {
-            container.style.display = 'none';
-        });
-
-        // Show the selected container
-        const selectedContainer = document.getElementById(containerId);
-        if (selectedContainer) {
-            selectedContainer.style.display = 'block';
-        }
-    }
-
-    // Add click event listeners to navbar items
-    document.querySelectorAll('.nav-item1').forEach(function (navItem) {
-        navItem.addEventListener('click', function (event) {
-            event.preventDefault();
-            const targetId = navItem.getAttribute('data-target');
-            toggleContainer(targetId);
-            console.log("try")
-        });
-    });
-
-    // Initially show the "Pending" container
-    toggleContainer('pending');
-
-
-        var ctx2 = document.getElementById('chart2').getContext('2d');
-        
-            $.ajax({
-                type: "POST",
-                url: "/count1",
-                success: function (data) {
-        
-                    console.log(data.Reports)
-                    // Create the data for the pie chart based on the response
-                    var chartData = {
-                        labels: ['Total Number of Complaints', 'Total Pending of Complaints', 'Total On-Going of Complaints','Total Rejected of Complaints', 'Total Resolved of Complaints'],
-                        datasets: [
-                            {
-                                data: [data.Reports, data.Pending, data.Ongoing, data.Rejected, data.CaseClosed], // Values for each segment
-                                backgroundColor: ["#FF5733", "#33FF57","#FF5733", "#33FF57", "#33FF57"], // Colors for each segment
-                            },
-                        ],  
-                    };
-        
-                    // Create the pie chart
-                    var myPieChart = new Chart(ctx2, {
-                        type: "pie",
-                        data: chartData,
-                    });
-                },
-                error: function (error) {
-                    console.error("Error fetching student data:", error);
-                }
-            });
-      
-        
-           // Add a delay of 2 seconds (2000 milliseconds) before running the next section
-        setTimeout(function() {
-            // Second section of code
-            var ctx3 = document.getElementById('chart3').getContext('2d');
-        
-            $.ajax({
-                type: "POST",
-                url: "/countrequest1",
-                success: function (data) {
-                    console.log(data.Reports)
-                    // Create the data for the pie chart based on the response
-                    var chartData = {
-                        labels: ['Total Number of Request', 'Total Pending of Request', 'Total On-Going of Request','Total Rejected of Request', 'Total Resolved of Request'],
-                        datasets: [
-                            {
-                                data: [data.Reports, data.Pending, data.Ongoing, data.Rejected, data.CaseClosed],
-                                backgroundColor: ["#FF5733", "#33FF57","#FF5733", "#33FF57", "#33FF57"],
-                            },
-                        ],
-                    };
-        
-                    // Create the pie chart
-                    var myPieChart = new Chart(ctx3, {
-                        type: "pie",
-                        data: chartData,
-                    });
-                },
-                error: function (error) {
-                    console.error("Error fetching student data:", error);
-                }
-            });
-        }, 500);
-
-  });
-
-  document.addEventListener('DOMContentLoaded', function () {
-
-    var ctx = document.getElementById('chart').getContext('2d');
-
     $.ajax({
         type: "POST",
-        url: "/count",
+        url: "/count1",
         success: function (data) {
 
             console.log(data.Reports)
@@ -285,7 +300,7 @@ function w3_open() {
             };
 
             // Create the pie chart
-            var myPieChart = new Chart(ctx, {
+            var myPieChart = new Chart(ctx2, {
                 type: "pie",
                 data: chartData,
             });
@@ -295,14 +310,15 @@ function w3_open() {
         }
     });
 
+
    // Add a delay of 2 seconds (2000 milliseconds) before running the next section
 setTimeout(function() {
     // Second section of code
-    var ctx1 = document.getElementById('chart1').getContext('2d');
+    var ctx3 = document.getElementById('chart3').getContext('2d');
 
     $.ajax({
         type: "POST",
-        url: "/countrequest",
+        url: "/countrequest1",
         success: function (data) {
             console.log(data.Reports)
             // Create the data for the pie chart based on the response
@@ -317,7 +333,7 @@ setTimeout(function() {
             };
 
             // Create the pie chart
-            var myPieChart = new Chart(ctx1, {
+            var myPieChart = new Chart(ctx3, {
                 type: "pie",
                 data: chartData,
             });
@@ -330,11 +346,6 @@ setTimeout(function() {
 
 
 
-    
-
-    
-
-    
 });
 
 function openModal1(id2) {
@@ -1930,5 +1941,7 @@ function closeModal() {
     // Hide the modal
     modal.style.display = 'none';
 }
+
+
 
 
