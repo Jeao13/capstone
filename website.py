@@ -38,10 +38,10 @@ nsmap = {
 
 
 db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '',
-    'database': 'capstoneproject',
+    'host': 'bk4eirhsdc6y9ipqvs0h-mysql.services.clever-cloud.com',
+    'user': 'ut5cv46rvwyaoobx',
+    'password': 'aiRzdgEuvx3iJPje78pp',
+    'database': 'bk4eirhsdc6y9ipqvs0h',
 }
 
 # Create a connection to the database
