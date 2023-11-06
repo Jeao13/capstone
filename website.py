@@ -47,10 +47,10 @@ nsmap = {
 
 
 db_config = {
-    'host': 'bpqsxicgc77tgxxe5sia-mysql.services.clever-cloud.com',
-    'user': 'uxtiwfla65brtbf1',
-    'password': 'ZvvUudkkFmfmmmxLqv2',
-    'database': 'bpqsxicgc77tgxxe5sia',
+    'host': 'bk4eirhsdc6y9ipqvs0h-mysql.services.clever-cloud.com',
+    'user': 'ut5cv46rvwyaoobx',
+    'password': 'aiRzdgEuvx3iJPje78pp',
+    'database': 'bk4eirhsdc6y9ipqvs0h',
 }
 
 # Create a connection to the database
