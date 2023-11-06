@@ -29,11 +29,11 @@ import time
 start_time = time.time()
 
 db_config = {
-    'host': os.environ.get('MYSQL_ADDON_HOST', 'localhost'),
-    'user': os.environ.get('MYSQL_ADDON_USER', 'root'),
-    'password': os.environ.get('MYSQL_ADDON_PASSWORD', ''),
-    'database': os.environ.get('MYSQL_ADDON_DB', 'capstoneproject'),
-    'port': os.environ.get('MYSQL_ADDON_PORT', '3306'),
+    'host': os.environ.get('MYSQL_ADDON_HOST', 'btkfgad5kv7rkgp2ljbl-mysql.services.clever-cloud.com'),
+    'user': os.environ.get('MYSQL_ADDON_USER', 'ut5cv46rvwyaoobx'),
+    'password': os.environ.get('MYSQL_ADDON_PASSWORD', 'aiRzdgEuvx3iJPje78pp'),
+    'database': os.environ.get('MYSQL_ADDON_DB', 'btkfgad5kv7rkgp2ljbl'),
+    'port': os.environ.get('MYSQL_ADDON_PORT', '21667'),
 }
 
 try:
