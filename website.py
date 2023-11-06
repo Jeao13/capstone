@@ -29,7 +29,7 @@ import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_selection import chi2
 from sklearn.model_selection import train_test_split
-from sklearn.svm import LinearSVC
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import confusion_matrix
 from sklearn import metrics
@@ -2664,7 +2664,7 @@ def algorithm(complaint_text):
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
         models = [
-            LinearSVC(dual=False),
+            KNeighborsClassifier(n_neighbors=5), 
         ]
 
         # 5 Cross-validation
@@ -2677,7 +2677,7 @@ def algorithm(complaint_text):
                 entries.append((model_name, fold_idx, accuracy))
 
         # Initialize and train the LinearSVC model
-        model = LinearSVC(dual=False)
+        model = KNeighborsClassifier(n_neighbors=5)
         model.fit(tfidf.transform(X_train), y_train)
 
 
@@ -2685,7 +2685,7 @@ def algorithm(complaint_text):
         complaint = complaint_text
 
         # Predict offenses for the complaint text
-        decision_scores = model.decision_function(tfidf.transform([complaint]))
+        decision_scores = model.predict_proba(tfidf.transform([complaint]))
 
         # Convert decision scores to probabilities using softmax
         def softmax(x):
@@ -3154,10 +3154,119 @@ def homepage_head():
         if image_data:
             profile_picture_base64 = base64.b64encode(image_data).decode('utf-8')
             profile_pictures[coord_id] = profile_picture_base64
+
+
+    username = session.get('courseall', '')
+    statuses = ["", "Pending", "Ongoing", "Rejected", "Case Closed"]
+    counts = {}
+    counts1 = {}
+    counts2 = {}
+    counts3 = {}
+
+
+    db_cursor = db_connection.cursor()
+
+    for status in statuses:
+        if status:
+            query = "SELECT COUNT(*) FROM reports WHERE course = %s AND status = %s"
+            db_cursor.execute(query, (username, status))
+        else:
+            query = "SELECT COUNT(*) FROM reports WHERE course = %s"
+            db_cursor.execute(query, (username,))
+        result = db_cursor.fetchone()
+        counts[status] = result[0]
+
+    db_cursor.close()
+
+
+    db_cursor1 = db_connection.cursor()
+
+    for status in statuses:
+        if status:
+            query = "SELECT COUNT(*) FROM forms_osd WHERE course = %s AND status = %s"
+            db_cursor1.execute(query, (username, status))
+        else:
+            query = "SELECT COUNT(*) FROM forms_osd WHERE course = %s"
+            db_cursor1.execute(query, (username,))
+        result1 = db_cursor1.fetchone()
+        counts1[status] = result1[0]
+
+    db_cursor1.close()
+
+
+    
+    db_cursor2 = db_connection.cursor()
+
+    for status in statuses:
+        if status:
+            query = "SELECT COUNT(*) FROM reports WHERE status = %s"
+            db_cursor2.execute(query, (status,))
+        else:
+            query = "SELECT COUNT(*) FROM reports"
+            db_cursor2.execute(query,)
+        result2 = db_cursor2.fetchone()
+        counts2[status] = result2[0]
+
+    db_cursor2.close()
+
+
+    db_cursor3 = db_connection.cursor()
+
+    for status in statuses:
+        if status:
+            query = "SELECT COUNT(*) FROM forms_osd WHERE status = %s"
+            db_cursor3.execute(query, (status,))
+        else:
+            query = "SELECT COUNT(*) FROM forms_osd"
+            db_cursor3.execute(query,)
+        result3 = db_cursor3.fetchone()
+        counts3[status] = result3[0]
+
+    db_cursor3.close()
+
+    counts = {
+    "Total Number of Complaints": counts[""],
+    "Total Pending of Complaints": counts["Pending"],
+    "Total On-Going of Complaints": counts["Ongoing"],
+    "Total Rejected of Complaints": counts["Rejected"],
+    "Total Resolved of Complaints": counts["Case Closed"]
+     }
+    
+    counts1 = {
+    "Total Number of Requests": counts1[""],
+    "Total Pending of Requests": counts1["Pending"],
+    "Total On-Going of Requests": counts1["Ongoing"],
+    "Total Rejected of Requests": counts1["Rejected"],
+    "Total Resolved of Requests": counts1["Case Closed"]
+     }
+    
+    counts2 = {
+    "Total Number of Complaints": counts2[""],
+    "Total Pending of Complaints": counts2["Pending"],
+    "Total On-Going of Complaints": counts2["Ongoing"],
+    "Total Rejected of Complaints": counts2["Rejected"],
+    "Total Resolved of Complaints": counts2["Case Closed"]
+     }
+    
+    counts3 = {
+    "Total Number of Requests": counts3[""],
+    "Total Pending of Requests": counts3["Pending"],
+    "Total On-Going of Requests": counts3["Ongoing"],
+    "Total Rejected of Requests": counts3["Rejected"],
+    "Total Resolved of Requests": counts3["Case Closed"]
+     }
+
+     
+
+
+
     
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage_head.html',isCoordinator=isCoordinator, request=reports4,profile_pictures=profile_pictures,coordinators=coordinators,reports3=reports3, reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base643, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call,profile_pictures1=profile_pictures1,profile_pictures2=profile_pictures2,profile_pictures3=profile_pictures3,profile_pictures4=profile_pictures4,cics=cics,cafad=cafad,coe=coe,cit=cit)
+    return render_template('homepage_head.html',counts2=counts2, counts3=counts3,counts=counts, counts1=counts1, isCoordinator=isCoordinator, request=reports4,profile_pictures=profile_pictures,coordinators=coordinators,reports3=reports3, reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base643, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call,profile_pictures1=profile_pictures1,profile_pictures2=profile_pictures2,profile_pictures3=profile_pictures3,profile_pictures4=profile_pictures4,cics=cics,cafad=cafad,coe=coe,cit=cit)
+
+
+
 
 @app.route('/hello', methods=['GET', 'POST'])
 def homepage():
@@ -3425,8 +3534,10 @@ def homepage():
 
     db_cursor_notif.close()
 
+
+
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage.html', roles=roles,notif=notifs,sanctions=sanctions,request1=request1,complaints=complaints,reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call)
+    return render_template('homepage.html', roles=roles,notif=notifs,sanctions=sanctions,request1=request1,complaints=complaints,reports1=reports1, reports=reports,reports2=reports2,username=username,profile_picture_base64=profile_picture_base64, name=name, course=course, year=year,user_source=user_source,warning=warning,reprimand=reprimand,suspension=suspension,call=call,)
 
 def lookup_student_info(username):
     try:

@@ -1127,3 +1127,15 @@ transform: translate(-50%, -50%);
   font-size: 16px;
 
 }
+
+.page {
+  display: none; /* Initially hide all pages */
+}
+
+.page.active {
+  display: block; /* Display the active page */
+}
+
+#pagination {
+  text-align: center;
+}

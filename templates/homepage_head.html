@@ -54,46 +54,54 @@
     <div id="main">
 
     <div class="content">
-      
+    
         <div id="tab1" class="tab-content active">
+
+            
             <h1>Dashboard</h1>
             {% if user_source == 'accounts_coordinator' %}
-
-        
-
-            <div class="chart-container-wrapper">
-
-                <div class="chart-container">
-                    <h2>Chart 1</h2>
-                    <canvas id="chart"></canvas>
-                </div>
-
-                <div class="chart-container">
-                    <h2>Chart 2</h2>
-                    <canvas id="chart1"></canvas>
-                </div>
-            
-            </div>
+    <div class="chart-container-wrapper">
+       
+        <ul>
+            <h2>Complaints</h2>
+            {% for key, value in counts.items() %}
+            <li>{{ key }}: {{ value }}</li>
+            {% endfor %}
+        </ul>
 
 
-             
-            {% endif %}
+<ul>
+    <h2>Document Request</h2>
+    {% for key, value in counts1.items() %}
+    <li>{{ key }}: {{ value }}</li>
+    {% endfor %}
+</ul>
+
+    </div>
+    {% endif %}
 
             {% if user_source == 'accounts_head' %}
 
             
-            <div class="chart-container-wrapper">
 
-                <div class="chart-container">
-                    <h2>Chart 1</h2>
-                    <canvas id="chart2"></canvas>
-                </div>
-
-                <div class="chart-container">
-                    <h2>Chart 2</h2>
-                    <canvas id="chart3"></canvas>
-                </div>
             
+            <div class="chart-container-wrapper">
+       
+                <ul>
+                    <h2>Complaints</h2>
+                    {% for key, value in counts2.items() %}
+                    <li>{{ key }}: {{ value }}</li>
+                    {% endfor %}
+                </ul>
+        
+        
+        <ul>
+            <h2>Document Request</h2>
+            {% for key, value in counts3.items() %}
+            <li>{{ key }}: {{ value }}</li>
+            {% endfor %}
+        </ul>
+        
             </div>
           
           
@@ -149,6 +157,7 @@
                             <th>Complainant's Username</th>
                             <th>Date and Time</th>
                             <th>Department</th>
+
                             <th>Status</th>
                             <th>Attached Form</th>
                             <th>Attached Supporting Document</th>
@@ -165,6 +174,7 @@
                             <td>{{ row[2] }}</td>
                             <td>{{ row[3] }}</td>
                             <td>{{ row[5] }}</td>
+    
                             <td>{{ row[6] }}</td>
                                 <td>
                                     <a href="{{ url_for('preview_report_file', report_id=row[1]) }}" target="_blank">{{ row[8] }}</a>

@@ -83,12 +83,13 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
     btn.onclick = function () {
+       
+
+        modal.style.display = "block";
         var targetScrollPosition = modal.offsetTop;
         
         // Scroll the page downward to the modal
         window.scrollTo(0, targetScrollPosition);
-
-        modal.style.display = "block";
 
         // Scroll the modal to the center of the viewport
         modal.style.top = "50%";
@@ -230,6 +231,10 @@ window.onload = function() {
 function openModal(reportText, reportFileLink, supportingDocumentLink) {
     var modal = document.getElementById('reportModal');
     var reportContent = document.getElementById('reportContent');
+    var targetScrollPosition = modal.offsetTop;
+        
+    // Scroll the page downward to the modal
+    window.scrollTo(0, targetScrollPosition);
     modal.style.display = 'block';
 
     modal.style.top = "50%";
@@ -261,6 +266,15 @@ function openModal(reportText, reportFileLink, supportingDocumentLink) {
 function openModal1(reportText, reportFileLink, supportingDocumentLink) {
     var modal = document.getElementById('reportModal5');
     var reportContent = document.getElementById('reportContent5');
+    var targetScrollPosition = modal.offsetTop;
+        
+    // Scroll the page downward to the modal
+    window.scrollTo(0, targetScrollPosition);
+
+    modal.style.top = "50%";
+    modal.style.left = "50%";
+    modal.style.transform = "translate(-50%, -50%)";
+    disableScroll();
 
     // Construct the HTML content for the modal
     var modalContent = '<b>Report Text:</b><br>' + reportText + '<br><br>';
@@ -938,9 +952,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 // You can also add other actions here when the modal is displayed.
             }
             else{
-                 // Data is found, open the modal
+    
                  var autoOpenModal = document.getElementById("autoOpenModal");
                  autoOpenModal.style.display = "block";
+             
+                 
                  disableScroll()
  
                  // Close the modal when the close button is clicked
@@ -1159,7 +1175,74 @@ document.addEventListener('DOMContentLoaded', function () {
     toggleContainer('pending');
 
     
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const reports = "{{ complaints|sort(attribute='2', reverse=true)|tojson }};"
+        const reportsPerPage = 5; // Number of reports per page
+        const pagesContainer = document.querySelector('.reports-container');
+        const prevPageButton = document.getElementById('prevPage');
+        const nextPageButton = document.getElementById('nextPage');
+        let currentPage = 0;
     
+        function createPage() {
+            const page = document.createElement('div');
+            page.classList.add('page');
+            pagesContainer.appendChild(page);
+            return page;
+        }
+    
+        function updatePaginationButtons() {
+            prevPageButton.disabled = currentPage === 0;
+            nextPageButton.disabled = currentPage >= pagesContainer.children.length - 1;
+        }
+    
+        function populateReports() {
+            const pages = pagesContainer.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.innerHTML = ''; // Clear the page
+            });
+    
+            for (let i = 0; i < reports.length; i++) {
+                const report = reports[i];
+                const pageIndex = Math.floor(i / reportsPerPage);
+                const page = pages[pageIndex] || createPage();
+    
+                const reportElement = document.createElement('div');
+                reportElement.classList.add('report');
+                reportElement.innerHTML = `
+                    <b>Report ID:</b> ${report[1]}<br>
+                    <div class="report_small">
+                        <b>Date and Time:</b> ${report[3]}<br>
+                        <button class="view-report-button" onclick="openModal('${report[4]}')">View Report</button>
+                        <b>Department:</b> ${report[5]}<br>
+                        <b>Status:</b> ${report[6]}<br>
+                    </div>
+                `;
+    
+                page.appendChild(reportElement);
+            }
+        }
+    
+        prevPageButton.addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage--;
+                updatePaginationButtons();
+            }
+        });
+    
+        nextPageButton.addEventListener('click', () => {
+            if (currentPage < pagesContainer.children.length - 1) {
+                currentPage++;
+                updatePaginationButtons();
+            }
+        });
+    
+        // Initial setup
+        createPage(); // Create the first page
+        populateReports(); // Populate the reports
+        updatePaginationButtons();
+
     });
 
 
@@ -1194,6 +1277,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
         // Hide the modal
         modal.style.display = 'none';
+        enableScroll()
     }
 
 

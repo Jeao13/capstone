@@ -175,26 +175,7 @@ error: function (error) {
 }, 500);
 
 
-    const departmentSelect = document.getElementById("department1");
-        const tableBody = document.querySelector("table tbody");
-        const rows = tableBody.querySelectorAll("tr");
 
-        departmentSelect.addEventListener("change", function() {
-            console.log("wow")
-            const selectedDepartment = departmentSelect.value;
-
-            // Loop through the table rows and hide/show based on department
-            rows.forEach(function(row) {
-                const departmentColumn = row.querySelector("td:nth-child(4)"); // Adjust the index based on your table structure
-                const department = departmentColumn.textContent.trim();
-
-                if (selectedDepartment === "All" || department === selectedDepartment) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            });
-        });
 
        
 
@@ -275,6 +256,30 @@ error: function (error) {
             });
         });
      
+
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+const departmentSelect = document.getElementById("department1");
+const tableBody = document.querySelector("table tbody");
+const rows = tableBody.querySelectorAll("tr");
+
+departmentSelect.addEventListener("change", function() {
+    console.log("wow")
+    const selectedDepartment = departmentSelect.value;
+
+    // Loop through the table rows and hide/show based on department
+    rows.forEach(function(row) {
+        const departmentColumn = row.querySelector("td:nth-child(4)"); // Adjust the index based on your table structure
+        const department = departmentColumn.textContent.trim();
+
+        if (selectedDepartment === "All" || department === selectedDepartment) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+});
 
 });
 
