@@ -24,8 +24,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score
+import time
 
-
+start_time = time.time()
 
 nsmap = {
     'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',
@@ -38,16 +39,17 @@ nsmap = {
 
 
 db_config = {
-    'host': 'bk4eirhsdc6y9ipqvs0h-mysql.services.clever-cloud.com',
-    'user': 'ut5cv46rvwyaoobx',
-    'password': 'aiRzdgEuvx3iJPje78pp',
-    'database': 'bk4eirhsdc6y9ipqvs0h',
+    'host': os.environ.get('MYSQL_ADDON_HOST', 'btkfgad5kv7rkgp2ljbl-mysql.services.clever-cloud.com'),
+    'user': os.environ.get('MYSQL_ADDON_USER', 'ut5cv46rvwyaoobx'),
+    'password': os.environ.get('MYSQL_ADDON_PASSWORD', 'aiRzdgEuvx3iJPje78pp'),
+    'database': os.environ.get('MYSQL_ADDON_DB', 'btkfgad5kv7rkgp2ljbl'),
+    'port': os.environ.get('MYSQL_ADDON_PORT', '21667'),
 }
 
-# Create a connection to the database
 try:
     db_connection = mysql.connector.connect(**db_config)
-    print("Connected to the database")
+    end_time = time.time()
+    print(f"Connected to the database (Time taken: {end_time - start_time} seconds)")
 except mysql.connector.Error as err:
     print(f"Error: {err}")
 
