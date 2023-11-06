@@ -1,0 +1,244 @@
+/*LOGIN*/
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #c50303;
+    text-align: left; /* Center the text */
+    padding: 10px 0; /* Adjust vertical padding and remove horizontal padding */
+    color: white;
+    font-size: 14px;
+  }
+  
+  
+  .login {
+    min-height: 100vh;
+  }
+  
+  .bg-image-container {
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .bg-image {
+    
+    background-size: contain; /* Fit image within the container without cropping */
+    background-position: left top; /* Fixed at the top left corner */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    height: 100vh; /* 100% viewport height */
+    width: 100%; /* 100% width within the container */
+  }
+  
+  
+  .divider {
+    border-top: 1px solid #ccc;
+    margin: 10px 0; /* Adjust margin as needed */
+  }
+  
+  label {
+    font-size: large; /* Adjust as needed */
+    font-weight: bold;
+  }
+  
+  .login-heading {
+   
+    font-weight: 900;
+    font-size: 30px; /* Adjust as needed */
+  }
+  
+  .login-head {
+    font-weight: 300;
+    font-size: medium; /* Adjust as needed */
+    color: #333;
+  }
+  
+  .login-head5 {
+    font-weight: 200;
+    font-size: small; /* Adjust as needed */
+    color: #888;
+  }
+  
+  element.style{
+    margin:auto;
+  }
+  
+  
+  /* Center the reCAPTCHA container and position it near the bottom */
+  
+  .captcha-container {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .log-btn {
+    background-color: #008000; /* Green background color */
+    color: #fff; /* White text color */
+    border: none; /* Remove the button border */
+    border-radius: 30px; /* Make the button round */
+    padding: 10px 20px; /* Add padding to make the button larger */
+    cursor: pointer; /* Change cursor to a pointer on hover */
+    margin-left: 150px;
+    margin-top: 20px;
+    width: 200px;
+}
+
+.log-btn:hover {
+    background-color: #006400; /* Darker green on hover */
+}
+  
+  .error-message {
+    font-size: small;
+    text-align: center;
+    color: red;
+    font-weight: bold;
+  }
+  
+  /* mobile phone */
+  .login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Adjust the background image styles for smaller screens */
+  .bg-image {
+    background-size: cover; /* Adjust to cover the entire container */
+  }
+  
+  /* Apply custom styles to form elements and center them */
+  .form-floating {
+    text-align: center;
+  }
+  
+  .form-floating input[type="text"],
+  .form-floating input[type="password"] {
+    width: 100%; /* Expand the input fields to full width */
+    font-size: 16px; /* Adjust as needed */
+    padding: 15px; /* Add some padding for touch devices */
+  }
+  
+  .form-label {
+    font-size: 16px; /* Adjust as needed */
+    font-weight: bold;
+  }
+  
+  .login-heading {
+    font-size: 30px; /* Adjust as needed */
+  }
+  
+  .login-head {
+    font-size: 20px; /* Adjust as needed */
+  }
+  
+  .login-head5 {
+    font-size: 14px; /* Adjust as needed */
+    color: #888;
+  }
+  
+  /* Reduce margins for smaller screens */
+  .divider {
+    margin: 5px 0; /* Adjust margin as needed */
+  }
+  
+  /* Smaller footer font size */
+  .footer {
+    font-size: 12px;
+  }
+  
+  /* Styles for mobile screens */
+  /* Styles for mobile screens */
+  @media (max-width: 768px) {
+      .bg-image-container {
+          display: none; /* Hide the background image container */
+      }
+  }
+  
+    .form-floating input[type="text"],
+    .form-floating input[type="password"] {
+        padding: 10px; /* Reduce padding for smaller screens */
+    }
+  
+    .login-heading {
+        font-size: 24px; /* Reduce font size for smaller screens */
+    }
+  
+    .login-head {
+        font-size: 16px;
+    }
+  
+    .login-head5 {
+        font-size: 12px;
+    }
+  
+    .divider {
+        margin: 3px 0; /* Reduce margin for smaller screens */
+    }
+  
+    .footer {
+        font-size: 10px;
+    }
+  
+    @media (max-width: 768px) {
+      .captcha-container {
+          text-align: center; /* Center the reCAPTCHA container horizontally */
+      }
+  }
+  /* Style for the modal container */
+ .modal-btn {
+    display: none; /* Hidden by default */
+    position: absolute; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 60%;
+    height: 70%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+ /* Style for the modal content */
+.modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    width: 60%;
+    max-height: 80vh; /* Adjust the maximum height as needed */
+    overflow-y: auto; /* Add overflow-y property to enable vertical scrolling */
+    border-radius: 10px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  
+  
+  
+  #closeModal {
+      margin-top: 10px;
+      background-color: #008CBA;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      float: right;
+  }
+
+
+
+
+/* CSS for the close button */
+.close-button {
+  position: absolute;
+  top: 10px; /* Adjust as needed to position it vertically */
+  left: 10px; /* Adjust as needed to position it horizontally */
+  color: hsl(0, 0%, 99%);
+  font-size: 60px;
+  font-weight: bold;
+  cursor: pointer;
+}
+  

@@ -28,22 +28,12 @@ import time
 
 start_time = time.time()
 
-nsmap = {
-    'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',
-    'a': 'http://schemas.openxmlformats.org/drawingml/2006/main',
-    'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
-    'w14': 'http://schemas.microsoft.com/office/word/2010/wordml',
-    'wp': 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing',
-    'm': 'http://schemas.openxmlformats.org/officeDocument/2006/math',
-}
-
-
 db_config = {
-    'host': os.environ.get('MYSQL_ADDON_HOST', 'btkfgad5kv7rkgp2ljbl-mysql.services.clever-cloud.com'),
-    'user': os.environ.get('MYSQL_ADDON_USER', 'ut5cv46rvwyaoobx'),
-    'password': os.environ.get('MYSQL_ADDON_PASSWORD', 'aiRzdgEuvx3iJPje78pp'),
-    'database': os.environ.get('MYSQL_ADDON_DB', 'btkfgad5kv7rkgp2ljbl'),
-    'port': os.environ.get('MYSQL_ADDON_PORT', '21667'),
+    'host': os.environ.get('MYSQL_ADDON_HOST', 'localhost'),
+    'user': os.environ.get('MYSQL_ADDON_USER', 'root'),
+    'password': os.environ.get('MYSQL_ADDON_PASSWORD', ''),
+    'database': os.environ.get('MYSQL_ADDON_DB', 'capstoneproject'),
+    'port': os.environ.get('MYSQL_ADDON_PORT', '3306'),
 }
 
 try:
@@ -1695,6 +1685,7 @@ def submit_written():
     if kind == "Written Warning":
 
         remarks = request.form.get('remarks')
+        complainant = request.form.get('student2')
         norms = request.form.get('norms')
         courseorposition = session.get('course', '')
         department = request.form.get('department')
@@ -2343,7 +2334,7 @@ def submit_approve():
     db_connection.commit()
     db_cursor.close()
 
-    return redirect('/request')
+    return redirect('/head')
 
 
 @app.route('/submit_reject', methods=['GET', 'POST'])
@@ -2360,7 +2351,7 @@ def submit_reject():
     db_connection.commit()
     db_cursor.close()
 
-    return redirect('/request')
+    return redirect('/head')
 
 
 @app.route('/delete_sanction', methods=['POST'])
@@ -2686,7 +2677,7 @@ def algorithm(complaint_text):
             for fold_idx, accuracy in enumerate(accuracies):
                 entries.append((model_name, fold_idx, accuracy))
 
-        # Initialize and train the LinearSVC model
+        # Initialize and train the KNeighborsClassifier model
         model = KNeighborsClassifier(n_neighbors=5)
         model.fit(tfidf.transform(X_train), y_train)
 

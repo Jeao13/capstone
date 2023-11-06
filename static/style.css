@@ -5,167 +5,7 @@ body {
   background-color: #f0f0f0;
 }
 
-/* HOME PAGE*/
-/* Container styles with shadow */
-    /* Logo styles */
-.logo {
-      font-size: 26px; /* Adjust font size */
-      margin-left: 10px;     
-      font-weight: normal; /* Remove bold style */
-  }
-
-.cont {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0; /* Remove padding to make navbar take the full width */
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Add shadow here */
-  background-color: #fff; /* Optional: Add a background color for the container */
-}
-
-/* Dark gray navbar styles with shadow */
-.logo {
-  font-size: 16px; /* Adjust font size */
-  margin-right: 10px; /* Add margin to the right to create space between logo and text */
-  font-weight: normal; /* Remove bold style */
-}
-
-.navbar {
-  background-color: #333;
-  color: #fff;
-  display: flex;
-  justify-content: flex-start; /* Change to 'flex-start' to move items to the left */
-  align-items: center;
-   /* You can adjust this margin as needed */
-  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2); /* Add shadow here */
-}
-
-
-/* Image container styles */
-.image-container {
-    background-image: url('static\headi.png'); /* Replace with your background image URL */
-    background-size: cover;
-    background-position: center;
-    height: 150px; /* Adjust the height as needed */
-    position: relative;
-    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
-   
-
-}
-
- /* Tab navigation styles */
- .tab-container {
-  display: flex;
-}
-#trackStatusLink {
-  color: black; /* Set the text color to black */
-  text-decoration: none; /* Remove underline if needed */
-  cursor: pointer; /* Change the cursor on hover to indicate it's clickable */
-}
-.tab {
-  display: flex;
-  align-items: center;
-  margin-right: 20px;
-  cursor: pointer;
-}
-
-.tab i {
-  font-size: 24px;
-  color: red;
-  margin-right: 5px;
-}
-
-.tab span {
-  color: black; /* Set the initial text color to black */
-}
-
-/* Remove underline from anchor elements inside tabs */
-.tab a {
-  text-decoration: none;
-}
-
-.button-container {
-  display: flex;
-  flex-direction: column; /* Stack buttons vertically */
-  align-items: center; /* Center-align buttons horizontally */
-  margin-top: 60px; /* Add spacing at the top */
-}
-
-.button-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 40px; /* Add spacing between button rows */
-  
-}
-
-/* Add margin between the buttons in a row */
-.green-button {
-  width: 250px;
-  height: 60px;
-  margin-right: 100px; /* Add space between buttons */
-}
-.green-button:last-child {
-  margin-right: 0; /* Remove margin from the last button in a row */
-}
-
-.green-button {
-  
-  background-color: #fff;
-  color: #4CAF50; /* Green text color */
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2); /* Add box shadow */
-}
-
-.green-button i {
-  font-size: 24px;
-  margin-right: 10px; /* Add space between icon and text */
-}
-
-
-.containerx {
-  display: flex;
-  float:right;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items:flex-end;
-
-  /* Align top and bottom *//* Set the container to 100% viewport height */
-}
-
-/* Contact container styles */
-.contact-container {
-  display: flex;
-  align-items: center;
-  margin-top: 20px; /* Add spacing at the top */
-}
-
-/* Contact icon styles */
-.contact-icon {
-  font-size: 24px;
-  margin-right: 10px; /* Add space between icon and text */
-}
-
-/* Contact text styles */
-.contact-text {
-  color: #000; /* Black text color */
-  font-size: 12px;
-  display: flex;
-  align-items: center; /* Align icon and text vertically */
-  margin-right: 20px;
-
-  margin-left: 40px;
-}
-.contact-text1 {
-  color: #000; /* Black text color */
-  font-size: 12px;
-  display: flex;
-  align-items: center; /* Align icon and text vertically */
-  margin-left: 60px;
-}
+/*LOGIN*/
 
 .footer {
   position: fixed;
@@ -174,11 +14,22 @@ body {
   width: 100%;
   background-color: #c50303;
   text-align: left; /* Center the text */
-  padding: 10px 0; /* Adjust vertical padding and remove horizontal padding */
   color: white;
-  font-size: 14px;
+  padding-inline: 30px;
+  padding-block: 10px;
 }
 
+.footer-portal {
+  width: fit-content;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #c50303;
+  text-align: left; /* Center the text */
+  text-indent: 30px;
+  padding: 10px 0px; /* Adjust vertical padding and remove horizontal padding */
+  color: white;
+}
 
 .login {
   min-height: 100vh;
@@ -191,14 +42,12 @@ body {
 }
 
 .bg-image {
-  
   background-size: contain; /* Fit image within the container without cropping */
   background-position: left top; /* Fixed at the top left corner */
   background-repeat: no-repeat; /* Prevent the image from repeating */
   height: 100vh; /* 100% viewport height */
   width: 100%; /* 100% width within the container */
 }
-
 
 .divider {
   border-top: 1px solid #ccc;
@@ -211,7 +60,6 @@ label {
 }
 
 .login-heading {
- 
   font-weight: 900;
   font-size: 30px; /* Adjust as needed */
 }
@@ -232,19 +80,28 @@ element.style{
   margin:auto;
 }
 
-
-
-
-
 /* Center the reCAPTCHA container and position it near the bottom */
-
 .captcha-container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+.log-btn {
+  background-color: #008000; /* Green background color */
+  color: #fff; /* White text color */
+  border: none; /* Remove the button border */
+  border-radius: 30px; /* Make the button round */
+  padding: 10px 20px; /* Add padding to make the button larger */
+  cursor: pointer; /* Change cursor to a pointer on hover */
+  margin-left: 150px;
+  margin-top: 20px;
+  width: 200px;
+}
 
+.log-btn:hover {
+  background-color: #006400; /* Darker green on hover */
+}
 
 .error-message {
   font-size: small;
@@ -253,7 +110,7 @@ element.style{
   font-weight: bold;
 }
 
-/* Default styles for larger screens */
+/* mobile phone */
 .login {
   min-height: 100vh;
   display: flex;
@@ -295,23 +152,13 @@ element.style{
   color: #888;
 }
 
+element.style{
+  margin:auto;
+}
+
 /* Reduce margins for smaller screens */
 .divider {
   margin: 5px 0; /* Adjust margin as needed */
-}
-
-/* Smaller footer font size */
-.footer {
-  font-size: 12px;
-}
-
-/* Styles for mobile screens */
-/* Styles for mobile screens */
-@media (max-width: 768px) {
-    .bg-image-container {
-        display: none; /* Hide the background image container */
-    }
-    
 }
 
   .form-floating input[type="text"],
@@ -335,14 +182,205 @@ element.style{
       margin: 3px 0; /* Reduce margin for smaller screens */
   }
 
-  .footer {
-      font-size: 10px;
-  }
-
   @media (max-width: 768px) {
     .captcha-container {
         text-align: center; /* Center the reCAPTCHA container horizontally */
     }
+}
+
+/* HOME PAGE*/
+/* Container styles with shadow */
+/* Logo styles */
+.logo {
+  font-size: 26px; /* Adjust font size */
+  margin-left: 10px;     
+  font-weight: normal; /* Remove bold style */
+}
+
+.cont {
+  max-width: 1000px;
+  min-width: 375px;
+  margin: 0 auto;
+  padding: 0; /* Remove padding to make navbar take the full width */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Add shadow here */
+  background-color: #fff; /* Optional: Add a background color for the container */
+}
+
+/* Dark gray navbar styles with shadow */
+.logo {
+  font-size: 16px; /* Adjust font size */
+  margin-right: 10px; /* Add margin to the right to create space between logo and text */
+  font-weight: normal; /* Remove bold style */
+}
+
+.navbar {
+  background-color: #333;
+  color: #fff;
+  display: flex;
+  justify-content: flex-start; /* Change to 'flex-start' to move items to the left */
+  align-items: center;
+  /* You can adjust this margin as needed */
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2); /* Add shadow here */
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  align-items: center; /* Center-align buttons horizontally */
+}
+
+.button-row {
+  gap: 20px; /* Adjust this value for the desired space between buttons */
+  display: flex;
+  justify-content: space-between;
+  margin-block: 40px; /* Add spacing between button rows */
+}
+
+.green-button {
+  width: 200px;
+  height: 60px;
+  background-color: #fff;
+  color: #4CAF50; /* Green text color */
+  border: none;
+  padding: 10px 20px;
+  margin-inline: 30px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2); /* Add box shadow */
+
+ /* Hover effect */
+  &:hover {
+    background-color: #008000df; /* Background color on hover (green) */
+    color: #ffffff; /* Text color on hover (white) */
+    }
+}
+
+.green-button i {
+font-size: 24px;
+margin-right: 10px; /* Add space between icon and text */
+}
+/* Styles for screens with a maximum width of 768px (typical for mobile devices) */
+@media screen and (max-width: 768px) {
+  .cont {
+    max-width: 100%; /* Allow the container to take the full width */
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center; /* Center-align buttons horizontally */
+    }
+    
+    .button-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px; /* Add spacing between button rows */
+    }
+}
+
+/* Contact container styles */
+.contact-container {
+  display: flex;
+  margin-inline: 30px;
+  flex-direction: column;
+  margin-block: 30px;
+}
+
+.contact-info {
+  display: flex;
+  align-items: center;
+  margin-inline: 12px;
+}
+
+/* Contact icon styles */
+.contact-icon {
+  font-size: 24px;
+  margin-right: 20px; /* Add space between icon and text */
+}
+
+/* Contact text styles */
+.contact-text {
+color: #000; /* Black text color */
+font-size: 12px;
+display: flex;
+align-items: center; /* Align icon and text vertically */
+margin-right: 20px;
+margin-left: 40px;
+}
+
+.contact-text1 {
+  color: #000; /* Black text color */
+  font-size: 12px;
+  display: flex;
+  align-items: center; /* Align icon and text vertically */
+  margin-left: 60px;
+  gap: 10px;
+}
+
+.contact-text1 {
+color: #000; /* Black text color */
+font-size: 12px;
+display: flex;
+align-items: center; /* Align icon and text vertically */
+margin-left: 60px;
+}
+
+.contact-text2 {
+  color: #000; /* Black text color */
+  font-size: 16px;
+  display: flex;
+  align-items: center; /* Align icon and text vertically */
+  margin-left: 60px;
+  }
+/* Define the hover effect for .contact-text */
+.contact-text:hover, .contact-text1:hover {
+  width: max-content;
+  background-color: #f0f0f0; /* Change the background color on hover */
+  cursor: pointer; /* Change the cursor to a pointer on hover */
+}
+
+/* You can also change the text color on hover */
+.contact-text:hover p, .contact-text1:hover p {
+  color: #800000; /* Change the text color on hover to green */
+}
+
+/* Define the hover effect for .contact-text */
+.contact-text:hover, .contact-text1:hover {
+  width: max-content;
+  background-color: #f0f0f0; /* Change the background color on hover */
+  cursor: pointer; /* Change the cursor to a pointer on hover */
+}
+
+/* You can also change the text color on hover */
+.contact-text:hover p, .contact-text1:hover p {
+  color: #800000; /* Change the text color on hover to green */
+}
+
+.file-text {
+  color: #000; /* Black text color */
+  font-size: 18px;
+  display: flex;
+  align-items: center; /* Align icon and text vertically */
+  margin-inline: 30px;
+}
+
+.file-text1 {
+  color: #000; /* Black text color */
+  font-size: 16px;
+  display: flex;
+  align-items: center; /* Align icon and text vertically */
+  text-decoration: none;
+  margin-top: 20px;
+}
+
+.file-container {
+  line-height: 30px;
+  text-align: justify;         
+  margin-inline: 30px;
+  background-color: #fff;
+  padding-bottom: 20px;
 }
 
 /* Add a black background color to the top navigation */
@@ -371,74 +409,115 @@ element.style{
 /* profile */
 
 .image-container {
-  background-image: url('static\headi.png'); /* Replace with your background image URL */
-  background-size: cover;
-  background-position: center;
-  height: 150px; /* Adjust the height as needed */
   position: relative;
-  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
- 
 }
 
-
-
-
-  .user-profile {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color:transparent;
+.user-profile {
+  position: absolute;
+  top: 50%; /* Position the element vertically at the center of the parent */
+  left: 0; /* Position the element at the left edge of the parent */
+  transform: translateY(-50%); /* Move the element up by 50% of its own height to center it vertically */
+  background: rgba(255, 255, 255, 0.658);
+  width: 100%;
+  height: 80%;
+  display: flex; /* To use align-items */
+  align-items: center; /* Center content vertically within the element */
+  justify-content: left; /* Center content horizontally within the element */
 }
-           
 
+/* Additional styling for the user-profile */
 .user-profile img {
-    max-width: 450px; /* Adjust as needed */
-    margin-right: 10px; /* Add some spacing between the image and text */
-    padding-left:30px;
-    padding-top:40px;
+  border-radius: 5%; /* Make the profile picture round */
+  max-width: 150px;
+  height: auto;
+  padding-left: 40px;
 }
 
 .user-info {
-  position: absolute;
-  top: 50%; /* Vertically center the text */
-  left: 20px; /* Add left spacing */
-  transform: translateY(-50%); /* Correct vertical alignment */
-  color: #000000;
-  font-size: 24px;
-  font-weight: bold;
+  position: relative;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column; /* Stack the text elements vertically */
 }
-  
+
+.overlay-text, .overlay-text1 {
+  margin-left: 20px;
+}
+
 .overlay-text {
-  position: absolute;
+  white-space: nowrap;
   top: 50%; /* Vertically center the text */
   left: 20px; /* Add left spacing */
-  transform: translateY(-50%); /* Correct vertical alignment */
   color: #000000;
-  font-size: 30px;
-  font-weight: bolder;
-  
+  font-size: 26px;
+  font-weight: bold;
 }
 
 .overlay-text1 {
-  position: absolute;
+  white-space: nowrap;
+  margin-top: 20px; /* Add some space between overlay-text and overlay-text1 */
   top: 50%; /* Vertically center the text */
   left: 20px; /* Add left spacing */
-  transform: translateY(-50%); /* Correct vertical alignment */
   color: #000000;
-  font-weight: bold;
-  font-size: 25px;
-
+  font-size: 20px;
 }
+
+@media (max-width: 500px) {
+  .body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    font-size: 12px !important;
+  }
+
+  .user-profile img {
+    max-width: 125px;
+    height: auto;
+    padding-left: 20px;
+  }
+
+  .user-info {
+    position: relative;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column; /* Stack the text elements vertically */
+  }
+
+  .overlay-text {
+    white-space: nowrap;
+    top: 50%; /* Vertically center the text */
+    left: 10px; /* Add left spacing */
+    color: #000000;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .overlay-text1 {
+    white-space: nowrap;
+    margin-top: 15px; /* Add some space between overlay-text and overlay-text1 */
+    top: 50%; /* Vertically center the text */
+    left: 10px; /* Add left spacing */
+    color: #000000;
+    font-size: 16px;
+  }
+}
+
 
  /* Container for reminders */
  .reminders-container {
   line-height: 30px;
   text-align: justify;         
-  padding: 10px 30px 30px 30px;
+  padding: 20px;
   background-color: #fff;
-  
+}
+
+.reminders-container1 {
+  line-height: 30px;
+  text-align: justify;         
+  padding-inline: 40px;
+  padding-block: 20px;
+  background-color: #fff;
 }
 
 /* Header styles */
@@ -446,6 +525,13 @@ element.style{
   display: flex;
   align-items: center;
 }
+
+.header-reminder {
+  display: flex;
+  align-items: center;
+  margin-inline: 12px;
+}
+
 
 /* Header title styles */
 .header-title {
@@ -456,8 +542,14 @@ element.style{
 }
 
 /* Header icon styles */
+
 .header-icon {
   font-size: 24px;
+  
+} 
+.header-icon2 {
+  font-size: 24px;
+  color: #c50303;
 }
 /* Header icon styles */
 .header-icon1 {
@@ -466,50 +558,40 @@ element.style{
 }
 
   /* Add a color to the active/current link */
-  .topnav a.active {
-    background-color: #04AA6D;
-    color: white;
-  }
-  
-  .topnav a.notif {
+.topnav a.logout {
     float:right;
-  }
+}
 
-  .topnav a.logout {
-    float:right;
-  }
-
-  
-  .user-profile img {
+.user-profile img {
     width: 200px; /* Set the desired width */
-    height: 200px; /* Set the desired height */
+    height: auto; /* Set the desired height */
+}
+/* Style links */
+a {
+  color: #007BFF;
+  text-decoration: none;
 }
 
- /* Style for the modal container */
- .modal {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  background-color: white;
-  z-index: 1;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  padding: 20px;
-
+a:hover {
+  text-decoration: underline;
 }
+
+
+ 
 
 /* Style for the modal content */
-.modal-content {
-  background-color: #fefefe; 
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-  max-height: 80vh; /* Adjust the maximum height as needed */
-  overflow-y: auto; /* Add overflow-y property to enable vertical scrolling */
-  margin-bottom: 20px; 
-  border-radius: 10px;
-}
 
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  overflow: auto; /* Enable scrolling within the modal */
+}
 /* Style for the close button */
 .close {
   font-size: 30px;
@@ -518,18 +600,165 @@ element.style{
   float: right;
 }
 
-#report {
-  padding-top:20px;
-  margin-top:20px;
-  padding-left:15px;
-  padding-right:15px;
-  vertical-align: top;
-  font-size: 16px; 
-  width: 98%;
-  height: 70%;
-  resize: none;
+/* Style the report containers within the modal */
+.report {
+  margin: 20px 0;
+  border: 1px solid #e0e0e0;
+  padding: 15px;
+  border-radius: 5px;
 }
 
+/* Style the Call Slip Form link */
+.report a {
+  color: #007BFF; /* Link color */
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.report a:hover {
+  color: #0056b3; /* Darker color on hover */
+}
+
+/* Add a separator between reports */
+.report-separator {
+  border: 1px solid #e0e0e0;
+  margin: 20px 0;
+}
+h1#modal-title {
+  font-size: 24px;
+}
+
+.report-separator {
+  border: 3px solid #ccc;
+  margin: 10px 0;
+}
+
+
+/* Form container styles */
+.form-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+    justify-content: space-between;
+}
+
+/* Form element styles */
+.form-element {
+  flex: 1;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 45%; /* Adjust as needed to control the width of individual elements */
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  color: #333;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  font-size: 16px;
+}
+
+/* Label styles */
+.form-element label {
+  margin-bottom: 5px;
+}
+
+/* Input styles */
+.form-element input {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+/* Form container styles */
+
+/* Form row styles */
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+/* Form element styles */
+.form-element {
+  flex: 1;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 50%; /* Adjust as needed to control the width of individual elements */
+}
+
+/* Label styles */
+.form-element label {
+  
+  margin-bottom: 5px;
+}
+
+/* Input styles */
+.form-element input {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+.green-submit-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 12px 24px; /* Decrease the padding slightly */
+  font-size: 1rem; /* Decrease the font size slightly */
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  margin: 0 auto;
+  cursor: pointer;
+  border-radius: 4px;
+
+}
+
+/* Custom checkbox container styles */
+.custom-checkbox-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Custom checkbox item styles */
+.custom-checkbox-container .checkbox-item {
+  display: flex;
+  align-items: center;  
+  margin-bottom: 10px;
+}
+
+/* Custom checkbox styles */
+.custom-checkbox-container input[type="checkbox"] {
+  width: 20px; /* Set the checkbox width */
+  height: 20px; /* Set the checkbox height */
+  margin-right: 10px;
+}
+
+/* Custom text label styles */
+.custom-checkbox-container label {
+  flex: 1;
+  font-size: 16px;
+}
+
+/* Checkbox container styles */
+.checkbox-container {
+ 
+  display: flex;
+  align-items: center;
+}
+
+/* Checkbox styles */
+#fieldwork {
+  margin-right: 10px; /* Add spacing between the checkbox and text */
+}
 
 
 #submit{
@@ -545,43 +774,47 @@ form textarea {
   /* Additional styles... */
 }
 
+/* Style the modal title */
+h3 {
+  font-size: 24px;
+  margin: 10px 0;
+}
+
+/* Style the table within the modal */
 table {
-  border-collapse: collapse;
   width: 100%;
+  border-collapse: collapse;
 }
 
-/* Define styles for table headers (th) */
-th {
-  border: 1px solid #000000;
-  padding: 8px;
+th, td {
+  border: 1px solid #ddd;
+  padding: 10px;
   text-align: left;
 }
 
-/* Define styles for table cells (td) */
-td {
-  border: 1px solid #000000;
-  padding: 8px;
-  text-align: left;
+thead {
+  background-color: #6b6c6c; /* Header background color */
+  color: #fff; /* Header text color */
+}
+
+/* Style the table rows */
+tbody tr:nth-child(even) {
+  background-color: #f2f2f2; /* Alternate row background color */
+}
+
+/* Style links within the table */
+table a {
+  color: #007BFF; /* Link color */
+  text-decoration: none;
+}
+
+table a:hover {
+  color: #0056b3; /* Darker color on hover */
 }
 
 .view-report-button {
   float: right;
   margin-right: 10px;
-}
-
-#reports-container{
-  background-color: white;
-  margin:5px;
-  padding: 5px;
-  border: 1px solid #000000;
-  width: 50%;
-  margin: 0 auto;
-  text-align: left;
-}
-
-.report-separator {
-  border-top: 1px solid #ccc; /* Style the separator as a horizontal line */
-  margin-bottom: 20px; /* Add margin to create spacing between reports */
 }
 
 .report {
@@ -602,21 +835,47 @@ td {
 }
 
 .notifications {
-  display: none; /* Initially hidden */
-  position: absolute;
-  margin-top: 5%;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  padding: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  z-index: 999; /* Ensure it appears above other elements */
-  width: 18%;
-  margin-top:2%;
-  overflow: auto;
-
-  height: 30%;
+  display: none;
+  position: fixed; /* Fixed position for the overlay */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center horizontally and vertically */
+  background-color: rgba(219, 182, 182, 0.8);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+  width: 80%; /* Adjust the width as needed */
+  max-width: 400px; /* Adjust the maximum width as needed */
+  color: #000000; /* Text color */
+  font-family: Arial, sans-serif; /* Choose a modern font */
 }
 
+/* To make the content of the notifications appear sleek and modern, you can style the text, links, and other elements as needed within the .notifications container. */
+.notifications p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 10px 0;
+}
+
+.notifications a {
+  color: #00a4e0; /* Link color */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.notifications a:hover {
+  text-decoration: underline;
+}
+
+.notifications .close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  color: #fff;
+  cursor: pointer;
+}
 
 .status-change-confirmation {
   display: none;
@@ -743,6 +1002,16 @@ td {
   color: #999; /* Adjust the color as needed */
 }
 
+#char-count5 {
+ flex-direction: row;
+ flex:right;
+ bottom: 5px; /* Adjust the distance from the bottom as needed */
+ /* Adjust the distance from the right as needed */
+font-size: 15px; /* Adjust the font size as needed */
+  
+}
+
+
  /* Style for the modal container */
  .modal {
   display: none; /* Hidden by default */
@@ -780,7 +1049,23 @@ td {
     float: right;
 }
 
+.terms-content {
+  background-color: #fefefe;
+  padding: 20px;
+  width: 60%;
+  max-height: 80vh; /* Adjust the maximum height as needed */
+  overflow-y: auto; /* Add overflow-y property to enable vertical scrolling */
+  border-radius: 10px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
 
+.terms-info {
+  margin: 20px;
+  text-align: justify;
+}
 
 /* CSS for the close button */
 .close-button {
@@ -915,125 +1200,246 @@ transform: translate(-50%, -50%);
   display: block;
 }
 
+.modal-title{
+  font-size: smaller;
+  display: block;
+  margin-top: 10px;
+}
 
+label {
+  font-size: smaller;
+  display: block;
+  margin-top: 10px;
+}
 
-        /* Overlay styles */
-        .overlay {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color:transparent;
-      }
-
-      /* Text styles on the overlay */
-      .overlay-text {
-          position: absolute;
-          top: 50%; /* Vertically center the text */
-          left: 20px; /* Add left spacing */
-          transform: translateY(-50%); /* Correct vertical alignment */
-          color: #000000;
-          font-size: 24px;
-          font-weight: bold;
-          
-      }
-
-      .overlay-text1 {
-          position: absolute;
-          top: 50%; /* Vertically center the text */
-          left: 20px; /* Add left spacing */
-          transform: translateY(-50%); /* Correct vertical alignment */
-          color: #000000;
-          font-size: 15x;
-       
-      }
-
-      .overlay-text2 {
-          position: absolute;
-          top: 50%; /* Vertically center the text */
-          left: 20px; /* Add left spacing */
-          transform: translateY(-50%); /* Correct vertical alignment */
-          color: #000000;
-          font-size: 15x;
-          font-weight: bold;
-       
-      }
-
-
-      /* Container for reminders */
-      .reminders-container {
-       
-          padding: 20px;
-          background-color: #fff;
-          
-      }
-
-      /* Header styles */
-      .header {
-          display: flex;
-          align-items: center;
-      }
-
-      /* Header title styles */
-      .header-title {
-          font-size: 18px;
-          font-weight: bold;
-          margin-right: 10px;
-      }
-      .header-title1 {
-          margin-top:50px;
-          color:#333;
-          font-size: 18px;
-          font-weight: bold;
-          margin-right: 10px;
-      }
-
-      /* Header icon styles */
-      .header-icon {
-          font-size: 24px;
-      }
-      /* Header icon styles */
-      .header-icon1 {
-          font-size: 12px;
-          margin-right: 20px;
-      }
 
       /* Tab navigation styles */
 
-     
-      /* Tab navigation styles */
-      .tab-container {
-          display: flex;
-      }
+/* Tab navigation styles */
+/* Tab container styles */
 
-      .tab {
-          display: flex;
-          align-items: center;
-          margin-right: 20px;
-          cursor: pointer;
-      }
+/* Tab navigation styles */
 
-      .tab i {
-          font-size: 24px;
-          color: red;
-          margin-right: 5px;
-      }
+  #trackStatusLink {
+  color: black; /* Set the text color to black */
+  text-decoration: none; /* Remove underline if needed */
+  cursor: pointer; /* Change the cursor on hover to indicate it's clickable */
+  }
 
-      .tab span {
-          color: black; /* Set the initial text color to black */
-      }
+  
+  .tab i {
+  font-size: 24px;
+  color: #c50303;
+  margin-right: 5px;
+  }
 
-      /* Remove underline from anchor elements inside tabs */
-      .tab a {
-          text-decoration: none;
-      }
+.tab-container {
+  background-color: transparent;
+  margin-inline: 30px;
+}
 
+/* Sidebar styles */
+.sidebar {
+  border-style:  2px solid #555; /* Only top border for active tab */
+  display: flex;
+  flex-direction: row; /* Align tabs in a row */
+  align-items: center;
+}
 
+@media (max-width: 600px) {
+  .green-button {
+    width: 70%; /* At a screen width of 768px or less, buttons take up 50% of their container width */
+  }
 
-  .faq-container {
-  width: 100%;
+  .sidebar{
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 20px;
+  }
+}
+
+/* Tab styles */
+.tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: background-color 0.3s ease;
  
+ 
+ 
+}
+
+/* Tab hover effect */
+.tab:hover {
+  background-color: #55555528;
+  transform: scale(1.05);
+}
+
+/* Active tab styles */
+.tab.active {
+  background-color: #fff;
+  color: #000;
+  border-top: 2px solid #555; /* Only top border for active tab */
+  border-left: 2px solid transparent; /* Transparent left border for active tab */
+  border-right: 2px solid transparent; /* Transparent right border for active tab */
+}
+
+/* Tab icon styles */
+.tab i {
+  font-size: 24px;
+  color: #d10505;
+  margin-right: 5px;
+  }
+
+/* Tab link styles */
+.tab a {
+  text-decoration: none;
+  color: #000;
+}
+
+
+/* Style for the button */
+.view-report-button {
+  background-color: #4CAF50; /* Green background color */
+  color: #fff; /* White text color */
+  padding: 10px 20px; /* Adjust padding as needed */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Change button color on hover */
+.view-report-button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+/* Dropdown styles */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #333; /* Set background color for dropdown */
+  min-width: 160px;
+  z-index: 1;
+  border-radius: 4px;
+}
+
+.dropdown-content a {
+  color: #fff; /* Set text color to white for dropdown links */
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block; /* Show the dropdown content on hover */
+}
+
+/* Adjust the styles for the icons */
+.tab i {
+  font-size: 24px;
+  margin-right: 30px; /* Increase the spacing between icon and text */
+}
+
+/* Style the tab container */
+#tab3 .tab-content {
+  background-color: #fff; /* Background color for the tab content */
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle box shadow */
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+/* Style the navigation bar container */
+#tab3 .navbar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Style the individual navigation items (tabs) */
+#tab3 .nav-item {
+  width: 300px; /* Adjust the width as needed */
+  height: 40px; /* Adjust the height as needed */
+  border-radius: 5px;
+  background-color: rgba(197, 200, 203, 0.751); /* Background color for the tabs */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px; /* Add spacing between tabs */
+  color: #000000; /* Text color for the tabs */
+  text-decoration: none;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Add hover effect on the tabs */
+#tab3 .nav-item:hover {
+  background-color: #3e8435; /* Darker background on hover */
+  transform: scale(1.05); /* Slight scale effect on hover */
+}
+
+/* Style the report containers */
+#reports-container .report {
+  background-color: #f7f7f7; /* Background color for the report container */
+  border: 1px solid #e0e0e0; /* Add a subtle border */
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+  margin: 10px 0;
+}
+
+/* Style the view report buttons */
+#reports-container .view-report-button {
+  background-color: #4CAF50; /* Button background color */
+  color: #fff; /* Button text color */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Add hover effect on the view report buttons */
+#reports-container .view-report-button:hover {
+  background-color: #437a45; /* Darker background on hover */
+}
+
+/* Style the report containers */
+#tab2 .report {
+  background-color: #f7f7f7; /* Background color for the report container */
+  border: 1px solid #e0e0e0; /* Add a subtle border */
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+  margin: 10px 0;
+}
+
+/* Style the view report buttons */
+#tab2 .view-report-button {
+  background-color: #4CAF50; /* Button background color */
+  color: #fff; /* Button text color */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Add hover effect on the view report buttons */
+#tab2 .view-report-button:hover {
+  background-color:  #437a45;  /* Darker background on hover */
+}
+
+
+
+.faq-container {
+  width: 100%;
 }
 
 .faq-question {
@@ -1042,26 +1448,29 @@ transform: translate(-50%, -50%);
   justify-content: space-between;
   margin-right: 10px;
   margin-top: 20px;
-  margin-left: 20px;
+  margin-left: 40px;
   border-bottom: 1px solid #ccc; /* Add a border line below each question */
   padding-bottom: 10px; /* Adjust the spacing as needed */
 }
 
 .faq-answer {
-  font-size: small;
+  font-size: 14px;
   color: #333;
   margin-top: 10px;
-  margin-left: 20px;
+  margin-left: 60px;
   display: none;
+  justify-content: flex-end;
 }
 
 .dropdown-button {
   cursor: pointer;
   padding: 5px;
- 
   color: rgb(0, 0, 0);
   border: none;
   border-radius: 5px;
+  margin-left: 20px;
+  height: 30px;
+  width: auto;
 }
 
 /* Style the dropdown container */
@@ -1104,6 +1513,40 @@ transform: translate(-50%, -50%);
   border: 1px solid #000;
 }
 
+
+
+
+/* Add responsive styles using media queries */
+
+/* For screens with a maximum width of 768px (typical mobile devices) */
+@media (max-width: 768px) {
+  .contact-container {
+    height: auto;
+    overflow: visible;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+  }
+
+  .contact-text {
+    height: auto;
+    overflow: visible;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+  }
+
+  .contact-text1 {
+    height: auto;
+    overflow: visible;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+  }
+}
+
+/* Add more media queries as needed for specific breakpoints */
+
 #krazy {
   position: absolute; /* Position the container relative to the document */
   background-color: #fff;
@@ -1116,26 +1559,27 @@ transform: translate(-50%, -50%);
 }
 
 .report {
-  position: relative;
-  overflow: auto;
+  position: static;
 }
 
 .delete-button {
-
-  float:right;
+  position: absolute;
+  top: 5px;
+  right: 5px;
   font-weight: bold;
   font-size: 16px;
 
 }
-
-.page {
-  display: none; /* Initially hide all pages */
+.containerx {
+  float:right;
 }
 
-.page.active {
-  display: block; /* Display the active page */
-}
-
-#pagination {
-  text-align: center;
+#autoOpenModal {
+  position: fixed;
+  top: 50%;  /* Adjust this value to position the modal vertically as desired */
+  left: 50%;  /* Adjust this value to position the modal horizontally as desired */
+  transform: translate(-50%, -50%);
+  z-index: 1000;  /* Adjust the z-index to ensure the modal is above other elements */
+  /* Additional styles for width, max-width, background, etc. */
+  /* Add any other styles you want for your modal */
 }

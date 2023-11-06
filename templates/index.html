@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSD GRIEVANCE SYSTEM</title>
-    <link rel="icon" href="/static/logo.ico" type="image/x-icon"/>
+    <title>Your Page Title</title>
     <!-- Add your other meta tags, links to stylesheets, and scripts here -->
     <link rel="stylesheet" href="/static/style.css">
     <!-- Include Bootstrap CSS -->
@@ -15,112 +14,108 @@
     <script src="/static/script.js"></script>
 
 </head>
-<body>
-    <div class="container-fluid">
-        <div class="row g-0">
-            <div class="col-md-6 bg-image-container">
-                <div class="bg-image">
-                  <img src="static\bsubgs.png" width="800"
-                  alt="Sample image">
+
+    <body>
+        <section class="vh-100">
+            <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6 px-0 d-none d-sm-block">
+                    <img src="static\bsubgs.png" alt="Login image" class="w-100 vh-100" style="object-fit: cover;">
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="login d-flex align-items-center py-5">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-9 col-lg-8 mx-auto">
-                                <h3 class="login-heading mb-4">Sign In</h3>
-                                <h4 class="login-head mb-5">Please enter your details</h4>
 
-                                <div class="divider d-flex align-items-center my-4"></div>
+                <div class="col-sm-6 text-black">
+                    <div class="login d-flex align-items-center py-5">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-9 col-lg-8 mx-auto">
+                                    <h3 class="login-heading mb-4">Sign In</h3>
+                                    <h4 class="login-head">Please enter your details</h4>
 
-                                <!-- Sign In Form -->
-                                <form action="/" method="POST">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" id="username" name="username" class="form-control" id="floatingInput" placeholder="Enter your Sr-Code">
-                                        <label for="floatingInput">Sr-Code</label>
+                                    <div class="divider d-flex align-items-center my-4"></div>
+
+                                        <!-- Sign In Form -->
+                                        <form action="/" method="POST">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" id="username" name="username" class="form-control" id="floatingInput" placeholder="Enter your Sr-Code">
+                                                <label for="floatingInput">Sr-Code</label>
+                                            </div>
+
+                                            <div class="form-floating mb-3">
+                                                <input type="password" id="password" name="password" class="form-control" id="floatingPassword" placeholder="Enter your password">
+                                                <label for "floatingPassword">Password</label>
+                                            </div>
+
+                                            <h5 class="login-head5">*Password is case sensitive</h5>
+
+                                            <div class="captcha-container">
+                                                <div class="g-recaptcha" data-sitekey="6Lf6r8MoAAAAALP1tP3pRrAbie3dWG1iRexIkK-a"></div>
+                                            </div>
+                                            <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" required>
+
+                                            <div class="login-btn" style="text-align: center; margin-top: 20px;">
+                                                <button class="btn btn-lg btn-success btn-login fw-bold px-5" type="submit">Sign in</button>
+                                            </div>
+                                        </form>
+
+                                        {% if error_message %}
+                                        <div class="center-text">
+                                            <p class="error-message">{{ error_message }}</p>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if captcha %}
+                                        <div class="center-text">
+                                            <p class="error-message">{{ captcha }}</p>
+                                        </div>
+                                        {% endif %}
                                     </div>
-
-                                    <div class="form-floating mb-3">
-                                        <input type="password" id="password" name="password" class="form-control" id="floatingPassword" placeholder="Enter your password">
-                                        <label for="floatingPassword">Password</label>
-                                    </div>
-
-                                    <h5 class="login-head5 mb-5">*Password is case sensitive</h5>
-
-                                    <div class="d-grid">
-                                        <button class="btn btn-lg btn-success btn-login fw-bold mb-2" type="submit">Sign in</button>
-                                    </div>
-
-                                    <div class="captcha-container">
-                                        <div class="g-recaptcha" data-sitekey="6Lf6r8MoAAAAALP1tP3pRrAbie3dWG1iRexIkK-a"></div>
-                                    </div>
-                                        <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" required>
-
-                                </form>
-
-                                {% if error_message %}
-                                <div class="center-text">
-                                    <p class="error-message">{{ error_message }}</p>
                                 </div>
-                                {% endif %}
-
-                                {% if captcha %}
-                                <div class="center-text">
-                                <p class="error-message" >{{ captcha }}</p>
-                                </div>
-                                {% endif %}
-
-                                       
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <!-- Copyright -->
-    <footer class="footer">
-        Copyright © 2023. Batangas State University
-    </footer>
+        <!-- Copyright -->
+        <footer class="footer">
+            <div class="row text-center align-items-end justify-content-center bottom-border py-1">
+            Copyright © 2023. Batangas State University</div>
+        </footer>
 
+            <div class="modal" style="display: block;" id="reportModal20">
+                <div class="terms-content">
+                    <span class="close" style="float:right;"onclick="closeModal20()">&times;</span>
+                    <h1>Terms of Condition</h1>
+                    <div style="border-bottom: 1px solid #ccc;"></div>
+                    <br>
+                    <h3>1. Introduction</h3>
+                    <p class="terms-info">1.1. These terms and conditions govern the use of the OSD Grievance System provided by the Office of Student Discipline - Alangilan at Batangas State University - The National Engineering University - Alangilan Campus. By using this System, you agree to comply with these terms and conditions.</p>
+                    <h3>2. Purpose of the System</h3>
+                    <p class="terms-info">2.1. The Grievance System is designed to facilitate the submission, processing, and resolution of grievances and requests for documents related to student discipline matters at the University.</p>
+                    <h3>3. Privacy and Data Protection</h3>
+                    <p class="terms-info">3.1. The University is committed to protecting your privacy and personal data. The System may collect and store personal information as necessary for the processing of grievances and document requests.</pre>
+                    <p class="terms-info">3.2. By using the System, you consent to the collection, processing, and storage of your personal information in accordance with the University's Privacy Policy.</p>
+                    <h3>4. User Responsibilities</h3>
+                    <p class="terms-info">4.1. Users of the System, including students, staff, and administrators, are responsible for providing accurate and truthful information when submitting grievances or document requests.</p>
+                    <p class="terms-info">4.2. Users must not use the System for any unlawful, fraudulent, or malicious purposes.</p>
+                    <h3>5. Grievance Submission</h3>
+                    <p class="terms-info">5.1. Users may submit grievances through the System following the designated procedures outlined by the Office.</p>
+                    <p class="terms-info">5.2. Grievances must be submitted in a timely manner, and users are responsible for providing all necessary information and supporting documentation.</p>
+                    <h3>6. Document Requests</h3>
+                    <p class="terms-info">6.1. Users may request documents related to their grievances through the System. The Office will process document requests in accordance with applicable policies and laws.</p>
+                    <h3>7. Confidentiality</h3>
+                    <p class="terms-info">7.1. The Office will make reasonable efforts to maintain the confidentiality of the information submitted through the System, in accordance with Republic Act No. 10173 or also known as Data Privacy Act 2012.</p>
+                    <h3>8. Dispute Resolution</h3>
+                    <p class="terms-info">8.1. Any disputes or concerns related to the use of the System should be directed to the Office for resolution.</p>
+                    <h3>9. Changes to Terms and Conditions</h3>
+                    <p class="terms-info">9.1. The University reserves the right to modify these terms and conditions at any time. Users will be notified of any changes, and continued use of the System constitutes acceptance of the revised terms.</p>
+                    <h3>10. Contact Information</h3>
+                    <p class="terms-info">10.1. For inquiries or assistance regarding the System, please contact the Office of Student Discipline through their email “osd.alangilan@g.batstate-u.edu.ph” and local hotline number “425-0139 loc. 2147”.</p>
+                </div>
+            </div>
+    </body>
 
-    <div class="modal" style="display: block;" id="reportModal20">
-        <div class="modal-content">
-            <span class="close" style="float:right;"onclick="closeModal20()">&times;</span>
-            <h1>Terms of Condition</h1><br>
-            <h3>Introduction</h3>
-            <p>1.1. These terms and conditions govern the use of the OSD Grievance System provided by the Office of Student Discipline - Alangilan at Batangas State University - The National Engineering University - Alangilan Campus. By using this System, you agree to comply with these terms and conditions.</p>
-            <h3>Purpose of the System</h3>
-            <p>2.1. The Grievance System is designed to facilitate the submission, processing, and resolution of grievances and requests for documents related to student discipline matters at the University.</p>
-            <h3> Privacy and Data Protection</h3>
-            <p>3.1. The University is committed to protecting your privacy and personal data. The System may collect and store personal information as necessary for the processing of grievances and document requests.</pre>
-            <p>3.2. By using the System, you consent to the collection, processing, and storage of your personal information in accordance with the University's Privacy Policy.</p>
-            <h3>User Responsibilities</h3>
-            <p>4.1. Users of the System, including students, staff, and administrators, are responsible for providing accurate and truthful information when submitting grievances or document requests.</p>
-            <p>4.2. Users must not use the System for any unlawful, fraudulent, or malicious purposes.</p>
-            <h3>Grievance Submission</h3>
-            <p>5.1. Users may submit grievances through the System following the designated procedures outlined by the Office.</p>
-            <p>5.2. Grievances must be submitted in a timely manner, and users are responsible for providing all necessary information and supporting documentation.</p>
-            <h3>Document Requests</h3>
-            <p>6.1. Users may request documents related to their grievances through the System. The Office will process document requests in accordance with applicable policies and laws.</p>
-            <h3>Confidentiality</h3>
-            <p>7.1. The Office will make reasonable efforts to maintain the confidentiality of the information submitted through the System, in accordance with Republic Act No. 10173 or also known as Data Privacy Act 2012.</p>
-            <h3>Dispute Resolution</h3>
-            <p>8.1. Any disputes or concerns related to the use of the System should be directed to the Office for resolution.</p>
-            <h3>Changes to Terms and Conditions</h3>
-            <p>9.1. The University reserves the right to modify these terms and conditions at any time. Users will be notified of any changes, and continued use of the System constitutes acceptance of the revised terms.</p>
-            <h3>Contact Information</h3>
-            <p>10.1. For inquiries or assistance regarding the System, please contact the Office of Student Discipline through their email “osd.alangilan@g.batstate-u.edu.ph” and local hotline number “425-0139 loc. 2147”.</p>
-
-        </div>
-    </div>
-
-
-         
-    
-</body>
 </html>
 
 

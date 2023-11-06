@@ -26,7 +26,7 @@ function w3_open() {
     }
     
 // Add click event listeners to navbar items
-document.querySelectorAll('.nav-item1').forEach(function (navItem) {
+document.querySelectorAll('.modern-sleek-nav-item').forEach(function (navItem) {
     navItem.addEventListener('click', function (event) {
         event.preventDefault();
         const targetId = navItem.getAttribute('data-target');
@@ -45,6 +45,7 @@ toggleContainer('pending');
     var major_input = document.getElementById("sanctionsInputmajor");
 
     document.getElementById("minor").addEventListener("click", function() {
+        console.log("minor")
         document.getElementById("sanctionsInputminor").style.display = "block";
         minor_input.required = true;
         document.getElementById("sanctionsInputmajor").style.display = "none";
@@ -53,6 +54,7 @@ toggleContainer('pending');
     });
     
     document.getElementById("major").addEventListener("click", function() {
+        console.log("major")
         document.getElementById("sanctionsInputmajor").style.display = "block";
         minor_input.required = false;
         document.getElementById("sanctionsInputminor").style.display = "none";
@@ -332,9 +334,8 @@ function closeModal12() {
 }
 
 
-
 function openModal2(id1) {
-    const modal = document.getElementById('modalContainer');
+    const modal = document.getElementById('modalContainer0');
     modal.style.display = 'block';
     // Create a new button element
     const newButton = document.createElement('input');
@@ -349,12 +350,12 @@ function openModal2(id1) {
     
 
 }
-function closeModal6() {
-    var modal = document.getElementById('modalContainer');
-
-    // Hide the modal
+function closeModalx() {
+    console.log("wow")
+    var modal = document.getElementById('modalContainer0');
     modal.style.display = 'none';
 }
+
 
 function openModal3(id) {
     const modal = document.getElementById('modalContainer');
@@ -852,7 +853,7 @@ function toggleInputFields() {
         else if (kindSelect.value === "Written Reprimand"){
             formContainer5.style.display = "none";
             formContainer6.style.display = "block";
-            formContainer7.style.display = "none";
+            formContainer7.style.display = "none";33
         }
         
         else {
@@ -1303,6 +1304,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
   function showRejectModal(id,code) {
+    console.log("lol")
     const modal = document.getElementById('rejectModal');
     modal.style.display = 'block';
     const newButton = document.createElement('input');
@@ -1365,6 +1367,7 @@ function checkStatus(id,code) {
 
     if (selectedValue === 'Rejected') {
         showRejectModal(id,code);
+        console.log("wew")
         return false; // Prevent the form submission
     }
 

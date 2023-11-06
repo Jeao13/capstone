@@ -1,151 +1,373 @@
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #454545;
+  color: white;
+  padding: 10px;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Stick the navbar to the top of the viewport */
+  width: 100%;
+  z-index: 100; /* Ensure the navbar is above other elements */
+}
+
+/* Styles for the dropdown container */
+.dropdown {
+  display: flex; /* Display dropdown as a flex container */
+}
+
+
+/* Styles for the profile button on the right side of the navbar */
+.profile-dropdown {
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* Pushes the button to the right end */
+}
+
+.profile-btn {
+  background-color: #454545;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Styles for the dropdown content associated with the profile button */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 160px;
+  z-index: -10; /* Set a higher z-index to layer it on top of other content */
+  top: 100%; /* Position the dropdown content below the profile button */
+}
+
+/* Style the profile dropdown items */
+.dropdown-content a {
+  color: rgb(0, 0, 0);
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color on hover for profile dropdown items */
+.dropdown-content a:hover {
+  background-color: #444444b9;
+}
+
+/* Display the profile dropdown content when hovering over the profile button */
+.profile-dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Push the profile dropdown to the right */
+.dropdown-push-prof {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+/* Additional styles for profile name and log */
+.profile-name {
+  color: rgb(0, 0, 0);
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.profile-log {
+  color: rgb(0, 0, 0);
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* Style for the profile image */
+.profile-img {
+  max-width: 50px;
+}
+
+.section-title{
+margin-top: 50px;
+  font-size: 30px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #333;
+
+}
+
+.form-title{
+  font-size: 30px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #333;
+
+}
+/* top bar*/
+.topnav {
+  height: auto;
+  overflow: visible;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: right;
+}
+
+.topnav a {
+  float: none;
+  margin: 5px;
+  text-align: right;
+}
+
+/* Sidebar styles */
 .sidebar {
-    height: 500px;
-    width: 150px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: #e2e2e2;
-    margin-top: 170px;
-    padding: 20px;/* Initially hide the sidebar */
-    text-decoration: none;
+  width: 250px;
+  background-color: #454545;
+  color: #fff;
+  position: fixed;
+  height: 100%;
+  transition: width 0.3s;
+  padding: 10px; /* Add padding to the sidebar */
+  box-sizing: border-box; /* Include padding in the width calculation */
 }
 
-.header {
-    height: 60px;
-    width: 100%;
-    display: flex;
-    justify-content:left;
-    padding-left:20px;
-    font-weight: bold;
-    top: 0;
-    left: 0;
-    color: white;
-    background-color: #000000;
-    text-align: center;
-    align-items: center;
+/* Add a hover effect to the sidebar */
+.sidebar:hover {
+  width: 270px;
 }
 
-.name {
-    height: 60px;
-    width: 100%;
-    display: flex;
-    justify-content:left;
-    padding-left:20px;
-    font-size: 30px;
-    font-weight: bold;
-    top: 0;
-    left: 0;
-    background-color: #a8a8a8;
-    text-align: center;
-    align-items: center;
-
-}
-.header img{
-    width:70px;
-    height:60px;
-   
-  
+/* Sidebar header styles */
+.sidebar-header {
+  font-size: small;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.name img{
-    width:70px;
-    height:60px;
-   
-  
+/* Logo styles */
+.sidebar-header img {
+  max-width: 100px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px;
 }
 
-.sidebar h2 {
-    color: #000000;
+/* List item styles */
+.sidebar ul li a {
+  background-image: linear-gradient(
+    to right,
+    #cb1313,
+    #a33535 50%,
+    #ffffff 50%
+  );
+  background-size: 200% 100%;
+  background-position: -100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.3s ease-in-out;
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px; /* Reduce the font size */
+  font-weight: 500;
+  line-height: 2.00;
+  text-decoration: none;
+  color: #fff;
+  padding: 5px; /* Reduce the padding */
+  text-decoration: none;
+}
+
+/* Add space between list items */
+.sidebar ul li {
+  list-style-type: none;
+  margin-bottom: 5px;
+}
+.sidebar ul li i {
+  margin-right: 10px; /* Adjust the margin as per your preference */
+}
+/* Hover effect on tabs */
+.sidebar ul li a:hover {
+  background-position: 0;
+}
+
+/* Dropdown styles */
+.dropdown {
+  box-shadow: none;
+  position: relative;
+  display: inline-block; /* Added to make the dropdown appear on the right side */
+}
+
+.dropdown-menu {
+  border-radius: 5px;
+  display: none;
+  position: absolute;
+  top: 0; /* Adjusted to align the top of the dropdown menu with the parent */
+  left: 100%; /* Adjusted to move the dropdown menu to the right of the parent */
+  background-color: #444;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-width: 200px; /* Set a minimum width for the dropdown menu */
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown a {
+  list-style-type: circle;
+  padding: 20px 20px;
+  transition: background 0.3s, color 0.3s;
+}
+.dropdown li {
+  margin: 0;
+  margin-left: 0; /* Adjusted to remove the left margin */
+  margin-bottom: 10px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.dropdown a:hover {
+  background-color: #ffffff9c;
+  color: #000000;
+}
+
+/* Optional: Add a smooth transition to the dropdown */
+.dropdown-menu {
+  opacity: 0;
+  transform: translateX(10px); /* Adjusted to move the dropdown to the right initially */
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.dropdown:hover .dropdown-menu {
+  opacity: 1;
+  transform: translateX(0); /* Adjusted to reset the transform to the right value */
 }
 
 
-.sidebar ul {
-    list-style: none;
-    padding: 0;
+hr.separator {
+  border: 5px solid rgb(72, 72, 72);
+  border-radius: 5px;
 }
 
-.sidebar li {
-    margin-bottom: 10px;
-}
+
 
 /* Define the content styles */
 .content {
-    margin-top: 40px;
-    margin-left: 150px; /* Adjust for the sidebar width */
-    padding: 20px;
-    position: relative;
-    width: 82%;
-    background-color: #e2e2e2;
-    height: 70vh;
-    overflow: auto;
-    
+  margin-top: 60px; /* Adjust to the height of your navbar */
+  margin-left: 300px; /* Adjust for the sidebar width */
+  padding: 20px;
+  position: relative;
+  width: 80%;
+  height: 70vh;
 }
 
 /* Style links in the sidebar */
 .sidebar a {
-    color: #000000;
+  border: #000000;
+  font-size: large;
+    color: #ffffff;
+  
+    margin-bottom: 20px;
     text-decoration: none;
 }
 
 /* Add CSS to hide sidebar in mobile view */
 .sidebar-toggle {
     display: block; /* Show the button by default */
+
+
 }
 
+
+/* Tab content styles */
 .tab-content {
-    display: none;
-    background-color: #e2e2e2;
+  display: none;
 }
 
+/* Make the active tab content visible */
 .tab-content.active {
-    display: block;
+  display: block;
 }
 
-body {
-    background: rgb(238, 227, 227);
-    color: black;
-    font-family: Arial, sans-serif !important
-}
-
-element.style{
-  margin:auto;
+/* Search form styles */
+#searchForm {
+  margin-top: 20px;
 }
 
 
-.login{
-    max-width: 500px;
-    margin-top: 20px;
-    margin: auto;
-    padding-top: 20px;
-    padding-bottom:20px;
-    text-align: center;
-    background: rgb(255, 255, 255);
+/* Complaint Tab*/
+#searchInput {
+  width: 70%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px; /* Add margin to the right for spacing */
 }
 
-/* Add a black background color to the top navigation */
-.topnav {
-    background-color: #333;
-    overflow: hidden;
-  }
+
+ /* Style the search bar button with a green color */
+ #searchForm button[type="submit"] {
+  background-color:#1da333;;
+  color: white;
+}
+
+
+
+/* Style the "Delete All Report" button with a red color */
+.delete_all_report {
+  background-color: #c51b1b;
+  color: white;
+}
+.delete_all_report :hover {
+  background-color: #6f0d0d;
+  color: white;
+}
+
+/* Adjust the spacing between the buttons and the table */
+
+
+/* Select department styles */
+#department1 {
+  width: 30%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Action button styles */
+.view-report-button {
+  padding: 10px 20px;
+  background-color: #4CAF50; /* Green button background color */
+  color: #fff; /* Button text color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Change status button and select styles */
+#statusChangeForm {
   
-  /* Style the links inside the navigation bar */
-  .topnav a {
-    float: left;
-    color: #f2f2f2;
-    text-align: center;
-    padding: 14px 16px; 
-    text-decoration: none;
-    font-size: 17px;
-    display: block;
-  }
-  
-  /* Change the color of links on hover */
-  .topnav a:hover {
-    background-color: #ddd;
-    color: black;
-  }
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
 
-  .user-profile {
+#new_status_select {
+  width: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+
+#statusChangeForm > form > button {
+  background-color:#1da333; /* Red button background color */
+}
+
+
+/*  .user-profile {
     display: flex;
     align-items: center;
     background-color: #ffffff;
@@ -153,17 +375,17 @@ element.style{
 }
 
 .user-profile img {
-    max-width: 450px; /* Adjust as needed */
-    margin-right: 10px; /* Add some spacing between the image and text */
+    max-width: 450px; /* Adjust as needed 
+    margin-right: 10px; /* Add some spacing between the image and text 
     padding-left:30px;
     padding-top:40px;
 }
 
 .user-info {
-    flex: 1; /* Allow the text to take up remaining space */
+    flex: 1; /* Allow the text to take up remaining space 
 }
   
-  /* Add a color to the active/current link */
+  /* Add a color to the active/current link 
   .topnav a.active {
     background-color: #04AA6D;
     color: white;
@@ -172,16 +394,16 @@ element.style{
   .topnav a.notif {
     float:right;
   }
-
+  
   .header a.logout {
     float:right;
   }
-
+  
   
   .user-profile img {
-    width: 200px; /* Set the desired width */
-    height: 200px; /* Set the desired height */
-}
+    width: 200px; /* Set the desired width 
+    height: 200px; /* Set the desired height 
+}*/
 
  /* Style for the modal container */
  .modal {
@@ -234,9 +456,7 @@ element.style{
 
 
 
-#submit{
-  float:right;
-}
+
 
 form textarea {
   /* Set the desired number of rows with !important */
@@ -246,25 +466,182 @@ form textarea {
   resize: none; /* Optional: Disable textarea resizing */
   /* Additional styles... */
 }
+/* Select label style */
+.select-label {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Form label style */
+.form-label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Form input style */
+.form-input {
+  width: 50%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 5px 0;
+  font-size: 14px;
+}
+.form-input1 {
+  width: 40%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+/* Form textarea style */
+.form-textarea {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 8px;
+  font-size: 14px;
+  resize: vertical;
+  margin: 5px 0;
+}
+
+/* Form button style */
+.form-button {
+
+  background-color:#19c642;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 8px 15px;
+  font-size: 14px;
+}
+
+.form-button:hover {
+  background-color:#159533;
+}
+.headtable{
+  margin-top: 30px;
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: -0; /* Set a higher z-index to layer it on top of other content */
+}
+
+.rep-table{
+  margin-top: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  
+  z-index: 0; /* Set a higher z-index to layer it on top of other content */
+  
+}
 
 table {
+  border: 1px solid #ccc;
   border-collapse: collapse;
-  width: 100%;
+ 
 }
 
 /* Define styles for table headers (th) */
-th {
-  border: 1px solid #000000;
-  padding: 8px;
-  text-align: left;
+
+
+ table td {  
+  font-size: smaller;
+  padding: 20px 10px;
+  text-align: center;
+  
+  border: 1px solid #ccc;
 }
 
-/* Define styles for table cells (td) */
-td {
-  border: 1px solid #000000;
-  padding: 8px;
-  text-align: left;
+table thead {
+  
+  background-color: #f2f2f2;
 }
+
+
+table th {
+  font-size: small;
+  color:white ;
+  background-color: #770a0a;
+  border: 1px solid #ccc;
+  padding: 20px 10px;
+  font-weight: bold;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+table tbody tr:hover {
+  background-color: #e0e0e0;
+}
+
+/* Style the buttons inside the table */
+table .view-report-button {
+  background-color: #1da333;
+  margin-left: 10px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+table .view-report-button:hover {
+  background-color: #1b6e29;
+}
+
+/* Style the select and change button in the status column */
+table select {
+  
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+table select:focus {
+  outline: none;
+}
+
+table form button[type="submit"] {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Style the submit button for changing status */
+table form button[type="submit"].status-button {
+  background-color:  #1da333;
+  color: #fff;
+}
+
+table form button[type="submit"].status-button:hover {
+  background-color: #1b6e29;
+}
+
+/* Style the submit button for deleting */
+table form button[type="submit"].delete-button {
+ margin: 3px 3px 3px 3px ;
+  background-color: #ed1919;
+  color: #fff;
+}
+
+table form button[type="submit"].delete-button:hover {
+  background-color: #962020;
+}
+/* Fix the table header at the top while scrolling */
+table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: #f2f2f2;
+}
+
 
 .view-report-button {
   float: right;
@@ -540,11 +917,41 @@ td {
   margin-bottom: 20px; 
 }
 
+/* Styles for the student info container */
+.student-info {
+  background-color: #ffffff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 20px;
+  width: 600px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.student-info p {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.student-info span {
+  font-weight: bold;
+  color: #030303;
+}
+
+
 
 .written-content {
   padding: 20px;
   height: 60%;
   margin-bottom: 20px; 
+  background-color: #ffffff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 20px;
+  
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 
@@ -607,25 +1014,422 @@ transform: translate(-50%, -50%);
   width: 60%;
 }
 
+/* Table style */
+.coordinator-table {
+  border-collapse: collapse;
+  width: 95%; /* Make the table a bit smaller */
+  margin-top: 20px;
+  z-index: 0; /* Set a higher z-index to layer it on top of other content */
+}
 
-.delete-button {
-  position: absolute;
-  right: 200px;
+.coordinator-table th, .coordinator-table td {
+  padding: 10px 8px; /* Reduce padding for cells */
+  text-align: left;
+  font-size: 14px; /* Reduce font size for content */
+}
+
+.coordinator-table th {
+  background-color: #770a0a;
+  color: #fff;
+  font-size: 16px; /* Adjust font size for header */
+}
+
+.coordinator-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Profile Picture style */
+.pic-coord {
+  width: 40px; /* Make the profile picture smaller */
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #770a0a;
+}
+
+/* Edit Button style */
+.edit-button {
+  background-color: #1da333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
-  font-weight: bold;
-  font-size: 16px;
-
+  padding: 3px 8px; /* Reduce padding */
+  margin-bottom: 3px; /* Reduce margin */
+  margin-right: 3px; /* Reduce margin */
 }
 
-.chart-container-wrapper {
+.edit-button:hover {
+  background-color: #1b6e29;
+}
+
+/* Change Button style */
+.change-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 3px 8px; /* Reduce padding */
+  margin-right: 3px; /* Reduce margin */
+}
+
+.change-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Profile Pic Button style */
+.profile-pic-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 3px 8px; /* Reduce padding */
+}
+
+/* Table style */
+.user-table {
+  border-collapse: collapse;
+  
+  margin-top: 20px;
+  z-index: -0; /* Set a higher z-index to layer it on top of other content */
+}
+
+.user-table th, .user-table td {
+  padding: 10px 8px; /* Reduce the padding for cells */
+  text-align: left;
+  font-size: 14px; /* Reduce the font size for cells */
+}
+
+.user-table th {
+  background-color: #770a0a;
+  color: #fff;
+}
+
+.user-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Profile Picture style */
+.pic-coord {
+  margin-left: 5px;
+  width: 40px; /* Reduce the width for the profile picture */
+  height: 40px; /* Reduce the height for the profile picture */
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #770a0a;
+}
+
+/* Edit Button style */
+.edit-button {
+  background-color: #1da333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px 8px; /* Adjust the padding */
+  margin-right: 5px;
+}
+
+.edit-button:hover {
+  background-color: #1b6e29;
+}
+
+/* Change Button style */
+.change-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px 8px; /* Adjust the padding */
+  margin-right: 5px;
+}
+
+.change-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Profile Pic Button style */
+.profile-pic-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px 8px; /* Adjust the padding */
+}
+
+
+.sidebar a.logout {
+  margin-top: 100px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  font-size: medium;
+  float:left;
+}
+/* Styles for the tabs and content */
+.modern-sleek-tab-content {
+  
+  margin-top: 10px;
+  display: none;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.modern-sleek-navbar-container {
+  width: max-content;  
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  
+  margin-top: 20px;  
   display: flex;
-  justify-content: space-between; /* Or 'space-around' for some space around the charts */
-  align-items: center; /* Vertically center align the charts */
-  width: 50%;
+  justify-content: center;
+  background-color:   #ffffff;
+  padding: 10px 0;
+ 
 }
 
-.chart-container {
-  flex: 0 0 20vw; /* Set the desired width, e.g., 20vw */
-  text-align: center; /* Center align the content */
-  margin-left: 20%;
+.modern-sleek-navbar {
+
+  display: flex;
 }
+
+.modern-sleek-nav-item {
+  color: #000000;
+  text-decoration: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.modern-sleek-nav-item:hover {
+  color: #878787;
+}
+
+.del-btn{
+  border-radius: 5px;
+  background-color:  #c51b1b;
+  color: #fff;
+  padding: 10px 10px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  
+  margin-top:20px ;
+ display: flex; /* Use flexbox to create a row layout */
+ align-items: center; /* Center vertically within the container */
+   
+   gap: 10px; /* Add space between buttons and input */
+ 
+}
+/* Styles for buttons */
+button {
+  
+  border-radius: 5px;
+  background-color: #1da333;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.del-btn:hover {
+  background-color: #6f0d0d;
+}
+
+button:hover {
+  background-color: #1b6e29;
+}
+
+/* Additional button styles for your specific buttons */
+.modern-sleek-view-report-button {
+  background-color: #1da333;
+}
+
+.modern-sleek-view-report-button:hover {
+  background-color: #1b6e29;
+}
+
+/* Form select styles */
+select {
+  padding: 10px;
+}
+
+/* Additional styles for the result tab buttons */
+#krazyid, #idkrazy {
+  background-color:  #1da333;
+  margin-right: 10px;
+}
+
+#krazyid:hover, #idkrazy:hover {
+  background-color: #1b6e29;
+}
+
+
+h1 {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Label styles */
+label {
+  display: block;
+  font-weight: 900;
+  margin-top: 10px;
+}
+label[for^="file"]::before {
+  content: "Upload File";
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #1da333;
+  color: #fff;
+  flex: right;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+/* Button styles */
+input[type="submit"] {
+  background-color: #1da333;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.text-table{
+
+  width: 80px; /* Set the desired width for the input fields */
+  height: 30px; /* Set the desired height for the input fields */
+  padding: 5px; /* Adjust padding as needed */
+}
+input[type="text"] {
+ 
+  border: 1px solid #ccc;
+  border-radius: 5px;
+ 
+  font-size: 16px;
+  color: #333;
+  transition: border-color 0.3s;
+}
+
+
+/* Checkbox label styles */
+input[type="checkbox"] + label {
+  display: block;
+  font-weight: normal;
+  margin-top: 5px;
+}
+/* Dashboard Section Styles */
+.dashboard-section {
+  display: flex;
+  justify-content: space-between;
+  
+}
+
+/* Complaints and Document Request Section Styles */
+.complaints-section, .document-request-section {
+  background-color: transparent;
+  
+  width: 48%;
+}
+
+
+
+/* List Styles */
+ul {
+  
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+/* Item Styles */
+li {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 5px;
+ 
+  border-radius: 5px;
+  padding: 10px;
+  transition: background-color 0.3s;
+}
+
+li:hover {
+  background-color: #ffffff;
+}
+
+.dashbtn:hover {
+  background-color: rgb(37, 173, 28);
+}
+
+/* Icon Styles */
+.complaint-icon, .document-icon {
+  margin-right: 10px;
+  width: 40px;
+  flex-shrink: 0; /* Prevent the icon from growing */
+}
+
+.complaint-icon img, .document-icon img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Details Styles */
+.complaint-details, .document-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+span {
+  font-size: 16px;
+}
+/* Styles for the custom select dropdown */
+.custom-select {
+  appearance: none; /* Remove the default arrow button */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  width: 30%;
+
+  font-size: 16px;
+  color: #333;
+}
+.custom-select {
+  /* Style the select element here */
+  /* Example styles (adjust as needed) */
+  border: 1px solid #ccc;
+  padding: 5px;
+  width: 20%;
+}
+
+.select-container {
+  position: relative;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666; /* Change the color as needed */
+  font-size: 16px;
+}
+
