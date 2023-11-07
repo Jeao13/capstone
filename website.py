@@ -28,15 +28,12 @@ import time
 
 start_time = time.time()
 
-db_user = os.environ.get('MYSQL_USER', 'mysql')
-db_password = os.environ.get('MYSQL_PASSWORD','1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE=')
-db_name = os.environ.get('MYSQL_DATABASE','mysql')
-
-
 db_config = {
-    'user': db_user,
-    'password': db_password,
-    'database': db_name,
+    'host': os.environ.get('MYSQL_ADDON_DIRECT_HOST', 'hv-sgp1-002.clvrcld.net'),
+    'user': os.environ.get('MYSQL_ADDON_USER', 'uhmp5ztvzx8cl2iq'),
+    'password': os.environ.get('MYSQL_ADDON_PASSWORD', 'FUdxr6xyK2ZGGjrmZjS'),
+    'database': os.environ.get('MYSQL_ADDON_DB', 'b28tqgc0yz0kvrdrsv6r'),
+    'port': os.environ.get('MYSQL_ADDON_DIRECT_PORT', '10108'),
 }
 
 try:
