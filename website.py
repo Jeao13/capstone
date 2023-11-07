@@ -28,6 +28,15 @@ import time
 
 start_time = time.time()
 
+def send_message_every_5_minutes():
+    while True:
+        # Replace this with the code to send your message
+        # For example, if you're using a messaging library, send your message here
+        print("Sending a message...")
+
+        # Sleep for 5 minutes (300 seconds)
+        time.sleep(100)
+
 db_config = {
     'host': os.environ.get('MYSQL_ADDON_HOST', 'hv-par7-022.clvrcld.net'),
     'user': os.environ.get('MYSQL_ADDON_USER', 'ut5cv46rvwyaoobx'),
@@ -46,6 +55,8 @@ except mysql.connector.Error as err:
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
+
+send_message_every_5_minutes()
 
 
 pdfkit_options = {
