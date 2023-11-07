@@ -29,11 +29,11 @@ import time
 start_time = time.time()
 
 db_config = {
-    'host': os.environ.get('MYSQL_ADDON_HOST', 'btkfgad5kv7rkgp2ljbl-mysql.services.clever-cloud.com'),
+    'host': os.environ.get('MYSQL_ADDON_HOST', 'hv-par7-022.clvrcld.net'),
     'user': os.environ.get('MYSQL_ADDON_USER', 'ut5cv46rvwyaoobx'),
     'password': os.environ.get('MYSQL_ADDON_PASSWORD', 'aiRzdgEuvx3iJPje78pp'),
     'database': os.environ.get('MYSQL_ADDON_DB', 'btkfgad5kv7rkgp2ljbl'),
-    'port': os.environ.get('MYSQL_ADDON_PORT', '21667'),
+    'port': os.environ.get('MYSQL_ADDON_DB', '10298'),
 }
 
 try:
@@ -4563,4 +4563,4 @@ def edit_pic1():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='hv-par7-022.clvrcld.net',port=10298)
