@@ -1492,6 +1492,79 @@ function closeModal7() {
     modal.style.display = 'none';
 }
 
+function coordedit2(id) {
+    const modal = document.getElementById('modalContainera');
+    console.log(id)
+    modal.style.display = 'block';
+    // Create a new button element
+    const newButton = document.createElement('input');
+    newButton.type = 'hidden';
+    newButton.value = id;
+    newButton.id = 'id';
+    newButton.name = 'id';
+
+    const form = document.getElementById('statusChangeForma');
+    form.appendChild(newButton);
+
+    
+
+}
+function closeModal8() {
+    var modal = document.getElementById('modalContainera');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
+
+
+function coordedit3(id) {
+    const modal = document.getElementById('modalContainerb');
+    console.log(id)
+    modal.style.display = 'block';
+    // Create a new button element
+    const newButton = document.createElement('input');
+    newButton.type = 'hidden';
+    newButton.value = id;
+    newButton.id = 'id';
+    newButton.name = 'id';
+
+    const form = document.getElementById('statusChangeFormb');
+    form.appendChild(newButton);
+
+    
+
+}
+function closeModal9() {
+    var modal = document.getElementById('modalContainerb');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
+
+
+function coordedit4(id) {
+    const modal = document.getElementById('modalContainerc');
+    console.log(id)
+    modal.style.display = 'block';
+    // Create a new button element
+    const newButton = document.createElement('input');
+    newButton.type = 'hidden';
+    newButton.value = id;
+    newButton.id = 'id';
+    newButton.name = 'id';
+
+    const form = document.getElementById('statusChangeFormc');
+    form.appendChild(newButton);
+
+    
+
+}
+function closeModal10() {
+    var modal = document.getElementById('modalContainerc');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
 
 
 function toggleReadonly(button,id) {
@@ -1591,6 +1664,8 @@ console.log("check");
         data[inputElement.name] = inputElement.value;
       
     }
+
+    console.log(data)
 
     data["coordId"] = coordId;
     data["picId"] = picId;

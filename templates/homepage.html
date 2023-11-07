@@ -1,6 +1,8 @@
 <html>
 <head>
     <link rel="stylesheet" href='/static/style.css' />
+    <title>OSD GRIEVANCE SYSTEM</title>
+    <link rel="icon" href="/static/logo.ico" type="image/x-icon"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/static/script.js"></script>
@@ -22,35 +24,38 @@
         </div>
 
    
-    <div class="topnav">  
-
-        <a class="logout" href="/logout">
-            <i class="fas fa-sign-out-alt"></i> Sign Out
-          </a>
-          <div class="containerx">
-            <a class="notif" href="#" id="toggleLink"><i class="fas fa-bell"></i></a><br>
-            <div id="notifications-container" class="notifications">
-                {% if user_source == 'accounts_cics' %}
-                {% if notif == [] %}
-                <b>You have no notifications</b>
-                {% else %}
-                {% for row in notif%}
-                <div class="report">
-                    <button class="delete-button" onclick="deleteNotification(this, '{{ row[0] }}')">X</button>
-                    <b>{{ row[2] }}</b> <br>
-                        <div class="report_small">
-                            <b>Date:</b> {{ row[4] }}<br>
-                            <b>Time:</b> {{ row[3] }}<br>
-                         
-                        </div>
-                </div>
-                <hr class="report-separator">
-                {% endfor %}
-                {% endif %}
-            {% endif %}
-              
+    <div class="topnav">
+        
+    
+      
+    <a class="logout" href="/logout">
+        <i class="fas fa-sign-out-alt"></i> Sign Out
+      </a>
+      <div class="containerx">
+        <a class="notif" href="#" id="toggleLink"><i class="fas fa-bell"></i></a><br>
+        <div id="notifications-container" class="notifications">
+            {% if user_source == 'accounts_cics' %}
+            {% if notif == [] %}
+            <b>You have no notifications</b>
+            {% else %}
+            {% for row in notif%}
+            <div class="report">
+                <button class="delete-button" onclick="deleteNotification(this, '{{ row[0] }}')">Delete</button>
+                <b></b> {{ row[2] }}<br>
+                    <div class="report_small">
+                        <b>Date:</b> {{ row[4] }}<br>
+                        <b>Time:</b> {{ row[3] }}<br>
+                     
+                    </div>
             </div>
+            <hr class="report-separator">
+            {% endfor %}
+            {% endif %}
+        {% endif %}
+          
         </div>
+    </div>
+   
       
         
 
@@ -157,391 +162,447 @@
     <div id="myModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeModalBtn">&times;</span>
-            <h1>File Report</h1>
-                <label for="kind">Kind of Report:</label> 
+            <h3>File Report</h3>
+                <label class="form-label" for="kind">Kind of Report:</label> 
                 <select name="kind" id="kind" required onchange="toggleInputFields()"> 
                     <option value="" selected disabled>Select a Report Type</option>
                     <option value="Formal Complaint">Formal Complaint</option> 
                     <option value="Incident Report">Incident Report</option> 
-                </select><br>
+                </select>
                 <hr>
-                <label for="department">Department to Send:</label> 
-                <select name="department" id="department" required> 
-                    <option value="CAFAD">CAFAD</option> 
-                    <option value="CICS">CICS</option> 
-                    <option value="CIT">CIT</option> 
-                    <option value="COE">COE</option> 
-                </select><br>
 
-                <div id="formContainer" style="display: none;">
-                    <form action="/submit_report" method="POST" enctype="multipart/form-data">
-                    <label id="provision1" for="provision">Provision in the Norms of Conduct Violated by the Student/s:</label>
-                    <div style="position: relative;">
-                    <textarea id="provision" name="provision" rows="4" cols="20" maxlength="250" required></textarea>
-                    <div id="char-count">250 characters remaining</div>
-                    </div>
+                    <div id="formContainer" style="display: none;">
+                        <form action="/submit_report" method="POST" enctype="multipart/form-data">
+                            <label class="form-label-main" for="department">Department to Send:</label> 
+                                <select name="department" id="department" required> 
+                                <option value="CAFAD">CAFAD</option> 
+                                <option value="CICS">CICS</option> 
+                                <option value="CIT">CIT</option> 
+                                <option value="COE">COE</option> 
+                            </select>
+                            <hr>
+
+                            <label class="form-label-main" for="complainant">Complainant Details:</label> 
+                            <hr>
+                            <div class="form-container">
+                                <div class="form-element">
+                                    <label for="number">Contact Number:</label>
+                                    <input type="text" id="number" name="number" required>
+                                </div>
+
+                                <div class="form-element">
+                                    <label for="email">Email Address</label>
+                                    <input type="text" id="email" name="email" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-element">
+                                    <label for="evidence1">Evidence 1:</label>
+                                    <input type="text" id="evidence1" name="evidence1">
+                                </div>
+
+                                <div class="form-element">
+                                    <label for="evidence2">Evidence 2:</label>
+                                    <input type="text" id="evidence2" name="evidence2">
+                                </div>
+
+                                <div class="form-element">
+                                    <label for="evidence3">Evidence 3:</label>
+                                    <input type="text" id="evidence3" name="evidence3">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-element">
+                                    <label for="witness1">Witness 1:</label>
+                                    <input type="text" id="witness1" name="witness1">
+                                </div>
+
+                                <div class="form-element">
+                                    <label for="witness2">Witness 2:</label>
+                                    <input type="text" id="witness2" name="witness2">
+                                </div>
+
+                                <div class="form-element">
+                                    <label for="witness3">Witness 3:</label>
+                                    <input type="text" id="witness3" name="witness3">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row-file">
+                                <div class="form-element">
+                                    <label for="file3">Attach Your Signature:</label>
+                                    <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
+                                </div>
+
+                                <div class="form-element">
+                                    <label for="file1">Attach Supporting Documents (if you have any):</label>
+                                    <input type="file" name="file1" id="file1" accept=".png, .jpg, .jpeg, .pdf, .docx">
+                                    <div id="char-count5">
+                                        <small style="color: gray;">Leave it blank if N/A</small>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <label class="form-label-main" for="subcomplaint">Subject of Complaint Details:</label> 
+                            <hr>
+
+                            <div class="form-container">
+                                <div class="form-element">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" required>
+                                </div>
+
+                                <div class="form-element">
+                                <label for="section">Year And Section</label>
+                                <input type="text" id="section" name="section" required>
+                                </div>
+                            </div>
+
+                            <label id="provision1" for="provision">Provision in the Norms of Conduct Violated by the Student/s:</label>
+                            <div style="position: relative;">
+                                <textarea id="provision" name="provision" rows="4" cols="20" maxlength="250" required></textarea>
+                                <div id="char-count">250 characters remaining</div>
+                            </div>
                 
+                            <label id="narrate1" for="narrate" >Brief Narration of Facts and Circumstances:</label>
+                            <div style="position: relative;">
+                                <textarea id="narrate" name="narrate" rows="4" cols="20" maxlength="250" required></textarea><br>
+                                <div id="char-count1">250 characters remaining</div>
+                            </div>
                 
-                    <label id="narrate1" for="narrate" >Brief Narration of Facts and Circumstances:</label>
-                    <div style="position: relative;">
-                    <textarea id="narrate" name="narrate" rows="4" cols="20" maxlength="250" required></textarea><br>
-                    <div id="char-count1">250 characters remaining</div>
-                </div>
-                
-                    <label id="final1" for="final" >Final Word</label>
-                    <div style="position: relative;">
-                    <textarea id="final" name="final" rows="4" cols="20" maxlength="250" required></textarea><br>
-                    <div id="char-count2">250 characters remaining</div>
-                </div>
-                <hr>
-                
-        
-                <div class="form-container">
-                    <div class="form-element">
-                      <label for="name">Name</label>
-                      <input type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-element">
-                      <label for="section">Year And Section</label>
-                      <input type="text" id="section" name="section" required>
-                    </div>
-                    <div class="form-element">
-                      <label for="number">Contact Number:</label>
-                      <input type="text" id="number" name="number" required>
-                    </div>
-                    <div class="form-element">
-                      <label for="email">Email Address</label>
-                      <input type="text" id="email" name="email" required>
-                    </div>
-                  </div>
-                  
-                <div class="form-container">
-                    <div class="form-row">
-                      <div class="form-element">
-                        <label for="witness1">Witness 1:</label>
-                        <input type="text" id="witness1" name="witness1">
-                      </div>
-                      <div class="form-element">
-                        <label for="witness2">Witness 2:</label>
-                        <input type="text" id="witness2" name="witness2">
-                      </div>
-                      <div class="form-element">
-                        <label for="witness3">Witness 3:</label>
-                        <input type="text" id="witness3" name="witness3">
-                      </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-element">
-                        <label for="evidence1">Evidence 1:</label>
-                        <input type="text" id="evidence1" name="evidence1">
-                      </div>
-                      <div class="form-element">
-                        <label for="evidence2">Evidence 2:</label>
-                        <input type="text" id="evidence2" name="evidence2">
-                      </div>
-                      <div class="form-element">
-                        <label for="evidence3">Evidence 3:</label>
-                        <input type="text" id="evidence3" name="evidence3">
-                      </div>
-                    </div>
-                  </div>
-                
-                  <div id="char-count5">
-                    <small style="color: gray;">Leave it blank if N/A</small>
+                            <label id="final1" for="final" >Final Word</label>
+                            <div style="position: relative;">
+                                <textarea id="final" name="final" rows="4" cols="20" maxlength="250" required></textarea><br>
+                                <div id="char-count2">250 characters remaining</div>
+                            </div>
+                            <hr>
                     
-                </div>
-                
-                
-                    <label for="file1">Attach Supporting Documents (if you have any):</label>
-                    <input type="file" name="file1" id="file1" accept=".png, .jpg, .jpeg, .pdf, .docx">
-                    <hr>
-                    <div class="checkbox-container">
-                        <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork" required>
-                        <label for="fieldwork">
-                          By clicking this, I hereby certify that the information furnished above is true to my knowledge and conscience.
-                        </label>
-                      </div>
-                      <input type="hidden" name="forms" value="Formal Complaint">
-                      <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
-                      
-                    <input id="submit" type="submit" value="Submit" class="green-submit-button">
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork" required>
+                                    <label for="fieldwork">
+                                        By clicking this, I hereby certify that the information furnished above is true to my knowledge and conscience.
+                                    </label>
+                            </div>
 
-                </div>
-                <br>
-
-            </form>
+                            <input type="hidden" name="forms" value="Formal Complaint">
+                            <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
+                            <input id="submit" type="submit" value="Submit" class="green-submit-button">
+                        </div>
+                    </form>
 
                 <div id="formContainer1" style="display: none;">
                     <form action="/submit_report" method="POST" enctype="multipart/form-data">
-                     <hr>
+                            <label class="form-label-main" for="department">Department to Send:</label> 
+                                <select name="department" id="department" required> 
+                                <option value="CAFAD">CAFAD</option> 
+                                <option value="CICS">CICS</option> 
+                                <option value="CIT">CIT</option> 
+                                <option value="COE">COE</option> 
+                            </select>
+                            <hr>
 
-                
-                    <div class="form-container">
-                        <div class="form-row">
-                          <div class="form-element">
-                            <label for="name1">Name of the Student:</label>
-                            <input type="text" id="name1" name="name1" required>
-                          </div>
-                          <div class="form-element">
-                            <label for="section1">Year And Section:</label>
-                            <input type="text" id="section1" name="section1" required>
-                          </div>
+                            <label class="form-label-main" for="complainant">Complainant Details:</label> 
+                            <hr>
+
+                            <div class="form-row">
+                                <div class="form-element">
+                                    <label for="designation">Designation:</label>
+                                    <input type="text" id="designation" name="designation" required>
+                                </div>
+
+                                <div class="form-element">
+                                    <label for="file3">Attach Your Signature:</label>
+                                    <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
+                                </div>
+                            </div>
+
+                            <div class="form-row1">
+                                <div class="form-element">
+                                    <label for="file4">Attach Supporting Documents (if you have any):</label>
+                                    <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx">
+                                </div>
+                            </div>
+
+                            
+                            <label class="form-label-main" for="subcomplaint">Subject of Complaint Details:</label> 
+                            <hr>
+
+                            <div class="form-row">
+                                <div class="form-element">
+                                    <label for="name1">Name of the Student:</label>
+                                    <input type="text" id="name1" name="name1" required>
+                                </div>
+
+                                <div class="form-element">
+                                    <label for="section1">Year And Section:</label>
+                                    <input type="text" id="section1" name="section1" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row1">
+                                <div class="form-element">
+                                    <label for="program">Program:</label>
+                                    <input type="text" id="program" name="program" required>
+                                </div>
+                            </div>
+            
+                        <label id="incident1" for="incident" >Incident:</label>
+                            <div style="position: relative;">
+                                <textarea id="incident" name="Incident" rows="4" cols="20" maxlength="250" required></textarea><br>
+                                <div id="char-count3">250 characters remaining</div>
+                            </div>
+
+                        <label id="provision1" for="remarks" >Remarks:</label>
+                            <div style="position: relative;">
+                                <textarea id="remarks" name="remarks" rows="4" cols="20" maxlength="250" required></textarea><br>
+                                <div id="char-count4">250 characters remaining</div>
+                            </div>
+
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork" required>
+                            <label for="fieldwork">
+                            By clicking this, I hereby certify that the information furnished above is true to my knowledge and conscience.
+                            </label>
                         </div>
-                        <div class="form-row">
-                          <div class="form-element">
-                            <label for="program">Program:</label>
-                            <input type="text" id="program" name="program" required>
-                          </div>
-                          <div class="form-element">
-                            <label for="designation">Designation:</label>
-                            <input type="text" id="designation" name="designation" required>
-                          </div>
-                        </div>
-                      </div>
-                      <hr>
-                    <label id="incident1" for="incident" >Incident:</label>
-                    <div style="position: relative;">
-                    <textarea id="incident" name="Incident" rows="4" cols="20" maxlength="250" required></textarea><br>
-                    <div id="char-count3">250 characters remaining</div>
-                </div>
-                    <label id="provision1" for="remarks" >Remarks:</label>
-                    <div style="position: relative;">
-                    <textarea id="remarks" name="remarks" rows="4" cols="20" maxlength="250" required></textarea><br>
-                    <div id="char-count4">250 characters remaining</div>
-                </div>
-                   
-                      
-                    <hr>
-                
-                    <label for="file3">Attach Your Signature with Printed Name:</label>
-                    <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
-                
-                    <label for="file4">Attach Supporting Documents (if you have any):</label>
-                    <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx">
-                    <hr>
-                    <div class="checkbox-container">
-                        <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork" required>
-                        <label for="fieldwork">
-                          By clicking this, I hereby certify that the information furnished above is true to my knowledge and conscience.
-                        </label>
-                      </div>
-                      <input type="hidden" name="forms" value="Formal Complaint">
-                      <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
-                      
-                    <input id="submit" type="submit" value="Submit" class="green-submit-button">
-                    
-                </div>
-                <br>
-               
-              
-            </form>
+
+                        <input type="hidden" name="forms" value="Formal Complaint">
+                        <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
+                        <input id="submit" type="submit" value="Submit" class="green-submit-button">
+                    </form>
+                </div>      
         </div>
     </div>
 
     <!-- Request Form -->
 
-<div id="myModal3" class="modal">
-    <div class="modal-content">
-        <span class="close" id="closeModalBtn3">&times;</span>
-        <h3>Request Form</h3>
-       
-            
-
-            <label for="forms">Forms:</label> 
-            <select name="forms" id="forms" required onchange="toggleInputFields1()"> 
-                <option value="" selected disabled>Select Form:</option> 
-                <option value="Temporary Gate Pass">Temporary Gate Pass</option> 
-                <option value="Request for Non-Wearing of Uniform">Request for Non-Wearing of Uniform</option> 
-                <option value="Request for New ID">Request for New ID</option> 
-    
-            </select><br><br>
-            <hr>
-            <div id="formContainer2" style="display: none;">
-                <form action="/submit_request" method="POST" enctype="multipart/form-data">
-                <label for="department">Department to Send:</label> 
-            <select name="department" id="department">
-                <option value="" selected disabled>Select the Department:</option> 
-                <option value="CAFAD">CAFAD</option> 
-                <option value="CICS">CICS</option> 
-                <option value="CIT">CIT</option> 
-                <option value="COE">COE</option> 
-            </select><br>
-
-            <hr>
-
-                <label id="provision1" for="remarks" >Remarks:</label>
-                <textarea id="remarks" name="remarks" rows="16" cols="20" required ></textarea><br>
-
-                <div class="form-element">
-            
-                <label for="section">Year And Section:</label>
-                <input type="text" id="section2" name="section2" required><br>
-            
-                <label for="program">Program:</label>
-                <input type="text" id="program" name="program" required><br>
-                </div>
-        <hr>
-            
-                <label for="file5">Attach Supporting Documents (if you have any):</label>
-                <input type="file" name="file5" id="file5" accept=".png, .jpg, .jpeg, .pdf, .docx" required>
-                <input type="hidden" id = "forms"name="forms" value="Temporary Gate Pass">
-        
-                <input id="submit" type="submit" value="Submit" class="green-submit-button">
-                </form>
-            </div>
-            
-            <div id="formContainer3" style="display: none;">
-                <form action="/submit_request" method="POST" enctype="multipart/form-data">
-                    <label for="department">Department to Send:</label> 
-            <select name="department" id="department">
-                <option value="" selected disabled>Select the Department:</option> 
-                <option value="CAFAD">CAFAD</option> 
-                <option value="CICS">CICS</option> 
-                <option value="CIT">CIT</option> 
-                <option value="COE">COE</option> 
-            </select><br><br>
-                    
-
-            <div class="custom-checkbox-container">
-                <div class="checkbox-item">
-                  <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork">
-                  <label for="fieldwork"> Classes with fieldwork or workshop.</label>
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="prolonged" name="prolonged" value="prolonged">
-                  <label for="prolonged"> Classes that require prolonged standing (such as architectural drafting classes).</label>
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="foreign" name="foreign" value="foreign">
-                  <label for="foreign"> Foreign students who are enrolled only on short special courses.</label>
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="pregnant" name="pregnant" value="pregnant">
-                  <label for="pregnant"> Students who are pregnant.</label>
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="cases" name="cases" value="cases">
-                  <label for="cases"> Special cases e.g.: students who are temporarily incapacitated or with permanent physical disability; students who are on special training for sports/cultural events, etc.</label>
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="majeure" name="majeure" value="majeure">
-                  <label for="majeure">Force majeure (fire, flood, other emergency situation)</label>
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="internship" name="internship" value="internship">
-                  <label for="internship">Students who are enrolled in Internship Training Program (ITP) or On-the-Job Training (OJT) whose training company or office is not BatStateU itself and enter the campus for various purposes during the training period.</label>
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="specify" name="specify" value="specify">
-                  <label for="specify">Others, please specify:</label>
-                </div>
-
-                <textarea id="specifyTextarea" name="specifyTextarea" rows="4" cols="50"></textarea>
-              </div>
-              
-                
-             
-                <label for="department">College:</label> 
-            <select name="college" id="college">
-                <option value="" selected disabled>Select your College:</option> 
-                <option value="CAFAD">CAFAD</option> 
-                <option value="CICS">CICS</option> 
-                <option value="CIT">CIT</option> 
-                <option value="COE">COE</option> 
-            </select><br><br>
-
-            <hr>
-            <div class="form-element">
-            
-                <label for="section">Year And Section:</label>
-                <input type="text" id="section2" name="section2" required><br>
-            
-                <label for="program">Program:</label>
-                <input type="text" id="program" name="program" required><br>
-              
-            </div>
-            <hr>
-                <label for="file3">Attach Your Signature with Printed Name:</label>
-                <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg" required>
-            
-                <label for="file6">Attach Supporting Documents (if you have any):</label>
-                <input type="file" name="file6" id="file6" accept=".png, .jpg, .jpeg, .pdf, .docx" required>
-                <input type="hidden" name="forms" value="Request for Non-Wearing of Uniform">
-                <input id="submit" type="submit" value="Submit" class="green-submit-button">
-            </form>
-            </div>
-
-            <div id="formContainer4" style="display: none;">
-                <form action="/submit_request" method="POST" enctype="multipart/form-data">
-                    
-           
-                    <div class="custom-checkbox-container">
-                        <div class="checkbox-item">
-                          <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork">
-                          <label for="fieldwork">Shifting</label>
-                        </div>
-                        <div class="checkbox-item">
-                          <input type="checkbox" id="prolonged" name="prolonged" value="prolonged">
-                          <label for="prolonged">Lost I.D.</label>
-                        </div>
-                        <div class="checkbox-item">
-                          <input type="checkbox" id="foreign" name="foreign" value="foreign">
-                          <label for="foreign">Torn/Damaged</label>
-                        </div>
-                        <div class="checkbox-item">
-                          <input type="checkbox" id="pregnant" name="pregnant" value="pregnant">
-                          <label for="pregnant">Updating</label>
-                        </div>
-                        <div class="checkbox-item">
-                          <input type="checkbox" id="specify1" name="specify1" value="specify1">
-                          <label for="specify1">Others, please specify:</label>
-                        </div>
-                        <textarea id="specifyTextarea1" name="specifyTextarea1" rows="4" cols="50"></textarea>
-                      </div>
-                     
-                      
-                <hr>
-                <label for="department">Department to Send:</label> 
-                <select name="department" id="department">
-                    <option value="" selected disabled>Select the Department:</option> 
-                    <option value="CAFAD">CAFAD</option> 
-                    <option value="CICS">CICS</option> 
-                    <option value="CIT">CIT</option> 
-                    <option value="COE">COE</option> 
+    <div id="myModal3" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModalBtn3">&times;</span>
+            <h3>Request Form</h3>
+                <label for="forms">Forms:</label> 
+                <select name="forms" id="forms" required onchange="toggleInputFields1()"> 
+                    <option value="" selected disabled>Select Form:</option> 
+                    <option value="Temporary Gate Pass">Temporary Gate Pass</option> 
+                    <option value="Request for Non-Wearing of Uniform">Request for Non-Wearing of Uniform</option> 
+                    <option value="Request for New ID">Request for New ID</option> 
                 </select><br><br>
-                <label for="department">College:</label> 
-                <select name="college" id="college">
-                    <option value="" selected disabled>Select your College:</option> 
-                    <option value="CAFAD">CAFAD</option> 
-                    <option value="CICS">CICS</option> 
-                    <option value="CIT">CIT</option> 
-                    <option value="COE">COE</option> 
-                </select><br>
-
                 <hr>
-                <div class="form-element">
-            
-                <label for="section">Year Level:</label>
-                <input type="text" id="section1" name="section1" required><br><br>
-            
-                <label for="program">Program:</label>
-                <input type="text" id="program" name="program" required>
-                <br>
+                
+                <div id="formContainer2" style="display: none;">
+                    <form action="/submit_request" method="POST" enctype="multipart/form-data">
+                        <label for="department">Department to Send:</label> 
+                            <select name="department" id="department">
+                                <option value="" selected disabled>Select the Department:</option> 
+                                <option value="CAFAD">CAFAD</option> 
+                                <option value="CICS">CICS</option> 
+                                <option value="CIT">CIT</option> 
+                                <option value="COE">COE</option> 
+                            </select><br>
+                        <hr>
+                        
+                        <label class="form-label-main" for="subcomplaint">Requesting Individual Details:</label> 
+                        <hr>
+    
+                        <div class="form-row">
+                            <div class="form-element">
+                                <label for="section">Year And Section:</label>
+                                <input type="text" id="section2" name="section2" required><br>
+                            </div>
+                            
+                            <div class="form-element">
+                                <label for="program">Program:</label>
+                                <input type="text" id="program" name="program" required><br>
+                            </div>
+                        </div>
+    
+                        <div class="form-row1">
+                            <div class="form-element">
+                                <label for="file5">Attach Supporting Documents (if you have any):</label>
+                                <input type="file" name="file5" id="file5" accept=".png, .jpg, .jpeg, .pdf, .docx" required>
+                                <input type="hidden" id = "forms"name="forms" value="Temporary Gate Pass">
+                            </div>
+                        </div>
+    
+                        <label class="form-label-main" for="subcomplaint">Reason Details:</label> 
+                        <hr>
+                        <label id="provision1" for="remarks" >Remarks:</label>
+                        <textarea id="remarks" name="remarks" rows="16" cols="20" required ></textarea><br>
+                
+                        <input id="submit" type="submit" value="Submit" class="green-submit-button">
+                        </form>
                 </div>
                 
-                <hr>
-            
-                <label for="file8">Attach Your Signature with Printed Name:</label>
-                <input type="file" name="file8" id="file8" accept=".png, .jpg, .jpeg" required>
-            
-                <label for="file4">Attach Supporting Documents (if you have any):</label>
-                <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx"required>
-                <input type="hidden" name="forms" value="Request for New ID">
-                <input id="submit" type="submit" value="Submit" class="green-submit-button">
-            </form>
-            </div>
+                <div id="formContainer3" style="display: none;">
+                    <form action="/submit_request" method="POST" enctype="multipart/form-data">
+                        <label for="department">Department to Send:</label> 
+                            <select name="department" id="department">
+                                <option value="" selected disabled>Select the Department:</option> 
+                                <option value="CAFAD">CAFAD</option> 
+                                <option value="CICS">CICS</option> 
+                                <option value="CIT">CIT</option> 
+                                <option value="COE">COE</option> 
+                            </select><br>
+                            <hr>
+    
+                            <label class="form-label-main" for="subcomplaint">Requesting Individual Details:</label> 
+                            <hr>
+                            
+                            <div class="form-row">
+                                <div class="form-element">
+                                    <label for="section">Year And Section:</label>
+                                    <input type="text" id="section2" name="section2" required><br>
+                                </div>
+    
+                                <div class="form-element">
+                                    <label for="program">Program:</label>
+                                    <input type="text" id="program" name="program" required><br>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="form-row">
+                                <div class="form-element">
+                                    <label for="file3">Attach Your Signature:</label>
+                                    <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg" required>
+                                </div>
+    
+                                <div class="form-element">
+                                    <label for="file6">Attach Supporting Documents (if you have any):</label>
+                                    <input type="file" name="file6" id="file6" accept=".png, .jpg, .jpeg, .pdf, .docx" required>
+                                    <input type="hidden" name="forms" value="Request for Non-Wearing of Uniform">
+                                </div>
+                            </div>
+                            
+                            <label class="form-label-main" for="subcomplaint">Reason/s:</label> 
+                            <hr>
+    
+                            <div class="custom-checkbox-container">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork">
+                                <label for="fieldwork"> Classes with fieldwork or workshop.</label>
+                            </div>
+                            
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="prolonged" name="prolonged" value="prolonged">
+                                <label for="prolonged"> Classes that require prolonged standing (such as architectural drafting classes).</label>
+                            </div>
+    
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="foreign" name="foreign" value="foreign">
+                                <label for="foreign"> Foreign students who are enrolled only on short special courses.</label>
+                            </div>
+    
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pregnant" name="pregnant" value="pregnant">
+                                <label for="pregnant"> Students who are pregnant.</label>
+                            </div>
+    
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cases" name="cases" value="cases">
+                                <label for="cases"> Special cases e.g.: students who are temporarily incapacitated or with permanent physical disability; students who are on special training for sports/cultural events, etc.</label>
+                            </div>
+    
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="majeure" name="majeure" value="majeure">
+                                <label for="majeure">Force majeure (fire, flood, other emergency situation)</label>
+                            </div>
+    
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="internship" name="internship" value="internship">
+                                <label for="internship">Students who are enrolled in Internship Training Program (ITP) or On-the-Job Training (OJT) whose training company or office is not BatStateU itself and enter the campus for various purposes during the training period.</label>
+                            </div>
+    
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="specify" name="specify" value="specify">
+                                <label for="specify">Others, please specify:</label>
+                            </div>
+                            <textarea id="specifyTextarea" name="specifyTextarea" rows="4" cols="50"></textarea>
+                        </div>
+    
+                    <input id="submit" type="submit" value="Submit" class="green-submit-button">
+                    </form>
+                </div>
+    
+                <div id="formContainer4" style="display: none;">
+                    <form action="/submit_request" method="POST" enctype="multipart/form-data">
+                        <label for="department">Department to Send:</label> 
+                            <select name="department" id="department">
+                                <option value="" selected disabled>Select the Department:</option> 
+                                <option value="CAFAD">CAFAD</option> 
+                                <option value="CICS">CICS</option> 
+                                <option value="CIT">CIT</option> 
+                                <option value="COE">COE</option> 
+                            </select><br>
+                            <hr>
+                            
+                            <label class="form-label-main" for="subcomplaint">Requesting Individual Details:</label> 
+                            <hr>
+    
+                            <div class="form-row">
+                                <div class="form-element">
+                                    <label for="section">Year Level:</label>
+                                    <input type="text" id="section1" name="section1" required><br><br>
+                                </div>
+                                
+                                <div class="form-element">
+                                    <label for="program">Program:</label>
+                                    <input type="text" id="program" name="program" required>
+                                </div>
+                            </div>
+                        
+                            <div class="form-row">
+                                <div class="form-element">
+                                    <label for="file8">Attach Your Signature:</label>
+                                    <input type="file" name="file8" id="file8" accept=".png, .jpg, .jpeg" required>
+                                </div>
+    
+                                <div class="form-element">
+                                    <label for="file4">Attach Supporting Documents (if you have any):</label>
+                                    <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx"required>
+                                    <input type="hidden" name="forms" value="Request for New ID">
+                                </div>
+                            </div>
+                        
+                        <label class="form-label-main" for="subcomplaint">Reason/s:</label> 
+                        <hr>
+                        <div class="custom-checkbox-container">
+                            <div class="checkbox-item">
+                              <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork">
+                              <label for="fieldwork">Shifting</label>
+                            </div>
+    
+                            <div class="checkbox-item">
+                              <input type="checkbox" id="prolonged" name="prolonged" value="prolonged">
+                              <label for="prolonged">Lost I.D.</label>
+                            </div>
+    
+                            <div class="checkbox-item">
+                              <input type="checkbox" id="foreign" name="foreign" value="foreign">
+                              <label for="foreign">Torn/Damaged</label>
+                            </div>
+    
+                            <div class="checkbox-item">
+                              <input type="checkbox" id="pregnant" name="pregnant" value="pregnant">
+                              <label for="pregnant">Updating</label>
+                            </div>
+    
+                            <div class="checkbox-item">
+                              <input type="checkbox" id="specify1" name="specify1" value="specify1">
+                              <label for="specify1">Others, please specify:</label>
+                            </div>
+    
+                            <textarea id="specifyTextarea1" name="specifyTextarea1" rows="4" cols="50"></textarea>
+                            </div>
+                            <hr>
+    
+                            <input id="submit" type="submit" value="Submit" class="green-submit-button">
+                    </form>
+                </div>
+        </div>
     </div>
-</div>
 
 <div class="content">
     <div id="tab1" class="tab-content active">
@@ -1052,6 +1113,16 @@
     <div class="modal-content">
         <span class="close" id="closeModalBtn1">&times;</span>
         <h3>My Sanctions</h3>
+       
+        <label for="forms3">Kind of Forms:</label>
+       
+        <select name="forms3" id="forms3" required onchange="toggleInputTables()"> 
+            <option value="" selected disabled>Select a Forms Type</option>
+            <option value="Sanctions">Sanctions</option> 
+            <option value="Complaint">Notice of Case Dismissal - Subject of Complaint</option> 
+            <option value="Complainant">Notice of Case Dismissal - Complainant</option> 
+        </select><br>
+        <hr> 
         <div id="table-container">
             {% if sanctions == [] %}
             <p>You have no sanctions</p>
@@ -1061,7 +1132,7 @@
                     <tr>
                         <th>Date</th>               
                         <th>Sanction</th>
-                        <th>File</th>
+                      
                     </tr>
                 </thead>
                 <tbody>
@@ -1071,9 +1142,77 @@
                     <tr>
                         <td>{{ row[3] }}</td>
                         <td>{{ row[4] }}</td>
+                    
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+        <div id="table-container1" style="display:none;">
+            <h3>Notice of Case Dismissal - Subject of Complaint</h3>
+            {% if reports1 == [] %}
+            <p>You have no sanctions</p>
+            {% else %}  
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>               
+                        <th>Subject of Complaint</th>
+                        <th>Complainant</th>
+                        <th>File</th>
+                        <th>Status</th>
+                      
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    {% for row in reports1 |sort(attribute='3', reverse=true) %}
+                    <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
+                    <tr>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[1] }}</td>
                         <td> 
-                            <a href="{{ url_for('preview_written_file', report_id=row[0]) }}" target="_blank">{{ row[6] }}</a>
+                            <a href="{{ url_for('preview_notice_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
                         </td>
+                        <td>{{ row[8] }}</td>
+                    
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+        <div id="table-container2" style="display:none;">
+            <h3>Notice of Case Dismissal - Complainant</h3>
+            {% if reports2 == [] %}
+            <p>You have no sanctions</p>
+            {% else %}  
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>               
+                        <th>Subject of Complaint</th>
+                        <th>Complainant</th>
+                        <th>File</th>
+                        <th>Status</th>
+                      
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    {% for row in reports2 |sort(attribute='3', reverse=true) %}
+                    <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
+                    <tr>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td> 
+                            <a href="{{ url_for('preview_notice_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
+                        </td>
+                        <td>{{ row[8] }}</td>
+                    
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -1082,7 +1221,6 @@
         </div>
     </div>
 </div>
-
  
 
 <div id="myModal2" class="modal">

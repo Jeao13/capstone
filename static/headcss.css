@@ -1,10 +1,10 @@
-
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   background-color: #f0f0f0;
 }
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -22,7 +22,6 @@ body {
 .dropdown {
   display: flex; /* Display dropdown as a flex container */
 }
-
 
 /* Styles for the profile button on the right side of the navbar */
 .profile-dropdown {
@@ -71,7 +70,6 @@ body {
 .dropdown-push-prof {
   display: flex;
   justify-content: flex-end;
-  width: 100%;
 }
 
 /* Additional styles for profile name and log */
@@ -93,13 +91,12 @@ body {
 }
 
 .section-title{
-margin-top: 50px;
+  margin-top: 50px;
   font-size: 30px;
   text-align: center;
   margin-bottom: 20px;
   font-weight: bold;
   color: #333;
-
 }
 
 .form-title{
@@ -244,13 +241,10 @@ margin-top: 50px;
   transform: translateX(0); /* Adjusted to reset the transform to the right value */
 }
 
-
 hr.separator {
   border: 5px solid rgb(72, 72, 72);
   border-radius: 5px;
 }
-
-
 
 /* Define the content styles */
 .content {
@@ -266,19 +260,15 @@ hr.separator {
 .sidebar a {
   border: #000000;
   font-size: large;
-    color: #ffffff;
-  
-    margin-bottom: 20px;
-    text-decoration: none;
+  color: #ffffff;
+  margin-bottom: 20px;
+  text-decoration: none;
 }
 
 /* Add CSS to hide sidebar in mobile view */
 .sidebar-toggle {
     display: block; /* Show the button by default */
-
-
 }
-
 
 /* Tab content styles */
 .tab-content {
@@ -295,7 +285,6 @@ hr.separator {
   margin-top: 20px;
 }
 
-
 /* Complaint Tab*/
 #searchInput {
   width: 70%;
@@ -305,14 +294,11 @@ hr.separator {
   margin-right: 10px; /* Add margin to the right for spacing */
 }
 
-
  /* Style the search bar button with a green color */
  #searchForm button[type="submit"] {
   background-color:#1da333;;
   color: white;
 }
-
-
 
 /* Style the "Delete All Report" button with a red color */
 .delete_all_report {
@@ -325,8 +311,6 @@ hr.separator {
 }
 
 /* Adjust the spacing between the buttons and the table */
-
-
 /* Select department styles */
 #department1 {
   width: 30%;
@@ -347,7 +331,6 @@ hr.separator {
 
 /* Change status button and select styles */
 #statusChangeForm {
-  
   display: flex;
   align-items: center;
   margin: 5px 0;
@@ -361,49 +344,9 @@ hr.separator {
   margin-right: 10px;
 }
 
-
 #statusChangeForm > form > button {
   background-color:#1da333; /* Red button background color */
 }
-
-
-/*  .user-profile {
-    display: flex;
-    align-items: center;
-    background-color: #ffffff;
-    margin-top:20px;
-}
-
-.user-profile img {
-    max-width: 450px; /* Adjust as needed 
-    margin-right: 10px; /* Add some spacing between the image and text 
-    padding-left:30px;
-    padding-top:40px;
-}
-
-.user-info {
-    flex: 1; /* Allow the text to take up remaining space 
-}
-  
-  /* Add a color to the active/current link 
-  .topnav a.active {
-    background-color: #04AA6D;
-    color: white;
-  }
-  
-  .topnav a.notif {
-    float:right;
-  }
-  
-  .header a.logout {
-    float:right;
-  }
-  
-  
-  .user-profile img {
-    width: 200px; /* Set the desired width 
-    height: 200px; /* Set the desired height 
-}*/
 
  /* Style for the modal container */
  .modal {
@@ -454,22 +397,41 @@ hr.separator {
   resize: none;
 }
 
-
-
-
-
 form textarea {
-  /* Set the desired number of rows with !important */
-
   /* Set other textarea styles as needed */
   width: 100%;
   resize: none; /* Optional: Disable textarea resizing */
   /* Additional styles... */
 }
+
 /* Select label style */
 .select-label {
   font-weight: bold;
   font-size: 16px;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.form-row1 {
+  display: flex;
+  flex-wrap: wrap;
+  width: 50%;
+}
+
+.form-element {
+  flex: 1;
+  margin: 10px;
+  width: 50%; /* Adjust as needed to control the width of individual elements */
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 /* Form label style */
@@ -480,13 +442,13 @@ form textarea {
 
 /* Form input style */
 .form-input {
-  width: 50%;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
   margin: 5px 0;
   font-size: 14px;
 }
+
 .form-input1 {
   width: 40%;
   padding: 8px;
@@ -503,13 +465,12 @@ form textarea {
   border-radius: 5px;
   padding: 8px;
   font-size: 14px;
-  resize: vertical;
+  resize: none;
   margin: 5px 0;
 }
 
 /* Form button style */
 .form-button {
-
   background-color:#19c642;
   color: #fff;
   border: none;
@@ -522,11 +483,12 @@ form textarea {
 .form-button:hover {
   background-color:#159533;
 }
+
 .headtable{
-  margin-top: 30px;
+  margin-top: 10px;
   border: 1px solid #ccc;
   border-collapse: collapse;
-  
+  width: 99%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: -0; /* Set a higher z-index to layer it on top of other content */
 }
@@ -536,33 +498,27 @@ form textarea {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 1px solid #ccc;
   border-collapse: collapse;
-  
+  width: 98%;
   z-index: 0; /* Set a higher z-index to layer it on top of other content */
-  
 }
 
 table {
   border: 1px solid #ccc;
   border-collapse: collapse;
- 
+  width: 98%;
 }
 
 /* Define styles for table headers (th) */
-
-
  table td {  
   font-size: smaller;
   padding: 20px 10px;
   text-align: center;
-  
   border: 1px solid #ccc;
 }
 
 table thead {
-  
   background-color: #f2f2f2;
 }
-
 
 table th {
   font-size: small;
@@ -597,7 +553,6 @@ table .view-report-button:hover {
 
 /* Style the select and change button in the status column */
 table select {
-  
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 5px;
@@ -634,6 +589,7 @@ table form button[type="submit"].delete-button {
 table form button[type="submit"].delete-button:hover {
   background-color: #962020;
 }
+
 /* Fix the table header at the top while scrolling */
 table thead {
   position: sticky;
@@ -641,7 +597,6 @@ table thead {
   z-index: 1;
   background-color: #f2f2f2;
 }
-
 
 .view-report-button {
   float: right;
@@ -693,7 +648,6 @@ table thead {
   width: 15%;
   height: 30%;
 }
-
 
 .status-change-confirmation {
   display: none;
@@ -773,16 +727,16 @@ table thead {
   color: #000000;
   font-size: 14px;
 }
+
 .navbar-container {
   display: flex;
   justify-content: center;
   align-items: center;
- 
 }
 
 #char-count {
   position: absolute;
-  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  bottom: 12px; /* Adjust the distance from the bottom as needed */
   right: 5px; /* Adjust the distance from the right as needed */
   font-size: 12px; /* Adjust the font size as needed */
   color: #999; /* Adjust the color as needed */
@@ -790,7 +744,7 @@ table thead {
 
 #char-count1 {
   position: absolute;
-  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  bottom: 12px; /* Adjust the distance from the bottom as needed */
   right: 5px; /* Adjust the distance from the right as needed */
   font-size: 12px; /* Adjust the font size as needed */
   color: #999; /* Adjust the color as needed */
@@ -798,7 +752,7 @@ table thead {
 
 #char-count2 {
   position: absolute;
-  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  bottom: 12px; /* Adjust the distance from the bottom as needed */
   right: 5px; /* Adjust the distance from the right as needed */
   font-size: 12px; /* Adjust the font size as needed */
   color: #999; /* Adjust the color as needed */
@@ -806,7 +760,7 @@ table thead {
 
 #char-count3 {
   position: absolute;
-  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  bottom: 12px; /* Adjust the distance from the bottom as needed */
   right: 5px; /* Adjust the distance from the right as needed */
   font-size: 12px; /* Adjust the font size as needed */
   color: #999; /* Adjust the color as needed */
@@ -814,7 +768,7 @@ table thead {
 
 #char-count4 {
   position: absolute;
-  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  bottom: 12px; /* Adjust the distance from the bottom as needed */
   right: 5px; /* Adjust the distance from the right as needed */
   font-size: 12px; /* Adjust the font size as needed */
   color: #999; /* Adjust the color as needed */
@@ -856,8 +810,6 @@ table thead {
     cursor: pointer;
     float: right;
 }
-
-
 
 /* CSS for the close button */
 .close-button {
@@ -909,7 +861,6 @@ table thead {
   100% { transform: rotate(360deg); }
 }
 
-
 .sanction-content {
   padding: 20px;
   height: 60%;
@@ -939,8 +890,6 @@ table thead {
   color: #030303;
 }
 
-
-
 .written-content {
   padding: 20px;
   height: 60%;
@@ -950,10 +899,8 @@ table thead {
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-top: 20px;
-  
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
 
 #loadingScreen {
   display: none;
@@ -975,12 +922,12 @@ table thead {
   font-size: 24px;
 } 
 
-.numberofall{
-align-content: center;
-position: absolute;
-top: 70%;
-left: 50%;
-transform: translate(-50%, -50%);
+.numberofall {
+  align-content: center;
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width:500px;
   height:500px;
 } 
@@ -1092,7 +1039,7 @@ transform: translate(-50%, -50%);
 /* Table style */
 .user-table {
   border-collapse: collapse;
-  
+  width: 95%; /* Reduce the width to 95% */
   margin-top: 20px;
   z-index: -0; /* Set a higher z-index to layer it on top of other content */
 }
@@ -1163,7 +1110,6 @@ transform: translate(-50%, -50%);
   padding: 5px 8px; /* Adjust the padding */
 }
 
-
 .sidebar a.logout {
   margin-top: 100px;
   margin-left: 10px;
@@ -1171,9 +1117,9 @@ transform: translate(-50%, -50%);
   font-size: medium;
   float:left;
 }
+
 /* Styles for the tabs and content */
 .modern-sleek-tab-content {
-  
   margin-top: 10px;
   display: none;
   padding: 20px;
@@ -1181,9 +1127,9 @@ transform: translate(-50%, -50%);
 }
 
 .modern-sleek-navbar-container {
-  width: max-content;  
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  
-  margin-top: 20px;  
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  width:1170px;
   display: flex;
   justify-content: center;
   background-color:   #ffffff;
@@ -1192,7 +1138,6 @@ transform: translate(-50%, -50%);
 }
 
 .modern-sleek-navbar {
-
   display: flex;
 }
 
@@ -1217,17 +1162,15 @@ transform: translate(-50%, -50%);
   border: none;
   cursor: pointer;
   transition: background-color 0.3s;
-  
+  margin-left: 1000px;
   margin-top:20px ;
- display: flex; /* Use flexbox to create a row layout */
- align-items: center; /* Center vertically within the container */
-   
-   gap: 10px; /* Add space between buttons and input */
- 
+  display: flex; /* Use flexbox to create a row layout */
+  align-items: center; /* Center vertically within the container */
+  gap: 10px; /* Add space between buttons and input */
 }
+
 /* Styles for buttons */
 button {
-  
   border-radius: 5px;
   background-color: #1da333;
   color: #fff;
@@ -1269,7 +1212,6 @@ select {
   background-color: #1b6e29;
 }
 
-
 h1 {
   font-size: 24px;
   text-align: center;
@@ -1284,6 +1226,7 @@ label {
   font-weight: 900;
   margin-top: 10px;
 }
+
 label[for^="file"]::before {
   content: "Upload File";
   display: inline-block;
@@ -1305,24 +1248,22 @@ input[type="submit"] {
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
+  margin-top: 20px;
 }
 
 .text-table{
-
   width: 80px; /* Set the desired width for the input fields */
   height: 30px; /* Set the desired height for the input fields */
   padding: 5px; /* Adjust padding as needed */
 }
+
 input[type="text"] {
- 
   border: 1px solid #ccc;
   border-radius: 5px;
- 
   font-size: 16px;
   color: #333;
   transition: border-color 0.3s;
 }
-
 
 /* Checkbox label styles */
 input[type="checkbox"] + label {
@@ -1330,25 +1271,21 @@ input[type="checkbox"] + label {
   font-weight: normal;
   margin-top: 5px;
 }
+
 /* Dashboard Section Styles */
 .dashboard-section {
   display: flex;
   justify-content: space-between;
-  
 }
 
 /* Complaints and Document Request Section Styles */
 .complaints-section, .document-request-section {
   background-color: transparent;
-  
   width: 48%;
 }
 
-
-
 /* List Styles */
 ul {
-  
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   list-style: none;
   margin: 0;
@@ -1364,7 +1301,6 @@ h2 {
 li {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 5px;
- 
   border-radius: 5px;
   padding: 10px;
   transition: background-color 0.3s;
@@ -1400,6 +1336,7 @@ li:hover {
 span {
   font-size: 16px;
 }
+
 /* Styles for the custom select dropdown */
 .custom-select {
   appearance: none; /* Remove the default arrow button */
@@ -1408,10 +1345,10 @@ span {
   border-radius: 5px;
   padding: 10px;
   width: 30%;
-
   font-size: 16px;
   color: #333;
 }
+
 .custom-select {
   /* Style the select element here */
   /* Example styles (adjust as needed) */
@@ -1432,4 +1369,3 @@ span {
   color: #666; /* Change the color as needed */
   font-size: 16px;
 }
-

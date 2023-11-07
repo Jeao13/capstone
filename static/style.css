@@ -35,6 +35,36 @@ body {
   min-height: 100vh;
 }
 
+.logo-container {
+  position: relative;
+  text-align: center;
+  margin: auto;
+}
+
+.logo-container img {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  visibility: hidden;
+  height: 0px;
+  width: auto;
+}
+
+@media (max-width: 575px) {
+  .logo-container {
+      text-align: center;
+  }
+
+  .logo-container img {
+      top: 0;
+      left: 50%;
+      transform: translateX(0%);
+      visibility: visible;
+      height: 150px;
+      width: auto;
+  }
+}
+
 .bg-image-container {
   padding: 0;
   position: relative;
@@ -87,18 +117,6 @@ element.style{
   align-items: center;
 }
 
-.log-btn {
-  background-color: #008000; /* Green background color */
-  color: #fff; /* White text color */
-  border: none; /* Remove the button border */
-  border-radius: 30px; /* Make the button round */
-  padding: 10px 20px; /* Add padding to make the button larger */
-  cursor: pointer; /* Change cursor to a pointer on hover */
-  margin-left: 150px;
-  margin-top: 20px;
-  width: 200px;
-}
-
 .log-btn:hover {
   background-color: #006400; /* Darker green on hover */
 }
@@ -137,6 +155,11 @@ element.style{
 .form-label {
   font-size: 16px; /* Adjust as needed */
   font-weight: bold;
+}
+
+.form-label-main {
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .login-heading {
@@ -235,7 +258,6 @@ element.style{
   justify-content: space-between;
   margin-block: 40px; /* Add spacing between button rows */
 }
-
 .green-button {
   width: 200px;
   height: 60px;
@@ -261,6 +283,7 @@ element.style{
 font-size: 24px;
 margin-right: 10px; /* Add space between icon and text */
 }
+
 /* Styles for screens with a maximum width of 768px (typical for mobile devices) */
 @media screen and (max-width: 768px) {
   .cont {
@@ -302,12 +325,12 @@ margin-right: 10px; /* Add space between icon and text */
 
 /* Contact text styles */
 .contact-text {
-color: #000; /* Black text color */
-font-size: 12px;
-display: flex;
-align-items: center; /* Align icon and text vertically */
-margin-right: 20px;
-margin-left: 40px;
+  color: #000; /* Black text color */
+  font-size: 12px;
+  display: flex;
+  align-items: center; /* Align icon and text vertically */
+  margin-right: 20px;
+  margin-left: 40px;
 }
 
 .contact-text1 {
@@ -320,11 +343,11 @@ margin-left: 40px;
 }
 
 .contact-text1 {
-color: #000; /* Black text color */
-font-size: 12px;
-display: flex;
-align-items: center; /* Align icon and text vertically */
-margin-left: 60px;
+  color: #000; /* Black text color */
+  font-size: 12px;
+  display: flex;
+  align-items: center; /* Align icon and text vertically */
+  margin-left: 60px;
 }
 
 .contact-text2 {
@@ -333,17 +356,6 @@ margin-left: 60px;
   display: flex;
   align-items: center; /* Align icon and text vertically */
   margin-left: 60px;
-  }
-/* Define the hover effect for .contact-text */
-.contact-text:hover, .contact-text1:hover {
-  width: max-content;
-  background-color: #f0f0f0; /* Change the background color on hover */
-  cursor: pointer; /* Change the cursor to a pointer on hover */
-}
-
-/* You can also change the text color on hover */
-.contact-text:hover p, .contact-text1:hover p {
-  color: #800000; /* Change the text color on hover to green */
 }
 
 /* Define the hover effect for .contact-text */
@@ -356,6 +368,22 @@ margin-left: 60px;
 /* You can also change the text color on hover */
 .contact-text:hover p, .contact-text1:hover p {
   color: #800000; /* Change the text color on hover to green */
+}
+
+/* Define the hover effect for .contact-text */
+.contact-text:hover, .contact-text1:hover {
+  width: max-content;
+  background-color: #f0f0f0; /* Change the background color on hover */
+  cursor: pointer; /* Change the cursor to a pointer on hover */
+}
+
+/* You can also change the text color on hover */
+.contact-text:hover p, .contact-text1:hover p {
+  color: #800000; /* Change the text color on hover to green */
+}
+
+.file-container {
+  margin-inline: 30px;
 }
 
 .file-text {
@@ -385,27 +413,27 @@ margin-left: 60px;
 
 /* Add a black background color to the top navigation */
 .topnav {
-    background-color: #bab7b7;
-    overflow: hidden;
-  }
+  background-color: #bab7b7;
+  overflow: hidden;
+}
   
   /* Style the links inside the navigation bar */
-  .topnav a {
-    height: 20px;
-    float: left;
-    color: #000000;
-    text-align: center;
-    padding: 14px 16px; 
-    text-decoration: none;
-    font-size: 16px;
-    display: block;
-  }
+.topnav a {
+  height: 20px;
+  float: left;
+  color: #000000;
+  text-align: center;
+  padding: 14px 16px; 
+  text-decoration: none;
+  font-size: 16px;
+  display: block;
+}
   
-  /* Change the color of links on hover */
-  .topnav a:hover {
-    background-color: #ddd;
-    color: black;
-  }
+/* Change the color of links on hover */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
 /* profile */
 
 .image-container {
@@ -503,7 +531,6 @@ margin-left: 60px;
   }
 }
 
-
  /* Container for reminders */
  .reminders-container {
   line-height: 30px;
@@ -532,7 +559,6 @@ margin-left: 60px;
   margin-inline: 12px;
 }
 
-
 /* Header title styles */
 .header-title {
   margin-left: 10px;
@@ -542,22 +568,23 @@ margin-left: 60px;
 }
 
 /* Header icon styles */
-
 .header-icon {
   font-size: 24px;
   
 } 
+
 .header-icon2 {
   font-size: 24px;
   color: #c50303;
 }
+
 /* Header icon styles */
 .header-icon1 {
   margin-left: 10px;
   font-size: 15px;
 }
 
-  /* Add a color to the active/current link */
+/* Add a color to the active/current link */
 .topnav a.logout {
     float:right;
 }
@@ -566,6 +593,7 @@ margin-left: 60px;
     width: 200px; /* Set the desired width */
     height: auto; /* Set the desired height */
 }
+
 /* Style links */
 a {
   color: #007BFF;
@@ -576,11 +604,7 @@ a:hover {
   text-decoration: underline;
 }
 
-
- 
-
 /* Style for the modal content */
-
 .modal {
   display: none;
   position: fixed;
@@ -592,6 +616,7 @@ a:hover {
   z-index: 1000;
   overflow: auto; /* Enable scrolling within the modal */
 }
+
 /* Style for the close button */
 .close {
   font-size: 30px;
@@ -624,6 +649,7 @@ a:hover {
   border: 1px solid #e0e0e0;
   margin: 20px 0;
 }
+
 h1#modal-title {
   font-size: 24px;
 }
@@ -633,22 +659,12 @@ h1#modal-title {
   margin: 10px 0;
 }
 
-
 /* Form container styles */
 .form-container {
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 15px;
     justify-content: space-between;
-}
-
-/* Form element styles */
-.form-element {
-  flex: 1;
-  margin: 10px;
-  display: flex;
-  flex-direction: column;
-  width: 45%; /* Adjust as needed to control the width of individual elements */
 }
 
 select {
@@ -674,8 +690,8 @@ select {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-/* Form container styles */
 
+/* Form container styles */
 /* Form row styles */
 .form-row {
   display: flex;
@@ -683,29 +699,25 @@ select {
   flex-wrap: wrap;
 }
 
+.form-row1 {
+  display: flex;
+  flex-wrap: wrap;
+  width: 50%;
+}
+
+.form-row-file {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border: none;
+}
+
 /* Form element styles */
 .form-element {
   flex: 1;
   margin: 10px;
-  display: flex;
-  flex-direction: column;
   width: 50%; /* Adjust as needed to control the width of individual elements */
 }
-
-/* Label styles */
-.form-element label {
-  
-  margin-bottom: 5px;
-}
-
-/* Input styles */
-.form-element input {
-  width: 100%;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
 
 .green-submit-button {
   background-color: #4CAF50;
@@ -726,6 +738,7 @@ select {
 .custom-checkbox-container {
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column;
 }
 
 /* Custom checkbox item styles */
@@ -750,7 +763,6 @@ select {
 
 /* Checkbox container styles */
 .checkbox-container {
- 
   display: flex;
   align-items: center;
 }
@@ -760,9 +772,8 @@ select {
   margin-right: 10px; /* Add spacing between the checkbox and text */
 }
 
-
 #submit{
-  float:right;
+  margin-top: 20px;
 }
 
 form textarea {
@@ -840,13 +851,13 @@ table a:hover {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); /* Center horizontally and vertically */
-  background-color: rgba(219, 182, 182, 0.8);
+  background-color: rgb(237, 237, 237);
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
   z-index: 999;
   width: 80%; /* Adjust the width as needed */
-  max-width: 400px; /* Adjust the maximum width as needed */
+  max-width: 460px; /* Adjust the maximum width as needed */
   color: #000000; /* Text color */
   font-family: Arial, sans-serif; /* Choose a modern font */
 }
@@ -1003,19 +1014,17 @@ table a:hover {
 }
 
 #char-count5 {
- flex-direction: row;
- flex:right;
- bottom: 5px; /* Adjust the distance from the bottom as needed */
- /* Adjust the distance from the right as needed */
-font-size: 15px; /* Adjust the font size as needed */
+  flex-direction: row;
+  flex:right;
+  bottom: 5px; /* Adjust the distance from the bottom as needed */
+  /* Adjust the distance from the right as needed */
+  font-size: 15px; /* Adjust the font size as needed */
   
 }
-
 
  /* Style for the modal container */
  .modal {
   display: none; /* Hidden by default */
-  position: absolute; /* Stay in place */
   z-index: 1; /* Sit on top */
   left: 0;
   top: 0;
@@ -1117,7 +1126,6 @@ font-size: 15px; /* Adjust the font size as needed */
   100% { transform: rotate(360deg); }
 }
 
-
 .sanction-content {
   padding: 20px;
   height: 60%;
@@ -1125,13 +1133,11 @@ font-size: 15px; /* Adjust the font size as needed */
   margin-bottom: 20px; 
 }
 
-
 .written-content {
   padding: 20px;
   height: 60%;
   margin-bottom: 20px; 
 }
-
 
 #loadingScreen {
   display: none;
@@ -1154,11 +1160,11 @@ font-size: 15px; /* Adjust the font size as needed */
 } 
 
 .numberofall{
-align-content: center;
-position: absolute;
-top: 70%;
-left: 50%;
-transform: translate(-50%, -50%);
+  align-content: center;
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width:500px;
   height:500px;
 } 
@@ -1212,26 +1218,18 @@ label {
   margin-top: 10px;
 }
 
-
-      /* Tab navigation styles */
-
 /* Tab navigation styles */
-/* Tab container styles */
-
-/* Tab navigation styles */
-
   #trackStatusLink {
   color: black; /* Set the text color to black */
   text-decoration: none; /* Remove underline if needed */
   cursor: pointer; /* Change the cursor on hover to indicate it's clickable */
   }
 
-  
-  .tab i {
+.tab i {
   font-size: 24px;
   color: #c50303;
   margin-right: 5px;
-  }
+}
 
 .tab-container {
   background-color: transparent;
@@ -1266,9 +1264,6 @@ label {
   cursor: pointer;
   padding: 8px 12px;
   transition: background-color 0.3s ease;
- 
- 
- 
 }
 
 /* Tab hover effect */
@@ -1298,7 +1293,6 @@ label {
   text-decoration: none;
   color: #000;
 }
-
 
 /* Style for the button */
 .view-report-button {
@@ -1436,8 +1430,6 @@ label {
   background-color:  #437a45;  /* Darker background on hover */
 }
 
-
-
 .faq-container {
   width: 100%;
 }
@@ -1513,11 +1505,7 @@ label {
   border: 1px solid #000;
 }
 
-
-
-
 /* Add responsive styles using media queries */
-
 /* For screens with a maximum width of 768px (typical mobile devices) */
 @media (max-width: 768px) {
   .contact-container {
@@ -1568,7 +1556,8 @@ label {
   right: 5px;
   font-weight: bold;
   font-size: 16px;
-
+  background: none;
+  border: none;
 }
 .containerx {
   float:right;

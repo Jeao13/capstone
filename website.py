@@ -26,14 +26,16 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score
 import time
 
+
+
 start_time = time.time()
 
 db_config = {
-    'host': os.environ.get('MYSQL_ADDON_HOST', 'btkfgad5kv7rkgp2ljbl-mysql.services.clever-cloud.com'),
-    'user': os.environ.get('MYSQL_ADDON_USER', 'ut5cv46rvwyaoobx'),
-    'password': os.environ.get('MYSQL_ADDON_PASSWORD', 'aiRzdgEuvx3iJPje78pp'),
-    'database': os.environ.get('MYSQL_ADDON_DB', 'btkfgad5kv7rkgp2ljbl'),
-    'port': os.environ.get('MYSQL_ADDON_PORT', '21667'),
+    'host': os.environ.get('MYSQL_ADDON_DIRECT_HOST', 'localhost'),
+    'user': os.environ.get('MYSQL_ADDON_USER', 'root'),
+    'password': os.environ.get('MYSQL_ADDON_PASSWORD', ''),
+    'database': os.environ.get('MYSQL_ADDON_DB', 'capstoneproject'),
+    'port': os.environ.get('MYSQL_ADDON_DIRECT_PORT', '3306'),
 }
 
 try:
@@ -42,14 +44,18 @@ try:
     print(f"Connected to the database (Time taken: {end_time - start_time} seconds)")
 except mysql.connector.Error as err:
     print(f"Error: {err}")
+    db_connection.reconnect()
 
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
 
 
+
+
+
 pdfkit_options = {
-    'page-size': 'Custom',
+    'page-size': 'Custom', 
     'page-width': '215.9mm',  # 8.5 inches converted to millimeters
     'page-height': '330.2mm',  # 13 inches converted to millimeters
     'encoding': 'UTF-8',
@@ -60,6 +66,8 @@ pdfkit_options = {
 def get_data(x):
     data = x
     return jsonify(data)
+
+
 
 
 def notifs(user_id, message):
@@ -779,7 +787,7 @@ def submit_report():
         evidence1 = request.form.get('witness1')
         evidence2 = request.form.get('witness2')
         evidence3 = request.form.get('witness3')
-        pic = request.files['file9']
+        pic = request.files['file3']
         current_datetime = datetime.now()
         current_date = current_datetime.date()
         formatted_date = current_date.strftime("/%m/%d/%Y")
@@ -801,41 +809,24 @@ def submit_report():
         doc = Document(pdf_filename)
         # Replace placeholders
 
-        replace_table_cell_placeholder1(
-            doc.tables[0], 2, 2, formatted_date, "(date)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 4, 1, Name_Coordinator, "NAME")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 11, 8, name, "(student)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 12, 8, department, "(college)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 13, 8, section, "(section)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 16, 3, provision, "(provision)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 23, 3, report_text, "(narration)")
+        replace_table_cell_placeholder1(doc.tables[0], 2, 2, formatted_date, "(date)")
+        replace_table_cell_placeholder1(doc.tables[0], 4, 1, Name_Coordinator, "NAME")
+        replace_table_cell_placeholder1(doc.tables[0], 11, 8, name, "(student)")
+        replace_table_cell_placeholder1(doc.tables[0], 12, 8, department, "(college)")
+        replace_table_cell_placeholder1(doc.tables[0], 13, 8, section, "(section)")
+        replace_table_cell_placeholder1(doc.tables[0], 16, 3, provision, "(provision)")
+        replace_table_cell_placeholder1(doc.tables[0], 23, 3, report_text, "(narration)")
         replace_table_cell_placeholder1(doc.tables[0], 30, 3, final, "(final)")
-        replace_table_cell_placeholder_with_image(
-            doc.tables[0], 37, 18, pic, "lol")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 37, 18, namecomplain, "(NAME)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 38, 18, number, "(number)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 39, 18, email, "(email)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 40, 6, witness1, "(witness1)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 41, 6, witness2, "(witness2)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 42, 6, witness3, "(witness3)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 44, 9, evidence1, "(evidence1)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 45, 9, evidence2, "(evidence2)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 46, 9, evidence3, "(evidence3)")
+        replace_table_cell_placeholder_with_image(doc.tables[0], 37, 18, pic, "lol")
+        replace_table_cell_placeholder1(doc.tables[0], 37, 18, namecomplain, "(NAME)")
+        replace_table_cell_placeholder1(doc.tables[0], 38, 18, number, "(number)")
+        replace_table_cell_placeholder1(doc.tables[0], 39, 18, email, "(email)")
+        replace_table_cell_placeholder1(doc.tables[0], 40, 6, witness1, "(witness1)")
+        replace_table_cell_placeholder1(doc.tables[0], 41, 6, witness2, "(witness2)")
+        replace_table_cell_placeholder1(doc.tables[0], 42, 6, witness3, "(witness3)")
+        replace_table_cell_placeholder1(doc.tables[0], 44, 9, evidence1, "(evidence1)")
+        replace_table_cell_placeholder1(doc.tables[0], 45, 9, evidence2, "(evidence2)")
+        replace_table_cell_placeholder1(doc.tables[0], 46, 9, evidence3, "(evidence3)")
 
         doc.save("modified_document.docx")
 
@@ -4034,7 +4025,7 @@ def delete_report1(report_id):
     db_connection.commit()  # Make sure to commit the changes to the database
     db_cursor.close()
 
-    return redirect(url_for('requestpage'))
+    return redirect(url_for('homepage_head'))
 
 
 @app.route('/delete_all_report1/<string:report_id>/<string:status>', methods=['POST'])
@@ -4045,7 +4036,7 @@ def delete_all_report1(report_id, status):
             "DELETE FROM forms_osd WHERE course = %s AND status = 'Approved' OR status = 'Rejected';", (report_id,))
         db_connection.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
-        return redirect(url_for('requestpage'))
+        return redirect(url_for('homepage_head'))
 
     else:
         db_cursor = db_connection.cursor()
@@ -4053,7 +4044,7 @@ def delete_all_report1(report_id, status):
             "DELETE FROM forms_osd WHERE course = %s AND status = %s;", (report_id, status))
         db_connection.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
-        return redirect(url_for('requestpage'))
+        return redirect(url_for('homepage_head'))
 
 
 @app.route('/delete_all_report/<string:report_id>', methods=['POST'])
@@ -4063,7 +4054,7 @@ def delete_all_report(report_id):
     db_connection.commit()  # Make sure to commit the changes to the database
     db_cursor.close()
 
-    return redirect(url_for('menu'))
+    return redirect(url_for('homepage_head'))
 
 
 @app.route('/delete_all_report2/', methods=['POST'])
@@ -4397,12 +4388,15 @@ def update_database1():
     try:
         # Get the JSON data from the request
         data = request.get_json()
+        print("data")
 
         id = data.get('coordId')
+        print(id)
         username = data.get('username')
         password = data.get('password')
         profile_pic_base64 = data.get('picId')
         name = data.get('name')
+        print(name)
         course = data.get('course')
 
         if profile_pic_base64:
@@ -4560,6 +4554,93 @@ def edit_pic1():
     except Exception as e:
         # Handle any errors that may occur during the update
         return jsonify({"error": str(e)})
+
+
+@app.route('/edit_pic2', methods=['POST'])
+def edit_pic2():
+    ids = request.form.get('id')
+    print(ids)
+    try:
+        pic = request.files['file3']
+
+        if pic:
+            # Read the image data from the file
+            image_data = memoryview(pic.read()).tobytes()
+        else:
+            image_data = None  # Handle the case where there is no profile picture
+
+        db_cursor = db_connection.cursor()
+        db_cursor.execute(
+            "UPDATE accounts_cit SET image_data = %s WHERE id = %s;", (image_data, ids))
+        db_connection.commit()  # Make sure to commit the changes to the database
+        db_cursor.close()
+
+        return redirect(url_for('homepage_head'))
+    except Exception as e:
+        # Handle any errors that may occur during the update
+        return jsonify({"error": str(e)})
+    
+
+
+
+@app.route('/edit_pic3', methods=['POST'])
+def edit_pic3():
+    ids = request.form.get('id')
+    print(ids)
+    try:
+        pic = request.files['file3']
+
+        if pic:
+            # Read the image data from the file
+            image_data = memoryview(pic.read()).tobytes()
+        else:
+            image_data = None  # Handle the case where there is no profile picture
+
+        db_cursor = db_connection.cursor()
+        db_cursor.execute(
+            "UPDATE accounts_cafad SET image_data = %s WHERE id = %s;", (image_data, ids))
+        db_connection.commit()  # Make sure to commit the changes to the database
+        db_cursor.close()
+
+        return redirect(url_for('homepage_head'))
+    except Exception as e:
+        # Handle any errors that may occur during the update
+        return jsonify({"error": str(e)})
+    
+
+
+
+@app.route('/edit_pic4', methods=['POST'])
+def edit_pic4():
+    ids = request.form.get('id')
+    print(ids)
+    try:
+        pic = request.files['file3']
+
+        if pic:
+            # Read the image data from the file
+            image_data = memoryview(pic.read()).tobytes()
+        else:
+            image_data = None  # Handle the case where there is no profile picture
+
+        db_cursor = db_connection.cursor()
+        db_cursor.execute(
+            "UPDATE accounts_coe SET image_data = %s WHERE id = %s;", (image_data, ids))
+        db_connection.commit()  # Make sure to commit the changes to the database
+        db_cursor.close()
+
+        return redirect(url_for('homepage_head'))
+    except Exception as e:
+        # Handle any errors that may occur during the update
+        return jsonify({"error": str(e)})
+    
+
+
+
+
+
+
+        
 
 
 if __name__ == '__main__':
