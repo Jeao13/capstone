@@ -4653,6 +4653,6 @@ while True:
             print(f"Error: {err}")
 
     # Ping the database every 5 minutes to keep the connection alive
-    ping_interval = 100  # 5 minutes
+    ping_interval = 1000  # 5 minutes
     time.sleep(ping_interval)
     ping_database(db_connection)
