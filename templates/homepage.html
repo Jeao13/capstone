@@ -784,7 +784,7 @@
             <div class="report_small">
                 <b>Date and Time:</b> {{ row[2] }}<br>
                 <button class="view-report-button" onclick="openModal1('{{ row[12] }}')">View Remarks</button>
-                <b>Document:</b><a href="{{ url_for('preview_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
+                <b>Document:</b><a href="{{ url_for('preview_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a><br>
                 <b>Department:</b> {{ row[4] }}<br>   
                 <b>Status:</b> {{ row[5] }}<br>
             </div>

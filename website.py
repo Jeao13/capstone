@@ -32,11 +32,11 @@ import time
 start_time = time.time()
 
 db_config = {
-    'host': os.environ.get('MYSQL_ADDON_DIRECT_HOST', 'hv-sgp1-002.clvrcld.net'),
+    'host': os.environ.get('MYSQL_ADDON_DIRECT_HOST', 'hv-sgp1-001.clvrcld.net'),
     'user': os.environ.get('MYSQL_ADDON_USER', 'uhmp5ztvzx8cl2iq'),
     'password': os.environ.get('MYSQL_ADDON_PASSWORD', 'FUdxr6xyK2ZGGjrmZjS'),
     'database': os.environ.get('MYSQL_ADDON_DB', 'b28tqgc0yz0kvrdrsv6r'),
-    'port': os.environ.get('MYSQL_ADDON_DIRECT_PORT', '10108'),
+    'port': os.environ.get('MYSQL_ADDON_DIRECT_PORT', '10269'),
 }
 
 try:
@@ -346,8 +346,8 @@ def submit_notice():
 
     toggle_table_cell_checkbox(doc.tables[0], 4, 19, status1)
     toggle_table_cell_checkbox(doc.tables[0], 4, 14, status)
-    toggle_table_cell_checkbox(doc.tables[0], 8, 0, status2)
-    toggle_table_cell_checkbox(doc.tables[0], 8, 8, status3)
+    toggle_table_cell_checkbox(doc.tables[0], 8, 0, status3)
+    toggle_table_cell_checkbox(doc.tables[0], 8, 8, status2)
     toggle_table_cell_checkbox(doc.tables[0], 10, 0, status4)
     toggle_table_cell_checkbox(doc.tables[0], 11, 0, status5)
 
@@ -1779,20 +1779,28 @@ def submit_written():
         doc = Document(pdf_filename)
 
         replace_table_cell_placeholder1(
-            doc.tables[0], 2, 12, formatted_date, "(date)")
+            doc.tables[0], 2, 13, formatted_date, "(date)")
         replace_table_cell_placeholder1(
             doc.tables[0], 3, 3, students, "(name)")
-        replace_table_cell_placeholder1(doc.tables[0], 6, 7, date2, "(date2)")
         replace_table_cell_placeholder1(
-            doc.tables[0], 7, 10, remarks, "(complain)")
+            doc.tables[0], 13, 6, sanction_number1, "(offense)")
+        replace_table_cell_placeholder1(doc.tables[0], 13, 14, days, "(days)")
         replace_table_cell_placeholder1(
-            doc.tables[0], 6, 10, complainant, "(name1)")
+            doc.tables[0], 14, 4, effectivity, "wew")
         replace_table_cell_placeholder1(
-            doc.tables[0], 11, 6, sanction_number, "(section)")
+            doc.tables[0], 6, 14, sanction_number, "(section)")
         replace_table_cell_placeholder1(
-            doc.tables[0], 19, 8, username, "coord")
-        replace_table_cell_placeholder1(doc.tables[0], 22, 2, username, "NAME")
-        replace_table_cell_placeholder1(doc.tables[0], 12, 2, norms, "norms")
+            doc.tables[0], 18, 3, username, "KRAZY")
+        replace_table_cell_placeholder1(
+            doc.tables[0], 18, 5, checked, "FERSON")
+        replace_table_cell_placeholder1(
+            doc.tables[0], 18, 16, verified, "TEST")
+        replace_table_cell_placeholder1(
+            doc.tables[0], 20, 5, students, "STUDENT")
+        replace_table_cell_placeholder1(
+            doc.tables[0], 20, 16, verified, "PARENT")
+
+        replace_table_cell_placeholder1(doc.tables[0], 7, 2, norms, "norms")
 
         doc.save("modified_document.docx")
 
@@ -3580,147 +3588,6 @@ def count():
     db_cursor4 = db_connection.cursor()
     db_cursor4.execute(
         "SELECT COUNT(*) FROM reports WHERE course = %s AND status = %s", (username, "Case Closed"))
-    result4 = db_cursor4.fetchone()
-    db_cursor4.close
-
-    countreports = result[0]
-    countpending = result1[0]
-    countongoing = result2[0]
-    countrejected = result3[0]
-    countcaseclosed = result4[0]
-
-    print(countreports)
-
-    # Return the result as JSON
-    student_data = {'Reports': countreports, 'Pending': countpending,
-                    'Ongoing': countongoing, 'Rejected': countrejected, 'Caseclosed': countcaseclosed}
-    return jsonify(student_data)
-
-
-@app.route('/countrequest', methods=['POST'])
-def countrequest():
-
-    username = session.get('courseall', '')
-
-    db_cursor = db_connection.cursor()
-    db_cursor.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE course = %s", (username,))
-    result = db_cursor.fetchone()
-    db_cursor.close
-
-    db_cursor1 = db_connection.cursor()
-    db_cursor1.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE course = %s AND status = %s", (username, "Pending",))
-    result1 = db_cursor1.fetchone()
-    db_cursor1.close
-
-    db_cursor2 = db_connection.cursor()
-    db_cursor2.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE course = %s AND status = %s", (username, "Ongoing"))
-    result2 = db_cursor2.fetchone()
-    db_cursor2.close
-
-    db_cursor3 = db_connection.cursor()
-    db_cursor3.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE course = %s AND status = %s", (username, "Rejected"))
-    result3 = db_cursor3.fetchone()
-    db_cursor3.close
-
-    db_cursor4 = db_connection.cursor()
-    db_cursor4.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE course = %s AND status = %s", (username, "Rejected"))
-    result4 = db_cursor4.fetchone()
-    db_cursor4.close
-
-    countreports = result[0]
-    countpending = result1[0]
-    countongoing = result2[0]
-    countrejected = result3[0]
-    countcaseclosed = result4[0]
-
-    print(countreports)
-
-    # Return the result as JSON
-    student_data = {'Reports': countreports, 'Pending': countpending,
-                    'Ongoing': countongoing, 'Rejected': countrejected, 'Caseclosed': countcaseclosed}
-    return jsonify(student_data)
-
-
-@app.route('/count1', methods=['POST'])
-def count1():
-
-    db_cursor = db_connection.cursor()
-    db_cursor.execute("SELECT COUNT(*) FROM reports")
-    result = db_cursor.fetchone()
-    db_cursor.close
-
-    db_cursor1 = db_connection.cursor()
-    db_cursor1.execute(
-        "SELECT COUNT(*) FROM reports WHERE status = %s", ("Pending",))
-    result1 = db_cursor1.fetchone()
-    db_cursor1.close
-
-    db_cursor2 = db_connection.cursor()
-    db_cursor2.execute(
-        "SELECT COUNT(*) FROM reports WHERE status = %s", ("Ongoing",))
-    result2 = db_cursor2.fetchone()
-    db_cursor2.close
-
-    db_cursor3 = db_connection.cursor()
-    db_cursor3.execute(
-        "SELECT COUNT(*) FROM reports WHERE status = %s", ("Rejected",))
-    result3 = db_cursor3.fetchone()
-    db_cursor3.close
-
-    db_cursor4 = db_connection.cursor()
-    db_cursor4.execute(
-        "SELECT COUNT(*) FROM reports WHERE status = %s", ("Case Closed",))
-    result4 = db_cursor4.fetchone()
-    db_cursor4.close
-
-    countreports = result[0]
-    countpending = result1[0]
-    countongoing = result2[0]
-    countrejected = result3[0]
-    countcaseclosed = result4[0]
-
-    print(countreports)
-
-    # Return the result as JSON
-    student_data = {'Reports': countreports, 'Pending': countpending,
-                    'Ongoing': countongoing, 'Rejected': countrejected, 'Caseclosed': countcaseclosed}
-    return jsonify(student_data)
-
-
-@app.route('/countrequest1', methods=['POST'])
-def countrequest1():
-
-    db_cursor = db_connection.cursor()
-    db_cursor.execute("SELECT COUNT(*) FROM forms_osd")
-    result = db_cursor.fetchone()
-    db_cursor.close
-
-    db_cursor1 = db_connection.cursor()
-    db_cursor1.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE status = %s", ("Pending",))
-    result1 = db_cursor1.fetchone()
-    db_cursor1.close
-
-    db_cursor2 = db_connection.cursor()
-    db_cursor2.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE status = %s", ("Ongoing",))
-    result2 = db_cursor2.fetchone()
-    db_cursor2.close
-
-    db_cursor3 = db_connection.cursor()
-    db_cursor3.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE status = %s", ("Rejected",))
-    result3 = db_cursor3.fetchone()
-    db_cursor3.close
-
-    db_cursor4 = db_connection.cursor()
-    db_cursor4.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE status = %s", ("Case Closed",))
     result4 = db_cursor4.fetchone()
     db_cursor4.close
 
