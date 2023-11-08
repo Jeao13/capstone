@@ -33,9 +33,11 @@ start_time = time.time()
 
 db_config = {
     'host': os.environ.get('MYSQL_ADDON_DIRECT_HOST', 'hv-sgp1-001.clvrcld.net'),
+    'host': os.environ.get('MYSQL_ADDON_DIRECT_HOST', 'hv-sgp1-001.clvrcld.net'),
     'user': os.environ.get('MYSQL_ADDON_USER', 'uhmp5ztvzx8cl2iq'),
     'password': os.environ.get('MYSQL_ADDON_PASSWORD', 'FUdxr6xyK2ZGGjrmZjS'),
     'database': os.environ.get('MYSQL_ADDON_DB', 'b28tqgc0yz0kvrdrsv6r'),
+    'port': os.environ.get('MYSQL_ADDON_DIRECT_PORT', '10269'),
     'port': os.environ.get('MYSQL_ADDON_DIRECT_PORT', '10269'),
 }
 
@@ -46,6 +48,7 @@ try:
 except mysql.connector.Error as err:
     print(f"Error: {err}")
     db_connection.reconnect()
+
 
 
 app = Flask(__name__)
