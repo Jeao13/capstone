@@ -32,44 +32,30 @@
         <i class="fas fa-sign-out-alt"></i> Sign Out
       </a>
       <div class="containerx">
-        <a class="notif" href="#" id="toggleLink"><i class="fas fa-bell"></i></a><br>
-        <div id="notifications-container" class="notifications">
-            {% if user_source == 'accounts_cics' %}
-            {% if notif == [] %}
-            <b>You have no notifications</b>
-            {% else %}
-            {% for row in notif%}
-            <div class="report">
-                <button class="delete-button" onclick="deleteNotification(this, '{{ row[0] }}')">Delete</button>
-                <b></b> {{ row[2] }}<br>
+            <a class="notif" href="#" id="toggleLink"><i class="fas fa-bell"></i></a><br>
+            <div id="notifications-container" class="notifications">
+                {% if user_source == 'accounts_cics' %}
+                {% if notif == [] %}
+                <b>You have no notifications</b>
+                {% else %}
+                {% for row in notif %}
+                <div class="report">
+                    <b>{{ row[2] }}</b> <br>
+                    <button class="delete-button" onclick="deleteNotification(this, '{{ row[0] }}')">X</button>
                     <div class="report_small">
                         <b>Date:</b> {{ row[4] }}<br>
                         <b>Time:</b> {{ row[3] }}<br>
-                     
                     </div>
-            </div>
-            <hr class="report-separator">
-            {% endfor %}
+                </div>
+                <hr class="report-separator">
+                {% endfor %}
+                {% endif %}
             {% endif %}
-        {% endif %}
-          
         </div>
     </div>
    
       
-        
 
-    <!-- or user_source == 'accounts_head' Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
-    {% if user_source == 'accounts_coordinators' %}
-    <a href="/menu">Reports</a>
-    <a href="/request">Requests</a>
-    {% endif %}
-
-    {% if user_source == 'accounts_head' %}
-    <a href="/menu">Reports</a>
-    <a href="/request">Requests</a>
-    <a href="/manage_coord">Manage Coordinators</a>
-    {% endif %}
    
     </div>
 
@@ -289,7 +275,7 @@
 
                             <input type="hidden" name="forms" value="Formal Complaint">
                             <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
-                            <input id="submit" type="submit" value="Submit" class="green-submit-button">
+                            <input id="submit" type="submit" class="green-submit-button">
                         </div>
                     </form>
 
@@ -322,7 +308,7 @@
                             <div class="form-row1">
                                 <div class="form-element">
                                     <label for="file4">Attach Supporting Documents (if you have any):</label>
-                                    <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx">
+                                    <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx" required>
                                 </div>
                             </div>
 
@@ -368,9 +354,8 @@
                             </label>
                         </div>
 
-                        <input type="hidden" name="forms" value="Formal Complaint">
                         <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
-                        <input id="submit" type="submit" value="Submit" class="green-submit-button">
+                        <input id="submit" type="submit" class="green-submit-button">
                     </form>
                 </div>      
         </div>
@@ -393,8 +378,8 @@
                 
                 <div id="formContainer2" style="display: none;">
                     <form action="/submit_request" method="POST" enctype="multipart/form-data">
-                        <label for="department">Department to Send:</label> 
-                            <select name="department" id="department">
+                        <label for="department1">Department to Send:</label> 
+                            <select name="department1" id="department1">
                                 <option value="" selected disabled>Select the Department:</option> 
                                 <option value="CAFAD">CAFAD</option> 
                                 <option value="CICS">CICS</option> 
@@ -438,7 +423,7 @@
                 <div id="formContainer3" style="display: none;">
                     <form action="/submit_request" method="POST" enctype="multipart/form-data">
                         <label for="department">Department to Send:</label> 
-                            <select name="department" id="department">
+                            <select name="department" id="department" required>
                                 <option value="" selected disabled>Select the Department:</option> 
                                 <option value="CAFAD">CAFAD</option> 
                                 <option value="CICS">CICS</option> 
@@ -799,6 +784,7 @@
             <div class="report_small">
                 <b>Date and Time:</b> {{ row[2] }}<br>
                 <button class="view-report-button" onclick="openModal1('{{ row[12] }}')">View Remarks</button>
+                <b>Document:</b><a href="{{ url_for('preview_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
                 <b>Department:</b> {{ row[4] }}<br>   
                 <b>Status:</b> {{ row[5] }}<br>
             </div>

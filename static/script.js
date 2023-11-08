@@ -1279,10 +1279,10 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.style.display = 'none';
         enableScroll()
     }
-s
+
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Get references to the link and the container
+        
         const toggleLink = document.getElementById('toggleLink');
         const container = document.getElementById('notifications-container');
     

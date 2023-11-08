@@ -403,7 +403,7 @@
                         <label for="fieldwork">The complaint is without merit.</label><br>
                         <input type="checkbox" id="prolonged" name="prolonged" value="prolonged" onclick="toggleInput4()">
                         <label for="prolonged">Others, please specify:</label><br>
-                        <input type="text" id="specify2" name="specify2" style="display: none" required><br>
+                        <input type="text" id="specify2" name="specify2" style="display: none"><br>
                         <input type="hidden" name="status" value="Rejected">
                             
                         <button onclick="validateCheckboxes()">Submit</button>
@@ -455,7 +455,7 @@
                       
                         <input type="radio" id="minor1" name="offense_type" value="minor">
                         <label for="minor">Minor Offense</label>
-                        <input list="sanctions" id="sanctionsInputminor1" style="display:none;" name="sanctionsminor" placeholder="Select Section:" required>
+                        <input list="sanctions" id="sanctionsInputminor1" style="display:none;" name="sanctionsminor1" placeholder="Select Section:" required>
                         <datalist id="sanctions">
                             <option value="12.1.1 - attendance, punctuality, cutting classes">12.1.1 - attendance, punctuality, cutting classes</option> 
                             <option value="12.1.2 - dress code, uniform">12.1.2 - dress code, uniform</option> 
@@ -475,7 +475,7 @@
                 
                         <input type="radio" id="major1" name="offense_type" value="major">
                         <label for="major">Major Offense</label>
-                        <input list="sanctions" id="sanctionsInputmajor1" name="sanctionsmajor" style="display:none;" placeholder="Select Section:" required>
+                        <input list="sanctions" id="sanctionsInputmajor1" name="sanctionsmajor1" style="display:none;" placeholder="Select Section:" required>
                         <datalist id="sanctions">
                             <option value="13.1 - repeat offenses">13.1 - repeat offenses</option> 
                             <option value="13.2 - insubordination">13.2 - insubordination</option>

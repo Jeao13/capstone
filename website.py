@@ -25,6 +25,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score
 import time
+import threading
 
 
 
@@ -38,6 +39,18 @@ db_config = {
     'port': os.environ.get('MYSQL_ADDON_DIRECT_PORT', '10108'),
 }
 
+db_connection = None  # Initialize the connection variable
+
+# Function to ping the database to keep the connection alive
+def ping_database(connection):
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT 1")
+        cursor.close()
+    except mysql.connector.Error as err:
+        print(f"Error while pinging database: {err}")
+        db_connection.reconnect()
+
 try:
     db_connection = mysql.connector.connect(**db_config)
     end_time = time.time()
@@ -49,6 +62,7 @@ except mysql.connector.Error as err:
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
+
 
 
 
@@ -254,7 +268,9 @@ def submit_notice():
     print(kind)
 
     id = request.form.get('id')
+    print(id)
     code = request.form.get('code')
+    print(code)
     student = request.form.get('student')
     complainant = request.form.get('complainant')
     srcode = request.form.get('srcode')
@@ -263,10 +279,10 @@ def submit_notice():
     gender = request.form.get('gender')
     offense = request.form.get('offense_type')
     offense1 = request.form.get('offense_type1')
-    minor_input1 = request.form.get('sanctionsInputminor')
-    minor_input2 = request.form.get('sanctionsInputminor1')
-    major_input1 = request.form.get('sanctionsInputmajor')
-    major_input2 = request.form.get('sanctionsInputmajor1')
+    minor_input1 = request.form.get('sanctionsminor')
+    minor_input2 = request.form.get('sanctionsminor1')
+    major_input1 = request.form.get('sanctionsmajor')
+    major_input2 = request.form.get('sanctionsmajor1')
     fieldwork1 = request.form.get('fieldwork')
     prolonged1 = request.form.get('prolonged')
     fieldwork2 = request.form.get('fieldwork1')
@@ -348,22 +364,16 @@ def submit_notice():
     toggle_table_cell_checkbox(doc.tables[0], 10, 0, status4)
     toggle_table_cell_checkbox(doc.tables[0], 11, 0, status5)
 
-    replace_table_cell_placeholder1(
-        doc.tables[0], 2, 6, formatted_date, "(date)")
-    replace_table_cell_placeholder1(
-        doc.tables[0], 14, 2, formatted_date, "(date2)")
+    replace_table_cell_placeholder1(doc.tables[0], 2, 6, formatted_date, "(date)")
+    replace_table_cell_placeholder1(doc.tables[0], 14, 2, formatted_date, "(date2)")
     replace_table_cell_placeholder1(doc.tables[0], 5, 6, program, "(program)")
     replace_table_cell_placeholder1(doc.tables[0], 3, 6, student, "(name)")
     replace_table_cell_placeholder1(doc.tables[0], 3, 18, srcode, "(code)")
     replace_table_cell_placeholder1(doc.tables[0], 5, 18, section, "(section)")
-    replace_table_cell_placeholder1(
-        doc.tables[0], 7, 6, minor_input, "(minor)")
-    replace_table_cell_placeholder1(
-        doc.tables[0], 7, 13, major_input, "(major)")
-    replace_table_cell_placeholder1(
-        doc.tables[0], 11, 12, specify2, "(specify)")
-    replace_table_cell_placeholder1(
-        doc.tables[0], 14, 2, Name_Coordinator, "NAME")
+    replace_table_cell_placeholder1(doc.tables[0], 7, 6, minor_input, "(minor)")
+    replace_table_cell_placeholder1(doc.tables[0], 7, 13, major_input, "(major)")
+    replace_table_cell_placeholder1(doc.tables[0], 11, 12, specify2, "(specify)")
+    replace_table_cell_placeholder1(doc.tables[0], 14, 2, Name_Coordinator, "NAME")
 
     toggle_table_cell_checkbox(doc.tables[1], 4, 19, status1)
     toggle_table_cell_checkbox(doc.tables[1], 4, 14, status)
@@ -372,22 +382,16 @@ def submit_notice():
     toggle_table_cell_checkbox(doc.tables[1], 10, 0, status4)
     toggle_table_cell_checkbox(doc.tables[1], 11, 0, status5)
 
-    replace_table_cell_placeholder1(
-        doc.tables[1], 2, 6, formatted_date, "(date)")
-    replace_table_cell_placeholder1(
-        doc.tables[1], 14, 2, formatted_date, "(date2)")
+    replace_table_cell_placeholder1(doc.tables[1], 2, 6, formatted_date, "(date)")
+    replace_table_cell_placeholder1(doc.tables[1], 14, 2, formatted_date, "(date2)")
     replace_table_cell_placeholder1(doc.tables[1], 5, 6, program, "(program)")
     replace_table_cell_placeholder1(doc.tables[1], 3, 6, student, "(name)")
     replace_table_cell_placeholder1(doc.tables[1], 3, 18, srcode, "(code)")
     replace_table_cell_placeholder1(doc.tables[1], 5, 18, section, "(section)")
-    replace_table_cell_placeholder1(
-        doc.tables[1], 7, 6, minor_input, "(minor)")
-    replace_table_cell_placeholder1(
-        doc.tables[1], 7, 13, major_input, "(major)")
-    replace_table_cell_placeholder1(
-        doc.tables[1], 11, 12, specify2, "(specify)")
-    replace_table_cell_placeholder1(
-        doc.tables[1], 14, 2, Name_Coordinator, "NAME")
+    replace_table_cell_placeholder1(doc.tables[1], 7, 6, minor_input, "(minor)")
+    replace_table_cell_placeholder1(doc.tables[1], 7, 13, major_input, "(major)")
+    replace_table_cell_placeholder1(doc.tables[1], 11, 12, specify2, "(specify)")
+    replace_table_cell_placeholder1(doc.tables[1], 14, 2, Name_Coordinator, "NAME")
 
     doc.save("modified_document.docx")
     # Check the operating system
@@ -419,8 +423,7 @@ def submit_notice():
     db_cursor.close()
 
     db_cursor_status = db_connection.cursor()
-    db_cursor_status.execute(
-        "UPDATE reports SET status = %s WHERE id = %s", (statusreport, id))
+    db_cursor_status.execute("UPDATE reports SET status = %s WHERE report_id = %s", (statusreport, code))
     db_connection.commit()
     db_cursor_status.close()
 
@@ -770,6 +773,7 @@ def generate_report():
 @app.route('/submit_report', methods=['POST'])
 def submit_report():
     kind = request.form.get('forms')
+    print(kind)
     role = request.form.get('role')
     if kind == "Formal Complaint":
         department = request.form.get('department')
@@ -907,6 +911,7 @@ def submit_report():
         remarks = request.form.get('remarks')
         report_text = request.form.get('Incident')
         name = request.form.get('name1')
+        print("lol")
         section = request.form.get('section1')
         designation = request.form.get('designation')
         program = request.form.get('program')
@@ -1043,7 +1048,8 @@ def submit_request():
     if kind == "Temporary Gate Pass":
 
         remarks = request.form.get('remarks')
-        department = request.form.get('department')
+        print(remarks)
+        department = request.form.get('department1')
         print(department)
         section = request.form.get('section2')
         program = request.form.get('program')
@@ -1064,41 +1070,25 @@ def submit_request():
         pdf_filename = 'Temporary Gate Pass.docx'
         doc = Document(pdf_filename)
 
-        replace_table_cell_placeholder1(
-            doc.tables[0], 2, 11, formatted_date, "(date)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 11, 1, formatted_date, "(date1)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 11, 1, Name_Coordinator1, "(Coord)")
+        replace_table_cell_placeholder1(doc.tables[0], 2, 11, formatted_date, "(date)")
+        replace_table_cell_placeholder1(doc.tables[0], 11, 1, formatted_date, "(date1)")
+        replace_table_cell_placeholder1(doc.tables[0], 11, 1, Name_Coordinator1, "(Coord)")
         replace_table_cell_placeholder1(doc.tables[0], 3, 3, student, "(name)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 6, 4, remarks, "(remarks)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 3, 11, username, "(code)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 5, 9, section, "(section)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 4, 3, department, "(department)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 5, 3, program, "(program)")
+        replace_table_cell_placeholder1(doc.tables[0], 6, 4, remarks, "(remarks)")
+        replace_table_cell_placeholder1(doc.tables[0], 3, 11, username, "(code)")
+        replace_table_cell_placeholder1(doc.tables[0], 5, 9, section, "(section)")
+        replace_table_cell_placeholder1(doc.tables[0], 4, 3, department, "(department)")
+        replace_table_cell_placeholder1(doc.tables[0], 5, 3, program, "(program)")
 
-        replace_table_cell_placeholder1(
-            doc.tables[1], 2, 11, formatted_date, "(date)")
-        replace_table_cell_placeholder1(
-            doc.tables[1], 11, 1, formatted_date, "(date1)")
-        replace_table_cell_placeholder1(
-            doc.tables[1], 11, 1, Name_Coordinator1, "(Coord)")
+        replace_table_cell_placeholder1( doc.tables[1], 2, 11, formatted_date, "(date)")
+        replace_table_cell_placeholder1(doc.tables[1], 11, 1, formatted_date, "(date1)")
+        replace_table_cell_placeholder1(doc.tables[1], 11, 1, Name_Coordinator1, "(Coord)")
         replace_table_cell_placeholder1(doc.tables[1], 3, 3, student, "(name)")
-        replace_table_cell_placeholder1(
-            doc.tables[1], 6, 4, remarks, "(remarks)")
-        replace_table_cell_placeholder1(
-            doc.tables[1], 3, 11, username, "(code)")
-        replace_table_cell_placeholder1(
-            doc.tables[1], 5, 9, section, "(section)")
-        replace_table_cell_placeholder1(
-            doc.tables[1], 4, 3, department, "(department)")
-        replace_table_cell_placeholder1(
-            doc.tables[1], 5, 3, program, "(program)")
+        replace_table_cell_placeholder1(doc.tables[1], 6, 4, remarks, "(remarks)")
+        replace_table_cell_placeholder1(doc.tables[1], 3, 11, username, "(code)")
+        replace_table_cell_placeholder1(doc.tables[1], 5, 9, section, "(section)")
+        replace_table_cell_placeholder1(doc.tables[1], 4, 3, department, "(department)")
+        replace_table_cell_placeholder1(doc.tables[1], 5, 3, program, "(program)")
 
         doc.save("modified_document.docx")
         # Check the operating system
@@ -1138,8 +1128,8 @@ def submit_request():
             support_extension = "None"
 
             db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                              (random_code, department, remarks, file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name,file_form_type, file_form, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
+                              (random_code, department, remarks, file_name, pdf_data, ".pdf",support_filename, support_extension, support_data, username, current_datetime, "Pending",remarks))
             db_connection.commit()
 
             db_cursor.close()
@@ -1158,8 +1148,8 @@ def submit_request():
 
             # Insert the report with file information into the database, including file data
             db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                              (random_code, department, remarks, file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
+                              (random_code, department, remarks, file_name, pdf_data, ".pdf",support_filename, support_extension, support_data, username, current_datetime, "Pending",remarks))
             db_connection.commit()
 
             db_cursor.close()
@@ -1251,21 +1241,14 @@ def submit_request():
         toggle_table_cell_checkbox(doc.tables[0], 12, 0, status6)
         toggle_table_cell_checkbox(doc.tables[0], 13, 0, status7)
 
-        replace_table_cell_placeholder1(
-            doc.tables[0], 16, 1, formatted_date, "(date)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 13, 2, specify1, "(specify)")
+        replace_table_cell_placeholder1(doc.tables[0], 16, 1, formatted_date, "(date)")
+        replace_table_cell_placeholder1(doc.tables[0], 13, 2, specify1, "(specify)")
         replace_table_cell_placeholder1(doc.tables[0], 2, 4, student, "(name)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 3, 4, college, "(college)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 4, 4, program, "(program)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 2, 10, username, "(srcode)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 4, 10, section, "(section)")
-        replace_table_cell_placeholder_with_image(
-            doc.tables[0], 16, 1, pic, "(signature)", 29)
+        replace_table_cell_placeholder1(doc.tables[0], 3, 4, department, "(college)")
+        replace_table_cell_placeholder1(doc.tables[0], 4, 4, program, "(program)")
+        replace_table_cell_placeholder1(doc.tables[0], 2, 10, username, "(srcode)")
+        replace_table_cell_placeholder1(doc.tables[0], 4, 10, section, "(section)")
+        replace_table_cell_placeholder_with_image(doc.tables[0], 16, 1, pic, "(signature)", 29)
 
         doc.save("modified_document.docx")
         convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
@@ -1304,8 +1287,8 @@ def submit_request():
             support_extension = "None"
 
             db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                              (random_code, department, remarks, file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
+                              (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending",""))
             db_connection.commit()
 
             db_cursor.close()
@@ -1324,8 +1307,8 @@ def submit_request():
 
             # Insert the report with file information into the database, including file data
             db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                              (random_code, department, remarks, file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
+                              (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending",""))
             db_connection.commit()
 
             db_cursor.close()
@@ -1343,6 +1326,7 @@ def submit_request():
         print(specify2)
         remarks = "The details of the report is located in the document"
         department = request.form.get('department')
+        print(department)
         specify3 = request.form.get('specifyTextarea1')
         section = request.form.get('section1')
         college = request.form.get('college')
@@ -1355,6 +1339,7 @@ def submit_request():
         print(pic)
 
         student = session.get('namestudent', '')
+        print(student)
         username = session.get('username', '')
 
         if fieldwork == "fieldwork":
@@ -1398,25 +1383,16 @@ def submit_request():
         replace_table_cell_placeholder2(doc.tables[0], 9, 2, status3, "UPDATE")
         replace_table_cell_placeholder2(doc.tables[0], 9, 4, status7, "OTHERS")
 
-        replace_table_cell_placeholder1(
-            doc.tables[0], 2, 3, formatted_date, "(date)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 10, 1, formatted_date, "(date1)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 10, 8, Name_Coordinator1, "NAME")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 8, 8, specify3, "(specify)")
+        replace_table_cell_placeholder1(doc.tables[0], 2, 3, formatted_date, "(date)")
+        replace_table_cell_placeholder1(doc.tables[0], 10, 1, formatted_date, "(date1)")
+        replace_table_cell_placeholder1(doc.tables[0], 10, 8, Name_Coordinator1, "NAME")
+        replace_table_cell_placeholder1(doc.tables[0], 8, 8, specify3, "(specify)")
         replace_table_cell_placeholder1(doc.tables[0], 3, 3, student, "(name)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 4, 3, college, "(college)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 5, 3, program, "(program)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 3, 10, username, "(srcode)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 5, 10, section, "(yearlevel)")
-        replace_table_cell_placeholder_with_image(
-            doc.tables[0], 10, 1, pic, "(signature)", 29)
+        replace_table_cell_placeholder1(doc.tables[0], 4, 3, department, "(college)")
+        replace_table_cell_placeholder1(doc.tables[0], 5, 3, program, "(program)")
+        replace_table_cell_placeholder1(doc.tables[0], 3, 10, username, "(srcode)")
+        replace_table_cell_placeholder1(doc.tables[0], 5, 10, section, "(yearlevel)")
+        replace_table_cell_placeholder_with_image(doc.tables[0], 10, 1, pic, "(signature)", 29)
 
         doc.save("modified_document.docx")
         convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
@@ -1454,8 +1430,8 @@ def submit_request():
             support_extension = "None"
 
             db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                              (random_code, department, remarks, file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
+                              (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending",""))
             db_connection.commit()
 
             db_cursor.close()
@@ -1474,8 +1450,8 @@ def submit_request():
 
             # Insert the report with file information into the database, including file data
             db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                              (random_code, department, remarks, file_name, pdf_data, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
+                              (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending",""))
             db_connection.commit()
 
             db_cursor.close()
@@ -2499,9 +2475,13 @@ def index():
             'secret': secret_key,
             'response': recaptcha_response
         })
+        #result = "success"
+
         result = response.json()
 
         if result['success']:
+
+        #if result == "success" :
 
             for table in tables:
                 query = "SELECT * FROM {} WHERE username = %s AND password = %s".format(
@@ -3155,7 +3135,8 @@ def homepage_head():
             profile_pictures[coord_id] = profile_picture_base64
 
     username = session.get('courseall', '')
-    statuses = ["", "Pending", "Ongoing", "Rejected", "Case Closed"]
+    statuses = ["", "Pending", "On Going", "Rejected", "Case Closed"]
+    statuses1 = ["", "Pending", "Ongoing", "Rejected", "Approved"]
     counts = {}
     counts1 = {}
     counts2 = {}
@@ -3177,7 +3158,7 @@ def homepage_head():
 
     db_cursor1 = db_connection.cursor()
 
-    for status in statuses:
+    for status in statuses1:
         if status:
             query = "SELECT COUNT(*) FROM forms_osd WHERE course = %s AND status = %s"
             db_cursor1.execute(query, (username, status))
@@ -3205,7 +3186,7 @@ def homepage_head():
 
     db_cursor3 = db_connection.cursor()
 
-    for status in statuses:
+    for status in statuses1:
         if status:
             query = "SELECT COUNT(*) FROM forms_osd WHERE status = %s"
             db_cursor3.execute(query, (status,))
@@ -3220,7 +3201,7 @@ def homepage_head():
     counts = {
         "Total Number of Complaints": counts[""],
         "Total Pending of Complaints": counts["Pending"],
-        "Total On-Going of Complaints": counts["Ongoing"],
+        "Total On-Going of Complaints": counts["On Going"],
         "Total Rejected of Complaints": counts["Rejected"],
         "Total Resolved of Complaints": counts["Case Closed"]
     }
@@ -3230,13 +3211,13 @@ def homepage_head():
         "Total Pending of Requests": counts1["Pending"],
         "Total On-Going of Requests": counts1["Ongoing"],
         "Total Rejected of Requests": counts1["Rejected"],
-        "Total Resolved of Requests": counts1["Case Closed"]
+        "Total Resolved of Requests": counts1["Approved"]
     }
 
     counts2 = {
         "Total Number of Complaints": counts2[""],
         "Total Pending of Complaints": counts2["Pending"],
-        "Total On-Going of Complaints": counts2["Ongoing"],
+        "Total On-Going of Complaints": counts2["On Going"],
         "Total Rejected of Complaints": counts2["Rejected"],
         "Total Resolved of Complaints": counts2["Case Closed"]
     }
@@ -3246,7 +3227,7 @@ def homepage_head():
         "Total Pending of Requests": counts3["Pending"],
         "Total On-Going of Requests": counts3["Ongoing"],
         "Total Rejected of Requests": counts3["Rejected"],
-        "Total Resolved of Requests": counts3["Case Closed"]
+        "Total Resolved of Requests": counts3["Approved"]
     }
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
@@ -4633,15 +4614,45 @@ def edit_pic4():
     except Exception as e:
         # Handle any errors that may occur during the update
         return jsonify({"error": str(e)})
-    
 
 
 
+# Thread function to run the Flask app
+def run_flask_app():
+    if __name__ == '__main__':
+        app.run(host='0.0.0.0')
+
+# Create a thread for running the Flask app
+flask_thread = threading.Thread(target=run_flask_app)
+
+# Start the Flask app thread
+flask_thread.start()
 
 
+# Infinite loop for reconnection attempts and pinging the database
+while True:
 
-        
 
+    if 'db_cursor' in locals():
+        db_cursor.close()
+            
+            # Re-create a new cursor
+        db_cursor = db_connection.cursor()
+        if db_connection is not None:
+            # Close the existing cursor (if it exists)
+            
+                
 
-if __name__ == '__main__':
-    app.run(debug=True, host='hv-par7-022.clvrcld.net',port=10298)
+                db_connection.reconnect()
+    else:
+        # Attempt to reconnect to the database
+        try:
+            db_connection = mysql.connector.connect(**db_config)
+            print("Reconnected to the database")
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+
+    # Ping the database every 5 minutes to keep the connection alive
+    ping_interval = 100  # 5 minutes
+    time.sleep(ping_interval)
+    ping_database(db_connection)

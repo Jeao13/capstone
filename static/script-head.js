@@ -1305,16 +1305,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function showRejectModal(id,code) {
     console.log("lol")
+    console.log(code)
     const modal = document.getElementById('rejectModal');
     modal.style.display = 'block';
     const newButton = document.createElement('input');
-        newButton.type = 'hidden';
+        newButton.type = 'display';
         newButton.value = id;
         newButton.id = 'id';
         newButton.name = 'id';
 
     const newButton1 = document.createElement('input');
-        newButton1.type = 'hidden';
+        newButton1.type = 'display';
         newButton1.value = code;
         newButton1.id = 'code';
         newButton1.name = 'code';

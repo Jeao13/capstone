@@ -847,9 +847,10 @@ table a:hover {
 
 .notifications {
   display: none;
-  position: fixed; /* Fixed position for the overlay */
+  position: absolute; /* Fixed position for the overlay */
   top: 50%;
   left: 50%;
+  
   transform: translate(-50%, -50%); /* Center horizontally and vertically */
   background-color: rgb(237, 237, 237);
   border-radius: 10px;
@@ -860,6 +861,7 @@ table a:hover {
   max-width: 460px; /* Adjust the maximum width as needed */
   color: #000000; /* Text color */
   font-family: Arial, sans-serif; /* Choose a modern font */
+  overflow: auto;
 }
 
 /* To make the content of the notifications appear sleek and modern, you can style the text, links, and other elements as needed within the .notifications container. */
