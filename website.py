@@ -4620,7 +4620,7 @@ def edit_pic4():
 # Thread function to run the Flask app
 def run_flask_app():
     if __name__ == '__main__':
-        app.run(host='0.0.0.0')
+           app.run(debug=True, host='hv-par7-022.clvrcld.net',port=10298)
 
 # Create a thread for running the Flask app
 flask_thread = threading.Thread(target=run_flask_app)
