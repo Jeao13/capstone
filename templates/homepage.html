@@ -127,7 +127,7 @@
     <div id="autoOpenModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeAutoOpenModalBtn">&times;</span>
-            <h1 id="modal-title">Please Report to OSD Office</h1>
+            <h1 id="modal-title">Hi {{name}} Please Report to OSD Office</h1>
             <hr>
             {% for row in reports|sort(attribute='2', reverse=true) %}
             <div class="report">
