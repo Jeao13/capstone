@@ -288,7 +288,7 @@
                 <div class="modal-content">
                     <span class="close" onclick="closeRejectModal()">&times;</span>
                     <h1>Notice of Case Dismissal - Reject</h1>
-                    <form id="noticeform" action="/submit_notice" method="POST" enctype="multipart/form-data">
+                    <form id="noticeformx" action="/submit_notice" method="POST" enctype="multipart/form-data">
             
                         <label for="complainant">Name of Complainant:</label><br>
                         <input type="text" id="complainant" name="complainant" required><br><br>
@@ -531,9 +531,9 @@
                         <h3>Reason for Dismissal:</h3>
                         <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork">
                         <label for="fieldwork">The complaint is without merit.</label><br>
-                        <input type="checkbox" id="prolonged" name="prolonged" value="prolonged" onclick="toggleInput4()">
-                        <label for="prolonged">Others, please specify:</label><br>
-                        <input type="text" id="specify2" name="specify2" style="display: none"><br>
+                        <input type="checkbox" id="prolonged1" name="prolonged1" value="prolonged1" onclick="toggleInput4()">
+                        <label for="prolonged1">Others, please specify:</label><br>
+                        <input type="text" id="specify3" name="specify3" style="display: none"><br>
                         <input type="hidden" name="status" value="Case Closed">
                 
                         <button onclick="validateCheckboxes()">Submit</button>
@@ -1320,73 +1320,6 @@
                 </div>
             </div>
             
-            <div id="caseModal" class="modal">
-                <div class="modal-content">
-                    <span class="close" onclick="closeCaseModal()">&times;</span>
-                    <h1 class="form-title" >Notice of Case Disimissal - Case Closed</h1>
-                    <form id="noticeform1" action="/submit_notice" method="POST" enctype="multipart/form-data">
-            
-                        <label for="complainant">Name of Complainant:</label><br>
-                        <input type="text" id="complainant" name="complainant" required><br><br>
-                
-                        <hr>
-                
-                        <label for="student">Name of the Student:</label><br>
-                        <input type="text" id="student" name="student" required><br><br>
-                
-                        <label for="srcode">SR-Code of the Student:</label><br>
-                        <input type="text" id="srcode" name="srcode" required><br><br>
-                
-                        <label for="section">Year and Section:</label><br>
-                        <input type="text" id="section" name="section" required><br><br>
-                
-                        <label for="department">Program:</label> 
-                        <select name="department" id="department" required>
-                            <option value="" selected disabled>Select the Department:</option> 
-                            <option value="CAFAD">CAFAD</option> 
-                            <option value="CICS">CICS</option> 
-                            <option value="CIT">CIT</option> 
-                            <option value="COE">COE</option> 
-                        </select><br><br>
-                
-                        <hr>
-                        <h3>Gender</h3>
-                
-                        <input type="radio" id="male" name="gender" value="male" required>
-                        <label for="male">Male</label><br>
-                        
-                        <input type="radio" id="female" name="gender" value="female">
-                        <label for="female">Female</label><br>
-                        <hr>
-                        <h3>Indicate Offense</h3>
-                        <input type="radio" id="minor" name="offense_type" value="minor" required>
-                        <label for="minor">Minor Offense</label>
-                        <select name="department" id="department">
-                            <option value="" selected disabled>Select the Department:</option> 
-                            <option value="CAFAD">CAFAD</option> 
-                            <option value="CICS">CICS</option> 
-                            <option value="CIT">CIT</option> 
-                            <option value="COE">COE</option> 
-                        </select><br><br>
-                        <input type="text" id="minor_input" name="minor_offense" style="display: none"><br>
-                
-                        <input type="radio" id="major" name="offense_type" value="major">
-                        <label for="major">Major Offense</label>
-                        <input type="text" id="major_input" name="major_offense" style="display: none"><br>
-                        <hr>
-                        <h3>Reason for Dismissal:</h3>
-                        <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork">
-                        <label for="fieldwork">The complaint is without merit.</label><br>
-                        <input type="checkbox" id="prolonged" name="prolonged" value="prolonged" onclick="toggleInput4()">
-                        <label for="prolonged">Others, please specify:</label><br>
-                        <input type="text" id="specify2" name="specify2" style="display: none"><br>
-                        <input type="hidden" name="status" value="Case Closed">
-                
-                        <button onclick="validateCheckboxes()">Submit</button>
-                    </form>
-                </div>
-            </div>
-            
         </div>
 
             <div id="tab7" class="tab-content">
@@ -1461,7 +1394,7 @@
                 <table class="user-table">
                   <thead>
                     <tr>
-                      <th>Sr Code</th>
+                      <th>ID</th>
                       <th>Profile</th>
                       <th>Username</th>
                       <th>Password</th>
@@ -1502,7 +1435,7 @@
             <table class="user-table">
               <thead>
                 <tr>
-                  <th>Sr Code</th>
+                  <th>ID</th>
                   <th>Profile</th>
                   <th>Username</th>
                   <th>Password</th>
@@ -1543,7 +1476,7 @@
         <table class="user-table">
           <thead>
             <tr>
-              <th>Sr Code</th>
+              <th>ID</th>
               <th>Profile</th>
               <th>Username</th>
               <th>Password</th>
@@ -1583,7 +1516,7 @@
     <table class="user-table">
       <thead>
         <tr>
-          <th>Sr Code</th>
+          <th>ID</th>
           <th>Profile</th>
           <th>Username</th>
           <th>Password</th>

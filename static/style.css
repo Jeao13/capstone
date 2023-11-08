@@ -847,7 +847,7 @@ table a:hover {
 
 .notifications {
   display: none;
-  position: absolute; /* Fixed position for the overlay */
+  position: fixed; /* Fixed position for the overlay */
   top: 50%;
   left: 50%;
   
@@ -855,7 +855,7 @@ table a:hover {
   background-color: rgb(237, 237, 237);
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 5px 5px rgba(24, 18, 18, 0.2);
   z-index: 999;
   width: 80%; /* Adjust the width as needed */
   max-width: 460px; /* Adjust the maximum width as needed */
@@ -869,12 +869,14 @@ table a:hover {
   font-size: 16px;
   line-height: 1.5;
   margin: 10px 0;
+  overflow: auto;
 }
 
 .notifications a {
   color: #00a4e0; /* Link color */
   text-decoration: none;
   font-weight: bold;
+  overflow: auto;
 }
 
 .notifications a:hover {

@@ -32,13 +32,12 @@ import time
 start_time = time.time()
 
 db_config = {
-    'host': os.environ.get('MYSQL_ADDON_DIRECT_HOST', 'hv-sgp1-001.clvrcld.net'),
-    'host': os.environ.get('MYSQL_ADDON_DIRECT_HOST', 'hv-sgp1-001.clvrcld.net'),
-    'user': os.environ.get('MYSQL_ADDON_USER', 'uhmp5ztvzx8cl2iq'),
-    'password': os.environ.get('MYSQL_ADDON_PASSWORD', 'FUdxr6xyK2ZGGjrmZjS'),
-    'database': os.environ.get('MYSQL_ADDON_DB', 'b28tqgc0yz0kvrdrsv6r'),
-    'port': os.environ.get('MYSQL_ADDON_DIRECT_PORT', '10269'),
-    'port': os.environ.get('MYSQL_ADDON_DIRECT_PORT', '10269'),
+  
+    'host': os.environ.get('MYSQL_ADDON_DIRECT_HOST', 'localhost'),
+    'user': os.environ.get('MYSQL_ADDON_USER', 'root'),
+    'password': os.environ.get('MYSQL_ADDON_PASSWORD', ''),
+    'database': os.environ.get('MYSQL_ADDON_DB', 'capstoneproject'),
+   
 }
 
 try:
@@ -254,13 +253,10 @@ def generate_random_code(length=8):
 
 @app.route('/submit_notice', methods=['GET', 'POST'])
 def submit_notice():
-    kind = request.form.get('forms')
-    print(kind)
 
     id = request.form.get('id')
     print(id)
     code = request.form.get('code')
-    print(code)
     student = request.form.get('student')
     complainant = request.form.get('complainant')
     srcode = request.form.get('srcode')
@@ -279,6 +275,8 @@ def submit_notice():
     prolonged2 = request.form.get('prolonged1')
     specify3 = request.form.get('specify2')
     specify4 = request.form.get('specify3')
+    print(specify3)
+    print(specify4)
     statusreport = request.form.get('status')
     current_datetime = datetime.now()
     random_code = generate_random_code()
@@ -286,7 +284,11 @@ def submit_notice():
     formatted_date = current_date.strftime("/%m/%d/%Y")
     current_time = datetime.now()
 
+
     specify2 = specify3 or specify4
+
+    if specify2 is None:
+        specify2 = "N/A"
 
     minor_input = minor_input1 or minor_input2
     major_input = major_input1 or major_input2
@@ -367,8 +369,8 @@ def submit_notice():
 
     toggle_table_cell_checkbox(doc.tables[1], 4, 19, status1)
     toggle_table_cell_checkbox(doc.tables[1], 4, 14, status)
-    toggle_table_cell_checkbox(doc.tables[1], 8, 0, status2)
-    toggle_table_cell_checkbox(doc.tables[1], 8, 8, status3)
+    toggle_table_cell_checkbox(doc.tables[1], 8, 0, status3)
+    toggle_table_cell_checkbox(doc.tables[1], 8, 8, status2)
     toggle_table_cell_checkbox(doc.tables[1], 10, 0, status4)
     toggle_table_cell_checkbox(doc.tables[1], 11, 0, status5)
 
@@ -411,6 +413,8 @@ def submit_notice():
     db_connection.commit()
 
     db_cursor.close()
+
+    print(statusreport)
 
     db_cursor_status = db_connection.cursor()
     db_cursor_status.execute("UPDATE reports SET status = %s WHERE report_id = %s", (statusreport, code))
@@ -2613,7 +2617,7 @@ def algorithm(complaint_text):
 
     if is_english(complaint_text) == 'en':
 
-        df = pd.read_csv("Grievance_News.csv")
+        df = pd.read_csv("Data_Gen.csv")
 
         # Create category_id column
         df['category_id'] = df['offense_tag'].factorize()[0]

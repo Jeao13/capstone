@@ -1303,25 +1303,27 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-  function showRejectModal(id,code) {
-    console.log("lol")
-    console.log(code)
+function showRejectModal(id, code) {
+    console.log(id);
+    console.log(code);
     const modal = document.getElementById('rejectModal');
     modal.style.display = 'block';
+
     const newButton = document.createElement('input');
-        newButton.type = 'display';
-        newButton.value = id;
-        newButton.id = 'id';
-        newButton.name = 'id';
+    newButton.type = 'hidden';
+    newButton.value = id;
+    newButton.id = 'id';
+    newButton.name = 'id';
 
     const newButton1 = document.createElement('input');
-        newButton1.type = 'display';
-        newButton1.value = code;
-        newButton1.id = 'code';
-        newButton1.name = 'code';
+    newButton1.type = 'hidden';
+    newButton1.value = code;
+    newButton1.id = 'code';
+    newButton1.name = 'code';
 
-        const form = document.getElementById('noticeform');
-        form.appendChild(newButton);
+    const form = document.getElementById('noticeformx');
+    form.appendChild(newButton);
+    form.appendChild(newButton1);
 }
 
 // JavaScript function to close the reject modal
@@ -1331,14 +1333,16 @@ function closeRejectModal() {
 }
 
 function showCaseModal(id,code) {
+    console.log(id);
+    console.log(code);
     const modal = document.getElementById('caseModal');
     modal.style.display = 'block';
+
     const newButton = document.createElement('input');
     newButton.type = 'hidden';
     newButton.value = id;
     newButton.id = 'id';
     newButton.name = 'id';
-
 
     const newButton1 = document.createElement('input');
     newButton1.type = 'hidden';
@@ -1346,9 +1350,9 @@ function showCaseModal(id,code) {
     newButton1.id = 'code';
     newButton1.name = 'code';
 
-
     const form = document.getElementById('noticeform1');
     form.appendChild(newButton);
+    form.appendChild(newButton1);
     
 }
 
@@ -1411,6 +1415,7 @@ function toggleInput4() {
 }
 
 function toggleInput5() {
+    console.log("check");
     var prolongedCheckbox1 = document.getElementById("prolonged1");
     var specify3Input = document.getElementById("specify3");
 
