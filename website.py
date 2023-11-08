@@ -302,8 +302,6 @@ def submit_notice():
 # Format the current time as "hh:mm AM/PM"
     formatted_time = current_time.strftime("%I:%M %p")
 
-    # Convert it to the desired format
-    username = session.get('username', '')
 
     if program == "CAFAD":
         Name_Coordinator = "CAFAD Coordinator"
@@ -414,7 +412,7 @@ def submit_notice():
 
     db_cursor.close()
 
-    print(statusreport)
+   
 
     db_cursor_status = db_connection.cursor()
     db_cursor_status.execute("UPDATE reports SET status = %s WHERE report_id = %s", (statusreport, code))

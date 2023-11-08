@@ -89,7 +89,7 @@
 
             <div class="modal" style="display: block;" id="reportModal20">
                 <div class="terms-content">
-                    <span class="close" style="float:right;"onclick="closeModal20()">&times;</span>
+                    <form>
                     <h1>Terms of Condition</h1>
                     <div style="border-bottom: 1px solid #ccc;"></div>
                     <br>
@@ -115,7 +115,13 @@
                     <h3>9. Changes to Terms and Conditions</h3>
                     <p class="terms-info">9.1. The University reserves the right to modify these terms and conditions at any time. Users will be notified of any changes, and continued use of the System constitutes acceptance of the revised terms.</p>
                     <h3>10. Contact Information</h3>
-                    <p class="terms-info">10.1. For inquiries or assistance regarding the System, please contact the Office of Student Discipline through their email “osd.alangilan@g.batstate-u.edu.ph” and local hotline number “425-0139 loc. 2147”.</p>
+                    <p class="terms-info">10.1. For inquiries or assistance regarding the System, please contact the Office of Student Discipline through their email “osd.alangilan.batstate-u.edu.ph” and local hotline number “425-0139 loc. 2147”.</p>
+                    <input type="checkbox" id="accept" name="accept" value="accept" required onchange="toggleButton8()">
+                    <label for="accept">I accept these conditions.</label><br><br>
+
+                    <button id="closeButton" style="float:right;" onclick="closeModal20()" disabled>Close</button>
+                    </form>
+
                 </div>
             </div>
     </body>
