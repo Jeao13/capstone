@@ -39,18 +39,6 @@ db_config = {
     'port': os.environ.get('MYSQL_ADDON_DIRECT_PORT', '10108'),
 }
 
-db_connection = None  # Initialize the connection variable
-
-# Function to ping the database to keep the connection alive
-def ping_database(connection):
-    try:
-        cursor = connection.cursor()
-        cursor.execute("SELECT 1")
-        cursor.close()
-    except mysql.connector.Error as err:
-        print(f"Error while pinging database: {err}")
-        db_connection.reconnect()
-
 try:
     db_connection = mysql.connector.connect(**db_config)
     end_time = time.time()
@@ -58,6 +46,7 @@ try:
 except mysql.connector.Error as err:
     print(f"Error: {err}")
     db_connection.reconnect()
+
 
 
 app = Flask(__name__)
@@ -4618,41 +4607,7 @@ def edit_pic4():
 
 
 # Thread function to run the Flask app
-def run_flask_app():
-    if __name__ == '__main__':
-           app.run(debug=True, host='hv-par7-022.clvrcld.net',port=10298)
 
-# Create a thread for running the Flask app
-flask_thread = threading.Thread(target=run_flask_app)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
 
-# Start the Flask app thread
-flask_thread.start()
-
-
-# Infinite loop for reconnection attempts and pinging the database
-while True:
-
-
-    if 'db_cursor' in locals():
-        db_cursor.close()
-            
-            # Re-create a new cursor
-        db_cursor = db_connection.cursor()
-        if db_connection is not None:
-            # Close the existing cursor (if it exists)
-            
-                
-
-                db_connection.reconnect()
-    else:
-        # Attempt to reconnect to the database
-        try:
-            db_connection = mysql.connector.connect(**db_config)
-            print("Reconnected to the database")
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")
-
-    # Ping the database every 5 minutes to keep the connection alive
-    ping_interval = 1000  # 5 minutes
-    time.sleep(ping_interval)
-    ping_database(db_connection)
