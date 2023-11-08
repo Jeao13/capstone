@@ -33,10 +33,11 @@ start_time = time.time()
 
 db_config = {
   
-    'host': os.environ.get('MYSQL_ADDON_DIRECT_HOST', 'localhost'),
-    'user': os.environ.get('MYSQL_ADDON_USER', 'root'),
-    'password': os.environ.get('MYSQL_ADDON_PASSWORD', ''),
-    'database': os.environ.get('MYSQL_ADDON_DB', 'capstoneproject'),
+    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
+    'user': os.environ.get('MYSQL_USER', 'mysql'),
+    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
+    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
+    'port': os.environ.get('MYSQL_PORT', '3306'),
    
 }
 
