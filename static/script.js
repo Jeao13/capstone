@@ -1324,7 +1324,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     function closeModal20() {
         var modal = document.getElementById('reportModal20');
-        e.preventDefault();
     
         // Hide the modal
         modal.style.display = 'none';

@@ -272,6 +272,9 @@ hr.separator {
 
 /* Tab content styles */
 .tab-content {
+ 
+    padding: 20px;
+
   display: none;
 }
 
@@ -332,7 +335,7 @@ hr.separator {
 /* Change status button and select styles */
 #statusChangeForm {
   display: flex;
-  align-items: center;
+ 
   margin: 5px 0;
 }
 
@@ -345,6 +348,7 @@ hr.separator {
 }
 
 #statusChangeForm > form > button {
+  
   background-color:#1da333; /* Red button background color */
 }
 
@@ -375,6 +379,10 @@ hr.separator {
   overflow-y: auto; /* Add overflow-y property to enable vertical scrolling */
   margin-bottom: 20px; 
   border-radius: 10px;
+ 
+}
+.modal-content-button{
+  float: left;
 }
 
 /* Style for the close button */
@@ -485,52 +493,46 @@ form textarea {
 }
 
 .headtable{
-  margin-top: 10px;
-  border: 1px solid #ccc;
+  
   border-collapse: collapse;
-  width: 99%;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: -0; /* Set a higher z-index to layer it on top of other content */
+  margin-top: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 .rep-table{
-  margin-top: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #ccc;
+  
   border-collapse: collapse;
-  width: 98%;
-  z-index: 0; /* Set a higher z-index to layer it on top of other content */
+  margin-top: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 table {
   border: 1px solid #ccc;
   border-collapse: collapse;
-  width: 98%;
+ 
 }
 
 /* Define styles for table headers (th) */
- table td {  
-  font-size: smaller;
-  padding: 20px 10px;
+ table th,td {  
+  
+  border: 1px solid #ddd;
+  padding: 8px;
   text-align: center;
-  border: 1px solid #ccc;
 }
 
 table thead {
-  background-color: #f2f2f2;
+ 
+  background-color: #e0e0e0;
 }
 
 table th {
-  font-size: small;
-  color:white ;
-  background-color: #770a0a;
-  border: 1px solid #ccc;
-  padding: 20px 10px;
-  font-weight: bold;
+  background-color: #f2f2f2;
+    font-weight: bold;
 }
 
-table tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
+
+table tbody tbody tr:nth-child(odd){
+  background-color: #f9f9f9;
 }
 
 table tbody tr:hover {
@@ -541,6 +543,7 @@ table tbody tr:hover {
 table .view-report-button {
   background-color: #1da333;
   margin-left: 10px;
+  font-size: smaller;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -553,6 +556,7 @@ table .view-report-button:hover {
 
 /* Style the select and change button in the status column */
 table select {
+  width: 110px !important;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 5px;
@@ -567,6 +571,7 @@ table form button[type="submit"] {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+
 }
 
 /* Style the submit button for changing status */
@@ -961,28 +966,26 @@ table thead {
   width: 60%;
 }
 
-/* Table style */
 .coordinator-table {
+  width: 100%;
   border-collapse: collapse;
-  width: 95%; /* Make the table a bit smaller */
   margin-top: 20px;
-  z-index: 0; /* Set a higher z-index to layer it on top of other content */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 .coordinator-table th, .coordinator-table td {
-  padding: 10px 8px; /* Reduce padding for cells */
+  border: 1px solid #ddd;
+  padding: 8px;
   text-align: left;
-  font-size: 14px; /* Reduce font size for content */
 }
 
 .coordinator-table th {
-  background-color: #770a0a;
-  color: #fff;
-  font-size: 16px; /* Adjust font size for header */
-}
-
-.coordinator-table tr:nth-child(even) {
   background-color: #f2f2f2;
+  color: #000000;
+  font-weight: bold;
+}
+.coordinator-table tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
 }
 
 /* Profile Picture style */
@@ -994,32 +997,30 @@ table thead {
   border: 2px solid #770a0a;
 }
 
-/* Edit Button style */
+.edit-button, .change-button, .profile-pic-button {
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  padding: 10px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
 .edit-button {
-  background-color: #1da333;
+  background-color: #1c8917;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  padding: 10px 10px;
   cursor: pointer;
-  padding: 3px 8px; /* Reduce padding */
-  margin-bottom: 3px; /* Reduce margin */
-  margin-right: 3px; /* Reduce margin */
+  border-radius: 5px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+.edit-button:hover, .change-button:hover, .profile-pic-button:hover {
+  background-color: #0056b3;
 }
 
-.edit-button:hover {
-  background-color: #1b6e29;
-}
-
-/* Change Button style */
-.change-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  padding: 3px 8px; /* Reduce padding */
-  margin-right: 3px; /* Reduce margin */
-}
 
 .change-button:disabled {
   background-color: #ccc;
@@ -1027,37 +1028,35 @@ table thead {
 }
 
 /* Profile Pic Button style */
-.profile-pic-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  padding: 3px 8px; /* Reduce padding */
-}
 
-/* Table style */
+
 .user-table {
+  width: 100%;
   border-collapse: collapse;
-  width: 95%; /* Reduce the width to 95% */
   margin-top: 20px;
-  z-index: -0; /* Set a higher z-index to layer it on top of other content */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 .user-table th, .user-table td {
-  padding: 10px 8px; /* Reduce the padding for cells */
+  border: 1px solid #ddd;
+  padding: 8px;
   text-align: left;
-  font-size: 14px; /* Reduce the font size for cells */
 }
 
 .user-table th {
-  background-color: #770a0a;
-  color: #fff;
+  color: #000000;
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.user-table tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
 }
 
 .user-table tr:nth-child(even) {
   background-color: #f2f2f2;
 }
+
 
 /* Profile Picture style */
 .pic-coord {
@@ -1069,31 +1068,8 @@ table thead {
   border: 2px solid #770a0a;
 }
 
-/* Edit Button style */
-.edit-button {
-  background-color: #1da333;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  padding: 5px 8px; /* Adjust the padding */
-  margin-right: 5px;
-}
 
-.edit-button:hover {
-  background-color: #1b6e29;
-}
 
-/* Change Button style */
-.change-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  padding: 5px 8px; /* Adjust the padding */
-  margin-right: 5px;
-}
 
 .change-button:disabled {
   background-color: #ccc;
@@ -1101,14 +1077,7 @@ table thead {
 }
 
 /* Profile Pic Button style */
-.profile-pic-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  padding: 5px 8px; /* Adjust the padding */
-}
+
 
 .sidebar a.logout {
   margin-top: 100px;
@@ -1120,6 +1089,7 @@ table thead {
 
 /* Styles for the tabs and content */
 .modern-sleek-tab-content {
+  
   margin-top: 10px;
   display: none;
   padding: 20px;
@@ -1127,25 +1097,30 @@ table thead {
 }
 
 .modern-sleek-navbar-container {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
   margin-top: 20px;
-  width:1170px;
+ 
   display: flex;
   justify-content: center;
-  background-color:   #ffffff;
+  background-color: transparent;
   padding: 10px 0;
  
 }
 
 .modern-sleek-navbar {
   display: flex;
+  
+  margin: 0 auto; /* Center the container itself on the screen */
 }
 
 .modern-sleek-nav-item {
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
   color: #000000;
   text-decoration: none;
   padding: 10px 20px;
-  font-weight: bold;
   cursor: pointer;
   transition: color 0.3s;
 }
@@ -1162,7 +1137,7 @@ table thead {
   border: none;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin-left: 1000px;
+  
   margin-top:20px ;
   display: flex; /* Use flexbox to create a row layout */
   align-items: center; /* Center vertically within the container */
@@ -1174,7 +1149,7 @@ button {
   border-radius: 5px;
   background-color: #1da333;
   color: #fff;
-  padding: 10px 20px;
+  padding: 10px 10px;
   border: none;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -1190,6 +1165,7 @@ button:hover {
 
 /* Additional button styles for your specific buttons */
 .modern-sleek-view-report-button {
+  margin-bottom: 10px;
   background-color: #1da333;
 }
 
@@ -1227,17 +1203,7 @@ label {
   margin-top: 10px;
 }
 
-label[for^="file"]::before {
-  content: "Upload File";
-  display: inline-block;
-  padding: 5px 10px;
-  background-color: #1da333;
-  color: #fff;
-  flex: right;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 5px;
-}
+
 
 /* Button styles */
 input[type="submit"] {
@@ -1250,11 +1216,12 @@ input[type="submit"] {
   cursor: pointer;
   margin-top: 20px;
 }
-
-.text-table{
-  width: 80px; /* Set the desired width for the input fields */
-  height: 30px; /* Set the desired height for the input fields */
-  padding: 5px; /* Adjust padding as needed */
+.text-table {
+  width: 100%;
+  padding: 5px;
+  border: none;
+  background: none;
+  font-size: 14px;
 }
 
 input[type="text"] {
@@ -1263,6 +1230,7 @@ input[type="text"] {
   font-size: 16px;
   color: #333;
   transition: border-color 0.3s;
+
 }
 
 /* Checkbox label styles */
@@ -1368,4 +1336,55 @@ span {
   transform: translateY(-50%);
   color: #666; /* Change the color as needed */
   font-size: 16px;
+}
+\select {
+  width: 40%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#departmentx,
+#searchInput1,
+#searchInput2,
+#searchInput3,
+#searchInput4 {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+/* Style the search button */
+#searchButton1,
+#searchButton2,
+#searchButton3,
+#searchButton4 {
+    background-color: #208c0d;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#searchButton1:hover,
+#searchButton2:hover,
+#searchButton3:hover,
+#searchButton4:hover {
+    background-color: #0056b3;
+}
+/* Additional styles as needed */
+/* Style for the button */
+.icon-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Style for the icon */
+.icon-button i {
+  font-size: 20px; /* Adjust the size as needed */
+  color: #1b9a22; /* Change the color to your preferred color */
 }

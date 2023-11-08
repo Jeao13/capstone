@@ -252,7 +252,7 @@
                                               <option value="Rejected">Rejected</option>
                                               <option value="Case Closed">Case Closed</option>
                                             </select>
-                                            <button type="submit">Change</button>
+                                            <button type="submit"><i class="fa-solid fa-pen-to-square"></i></button>
                                           </form>
                                     </td>
                                    
@@ -605,7 +605,7 @@
                                                 <option value="Ongoing">Ongoing</option>
                                 
                                             </select>
-                                            <button type="submit">Change</button>
+                                            <button type="submit"><i class="fa-solid fa-pen-to-square"></i></button>
                                         </form>
                                         </td>
                                         <td>
@@ -1321,270 +1321,44 @@
             
         </div>
 
-            <div id="tab7" class="tab-content">
-                <h1 class="form-title" >Manage Coordinators</h1>
-                <table class="coordinator-table">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Profile</th>
-                      <th>Username</th>
-                      <th>Password</th>
-                      <th>Name</th>
-                      <th>Course</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody id="coordinator-table">
-                    {% for row in coordinators %}
-                    <tr>
-                      <td data-coord-id="{{ row[0] }}">{{ row[0] }}</td>
-                      <td data-pic-id="{{ profile_pictures[row[0]] }}"><img src="{% if profile_pictures.get(row[0]) %}data:image/jpeg;base64,{{ profile_pictures[row[0]] }}{% else %}/static/default_profile.png{% endif %}" alt="Profile Picture" class="pic-coord"></td>
-                      <td><input class="text-table" type="text" name="username" value="{{ row[1] }}" readonly>
-                      <td><input class="text-table" type="text" name="password" value="{{ row[2] }}" readonly></td>
-                      <td><input class="text-table"  type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly></td>
-                      <td><input class="text-table"  type="text" name="course" value="{{ row[5] }}" readonly></td>
-                      <td>
-                        <button class="edit-button" onclick="toggleReadonly(this,'{{ row[0] }}')">Toggle Edit</button>
-                        <button id="changebutton_{{ row[0] }}" class="change-button" onclick="updateRow(this)" disabled>Change</button>
-                        <button class="profile-pic-button" onclick="coordedit('{{ row[0] }}')">Change Profile Pic</button>
-                      </td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
+        <div id="tab7" class="tab-content">
+          <h1 class="form-title" >Manage Coordinators</h1>
+          <table class="coordinator-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Profile</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="coordinator-table">
+              {% for row in coordinators %}
+              <tr>
+                <td data-coord-id="{{ row[0] }}">{{ row[0] }}</td>
+                <td data-pic-id="{{ profile_pictures[row[0]] }}"><img src="{% if profile_pictures.get(row[0]) %}data:image/jpeg;base64,{{ profile_pictures[row[0]] }}{% else %}/static/default_profile.png{% endif %}" alt="Profile Picture" class="pic-coord"></td>
+                <td><input class="text-table" type="text" name="username" value="{{ row[1] }}" readonly>
+                <td><input class="text-table" type="text" name="password" value="{{ row[2] }}" readonly></td>
+                <td><input class="text-table"  type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly></td>
+                <td><input class="text-table"  type="text" name="course" value="{{ row[5] }}" readonly></td>
+                <td>
+                  <button class="edit-button" onclick="toggleReadonly(this,'{{ row[0] }}')"><i class="fa-solid fa-user-pen"></i></button>
+                  <button id="changebutton_{{ row[0] }}" class="change-button" onclick="updateRow(this)" disabled><i class="fa-solid fa-pen-to-square"></i></button>
+                  <button class="profile-pic-button" onclick="coordedit('{{ row[0] }}')">Change Profile Pic</button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
 
 
-                <div id="modalContainery" class="modal">
-                  <div class="modal-content">
-                      <span class="close" onclick="closeModal6()">&times;</span>
-                      <form id="statusChangeFormy" method="POST" action="/edit_pic" enctype="multipart/form-data">
-                          <label for="file3">Attach the New Profile Pic:</label>
-                          <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
-                          
-          
-          
-                      <button type="submit">Change</button>
-                    
-                  </form>
-                  </div>
-                  
-              </div>
-              </div>
-              
-              <div id="tab8" class="tab-content">
-
-                <select name="departmentx" id="departmentx" onchange="toggleInputTables1()">
-                    <option value="" selected disabled>Select the Department:</option> 
-                    <option value="CAFAD">CAFAD</option> 
-                    <option value="CICS">CICS</option> 
-                    <option value="CIT">CIT</option> 
-                    <option value="COE">COE</option> 
-                </select><br><br>
-
-
-                <div id="cics-table">
-
-                    <form id="searchForm1" onsubmit="return false;">
-                        <input type="text" id="searchInput1" name="searchQuery" placeholder="Search...">
-                        <button type="button" id="searchButton1">Search</button>
-                    </form>
-                <h1 class="form-title">Manage Users</h1>
-                <table class="user-table">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Profile</th>
-                      <th>Username</th>
-                      <th>Password</th>
-                      <th>Name</th>
-                      <th>Course</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody id="user-table">
-                    {% for row in cics %}
-                    <tr>
-                      <td data-coord-id="{{ row[0] }}">{{ row[0] }}</td>
-                      <td data-pic-id="{{ profile_pictures1[row[0]] }}"><img src="{% if profile_pictures1.get(row[0]) %}data:image/jpeg;base64,{{ profile_pictures1[row[0]] }}{% else %}/static/default_profile.png{% endif %}" alt="Profile Picture" class="pic-coord"></td>
-                      <td style="color: transparent; user-select: none;"><input type="text" name="username" value="{{ row[1] }}" readonly>{{ row[1] }}</td>
-                      <td style="color: transparent; user-select: none;"><input type="text" name="password" value="{{ row[2] }}" readonly>{{ row[2] }}</td>
-                    
-                      <td style="color: transparent; user-select: none;"><input type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly>{{ row[4] }}</td>
-                      <td style="color: transparent; user-select: none;"><input type="text" name="course" value="{{ row[5] }}" readonly>{{ row[5] }}</td>
-                      <td>
-                        <button class="edit-button" onclick="toggleReadonly1(this,'{{ row[0] }}')">Toggle Edit</button>
-                        <button id="changebutton1_{{ row[0] }}" class="change-button" onclick="updateRow1(this)" disabled>Change</button>
-                        <button class="profile-pic-button" onclick="coordedit1('{{ row[0] }}')">Change Profile Pic</button>
-                        <input type="hidden" name="role" value="cics">
-                      </td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-
-              <div id="cit-table">
-
-                <form id="searchForm2">
-                    <input type="text" id="searchInput2" name="searchQuery" placeholder="Search...">
-                    <button type="button" id="searchButton2">Search</button>
-                </form>
-            <h1 class="form-title">Manage Users</h1>
-            <table class="user-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Profile</th>
-                  <th>Username</th>
-                  <th>Password</th>
-                  <th>Name</th>
-                  <th>Course</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="user-table">
-                {% for row in cit %}
-                <tr>
-                  <td data-coord-id="{{ row[0] }}">{{ row[0] }}</td>
-                  <td data-pic-id="{{ profile_pictures4[row[0]] }}"><img src="{% if profile_pictures4.get(row[0]) %}data:image/jpeg;base64,{{ profile_pictures4[row[0]] }}{% else %}/static/default_profile.png{% endif %}" alt="Profile Picture" class="pic-coord"></td>
-                  <td style="color: transparent; user-select: none;"><input type="text" name="username" value="{{ row[1] }}" readonly>{{ row[1] }}</td>
-                  <td style="color: transparent; user-select: none;"><input type="text" name="password" value="{{ row[2] }}" readonly>{{ row[2] }}</td>
-                
-                  <td style="color: transparent; user-select: none;"><input type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly>{{ row[4] }}</td>
-                  <td style="color: transparent; user-select: none;"><input type="text" name="course" value="{{ row[5] }}" readonly>{{ row[5] }}</td>
-                  <td>
-                    <button class="edit-button" onclick="toggleReadonly2(this,'{{ row[0] }}')">Toggle Edit</button>
-                    <button id="changebutton2_{{ row[0] }}" class="change-button" onclick="updateRow2(this)" disabled>Change</button>
-                    <button class="profile-pic-button" onclick="coordedit2('{{ row[0] }}')">Change Profile Pic</button>
-                    <input type="hidden" name="role" value="cit">
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-
-          <div id="cafad-table">
-
-            <form id="searchForm3">
-                <input type="text" id="searchInput3" name="searchQuery" placeholder="Search...">
-                <button type="button" id="searchButton3">Search</button>
-            </form>
-        <h1 class="form-title">Manage Users</h1>
-        <table class="user-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Profile</th>
-              <th>Username</th>
-              <th>Password</th>
-              <th>Name</th>
-              <th>Course</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="user-table">
-            {% for row in cafad %}
-            <tr>
-              <td data-coord-id="{{ row[0] }}">{{ row[0] }}</td>
-              <td data-pic-id="{{ profile_pictures2[row[0]] }}"><img src="{% if profile_pictures2.get(row[0]) %}data:image/jpeg;base64,{{ profile_pictures2[row[0]] }}{% else %}/static/default_profile.png{% endif %}" alt="Profile Picture" class="pic-coord"></td>
-              <td style="color: transparent; user-select: none;"><input type="text" name="username" value="{{ row[1] }}" readonly>{{ row[1] }}</td>
-              <td style="color: transparent; user-select: none;"><input type="text" name="password" value="{{ row[2] }}" readonly>{{ row[2] }}</td>
-            
-              <td style="color: transparent; user-select: none;"><input type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly>{{ row[4] }}</td>
-              <td style="color: transparent; user-select: none;"><input type="text" name="course" value="{{ row[5] }}" readonly>{{ row[5] }}</td>
-              <td>
-                <button class="edit-button" onclick="toggleReadonly3(this,'{{ row[0] }}')">Toggle Edit</button>
-                <button id="changebutton3_{{ row[0] }}" class="change-button" onclick="updateRow3(this)" disabled>Change</button>
-                <button class="profile-pic-button" onclick="coordedit3('{{ row[0] }}')">Change Profile Pic</button>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-
-      <div id="coe-table">
-
-        <form id="searchForm4">
-            <input type="text" id="searchInput4" name="searchQuery" placeholder="Search...">
-            <button type="button" id="searchButton4">Search</button>
-        </form>
-    <h1 class="form-title">Manage Users</h1>
-    <table class="user-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Profile</th>
-          <th>Username</th>
-          <th>Password</th>
-          <th>Name</th>
-          <th>Course</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="user-table">
-        {% for row in coe %}
-        <tr>
-          <td data-coord-id="{{ row[0] }}">{{ row[0] }}</td>
-          <td data-pic-id="{{ profile_pictures3[row[0]] }}"><img src="{% if profile_pictures3.get(row[0]) %}data:image/jpeg;base64,{{ profile_pictures3[row[0]] }}{% else %}/static/default_profile.png{% endif %}" alt="Profile Picture" class="pic-coord"></td>
-          <td style="color: transparent; user-select: none;"><input type="text" name="username" value="{{ row[1] }}" readonly>{{ row[1] }}</td>
-          <td style="color: transparent; user-select: none;"><input type="text" name="password" value="{{ row[2] }}" readonly>{{ row[2] }}</td>
-        
-          <td style="color: transparent; user-select: none;"><input type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly>{{ row[4] }}</td>
-          <td style="color: transparent; user-select: none;"><input type="text" name="course" value="{{ row[5] }}" readonly>{{ row[5] }}</td>
-          <td>
-            <button class="edit-button" onclick="toggleReadonly4(this,'{{ row[0] }}')">Toggle Edit</button>
-            <button id="changebutton4_{{ row[0] }}" class="change-button" onclick="updateRow4(this)" disabled>Change</button>
-            <button class="profile-pic-button" onclick="coordedit4('{{ row[0] }}')">Change Profile Pic</button>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-              
-    
-           
-
-                <div id="modalContainerx" class="modal">
-                  <div class="modal-content">
-                      <span class="close" onclick="closeModal7()">&times;</span>
-                      <form id="statusChangeFormx" method="POST" action="/edit_pic1" enctype="multipart/form-data">
-                          <label for="file3">Attach the New Profile Pic:</label>
-                          <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
-                          
-          
-          
-                      <button type="submit">Change</button>
-                    
-                  </form>
-                  </div>
-                  
-              </div>
-            </div>
-
-            <div id="modalContainera" class="modal">
-              <div class="modal-content">
-                  <span class="close" onclick="closeModal7()">&times;</span>
-                  <form id="statusChangeForma" method="POST" action="/edit_pic2" enctype="multipart/form-data">
-                      <label for="file3">Attach the New Profile Pic:</label>
-                      <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
-                      
-      
-      
-                  <button type="submit">Change</button>
-                
-              </form>
-              </div>
-              
-          </div>
-
-          <div id="modalContainerb" class="modal">
+          <div id="modalContainery" class="modal">
             <div class="modal-content">
-                <span class="close" onclick="closeModal7()">&times;</span>
-                <form id="statusChangeFormb" method="POST" action="/edit_pic3" enctype="multipart/form-data">
+                <span class="close" onclick="closeModal6()">&times;</span>
+                <form id="statusChangeFormy" method="POST" action="/edit_pic" enctype="multipart/form-data">
                     <label for="file3">Attach the New Profile Pic:</label>
                     <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
                     
@@ -1596,40 +1370,267 @@
             </div>
             
         </div>
+        </div>
+        
+        <div id="tab8" class="tab-content">
+          <h1 class="form-title">Manage Users</h1>
+          <select name="departmentx" id="departmentx" onchange="toggleInputTables1()">
+              <option value="" selected disabled>Select the Department:</option> 
+              <option value="CAFAD">CAFAD</option> 
+              <option value="CICS">CICS</option> 
+              <option value="CIT">CIT</option> 
+              <option value="COE">COE</option> 
+          </select><br><br>
 
-        <div id="modalContainerb" class="modal">
-          <div class="modal-content">
-              <span class="close" onclick="closeModal7()">&times;</span>
-              <form id="statusChangeFormb" method="POST" action="/edit_pic4" enctype="multipart/form-data">
-                  <label for="file3">Attach the New Profile Pic:</label>
-                  <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
-                  
-  
-  
-              <button type="submit">Change</button>
-            
-          </form>
-          </div>
+
+          <div id="cics-table">
+
+              <form id="searchForm1" onsubmit="return false;">
+                  <input type="text" id="searchInput1" name="searchQuery" placeholder="Search...">
+                  <button type="button" id="searchButton1">Search</button>
+              </form>
           
-      </div>
-      </div>
-
-
-
-
+          <table class="user-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Profile</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="user-table">
+              {% for row in cics %}
+              <tr>
+                <td data-coord-id="{{ row[0] }}">{{ row[0] }}</td>
+                <td data-pic-id="{{ profile_pictures1[row[0]] }}"><img src="{% if profile_pictures1.get(row[0]) %}data:image/jpeg;base64,{{ profile_pictures1[row[0]] }}{% else %}/static/default_profile.png{% endif %}" alt="Profile Picture" class="pic-coord"></td>
+                <td style="color: transparent; user-select: none;"><input class="text-table" type="text" name="username" value="{{ row[1] }}" readonly>{{ row[1] }}</td>
+                <td style="color: transparent; user-select: none;"><input class="text-table" type="text" name="password" value="{{ row[2] }}" readonly>{{ row[2] }}</td>
+              
+                <td style="color: transparent; user-select: none;"><input class="text-table" type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly>{{ row[4] }}</td>
+                <td style="color: transparent; user-select: none;"><input  class="text-table" type="text" name="course" value="{{ row[5] }}" readonly>{{ row[5] }}</td>
+                <td>
+                  <button class="edit-button" onclick="toggleReadonly1(this,'{{ row[0] }}')"><i class="fa-solid fa-user-pen"></i></button>
+                  <button id="changebutton1_{{ row[0] }}" class="change-button" onclick="updateRow1(this)" disabled><i class="fa-solid fa-pen-to-square"></i></button>
+                  <button class="profile-pic-button" onclick="coordedit1('{{ row[0] }}')">Change Profile Pic</button>
+                  <input type="hidden" name="role" value="cics">
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
-        </div>
 
-           
+        <div id="cit-table">
+          
+       
+          <form id="searchForm2">
+              <input type="text" id="searchInput2" name="searchQuery" placeholder="Search...">
+              <button type="button" id="searchButton2">Search</button>
+          </form>
+     
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Profile</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Name</th>
+            <th>Course</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="user-table">
+          {% for row in cit %}
+          <tr>
+            <td data-coord-id="{{ row[0] }}">{{ row[0] }}</td>
+            <td data-pic-id="{{ profile_pictures4[row[0]] }}"><img src="{% if profile_pictures4.get(row[0]) %}data:image/jpeg;base64,{{ profile_pictures4[row[0]] }}{% else %}/static/default_profile.png{% endif %}" alt="Profile Picture" class="pic-coord"></td>
+            <td style="color: transparent; user-select: none;"><input class="text-table" type="text" name="username" value="{{ row[1] }}" readonly>{{ row[1] }}</td>
+            <td style="color: transparent; user-select: none;"><input class="text-table" type="text" name="password" value="{{ row[2] }}" readonly>{{ row[2] }}</td>
+          
+            <td style="color: transparent; user-select: none;"><input  class="text-table" type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly>{{ row[4] }}</td>
+            <td style="color: transparent; user-select: none;"><input  class="text-table" type="text" name="course" value="{{ row[5] }}" readonly>{{ row[5] }}</td>
+            <td>
+              <button class="edit-button" onclick="toggleReadonly2(this,'{{ row[0] }}')"><i class="fa-solid fa-user-pen"></i></button>
+              <button id="changebutton2_{{ row[0] }}" class="change-button" onclick="updateRow2(this)" disabled><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="profile-pic-button" onclick="coordedit2('{{ row[0] }}')">Change Profile Pic</button>
+              <input type="hidden" name="role" value="cit">
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
 
- 
+    <div id="cafad-table">
+   
+      <form id="searchForm3">
+          <input type="text" id="searchInput3" name="searchQuery" placeholder="Search...">
+          <button type="button" id="searchButton3">Search</button>
+      </form>
+
+  <table class="user-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Profile</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Name</th>
+        <th>Course</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="user-table">
+      {% for row in cafad %}
+      <tr>
+        <td data-coord-id="{{ row[0] }}">{{ row[0] }}</td>
+        <td data-pic-id="{{ profile_pictures2[row[0]] }}"><img src="{% if profile_pictures2.get(row[0]) %}data:image/jpeg;base64,{{ profile_pictures2[row[0]] }}{% else %}/static/default_profile.png{% endif %}" alt="Profile Picture" class="pic-coord"></td>
+        <td style="color: transparent; user-select: none;"><input class="text-table" type="text" name="username" value="{{ row[1] }}" readonly>{{ row[1] }}</td>
+        <td style="color: transparent; user-select: none;"><input class="text-table"  type="text" name="password" value="{{ row[2] }}" readonly>{{ row[2] }}</td>
       
+        <td style="color: transparent; user-select: none;"><input  class="text-table"  type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly>{{ row[4] }}</td>
+        <td style="color: transparent; user-select: none;"><input class="text-table"  type="text" name="course" value="{{ row[5] }}" readonly>{{ row[5] }}</td>
+        <td>
+          <button class="edit-button" onclick="toggleReadonly3(this,'{{ row[0] }}')"><i class="fa-solid fa-user-pen"></i></button>
+          <button id="changebutton3_{{ row[0] }}" class="change-button" onclick="updateRow3(this)" disabled><i class="fa-solid fa-pen-to-square"></i></button>
+          <button class="profile-pic-button" onclick="coordedit3('{{ row[0] }}')">Change Profile Pic</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div id="coe-table">
+
+  <form id="searchForm4">
+      <input type="text" id="searchInput4" name="searchQuery" placeholder="Search...">
+      <button type="button" id="searchButton4">Search</button>
+  </form>
+
+<table class="user-table">
+<thead>
+  <tr>
+    <th>ID</th>
+    <th>Profile</th>
+    <th>Username</th>
+    <th>Password</th>
+    <th>Name</th>
+    <th>Course</th>
+    <th>Action</th>
+  </tr>
+</thead>
+<tbody id="user-table">
+  {% for row in coe %}
+  <tr>
+    <td data-coord-id="{{ row[0] }}">{{ row[0] }}</td>
+    <td data-pic-id="{{ profile_pictures3[row[0]] }}"><img src="{% if profile_pictures3.get(row[0]) %}data:image/jpeg;base64,{{ profile_pictures3[row[0]] }}{% else %}/static/default_profile.png{% endif %}" alt="Profile Picture" class="pic-coord"></td>
+    <td style="color: transparent; user-select: none;"><input class="text-table"  type="text" name="username" value="{{ row[1] }}" readonly>{{ row[1] }}</td>
+    <td style="color: transparent; user-select: none;"><input class="text-table"  type="text" name="password" value="{{ row[2] }}" readonly>{{ row[2] }}</td>
+  
+    <td style="color: transparent; user-select: none;"><input class="text-table"  type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly>{{ row[4] }}</td>
+    <td style="color: transparent; user-select: none;"><input  class="text-table" type="text" name="course" value="{{ row[5] }}" readonly>{{ row[5] }}</td>
+    <td>
+      <button class="edit-button" onclick="toggleReadonly4(this,'{{ row[0] }}')"><i class="fa-solid fa-user-pen"></i></button>
+      <button id="changebutton4_{{ row[0] }}" class="change-button" onclick="updateRow4(this)" disabled><i class="fa-solid fa-pen-to-square"></i></button>
+      <button class="profile-pic-button" onclick="coordedit4('{{ row[0] }}')">Change Profile Pic</button>
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+</div>
+        
+
+     
+
+          <div id="modalContainerx" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal7()">&times;</span>
+                <form id="statusChangeFormx" method="POST" action="/edit_pic1" enctype="multipart/form-data">
+                    <label for="file3">Attach the New Profile Pic:</label>
+                    <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
+                    
+    
+    
+                <button type="submit">Change</button>
+              
+            </form>
+            </div>
+            
+        </div>
+      </div>
+
+      <div id="modalContainera" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal7()">&times;</span>
+            <form id="statusChangeForma" method="POST" action="/edit_pic2" enctype="multipart/form-data">
+                <label for="file3">Attach the New Profile Pic:</label>
+                <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
                 
+
+
+            <button type="submit">Change</button>
+          
+        </form>
+        </div>
+        
+    </div>
+
+    <div id="modalContainerb" class="modal">
+      <div class="modal-content">
+          <span class="close" onclick="closeModal7()">&times;</span>
+          <form id="statusChangeFormb" method="POST" action="/edit_pic3" enctype="multipart/form-data">
+              <label for="file3">Attach the New Profile Pic:</label>
+              <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
+              
+
+
+          <button type="submit">Change</button>
+        
+      </form>
+      </div>
+      
+  </div>
+
+  <div id="modalContainerb" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal7()">&times;</span>
+        <form id="statusChangeFormb" method="POST" action="/edit_pic4" enctype="multipart/form-data">
+            <label for="file3">Attach the New Profile Pic:</label>
+            <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
+            
+
+
+        <button type="submit">Change</button>
+      
+    </form>
+    </div>
+    
+</div>
+</div>
+
+
+
+
+  </div>
+  </div>
+
+     
+
+
+
+          
 </div>
 </div>
 </div>
 
-  
+
 
 </body>
 </html>
