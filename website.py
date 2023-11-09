@@ -30,6 +30,7 @@ import threading
 
 
 
+
 start_time = time.time()
 
 db_config = {
@@ -48,7 +49,19 @@ try:
     print(f"Connected to the database (Time taken: {end_time - start_time} seconds)")
 except mysql.connector.Error as err:
     print(f"Error: {err}")
-    db_connection.reconnect()
+
+
+def ping_database():
+    while True:
+        db_connection = mysql.connector.connect(**db_config)
+        db_connection.ping(reconnect=True)  # Renew the connection if it's been closed
+        time.sleep(300)
+
+# Create a thread to run the ping_database function
+ping_thread = threading.Thread(target=ping_database)
+
+# Start the thread
+ping_thread.start()
 
 
 
