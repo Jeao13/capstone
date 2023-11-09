@@ -25,7 +25,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score
 import time
-import threading
 
 
 
@@ -53,8 +52,6 @@ except mysql.connector.Error as err:
 
 
 
-
-
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
 
@@ -70,16 +67,7 @@ pdfkit_options = {
 }
 
 # Define the function to periodically ping the database
-def ping_database():
-    while True:
-        db_connection.ping(reconnect=True)  # Renew the connection if it's been closed
-        time.sleep(300)
 
-# Create a thread to run the ping_database function
-ping_thread = threading.Thread(target=ping_database)
-
-# Start the thread
-ping_thread.start()
 
 
 @app.route('/get_data_endpoint', methods=['GET'])
@@ -800,17 +788,13 @@ def submit_report():
         evidence1 = request.form.get('witness1')
         evidence2 = request.form.get('witness2')
         evidence3 = request.form.get('witness3')
-        pic1 = request.files['file3']
-        pic2 = request.files['file5']
+        pic = request.files['file3']
         current_datetime = datetime.now()
         current_date = current_datetime.date()
         formatted_date = current_date.strftime("/%m/%d/%Y")
         random_code = generate_random_code()
 
 
-        pic = pic1 or pic2
-
-        print(pic)
 
         if pic is None:
             pic = ""
@@ -942,6 +926,291 @@ def submit_report():
         program = request.form.get('program')
         namecomplain = request.form.get('namecomplain')
         pic = request.files['file3']
+        current_datetime = datetime.now()
+        current_date = current_datetime.date()
+        formatted_date = current_date.strftime("/%m/%d/%Y")
+        current_time = current_datetime.strftime('%I:%M %p')
+        random_code = generate_random_code()
+
+        username = session.get('username', '')
+
+        pdf_filename = 'Incident Report.docx'
+        doc = Document(pdf_filename)
+        # Replace placeholders
+
+        replace_table_cell_placeholder(doc.tables[0], 2, 3, str(current_date))
+        replace_table_cell_placeholder(doc.tables[0], 3, 3, name)
+        replace_table_cell_placeholder(doc.tables[0], 4, 3, department)
+        replace_table_cell_placeholder(doc.tables[0], 5, 3, program)
+        replace_table_cell_placeholder(doc.tables[0], 6, 4, report_text)
+        replace_table_cell_placeholder(doc.tables[0], 10, 4, remarks)
+
+        replace_table_cell_placeholder_with_image(
+            doc.tables[0], 14, 1, pic, "(signature)", 2)
+        replace_table_cell_placeholder1(
+            doc.tables[0], 14, 1, namecomplain, "Amazing")
+        replace_table_cell_placeholder1(
+            doc.tables[0], 14, 1, designation, "(designation)")
+        replace_table_cell_placeholder1(
+            doc.tables[0], 14, 1, str(current_date), "lol")
+        replace_table_cell_placeholder(doc.tables[0], 2, 8, current_time)
+        replace_table_cell_placeholder(doc.tables[0], 3, 10, username)
+        replace_table_cell_placeholder(doc.tables[0], 5, 8, section)
+
+        replace_table_cell_placeholder(doc.tables[1], 2, 3, str(current_date))
+        replace_table_cell_placeholder(doc.tables[1], 3, 3, name)
+        replace_table_cell_placeholder(doc.tables[1], 4, 3, department)
+        replace_table_cell_placeholder(doc.tables[1], 5, 3, program)
+        replace_table_cell_placeholder(doc.tables[1], 6, 4, report_text)
+        replace_table_cell_placeholder(doc.tables[1], 10, 4, remarks)
+
+        replace_table_cell_placeholder_with_image(
+            doc.tables[1], 14, 1, pic, "(signature)", 29)
+        replace_table_cell_placeholder1(
+            doc.tables[1], 14, 1, namecomplain, "Amazing")
+        replace_table_cell_placeholder1(
+            doc.tables[1], 14, 1, designation, "(designation)")
+        replace_table_cell_placeholder1(
+            doc.tables[1], 14, 1, str(current_date), "lol")
+        replace_table_cell_placeholder(doc.tables[1], 2, 8, current_time)
+        replace_table_cell_placeholder(doc.tables[1], 3, 10, username)
+        replace_table_cell_placeholder(doc.tables[1], 5, 8, section)
+
+        doc.save("modified_document.docx")
+
+        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
+
+        source_docx = 'modified_document.docx'
+
+        # Use upload IO wrapper to upload file only once to the API
+        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
+
+        saved_files = convertapi.convert(
+            'pdf', {'File': upload_io}).save_files('modified_document.pdf')
+
+        print("The PDF saved to %s" % saved_files)
+
+        pdfpath = os.path.join('modified_document.pdf')
+
+        convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
+                           'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
+
+        file_name = f'{random_code}_Incident Report Letter'
+        with open(pdfpath, "rb") as pdf_file:
+            pdf_data = pdf_file.read()
+
+        # Check if the POST request has the file part for the supporting document file
+        if 'file3' not in request.files:
+            flash('No supporting document file part')
+            return redirect(request.url)
+
+        support_file = request.files['file3']
+
+        # Check if the user submitted an empty supporting document file input
+
+        if support_file.filename == '':
+            support_data = None
+            support_filename = "None"
+            support_extension = "None"
+
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)",
+                              (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_connection.commit()
+
+            db_cursor.close()
+
+            flash('The report is submitted', 'success')
+            if role == "coord":
+                return redirect('/head')
+            else:
+                return redirect('/hello')
+        else:
+
+            support_filename = secure_filename(support_file.filename)
+
+            support_extension = os.path.splitext(support_filename)[1]
+
+            # Read the file data into memory
+
+            support_data = support_file.read()
+
+            # Insert the report with file information into the database, including file data
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
+                              (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_connection.commit()
+
+            db_cursor.close()
+
+            flash('The report is submitted', 'success')
+            if role == "coord":
+                return redirect('/head')
+            else:
+                return redirect('/hello')
+
+
+
+
+@app.route('/submit_report1', methods=['POST'])
+def submit_report1():
+    kind = request.form.get('forms')
+    print(kind)
+    role = request.form.get('role')
+    if kind == "Formal Complaint":
+        department = request.form.get('department')
+        provision = ""
+        final = request.form.get('final')
+        report_text = request.form.get('narrate')
+        name = request.form.get('name')
+        section = request.form.get('section')
+        number = request.form.get('number')
+        email = request.form.get('email')
+        namecomplain = request.form.get('namecomplain')
+        witness1 = request.form.get('witness1')
+        witness2 = request.form.get('witness2')
+        witness3 = request.form.get('witness3')
+        evidence1 = request.form.get('witness1')
+        evidence2 = request.form.get('witness2')
+        evidence3 = request.form.get('witness3')
+        pic = request.files['file9']
+        current_datetime = datetime.now()
+        current_date = current_datetime.date()
+        formatted_date = current_date.strftime("/%m/%d/%Y")
+        random_code = generate_random_code()
+
+
+
+        if pic is None:
+            pic = ""
+
+
+        if department == "CAFAD":
+            Name_Coordinator = "CAFAD Coordinator"
+
+        elif department == "CICS":
+            Name_Coordinator = "Lovely Rose Tipan Hernandez"
+
+
+        elif department == "CAFAD":
+            Name_Coordinator = "Lovely Rose Tipan Hernandez"
+
+
+        elif department == "COE":
+            Name_Coordinator = "Lovely Rose Tipan Hernandez"
+
+        username = session.get('username', '')
+        print(username)
+
+        pdf_filename = 'Formal Complaint Letter.docx'
+
+        doc = Document(pdf_filename)
+        # Replace placeholders
+
+        replace_table_cell_placeholder1(doc.tables[0], 2, 2, formatted_date, "(date)")
+        replace_table_cell_placeholder1(doc.tables[0], 4, 1, Name_Coordinator, "NAME")
+        replace_table_cell_placeholder1(doc.tables[0], 11, 8, name, "(student)")
+        replace_table_cell_placeholder1(doc.tables[0], 12, 8, department, "(college)")
+        replace_table_cell_placeholder1(doc.tables[0], 13, 8, section, "(section)")
+        replace_table_cell_placeholder1(doc.tables[0], 16, 3, provision, "(provision)")
+        replace_table_cell_placeholder1(doc.tables[0], 23, 3, report_text, "(narration)")
+        replace_table_cell_placeholder1(doc.tables[0], 30, 3, final, "(final)")
+        replace_table_cell_placeholder_with_image(doc.tables[0], 37, 18, pic, "lol")
+        replace_table_cell_placeholder1(doc.tables[0], 37, 18, namecomplain, "(NAME)")
+        replace_table_cell_placeholder1(doc.tables[0], 38, 18, number, "(number)")
+        replace_table_cell_placeholder1(doc.tables[0], 39, 18, email, "(email)")
+        replace_table_cell_placeholder1(doc.tables[0], 40, 6, witness1, "(witness1)")
+        replace_table_cell_placeholder1(doc.tables[0], 41, 6, witness2, "(witness2)")
+        replace_table_cell_placeholder1(doc.tables[0], 42, 6, witness3, "(witness3)")
+        replace_table_cell_placeholder1(doc.tables[0], 44, 9, evidence1, "(evidence1)")
+        replace_table_cell_placeholder1(doc.tables[0], 45, 9, evidence2, "(evidence2)")
+        replace_table_cell_placeholder1(doc.tables[0], 46, 9, evidence3, "(evidence3)")
+
+        doc.save("modified_document.docx")
+
+        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
+
+        source_docx = 'modified_document.docx'
+
+        # Use upload IO wrapper to upload file only once to the API
+        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
+
+        saved_files = convertapi.convert(
+            'pdf', {'File': upload_io}).save_files('modified_document.pdf')
+
+        print("The PDF saved to %s" % saved_files)
+
+        pdfpath = os.path.join('modified_document.pdf')
+
+        convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
+                           'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
+
+        file_name = f'{random_code}_Formal Complaint Letter'
+        with open(pdfpath, "rb") as pdf_file:
+            pdf_data = pdf_file.read()
+
+        # Check if the POST request has the file part for the supporting document file
+        if 'file1' not in request.files:
+            flash('No supporting document file part')
+            return redirect(request.url)
+
+        support_file = request.files['file1']
+
+        # Check if the user submitted an empty supporting document file input
+
+        if support_file.filename == '':
+            support_data = None
+            support_filename = "None"
+            support_extension = "None"
+
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)",
+                              (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_connection.commit()
+
+            db_cursor.close()
+
+            flash('The report is submitted', 'success')
+
+            if role == "coord":
+                return redirect('/head')
+            else:
+                return redirect('/hello')
+
+        else:
+            # Securely get the filenames and file extensions
+            support_filename = secure_filename(support_file.filename)
+
+            support_extension = os.path.splitext(support_filename)[1]
+
+            # Read the file data into memory
+
+            support_data = support_file.read()
+
+            # Insert the report with file information into the database, including file data
+            db_cursor = db_connection.cursor()
+            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
+                              (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_connection.commit()
+
+            db_cursor.close()
+
+            flash('The report is submitted', 'success')
+            if role == "coord":
+                return redirect('/head')
+            else:
+                return redirect('/hello')
+    else:
+        department = request.form.get('department')
+        remarks = request.form.get('remarks')
+        report_text = request.form.get('Incident')
+        name = request.form.get('name1')
+        print("lol")
+        section = request.form.get('section1')
+        designation = request.form.get('designation')
+        program = request.form.get('program')
+        namecomplain = request.form.get('namecomplain')
+        pic = request.files['file9']
         current_datetime = datetime.now()
         current_date = current_datetime.date()
         formatted_date = current_date.strftime("/%m/%d/%Y")

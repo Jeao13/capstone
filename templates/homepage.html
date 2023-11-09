@@ -33,13 +33,13 @@
       </a>
       <div class="containerx">
             <a class="notif" href="#" id="toggleLink"><i class="fas fa-bell"></i></a><br>
-            <div id="notifications-container" class="notifications">
+            <div id="notifications-container" class="notifications"  style="overflow:auto;">
                 {% if user_source == 'accounts_cics' %}
                 {% if notif == [] %}
                 <b>You have no notifications</b>
                 {% else %}
                 {% for row in notif %}
-                <div class="report">
+                <div class="report" >
                     <b>{{ row[2] }}</b> <br>
                     <button class="delete-button" onclick="deleteNotification(this, '{{ row[0] }}')">Clear</button>
                     <div class="report_small">
@@ -273,6 +273,7 @@
                             </div>
 
                             <input type="hidden" name="forms" value="Formal Complaint">
+                
                             <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
                             <input id="submit" type="submit" class="green-submit-button">
                         </div>
