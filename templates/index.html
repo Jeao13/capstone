@@ -39,14 +39,16 @@
 
                                         <!-- Sign In Form -->
                                         <form action="/" method="POST">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" id="username" name="username" class="form-control" id="floatingInput" placeholder="Enter your Username">
-                                                <label>Username</label>
+                                            <div>
+                                                <label >Username</label>
+                                                <input type="text" id="username" name="username" class="form-control" id="floatingInput">
+                                               
                                             </div>
 
-                                            <div class="form-floating mb-3">
-                                                <input type="password" id="password" name="password" class="form-control" id="floatingPassword" placeholder="Enter your password">
-                                                <label for="floatingPassword">Password</label>
+                                            <div>
+                                                <label>Password</label>
+                                                <input type="password" id="password" name="password" class="form-control" id="floatingPassword">
+                                               
                                             </div>
 
                                             <h5 class="login-head5">*Password is case sensitive</h5>
@@ -89,7 +91,6 @@
 
             <div class="modal" style="display: block;" id="reportModal20">
                 <div class="terms-content">
-                    <span class="close" style="float:right;"onclick="closeModal20()">&times;</span>
                     <h1>Terms of Condition</h1>
                     <div style="border-bottom: 1px solid #ccc;"></div>
                     <br>
@@ -116,6 +117,11 @@
                     <p class="terms-info">9.1. The University reserves the right to modify these terms and conditions at any time. Users will be notified of any changes, and continued use of the System constitutes acceptance of the revised terms.</p>
                     <h3>10. Contact Information</h3>
                     <p class="terms-info">10.1. For inquiries or assistance regarding the System, please contact the Office of Student Discipline through their email “osd.alangilan.batstate-u.edu.ph” and local hotline number “425-0139 loc. 2147”.</p>
+
+                    
+                    <input type="checkbox" id="myCheckbox">
+                    <label for="myCheckbox">I accept these conditions</label><br><br>
+                    <button id="myButton" style="color:white; background-color:#008000df; font-size:16px; float:right; margin-bottom:20px;" onclick="closeModal20()" disabled>Close</button><br><br>
 
                 </div>
             </div>

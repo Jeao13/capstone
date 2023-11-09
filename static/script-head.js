@@ -688,9 +688,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                         var previewUrl = "/preview_written_file/" + sanitizedSanctionsId;
                                 
                                         // Create a delete button with a unique ID based on the sanction ID
-                                        var deleteButtonId = "delete-button-" + sanction.sanctions_id;
+                                        
                                         formattedSanctions += '<hr>';
-                                        formattedSanctions += '<button class="delete-button" id="' + deleteButtonId + '">X</button>';
                                         formattedSanctions += '<p><strong>Sanction Id:</strong> ' + sanction.sanctions_id + '</p>';
                                         formattedSanctions += '<p><strong>Date and Time:</strong> ' + formattedDate + '</p>';
                                         formattedSanctions += '<p><strong>Sanction:</strong> ' + sanction.sanction + '</p>';

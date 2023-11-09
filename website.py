@@ -25,6 +25,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score
 import time
+import threading
 
 
 
@@ -33,10 +34,11 @@ start_time = time.time()
 
 db_config = {
   
-    'host': os.environ.get('MYSQL_ADDON_DIRECT_HOST', 'localhost'),
-    'user': os.environ.get('MYSQL_ADDON_USER', 'root'),
-    'password': os.environ.get('MYSQL_ADDON_PASSWORD', ''),
-    'database': os.environ.get('MYSQL_ADDON_DB', 'capstoneproject'),
+    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
+    'user': os.environ.get('MYSQL_USER', 'mysql'),
+    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
+    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
+    'port': os.environ.get('MYSQL_PORT', '3306'),
    
 }
 
@@ -47,6 +49,9 @@ try:
 except mysql.connector.Error as err:
     print(f"Error: {err}")
     db_connection.reconnect()
+
+
+
 
 
 
@@ -63,6 +68,18 @@ pdfkit_options = {
     'page-height': '330.2mm',  # 13 inches converted to millimeters
     'encoding': 'UTF-8',
 }
+
+# Define the function to periodically ping the database
+def ping_database():
+    while True:
+        db_connection.ping(reconnect=True)  # Renew the connection if it's been closed
+        time.sleep(300)
+
+# Create a thread to run the ping_database function
+ping_thread = threading.Thread(target=ping_database)
+
+# Start the thread
+ping_thread.start()
 
 
 @app.route('/get_data_endpoint', methods=['GET'])
@@ -769,7 +786,7 @@ def submit_report():
     role = request.form.get('role')
     if kind == "Formal Complaint":
         department = request.form.get('department')
-        provision = request.form.get('provision')
+        provision = ""
         final = request.form.get('final')
         report_text = request.form.get('narrate')
         name = request.form.get('name')
@@ -783,18 +800,34 @@ def submit_report():
         evidence1 = request.form.get('witness1')
         evidence2 = request.form.get('witness2')
         evidence3 = request.form.get('witness3')
-        pic = request.files['file3']
+        pic1 = request.files['file3']
+        pic2 = request.files['file5']
         current_datetime = datetime.now()
         current_date = current_datetime.date()
         formatted_date = current_date.strftime("/%m/%d/%Y")
         random_code = generate_random_code()
 
+
+        pic = pic1 or pic2
+
         print(pic)
+
+        if pic is None:
+            pic = ""
+
 
         if department == "CAFAD":
             Name_Coordinator = "CAFAD Coordinator"
 
         elif department == "CICS":
+            Name_Coordinator = "Lovely Rose Tipan Hernandez"
+
+
+        elif department == "CAFAD":
+            Name_Coordinator = "Lovely Rose Tipan Hernandez"
+
+
+        elif department == "COE":
             Name_Coordinator = "Lovely Rose Tipan Hernandez"
 
         username = session.get('username', '')
@@ -1386,6 +1419,23 @@ def submit_request():
         replace_table_cell_placeholder1(doc.tables[0], 5, 10, section, "(yearlevel)")
         replace_table_cell_placeholder_with_image(doc.tables[0], 10, 1, pic, "(signature)", 29)
 
+        replace_table_cell_placeholder2(doc.tables[1], 7, 0, status, "SHIFT")
+        replace_table_cell_placeholder2(doc.tables[1], 7, 4, status1, "LOST")
+        replace_table_cell_placeholder2(doc.tables[1], 7, 8, status2, "TORN")
+        replace_table_cell_placeholder2(doc.tables[1], 9, 2, status3, "UPDATE")
+        replace_table_cell_placeholder2(doc.tables[1], 9, 4, status7, "OTHERS")
+
+        replace_table_cell_placeholder1(doc.tables[1], 2, 3, formatted_date, "(date)")
+        replace_table_cell_placeholder1(doc.tables[1], 10, 1, formatted_date, "(date1)")
+        replace_table_cell_placeholder1(doc.tables[1], 10, 8, Name_Coordinator1, "NAME")
+        replace_table_cell_placeholder1(doc.tables[1], 8, 8, specify3, "(specify)")
+        replace_table_cell_placeholder1(doc.tables[1], 3, 3, student, "(name)")
+        replace_table_cell_placeholder1(doc.tables[1], 4, 3, department, "(college)")
+        replace_table_cell_placeholder1(doc.tables[1], 5, 3, program, "(program)")
+        replace_table_cell_placeholder1(doc.tables[1], 3, 10, username, "(srcode)")
+        replace_table_cell_placeholder1(doc.tables[1], 5, 10, section, "(yearlevel)")
+        replace_table_cell_placeholder_with_image(doc.tables[1], 10, 1, pic, "(signature)", 29)
+
         doc.save("modified_document.docx")
         convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
 
@@ -1783,28 +1833,10 @@ def submit_written():
         pdf_filename = 'written warning.docx'
         doc = Document(pdf_filename)
 
-        replace_table_cell_placeholder1(
-            doc.tables[0], 2, 13, formatted_date, "(date)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 3, 3, students, "(name)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 13, 6, sanction_number1, "(offense)")
-        replace_table_cell_placeholder1(doc.tables[0], 13, 14, days, "(days)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 14, 4, effectivity, "wew")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 6, 14, sanction_number, "(section)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 18, 3, username, "KRAZY")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 18, 5, checked, "FERSON")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 18, 16, verified, "TEST")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 20, 5, students, "STUDENT")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 20, 16, verified, "PARENT")
-
+        replace_table_cell_placeholder1(doc.tables[0], 2, 13, formatted_date, "(date)")
+        replace_table_cell_placeholder1(doc.tables[0], 3, 3, students, "(name)")
+        replace_table_cell_placeholder1(doc.tables[0], 13, 6, sanction_number, "(offense)")
+        replace_table_cell_placeholder1(doc.tables[0], 6, 14, sanction_number, "(section)")
         replace_table_cell_placeholder1(doc.tables[0], 7, 2, norms, "norms")
 
         doc.save("modified_document.docx")
@@ -2451,7 +2483,8 @@ tables = [
     'accounts_coe',
     'accounts_cit',
     'accounts_coordinators',
-    'accounts_head'
+    'accounts_head',
+    'accounts_guard'
 ]
 
 
@@ -3516,22 +3549,31 @@ def homepage():
     return render_template('homepage.html', roles=roles, notif=notifs, sanctions=sanctions, request1=request1, complaints=complaints, reports1=reports1, reports=reports, reports2=reports2, username=username, profile_picture_base64=profile_picture_base64, name=name, course=course, year=year, user_source=user_source, warning=warning, reprimand=reprimand, suspension=suspension, call=call,)
 
 
+tables1 = [
+    'accounts_cics',
+    'accounts_cafad',
+    'accounts_coe',
+    'accounts_cit'
+]
+
 def lookup_student_info(username):
     try:
-        db_cursor = db_connection.cursor(dictionary=True)
+        student_name, student_course = None, None  # Initialize the variables
 
-        # Assuming you have a table called 'students' with columns 'username', 'name', and 'course'
-        query = "SELECT Name, Course FROM accounts_cics WHERE username = %s"
-        db_cursor.execute(query, (username,))
-        student_data = db_cursor.fetchone()
+        for table in tables1:
+            query = f"SELECT Name, Course FROM {table} WHERE username = %s"
+            db_cursor = db_connection.cursor(dictionary=True)
+            db_cursor.execute(query, (username,))
+            result = db_cursor.fetchone()
+            db_cursor.close()
 
-        if student_data:
-            student_name = student_data['Name']
-            student_course = student_data['Course']
-            return student_name, student_course
-        else:
-            # Return None if the student is not found
-            return None, None
+            if result:
+                student_name = result['Name']
+                student_course = result['Course']
+                # If a match is found in any table, break out of the loop
+                break
+
+        return student_name, student_course
     except mysql.connector.Error as err:
         # Handle any errors that may occur during the database query
         print(f"Error: {err}")
@@ -4479,5 +4521,5 @@ def edit_pic4():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')
 

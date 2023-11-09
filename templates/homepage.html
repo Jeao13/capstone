@@ -47,7 +47,6 @@
                         <b>Time:</b> {{ row[3] }}<br>
                     </div>
                 </div>
-                <hr class="report-separator">
                 {% endfor %}
                 {% endif %}
             {% endif %}
@@ -127,7 +126,7 @@
     <div id="autoOpenModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeAutoOpenModalBtn">&times;</span>
-            <h1 id="modal-title">Hi {{name}} Please Report to OSD Office</h1>
+            <h1 id="modal-title">Hi {{name}} ! please report to OSD Office</h1>
             <hr>
             {% for row in reports|sort(attribute='2', reverse=true) %}
             <div class="report">
@@ -247,10 +246,10 @@
                                 </div>
                             </div>
 
-                            <label id="provision1" for="provision">Provision in the Norms of Conduct Violated by the Student/s:</label>
-                            <div style="position: relative;">
-                                <textarea id="provision" name="provision" rows="4" cols="20" maxlength="250" required></textarea>
-                                <div id="char-count">250 characters remaining</div>
+                            <label id="provision1" for="provision" style="display:none;">Provision in the Norms of Conduct Violated by the Student/s:</label>
+                            <div style="position: relative;" style="display:none;">
+                                <textarea style="display:none;" id="provision" name="provision" rows="4" cols="20" maxlength="250"></textarea>
+                                <div style="display:none;" id="char-count">250 characters remaining</div>
                             </div>
                 
                             <label id="narrate1" for="narrate" >Brief Narration of Facts and Circumstances:</label>

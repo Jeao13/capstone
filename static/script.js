@@ -1,3 +1,22 @@
+document.addEventListener('DOMContentLoaded', function () {
+    // Get references to the checkbox and the button
+       const checkbox = document.getElementById('myCheckbox');
+       const button = document.getElementById('myButton');
+
+       // Add an event listener to the checkbox
+       checkbox.addEventListener('change', function() {
+           // Check if the checkbox is checked
+           if (checkbox.checked) {
+               // Enable the button
+               button.disabled = false;
+           } else {
+               // Disable the button
+               button.disabled = true;
+           }
+       });
+   });
+   
+
 function disableScroll() {
     // Get the current scroll position
     var scrollX = window.scrollX || window.pageXOffset;
@@ -1331,17 +1350,6 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
 
-    function toggleButton8() {
-        const acceptCheckbox = document.getElementById("accept");
-        const closeButton = document.getElementById("closeButton");
-    
-        if (acceptCheckbox.checked) {
-            closeButton.disabled = false;
-        } else {
-            closeButton.disabled = true;
-        }
-    }
-    
     
     
     
