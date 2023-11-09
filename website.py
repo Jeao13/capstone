@@ -25,6 +25,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score
 import time
+import threading
 
 
 
@@ -48,6 +49,8 @@ try:
 except mysql.connector.Error as err:
     print(f"Error: {err}")
     db_connection.reconnect()
+
+
 
 
 
