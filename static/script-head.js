@@ -313,15 +313,6 @@ function closeModal11() {
 function openModal6() {
     const modal = document.getElementById('reportModal6');
     modal.style.display = 'block';
-    // Create a new button element
-    const newButton = document.createElement('input');
-    newButton.type = 'hidden';
-    newButton.value = id2;
-    newButton.id = 'id';
-    newButton.name = 'id';
-
-    const form = document.getElementById('statusChangeForm1');
-    form.appendChild(newButton);
 
     
 
@@ -396,6 +387,8 @@ tabLinks.forEach((link) => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
         const targetId = link.getAttribute('href').substring(1);
+
+        
 
         // Remove "active" class from all tab content elements
         tabContents.forEach((content) => {

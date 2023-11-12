@@ -54,7 +54,9 @@
             <li><a href="#tab1"><i class="fa-solid fa-house"></i>Dashboard</a></li>
             <hr><li><a href="#tab2"><i class="fa-solid fa-file"></i>Complaints</a></li>
             <li><a href="#tab3"><i class="fa-solid fa-file-export"></i>Form Requests</a></li>
-            <li><a href="#tab9"><i class="fa-solid fa-file-lines"></i>Lodge Complaint</a></li>    
+            {% if user_source == 'accounts_coordinator'%}
+            <li><a href="#tab9"><i class="fa-solid fa-file-lines"></i>Lodge Complaint</a></li>   
+            {% endif %}
             <hr><li><a href="#tab5"><i class="fa-solid fa-scale-balanced"></i>Sanctions</a></li>  
           
             <li><a href="#tab10"><i class="fa-solid fa-pager"></i>Call Student</a></li>
@@ -74,7 +76,9 @@
     
     
         <div class="content">
+        
           <div id="tab1" class="tab-content active">
+
             <h1>Dashboard</h1>
             {% if user_source == 'accounts_coordinator' %}
               <div class="chart-container-wrapper">
@@ -115,6 +119,7 @@
               </div>
             {% endif %}
             {% if user_source == 'accounts_head' %}
+           
               <div class="chart-container-wrapper">
                 <div class="dashboard-section">
                   <div class="complaints-section">
@@ -149,15 +154,57 @@
                       {% endfor %}
                     </ul>
                   </div>
+
+
+                  
+                
+
+
+                </div>
+                <hr style="background-color: black;">
+                <div class="dashboard-section">
+                <div class="complaints-section">
+                  <h2>Minor Offenses</h2>
+                  <ul>
+                    {% for key, value in counts4.items() %}
+                    <li class="dashbtn">
+                        <div class="document-request-item">
+                         
+                          <div class="document-details">
+                            <span>{{ key }}</span>
+                            <span>{{ value }}</span>
+                          </div>
+                        </div>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+
+                <div class="complaints-section">
+                  <h2>Major Offenses</h2>
+                  <ul>
+                    {% for key, value in counts5.items() %}
+                    <li class="dashbtn">
+                        <div class="document-request-item">
+                         
+                          <div class="document-details">
+                            <span>{{ key }}</span>
+                            <span>{{ value }}</span>
+                          </div>
+                        </div>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
                 </div>
               </div>
            
-       
-          
+       <br>
+              <button type="button" id="searchButton" onclick="openModal6()" style="float:right; margin-bottom:20px;">Generate Report</button>
 
            
-            <button type="button" id="searchButton" onclick="openModal6()" style="float:right;">Generate Report</button>
-          
+           <br>
+            
             {% endif %}
 
             <div class="modal" id="reportModal6">
@@ -216,7 +263,7 @@
                                 <th>Department</th>
                                 <th>Status</th>
                                 <th>Attached Form</th>
-                                <th>Attached Supporting Document</th>
+                                <th>Attached Evidence/s</th>
                                 <th>Action</th>
                                 <th>Change Status</th>
                                 <th>Delete Report</th>
@@ -238,8 +285,12 @@
                 
                               
                                     <td>
-                                        <a href="{{ url_for('preview_support_file', report_id=row[1]) }}" target="_blank">{{ row[11] }}</a>
+                                        <label for="lol" style="display: inline-block;">Evidence 1:</label><a class = "lol" href="{{ url_for('preview_support_file', report_id=row[1]) }}" target="_blank">{{ row[11] }}</a><br>
+                                        <label for="lol1" style = "display: inline-block;">Evidence 2:</label><a class = "lol1" href="{{ url_for('preview_support_file', report_id=row[1]) }}" target="_blank">{{ row[14] }}</a><br>
+                                        <label for="lol2" style = "display: inline-block;">Evidence 3:</label><a class = "lol2" href="{{ url_for('preview_support_file', report_id=row[1]) }}" target="_blank">{{ row[17] }}</a><br>
                                     </td>
+
+                                    
                                   
                                 
                                 
@@ -353,6 +404,11 @@
                             <option value="13.5 - intoxication">13.5 - intoxication</option> 
                             <option value="13.6 - trespassing">13.6 - trespassing</option>
                             <option value="13.7 - property misuse">13.7 - property misuse</option> 
+                            <option value="13.8 - Reckless endangerment">13.8 - Reckless endangerment</option> 
+                            <option value="13.9 - Gambling">13.9 - Gambling</option> 
+                            <option value="13.10 - Identity fraud">13.10 - Identity fraud</option> 
+                            <option value="13.11 - Misuse of university name/logo">13.11 - Misuse of university name/logo</option> 
+                            <option value="13.12 - Unauthorized representation">13.12 - Unauthorized representation</option> 
                             <option value="13.13 - abusive behavior">13.13 - abusive behavior</option> 
                             <option value="13.14 - unauthorized membership">13.14 - unauthorized membership</option> 
                             <option value="13.15 - online misconduct">13.15 - online misconduct</option>
@@ -483,6 +539,11 @@
                             <option value="13.5 - intoxication">13.5 - intoxication</option> 
                             <option value="13.6 - trespassing">13.6 - trespassing</option>
                             <option value="13.7 - property misuse">13.7 - property misuse</option> 
+                            <option value="13.8 - Reckless endangerment">13.8 - Reckless endangerment</option> 
+                            <option value="13.9 - Gambling">13.9 - Gambling</option> 
+                            <option value="13.10 - Identity fraud">13.10 - Identity fraud</option> 
+                            <option value="13.11 - Misuse of university name/logo">13.11 - Misuse of university name/logo</option> 
+                            <option value="13.12 - Unauthorized representation">13.12 - Unauthorized representation</option> 
                             <option value="13.13 - abusive behavior">13.13 - abusive behavior</option> 
                             <option value="13.14 - unauthorized membership">13.14 - unauthorized membership</option> 
                             <option value="13.15 - online misconduct">13.15 - online misconduct</option>
@@ -898,6 +959,7 @@
                       </div>
 
                       <label for="narrate1" class="form-label">Brief Narration of Facts and Circumstances:</label>
+                      <h5 style="font-size:12px; color:red; font-weight:bold">*Only accepting reports in english language</h5>
                       <div style="position: relative;">
                         <textarea id="narrate" name="narrate" rows="4" cols="20" maxlength="250" required class="form-textarea"></textarea><br>
                         <div id="char-count1">250 characters remaining</div>
@@ -934,6 +996,21 @@
                         </select><br>
 
                         <div style=" margin-top: 15px; border-bottom: 1px solid #3c3c3c;"></div>
+
+                        <label for="incident1" class="form-label">Incident:</label>
+                        <h5 style="font-size:12px; color:red; font-weight:bold">*Only accepting reports in english language</h5>
+                          <div style="position: relative;">
+                            <textarea id="incident" name="Incident" rows="4" cols="20" maxlength="250" required class="form-textarea"></textarea><br>
+                            <div id="char-count3">250 characters remaining</div>
+                          </div>
+                        
+                          <label for="provision1" class="form-label">Remarks:</label>
+                          <div style="position: relative;">
+                            <textarea id="remarks" name="remarks" rows="4" cols="20" maxlength="250" required class="form-textarea"></textarea><br>
+                            <div id="char-count4">250 characters remaining</div>
+                          </div>
+
+                          <hr>
 
                         <label class="form-label-main" for="complainant">Complainant Details:</label> 
                         <div style=" margin-top: 15px; border-bottom: 1px solid #3c3c3c;"></div>
@@ -978,18 +1055,7 @@
                             <input type="text" id="program" name="program" required class="form-input">
                           </div>
                         </div>
-                        
-                        <label for="incident1" class="form-label">Incident:</label>
-                          <div style="position: relative;">
-                            <textarea id="incident" name="Incident" rows="4" cols="20" maxlength="250" required class="form-textarea"></textarea><br>
-                            <div id="char-count3">250 characters remaining</div>
-                          </div>
-                        
-                          <label for="provision1" class="form-label">Remarks:</label>
-                          <div style="position: relative;">
-                            <textarea id="remarks" name="remarks" rows="4" cols="20" maxlength="250" required class="form-textarea"></textarea><br>
-                            <div id="char-count4">250 characters remaining</div>
-                          </div>
+                      
                   
                       <div class="checkbox-container">
                         <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork" required class="form-checkbox">
@@ -1005,8 +1071,12 @@
               </div>
 
         <div id="tab10" class="tab-content">
-            <h1 class="section-title">Call Student</h1>
+            <h1 class="section-title">Call Slip Section</h1>
+
+            <div style="margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
+  
             <form action="/submit_call" method="POST" enctype="multipart/form-data">
+
               <label for="student" class="form-label">Name of the Student:</label><br>
               <input type="text" id="student" name="student" class="form-input"><br><br>
               <label for="section" class="form-label">Section:</label><br>
@@ -1018,7 +1088,55 @@
               <label id="provision1" for="remarks" class="form-label">Reason:</label><br>
               <textarea id="remarks" name="remarks" rows="16" cols="50" style="resize: none;" required class="form-textarea"></textarea><br><br>
               <input id="submit" type="submit" value="Submit" class="form-button">
+
+             
+    
             </form>
+
+            <h1 class="section-title">Call Slip List</h1>
+            <div style="margin-top:20px; margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
+
+            <table class="center">
+              <thead>
+                  <tr>
+                      <th>Call ID</th>               
+                      <th>Name</th>
+                      <th>Reported By:</th>
+                      <th>Reasons</th>
+                      <th>Date</th>
+                      <th>Time</th>
+          
+                      <th>Action</th>
+                      <th>Delete Report</th>
+                  </tr>
+              </thead>
+             
+                  <tbody>
+                  {% for row in reports|sort(attribute='3', reverse=true) %}
+                  <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
+                  <tr>
+                      <td>{{ row[0] }}</td>
+                      <td>{{ row[1] }}</td>
+                      <td>Reported By:{{ row[2] }}</td>
+                      <td>{{ row[3] }}</td>
+                      <td>{{ row[4] }}</td>
+                      <td>{{ row[5] }}</td>
+                          <td>
+                              <a href="{{ url_for('preview_call_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
+                          </td>
+      
+                        
+                      <td style="justify-content:center">
+                          <!-- Add a form to change the status -->
+                          <form method="POST" action="{{ url_for('delete_report2', report_id=row[0]) }}"
+                                onsubmit="return confirm('Are you sure you want to delete this report?');">
+                              <button type="submit" class="delete-button">Delete</button>
+                          </form>
+                      </td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
           </div>
           
             

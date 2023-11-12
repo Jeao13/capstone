@@ -22,10 +22,13 @@ import numpy as np
 from scipy.stats import randint
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import LinearSVC
 from sklearn.model_selection import cross_val_score
 import time
-import threading
+from docx.oxml import OxmlElement
+from PIL import Image
+import io
+from docx.shared import Inches
 
 
 
@@ -34,11 +37,10 @@ start_time = time.time()
 
 db_config = {
   
-    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
-    'user': os.environ.get('MYSQL_USER', 'mysql'),
-    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
-    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
-    'port': os.environ.get('MYSQL_PORT', '3306'),
+    'host': os.environ.get('MYSQL_HOST', 'localhost'),
+    'user': os.environ.get('MYSQL_USER', 'root'),
+    'password': os.environ.get('MYSQL_PASSWORD', ''),
+    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
    
 }
 
@@ -89,6 +91,44 @@ def notifs(user_id, message):
     db_connection.commit()
 
     db_cursor.close()
+
+
+
+def replace_table_cell_placeholder_with_blob(table, row_index, col_index, blob_data, placeholder):
+    cell = table.cell(row_index, col_index)
+
+    # Clear existing content in the cell
+    for paragraph in cell.paragraphs:
+        for run in paragraph.runs:
+            run.clear()
+
+    # Create an in-memory file-like object
+    blob_stream = io.BytesIO(blob_data)
+
+    # Check file type and add accordingly
+    if placeholder.lower().endswith(('.png', '.jpg', '.jpeg')):
+
+        image = Image.open(blob_stream)
+        cell.paragraphs[0].runs[0].add_picture(blob_stream, width=Inches(1.0))
+    elif placeholder.lower().endswith('.pdf'):
+        print("pdf")
+        pdf_icon = OxmlElement('a:object')
+        pdf_icon.set('d:type', 'pdf')
+        pdf_icon.set('d:iconsrc', 'file://{}/path/to/pdf_icon.png'.format(os.getcwd()))
+        pdf_icon.set('d:iconupdate', 'always')
+
+        # Encode the binary data as base64
+        blob_base64 = base64.b64encode(blob_data).decode('utf-8')
+
+        pdf_icon.set('d:href', 'data:application/pdf;base64,' + blob_base64)
+        cell.paragraphs[0].runs[0].paragraph.insert_before(pdf_icon)
+        cell.paragraphs[0].runs[0].add_text(' [PDF]')
+    elif placeholder.lower().endswith('.mp4'):
+        # Handle video
+        pass
+    else:
+        # Handle other file types as needed
+        pass
 
 
 def replace_placeholder1(doc, placeholder, image_path, font_size=12, alignment=WD_ALIGN_PARAGRAPH.LEFT, bold=False, indentation_spaces=0):
@@ -393,7 +433,7 @@ def submit_notice():
 
     doc.save("modified_document.docx")
     # Check the operating system
-    convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
+    convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
 
     source_docx = 'modified_document.docx'
 
@@ -440,6 +480,33 @@ def generate_report():
     print(form)
     print(to)
 
+    minor = ["12.1.1 - attendance, punctuality, cutting classes", 
+             "12.1.2 - dress code, uniform", "12.1.3 - property misuse", 
+             "12.1.4 - noise disturbance", "12.1.5 - posting violation",
+             "12.1.6 - notice removal","12.1.7 - littering",
+             "12.1.8 - smoking violation","12.1.9 - trespassing",
+             "12.1.10 - misconduct","12.1.11 - harassment",
+             "12.1.12 - provocation, fight","12.1.13 - PDA",
+             "12.1.14 - truancy",
+             ]
+    
+    major = ["13.1 - repeat offenses","13.2 - insubordination","13.3 - smoking violation",
+             "13.4 - alcohol violation","13.5 - intoxication","13.6 - trespassing",
+             "13.7 - property misuse","13.8 - Reckless endangerment","13.9 - Gambling","13.10 - Identity fraud",
+             "13.11 - Misuse of university name/logo","13.12 - Unauthorized representation","13.13 - abusive behavior","13.14 - unauthorized membership",
+             "13.15 - online misconduct","13.16 - vandalism","13.17 - academic disruption",
+             "13.18 - solicitation","13.19 - physical harm","13.20 - weapons possession",
+             "13.21 - theft","13.22 - bribery","13.23 - sexual misconduct","13.24 - obscenity",
+             "13.25 - defamation","13.26 - physical harm","13.27 - falsification","13.28 - disrepute",
+             "13.29 - riot","13.30 - destruction of property","13.31 - burglary","13.32 - hazing",
+             "13.33 - drugs","13.34 - firearms possession","13.35 - threats","13.36 - felonies","13.37 - moral turpitude",
+             "14.1 - cheating, mobile phone","14.2 - cheating, talking","14.3 - cheating, dictating answers",
+             "14.4 - cheating, notes possession","14.5 - cheating, outside information","14.6 - cheating, leakage facilitation",
+             "14.7 - cheating, buying/selling questions","14.8 - cheating, copying answers","14.9 - cheating, covert devices",
+             "14.10 - cheating, impersonation","14.11 - plagiarism","14.12 - cheating, surrogate attendance",
+             "14.13 - plagiarism","14.14 - cheating, caught","14.15 - cheating, aiding"
+             ]
+
     current_datetime = datetime.now()
     random_code = generate_random_code()
     current_date = current_datetime.date()
@@ -457,30 +524,6 @@ def generate_report():
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s;", (form, to))
     result9 = db_cursor9.fetchone()
     db_cursor9.close
-
-    db_cursor1 = db_connection.cursor()
-    db_cursor1.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form, to, "Pending",))
-    result1 = db_cursor1.fetchone()
-    db_cursor1.close
-
-    db_cursor2 = db_connection.cursor()
-    db_cursor2.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form, to, "Ongoing",))
-    result2 = db_cursor2.fetchone()
-    db_cursor2.close
-
-    db_cursor3 = db_connection.cursor()
-    db_cursor3.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form, to, "Rejected",))
-    result3 = db_cursor3.fetchone()
-    db_cursor3.close
-
-    db_cursor4 = db_connection.cursor()
-    db_cursor4.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form, to, "Case Closed",))
-    result4 = db_cursor4.fetchone()
-    db_cursor4.close
 
     db_cursor5 = db_connection.cursor()
     db_cursor5.execute(
@@ -650,11 +693,42 @@ def generate_report():
     result33 = db_cursor33.fetchone()
     db_cursor33.close
 
+    counts4={}
+    counts5={}
+
+
+    db_cursor34 = db_connection.cursor()
+
+    minor_offenses_sum = 0
+
+    for status in minor:
+  
+        query = "SELECT COUNT(*) FROM sanctions WHERE sanction = %s"
+        db_cursor34.execute(query, (status,))
+
+        result4 = db_cursor34.fetchone()
+        counts4[status] = str(result4[0])
+        minor_offenses_sum += int(counts4[status])
+
+    db_cursor34.close()
+
+    db_cursor35 = db_connection.cursor()
+
+    major_offenses_sum = 0
+
+    for status in major:
+  
+        query = "SELECT COUNT(*) FROM sanctions WHERE sanction = %s"
+        db_cursor35.execute(query, (status,))
+
+        result5 = db_cursor35.fetchone()
+        counts5[status] = str(result5[0])
+        major_offenses_sum += int(counts5[status])
+
+    db_cursor35.close()
+
     countreports = str(result[0])
-    countpending = str(result1[0])
-    countongoing = str(result2[0])
-    countrejected = str(result3[0])
-    countcaseclosed = str(result4[0])
+
     count1 = str(result5[0])
     count2 = str(result6[0])
     count3 = str(result7[0])
@@ -737,12 +811,84 @@ def generate_report():
     replace_table_cell_placeholder1(doc.tables[2], 2, 3, cclosed2, "CICS")
     replace_table_cell_placeholder1(doc.tables[2], 3, 3, cclosed3, "CAFAD")
     replace_table_cell_placeholder1(doc.tables[2], 4, 3, cclosed4, "CIT")
-    replace_table_cell_placeholder1(
-        doc.tables[2], 5, 3, ctotalcaseclosed, "(total)")
+    replace_table_cell_placeholder1(doc.tables[2], 5, 3, ctotalcaseclosed, "(total)")
+
+
+
+    replace_table_cell_placeholder1(doc.tables[3], 1, 1, counts4["12.1.1 - attendance, punctuality, cutting classes"], "coe")
+    replace_table_cell_placeholder1(doc.tables[3], 2, 1, counts4["12.1.2 - dress code, uniform"], "CICS")
+    replace_table_cell_placeholder1(doc.tables[3], 3, 1, counts4["12.1.3 - property misuse"], "cafad")
+    replace_table_cell_placeholder1(doc.tables[3], 4, 1, counts4["12.1.4 - noise disturbance"], "cit")
+    replace_table_cell_placeholder1(doc.tables[3], 5, 1, counts4["12.1.5 - posting violation"], "total")
+    replace_table_cell_placeholder1(doc.tables[3], 6, 1, counts4["12.1.6 - notice removal"], "(coe1)")
+    replace_table_cell_placeholder1(doc.tables[3], 7, 1, counts4["12.1.7 - littering"], "(cics1)")
+    replace_table_cell_placeholder1(doc.tables[3], 8, 1, counts4["12.1.8 - smoking violation"], "(cafad1)")
+    replace_table_cell_placeholder1(doc.tables[3], 9, 1, counts4["12.1.9 - trespassing"], "(cit1)")
+    replace_table_cell_placeholder1(doc.tables[3], 10, 1, counts4["12.1.10 - misconduct"], "1")
+    replace_table_cell_placeholder1(doc.tables[3], 11, 1, counts4["12.1.11 - harassment"], "2")
+    replace_table_cell_placeholder1(doc.tables[3], 12, 1, counts4["12.1.12 - provocation, fight"], "3")
+    replace_table_cell_placeholder1(doc.tables[3], 13, 1, counts4["12.1.13 - PDA"], "4")
+    replace_table_cell_placeholder1(doc.tables[3], 14, 1, counts4["12.1.14 - truancy"], "5")
+    replace_table_cell_placeholder1(doc.tables[3], 15, 1, str(minor_offenses_sum), "6")
+
+    replace_table_cell_placeholder1(doc.tables[4], 1, 1, counts5["13.1 - repeat offenses"], "1")
+    replace_table_cell_placeholder1(doc.tables[4], 2, 1, counts5["13.2 - insubordination"], "2")
+    replace_table_cell_placeholder1(doc.tables[4], 3, 1, counts5["13.3 - smoking violation"], "3")
+    replace_table_cell_placeholder1(doc.tables[4], 4, 1, counts5["13.4 - alcohol violation"], "4")
+    replace_table_cell_placeholder1(doc.tables[4], 5, 1, counts5["13.5 - intoxication"], "5")
+    replace_table_cell_placeholder1(doc.tables[4], 6, 1, counts5["13.6 - trespassing"], "6")
+    replace_table_cell_placeholder1(doc.tables[4], 7, 1, counts5["13.7 - property misuse"], "7")
+    replace_table_cell_placeholder1(doc.tables[4], 8, 1, counts5["13.8 - Reckless endangerment"], "8")
+    replace_table_cell_placeholder1(doc.tables[4], 9, 1, counts5["13.9 - Gambling"], "9")
+    replace_table_cell_placeholder1(doc.tables[4], 10, 1, counts5["13.10 - Identity fraud"], "10")
+    replace_table_cell_placeholder1(doc.tables[4], 11, 1, counts5["13.11 - Misuse of university name/logo"], "11")
+    replace_table_cell_placeholder1(doc.tables[4], 12, 1, counts5["13.12 - Unauthorized representation"], "12")
+    replace_table_cell_placeholder1(doc.tables[4], 13, 1, counts5["13.13 - abusive behavior"], "13")
+    replace_table_cell_placeholder1(doc.tables[4], 14, 1, counts5["13.14 - unauthorized membership"], "14")
+    replace_table_cell_placeholder1(doc.tables[4], 15, 1, counts5["13.15 - online misconduct"], "15")
+    replace_table_cell_placeholder1(doc.tables[4], 16, 1, counts5["13.16 - vandalism"], "16")
+    replace_table_cell_placeholder1(doc.tables[4], 17, 1, counts5["13.17 - academic disruption"], "17")
+    replace_table_cell_placeholder1(doc.tables[4], 18, 1, counts5["13.18 - solicitation"], "18")
+    replace_table_cell_placeholder1(doc.tables[4], 19, 1, counts5["13.19 - physical harm"], "19")
+    replace_table_cell_placeholder1(doc.tables[4], 20, 1, counts5["13.20 - weapons possession"], "20")
+    replace_table_cell_placeholder1(doc.tables[4], 21, 1, counts5["13.21 - theft"], "21")
+    replace_table_cell_placeholder1(doc.tables[4], 22, 1, counts5["13.22 - bribery"], "22")
+    replace_table_cell_placeholder1(doc.tables[4], 23, 1, counts5["13.23 - sexual misconduct"], "23")
+    replace_table_cell_placeholder1(doc.tables[4], 24, 1, counts5["13.24 - obscenity"], "24")
+    replace_table_cell_placeholder1(doc.tables[4], 25, 1, counts5["13.25 - defamation"], "25")
+    replace_table_cell_placeholder1(doc.tables[4], 26, 1, counts5["13.26 - physical harm"], "26")
+    replace_table_cell_placeholder1(doc.tables[4], 27, 1, counts5["13.27 - falsification"], "27")
+    replace_table_cell_placeholder1(doc.tables[4], 28, 1, counts5["13.28 - disrepute"], "28")
+    replace_table_cell_placeholder1(doc.tables[4], 29, 1, counts5["13.29 - riot"], "29")
+    replace_table_cell_placeholder1(doc.tables[4], 30, 1, counts5["13.30 - destruction of property"], "30")
+    replace_table_cell_placeholder1(doc.tables[4], 31, 1, counts5["13.31 - burglary"], "31")
+    replace_table_cell_placeholder1(doc.tables[4], 32, 1, counts5["13.32 - hazing"], "32")
+    replace_table_cell_placeholder1(doc.tables[4], 33, 1, counts5["13.33 - drugs"], "33")
+    replace_table_cell_placeholder1(doc.tables[4], 34, 1, counts5["13.34 - firearms possession"], "34")
+    replace_table_cell_placeholder1(doc.tables[4], 35, 1, counts5["13.35 - threats"], "35")
+    replace_table_cell_placeholder1(doc.tables[4], 36, 1, counts5["13.36 - felonies"], "36")
+    replace_table_cell_placeholder1(doc.tables[4], 37, 1, counts5["13.37 - moral turpitude"], "37")
+    replace_table_cell_placeholder1(doc.tables[4], 38, 1, counts5["14.1 - cheating, mobile phone"], "38")
+    replace_table_cell_placeholder1(doc.tables[4], 39, 1, counts5["14.2 - cheating, talking"], "39")
+    replace_table_cell_placeholder1(doc.tables[4], 40, 1, counts5["14.3 - cheating, dictating answers"], "40")
+    replace_table_cell_placeholder1(doc.tables[4], 41, 1, counts5["14.4 - cheating, notes possession"], "41")
+    replace_table_cell_placeholder1(doc.tables[4], 42, 1, counts5["14.5 - cheating, outside information"], "42")
+    replace_table_cell_placeholder1(doc.tables[4], 43, 1, counts5["14.6 - cheating, leakage facilitation"], "43")
+    replace_table_cell_placeholder1(doc.tables[4], 44, 1, counts5["14.7 - cheating, buying/selling questions"], "44")
+    replace_table_cell_placeholder1(doc.tables[4], 45, 1, counts5["14.8 - cheating, copying answers"], "45")
+    replace_table_cell_placeholder1(doc.tables[4], 46, 1, counts5["14.9 - cheating, covert devices"], "46")
+    replace_table_cell_placeholder1(doc.tables[4], 47, 1, counts5["14.10 - cheating, impersonation"], "47")
+    replace_table_cell_placeholder1(doc.tables[4], 48, 1, counts5["14.11 - plagiarism"], "48")
+    replace_table_cell_placeholder1(doc.tables[4], 49, 1, counts5["14.12 - cheating, surrogate attendance"], "49")
+    replace_table_cell_placeholder1(doc.tables[4], 50, 1, counts5["14.13 - plagiarism"], "50")
+    replace_table_cell_placeholder1(doc.tables[4], 51, 1, counts5["14.14 - cheating, caught"], "51")
+    replace_table_cell_placeholder1(doc.tables[4], 52, 1, counts5["14.15 - cheating, aiding"], "52")
+    replace_table_cell_placeholder1(doc.tables[4], 53, 1, str(major_offenses_sum), "53")
+
 
     doc.save("modified_document.docx")
     # Check the operating system
-    convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
+    convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
 
     source_docx = 'modified_document.docx'
 
@@ -770,12 +916,14 @@ def generate_report():
     return response
 
 
-@app.route('/submit_report', methods=['POST'])
+@app.route('/submit_report', methods=['GET', 'POST'])
 def submit_report():
+    role = request.form.get('role')
     kind = request.form.get('forms')
     print(kind)
-    role = request.form.get('role')
+    print("test")
     if kind == "Formal Complaint":
+        print("test1")
         department = request.form.get('department')
         provision = ""
         final = request.form.get('final')
@@ -791,7 +939,7 @@ def submit_report():
         evidence1 = request.form.get('witness1')
         evidence2 = request.form.get('witness2')
         evidence3 = request.form.get('witness3')
-        pic = request.files['file3']
+        pic = request.files['file7']
         current_datetime = datetime.now()
         current_date = current_datetime.date()
         formatted_date = current_date.strftime("/%m/%d/%Y")
@@ -844,9 +992,10 @@ def submit_report():
         replace_table_cell_placeholder1(doc.tables[0], 45, 9, evidence2, "(evidence2)")
         replace_table_cell_placeholder1(doc.tables[0], 46, 9, evidence3, "(evidence3)")
 
+
         doc.save("modified_document.docx")
 
-        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
+        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
 
         source_docx = 'modified_document.docx'
 
@@ -867,12 +1016,9 @@ def submit_report():
         with open(pdfpath, "rb") as pdf_file:
             pdf_data = pdf_file.read()
 
-        # Check if the POST request has the file part for the supporting document file
-        if 'file1' not in request.files:
-            flash('No supporting document file part')
-            return redirect(request.url)
-
-        support_file = request.files['file1']
+        support_file = request.files['file4']
+        support_file1 = request.files['file5']
+        support_file2 = request.files['file6']
 
         # Check if the user submitted an empty supporting document file input
 
@@ -880,20 +1026,6 @@ def submit_report():
             support_data = None
             support_filename = "None"
             support_extension = "None"
-
-            db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)",
-                              (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
-            db_connection.commit()
-
-            db_cursor.close()
-
-            flash('The report is submitted', 'success')
-
-            if role == "coord":
-                return redirect('/head')
-            else:
-                return redirect('/hello')
 
         else:
             # Securely get the filenames and file extensions
@@ -905,19 +1037,55 @@ def submit_report():
 
             support_data = support_file.read()
 
-            # Insert the report with file information into the database, including file data
-            db_cursor = db_connection.cursor()
-            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
-                              (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
-            db_connection.commit()
 
-            db_cursor.close()
+        if support_file1.filename == '':
+            support_data1 = None
+            support_filename1 = "None"
+            support_extension1 = "None"
 
-            flash('The report is submitted', 'success')
-            if role == "coord":
-                return redirect('/head')
-            else:
-                return redirect('/hello')
+        else:
+            # Securely get the filenames and file extensions
+            support_filename1 = secure_filename(support_file1.filename)
+
+            support_extension1 = os.path.splitext(support_filename1)[1]
+
+            # Read the file data into memory
+
+            support_data1 = support_file1.read()
+
+        if support_file2.filename == '':
+            support_data2 = None
+            support_filename2 = "None"
+            support_extension2 = "None"
+
+        else:
+            # Securely get the filenames and file extensions
+            support_filename2 = secure_filename(support_file2.filename)
+
+            support_extension2 = os.path.splitext(support_filename2)[1]
+
+            # Read the file data into memory
+
+            support_data2 = support_file2.read()
+
+
+
+        db_cursor = db_connection.cursor()
+        db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support,file_support_name1, file_support_type1, file_support1, file_support_name2, file_support_type2, file_support2, username, date_time, status) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                            (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, support_filename1, support_extension1, support_data1,support_filename2, support_extension2, support_data2, username, current_datetime, "Pending"))
+        db_connection.commit()
+
+        db_cursor.close()
+
+        flash('The report is submitted', 'success')
+
+        if role == "coord":
+            return redirect('/head')
+        else:
+            return redirect('/hello')
+
+        
+            
     else:
         department = request.form.get('department')
         remarks = request.form.get('remarks')
@@ -981,7 +1149,7 @@ def submit_report():
 
         doc.save("modified_document.docx")
 
-        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
+        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
 
         source_docx = 'modified_document.docx'
 
@@ -1131,7 +1299,7 @@ def submit_report1():
 
         doc.save("modified_document.docx")
 
-        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
+        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
 
         source_docx = 'modified_document.docx'
 
@@ -1266,7 +1434,7 @@ def submit_report1():
 
         doc.save("modified_document.docx")
 
-        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
+        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
 
         source_docx = 'modified_document.docx'
 
@@ -1389,7 +1557,7 @@ def submit_request():
 
         doc.save("modified_document.docx")
         # Check the operating system
-        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
+        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
 
         source_docx = 'modified_document.docx'
 
@@ -1548,7 +1716,7 @@ def submit_request():
         replace_table_cell_placeholder_with_image(doc.tables[0], 16, 1, pic, "(signature)", 29)
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
+        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
 
         source_docx = 'modified_document.docx'
 
@@ -1709,7 +1877,7 @@ def submit_request():
         replace_table_cell_placeholder_with_image(doc.tables[1], 10, 1, pic, "(signature)", 29)
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
+        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
 
         source_docx = 'modified_document.docx'
 
@@ -1926,7 +2094,7 @@ def submit_call():
     replace_table_cell_placeholder1(doc.tables[2], 7, 1, username, "NAME")
 
     doc.save("modified_document.docx")
-    convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
+    convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
 
     source_docx = 'modified_document.docx'
 
@@ -2113,7 +2281,7 @@ def submit_written():
 
         doc.save("modified_document.docx")
 
-        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
+        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
 
         source_docx = 'modified_document.docx'
 
@@ -2293,7 +2461,7 @@ def submit_written():
         replace_table_cell_placeholder1(doc.tables[0], 15, 2, username, "NAME")
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
+        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
 
         source_docx = 'modified_document.docx'
 
@@ -2558,7 +2726,7 @@ def submit_written():
 
         doc.save("modified_document.docx")
         # Check the operating system
-        convertapi.api_secret = 'xyDSHhZ1lNjeiPr3'
+        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
 
         source_docx = 'modified_document.docx'
 
@@ -2940,7 +3108,7 @@ def algorithm(complaint_text):
             X, y, test_size=0.3, random_state=42)
 
         models = [
-            KNeighborsClassifier(n_neighbors=5),
+            LinearSVC(dual=False),
         ]
 
         # 5 Cross-validation
@@ -2954,14 +3122,14 @@ def algorithm(complaint_text):
                 entries.append((model_name, fold_idx, accuracy))
 
         # Initialize and train the KNeighborsClassifier model
-        model = KNeighborsClassifier(n_neighbors=5)
+        model = LinearSVC()
         model.fit(tfidf.transform(X_train), y_train)
 
         # Sample complaint text
         complaint = complaint_text
 
         # Predict offenses for the complaint text
-        decision_scores = model.predict_proba(tfidf.transform([complaint]))
+        decision_scores = model.decision_function(tfidf.transform([complaint]))
 
         # Convert decision scores to probabilities using softmax
         def softmax(x):
@@ -2971,7 +3139,7 @@ def algorithm(complaint_text):
         predicted_probabilities = softmax(decision_scores)
 
         # Get the top 10 predicted offenses' category IDs in descending order of prediction score
-        top_10_offense_indices = np.argsort(-predicted_probabilities)[0, :10]
+        top_10_offense_indices = np.argsort(-predicted_probabilities)[0, :5]
         top_10_offense_ids = model.classes_[top_10_offense_indices]
 
         # Create a dictionary to store the top 10 predicted offenses and their scores
@@ -3282,11 +3450,6 @@ def homepage_head():
     call = db_cursor_call.fetchall()
     db_cursor_call.close()
 
-    db_cursor_call_student = db_connection.cursor()
-    db_cursor_call_student.execute(
-        "SELECT * FROM callslip WHERE name = %s", (name,))
-    reports = db_cursor_call_student.fetchall()
-    db_cursor_call_student.close()
 
     db_cursor_notice_student = db_connection.cursor()
     db_cursor_notice_student.execute(
@@ -3442,10 +3605,39 @@ def homepage_head():
     username = session.get('courseall', '')
     statuses = ["", "Pending", "On Going", "Rejected", "Case Closed"]
     statuses1 = ["", "Pending", "Ongoing", "Rejected", "Approved"]
+    minor = ["12.1.1 - attendance, punctuality, cutting classes", 
+             "12.1.2 - dress code, uniform", "12.1.3 - property misuse", 
+             "12.1.4 - noise disturbance", "12.1.5 - posting violation",
+             "12.1.6 - notice removal","12.1.7 - littering",
+             "12.1.8 - smoking violation","12.1.9 - trespassing",
+             "12.1.10 - misconduct","12.1.11 - harassment",
+             "12.1.12 - provocation, fight","12.1.13 - PDA",
+             "12.1.14 - truancy"
+             ]
+    
+    major = ["13.1 - repeat offenses","13.2 - insubordination","13.3 - smoking violation",
+             "13.4 - alcohol violation","13.5 - intoxication","13.6 - trespassing",
+             "13.7 - property misuse","13.8 - Reckless endangerment","13.9 - Gambling","13.10 - Identity fraud",
+             "13.11 - Misuse of university name/logo","13.12 - Unauthorized representation","13.13 - abusive behavior","13.14 - unauthorized membership",
+             "13.15 - online misconduct","13.16 - vandalism","13.17 - academic disruption",
+             "13.18 - solicitation","13.19 - physical harm","13.20 - weapons possession",
+             "13.21 - theft","13.22 - bribery","13.23 - sexual misconduct","13.24 - obscenity",
+             "13.25 - defamation","13.26 - physical harm","13.27 - falsification","13.28 - disrepute",
+             "13.29 - riot","13.30 - destruction of property","13.31 - burglary","13.32 - hazing",
+             "13.33 - drugs","13.34 - firearms possession","13.35 - threats","13.36 - felonies","13.37 - moral turpitude",
+             "14.1 - cheating, mobile phone","14.2 - cheating, talking","14.3 - cheating, dictating answers",
+             "14.4 - cheating, notes possession","14.5 - cheating, outside information","14.6 - cheating, leakage facilitation",
+             "14.7 - cheating, buying/selling questions","14.8 - cheating, copying answers","14.9 - cheating, covert devices",
+             "14.10 - cheating, impersonation","14.11 - plagiarism","14.12 - cheating, surrogate attendance",
+             "14.13 - plagiarism","14.14 - cheating, caught","14.15 - cheating, aiding"
+             ]
+    
     counts = {}
     counts1 = {}
     counts2 = {}
     counts3 = {}
+    counts4 = {}
+    counts5 = {}
 
     db_cursor = db_connection.cursor()
 
@@ -3503,6 +3695,30 @@ def homepage_head():
 
     db_cursor3.close()
 
+    db_cursor4 = db_connection.cursor()
+
+    for status in minor:
+  
+        query = "SELECT COUNT(*) FROM sanctions WHERE sanction = %s"
+        db_cursor4.execute(query, (status,))
+
+        result4 = db_cursor4.fetchone()
+        counts4[status] = result4[0]
+
+    db_cursor4.close()
+
+    db_cursor5 = db_connection.cursor()
+
+    for status in major:
+      
+        query = "SELECT COUNT(*) FROM sanctions WHERE sanction = %s"
+        db_cursor5.execute(query, (status,))
+
+        result5 = db_cursor5.fetchone()
+        counts5[status] = result5[0]
+
+    db_cursor5.close()
+
     counts = {
         "Total Number of Complaints": counts[""],
         "Total Pending of Complaints": counts["Pending"],
@@ -3535,8 +3751,41 @@ def homepage_head():
         "Total Resolved of Requests": counts3["Approved"]
     }
 
+    minor_offenses_sum = 0
+
+    for offense in minor:
+        key = f"Total Number of {offense}"
+        counts4[key] = counts4.get(offense, 0)
+        minor_offenses_sum += counts4[key]
+
+    counts4["Total Number of Minor Offenses"] = minor_offenses_sum
+
+    filtered_counts4 = {key: value for key, value in counts4.items() if "Total Number of" in key}
+
+    major_offenses_sum = 0
+
+    for offense in major:
+        key = f"Total Number of {offense}"
+        counts5[key] = counts5.get(offense, 0)
+        major_offenses_sum += counts5[key]
+
+    counts5["Total Number of Major Offenses"] = major_offenses_sum
+
+    filtered_counts5 = {key: value for key, value in counts5.items() if "Total Number of" in key}
+
+
+    
+    db_cursor_call_student = db_connection.cursor()
+    db_cursor_call_student.execute(
+        "SELECT * FROM callslip WHERE coord = %s", (name,))
+    reports = db_cursor_call_student.fetchall()
+    db_cursor_call_student.close()
+
+
+
+
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage_head.html', counts2=counts2, counts3=counts3, counts=counts, counts1=counts1, isCoordinator=isCoordinator, request=reports4, profile_pictures=profile_pictures, coordinators=coordinators, reports3=reports3, reports1=reports1, reports=reports, reports2=reports2, username=username, profile_picture_base64=profile_picture_base643, name=name, course=course, year=year, user_source=user_source, warning=warning, reprimand=reprimand, suspension=suspension, call=call, profile_pictures1=profile_pictures1, profile_pictures2=profile_pictures2, profile_pictures3=profile_pictures3, profile_pictures4=profile_pictures4, cics=cics, cafad=cafad, coe=coe, cit=cit)
+    return render_template('homepage_head.html',counts5=filtered_counts5,counts4= filtered_counts4, counts2=counts2, counts3=counts3, counts=counts, counts1=counts1, isCoordinator=isCoordinator, request=reports4, profile_pictures=profile_pictures, coordinators=coordinators, reports3=reports3, reports1=reports1, reports=reports, reports2=reports2, username=username, profile_picture_base64=profile_picture_base643, name=name, course=course, year=year, user_source=user_source, warning=warning, reprimand=reprimand, suspension=suspension, call=call, profile_pictures1=profile_pictures1, profile_pictures2=profile_pictures2, profile_pictures3=profile_pictures3, profile_pictures4=profile_pictures4, cics=cics, cafad=cafad, coe=coe, cit=cit)
 
 
 @app.route('/hello', methods=['GET', 'POST'])
@@ -4181,6 +4430,16 @@ def delete_report1(report_id):
 
     return redirect(url_for('homepage_head'))
 
+@app.route('/delete_report2/<string:report_id>', methods=['POST'])
+def delete_report2(report_id):
+    db_cursor = db_connection.cursor()
+    db_cursor.execute(
+        "DELETE FROM callslip WHERE call_id = %s;", (report_id,))
+    db_connection.commit()  # Make sure to commit the changes to the database
+    db_cursor.close()
+
+    return redirect(url_for('homepage_head'))
+
 
 @app.route('/delete_all_report1/<string:report_id>/<string:status>', methods=['POST'])
 def delete_all_report1(report_id, status):
@@ -4398,6 +4657,9 @@ def preview_report_file(report_id):
 
     # Handle the case where the file was not found
     return "File not found", 404,
+
+
+
 
 
 @app.route('/preview_support_file/<string:report_id>', methods=['GET'])

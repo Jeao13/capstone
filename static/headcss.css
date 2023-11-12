@@ -1388,3 +1388,8 @@ span {
   font-size: 20px; /* Adjust the size as needed */
   color: #1b9a22; /* Change the color to your preferred color */
 }
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}

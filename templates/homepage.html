@@ -158,6 +158,11 @@
 
                     <div id="formContainer" style="display: none;">
                         <form action="/submit_report" method="POST" enctype="multipart/form-data">
+                            
+                            <input type="hidden" name="forms" value="Formal Complaint">
+                
+                            <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
+
                             <label class="form-label-main" for="department">Department to Send:</label> 
                                 <select name="department" id="department" required> 
                                 <option value="CAFAD">CAFAD</option> 
@@ -167,34 +172,79 @@
                             </select>
                             <hr>
 
+                            <label class="form-label-main" for="subcomplaint">Subject of Complaint Details: <div class="tooltip">?
+                                <span class="tooltiptext">This is where you will input the details of the person you want to report</span>
+                              </div></label> 
+                            <hr>
+
+                            <div class="form-container">
+                                <div class="form-element">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" placeholder="Ex. Juan Dela Cruz" required>
+                                </div>
+
+                                <div class="form-element">
+                                <label for="section">Year And Section</label>
+                                <input type="text" id="section" name="section" placeholder="Ex. ITSM 4109" required>
+                                </div>
+                            </div>
+
+                            <label id="provision1" for="provision" style="display:none;">Provision in the Norms of Conduct Violated by the Student/s:</label>
+                            <div style="position: relative;" style="display:none;">
+                                <textarea style="display:none;" id="provision" name="provision" rows="4" cols="20" maxlength="250"></textarea>
+                                <div style="display:none;" id="char-count">250 characters remaining</div>
+                            </div>
+                
+                            <label id="narrate1" for="narrate" >Brief Narration of Facts and Circumstances:</label>
+                            <h5 style="font-size:12px; color:red; font-weight:bold">*Only accepting reports in english language</h5>
+                            <div style="position: relative;">
+                                <textarea id="narrate" name="narrate" rows="4" cols="20" maxlength="250" required></textarea><br>
+                                <div id="char-count1">250 characters remaining</div>
+                            </div>
+                
+                            <label id="final1" for="final" >Final Word: <div class="tooltip">?
+                                <span class="tooltiptext">You can say here your final remarks for example: "I hope this issue wont happen again".</span>
+                              </div></label>
+                            <div style="position: relative;">
+                                <textarea id="final" name="final" rows="4" cols="20" maxlength="250" required></textarea><br>
+                                <div id="char-count2">250 characters remaining</div>
+                            </div>
+                            <hr>
+
                             <label class="form-label-main" for="complainant">Complainant Details:</label> 
                             <hr>
                             <div class="form-container">
                                 <div class="form-element">
                                     <label for="number">Contact Number:</label>
-                                    <input type="text" id="number" name="number" required>
-                                </div>
+                                    <input type="tel" id="number" name="number" placeholder="Ex. 09498030745" pattern="[0-9]{11}">
+                                </div> 
 
                                 <div class="form-element">
                                     <label for="email">Email Address</label>
-                                    <input type="text" id="email" name="email" required>
+                                    <input type="email" id="email" name="email"  placeholder="Ex. example@yahoo.com" required>
                                 </div>
                             </div>
 
                             <div class="form-row">
-                                <div class="form-element">
-                                    <label for="evidence1">Evidence 1:</label>
-                                    <input type="text" id="evidence1" name="evidence1">
+                                <div class="file-input-group">
+                                    <label for="file4">Attach Evidence 1:</label>
+                                    <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx"  onchange="handleFileChange('file4', 'evi1')">
+                                    <label for="evi1" id="evi1Label" style="display: none;">Small description about the file:</label>
+                                    <input type="text" id="evi1" name="evi1" style="display: none;">
                                 </div>
-
-                                <div class="form-element">
-                                    <label for="evidence2">Evidence 2:</label>
-                                    <input type="text" id="evidence2" name="evidence2">
+                            
+                                <div class="file-input-group">
+                                    <label for="file5">Attach Evidence 2:</label>
+                                    <input type="file" name="file5" id="file5" accept=".png, .jpg, .jpeg, .pdf, .docx"  onchange="handleFileChange('file5', 'evi2')">
+                                    <label for="evi2" id="evi2Label" style="display: none;">Small description about the attached file:</label>
+                                    <input type="text" id="evi2" name="evi2" style="display: none;">
                                 </div>
-
-                                <div class="form-element">
-                                    <label for="evidence3">Evidence 3:</label>
-                                    <input type="text" id="evidence3" name="evidence3">
+                            
+                                <div class="file-input-group">
+                                    <label for="file6">Attach Evidence 3:</label>
+                                    <input type="file" name="file6" id="file6" accept=".png, .jpg, .jpeg, .pdf, .docx"  onchange="handleFileChange('file6', 'evi3')">
+                                    <label for="evi3" id="evi3Label" style="display: none;">Small description about the attached file:</label>
+                                    <input type="text" id="evi3" name="evi3" style="display: none;">
                                 </div>
                             </div>
                             
@@ -217,53 +267,13 @@
                             
                             <div class="form-row-file">
                                 <div class="form-element">
-                                    <label for="file3">Attach Your Signature:</label>
-                                    <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
+                                    
                                 </div>
 
-                                <div class="form-element">
-                                    <label for="file1">Attach Supporting Documents (if you have any):</label>
-                                    <input type="file" name="file1" id="file1" accept=".png, .jpg, .jpeg, .pdf, .docx">
-                                    <div id="char-count5">
-                                        <small style="color: gray;">Leave it blank if N/A</small>
-                                    </div>
-                                </div>
                             </div>
 
 
-                            <label class="form-label-main" for="subcomplaint">Subject of Complaint Details:</label> 
-                            <hr>
-
-                            <div class="form-container">
-                                <div class="form-element">
-                                <label for="name">Name</label>
-                                <input type="text" id="name" name="name" required>
-                                </div>
-
-                                <div class="form-element">
-                                <label for="section">Year And Section</label>
-                                <input type="text" id="section" name="section" required>
-                                </div>
-                            </div>
-
-                            <label id="provision1" for="provision" style="display:none;">Provision in the Norms of Conduct Violated by the Student/s:</label>
-                            <div style="position: relative;" style="display:none;">
-                                <textarea style="display:none;" id="provision" name="provision" rows="4" cols="20" maxlength="250"></textarea>
-                                <div style="display:none;" id="char-count">250 characters remaining</div>
-                            </div>
-                
-                            <label id="narrate1" for="narrate" >Brief Narration of Facts and Circumstances:</label>
-                            <div style="position: relative;">
-                                <textarea id="narrate" name="narrate" rows="4" cols="20" maxlength="250" required></textarea><br>
-                                <div id="char-count1">250 characters remaining</div>
-                            </div>
-                
-                            <label id="final1" for="final" >Final Word</label>
-                            <div style="position: relative;">
-                                <textarea id="final" name="final" rows="4" cols="20" maxlength="250" required></textarea><br>
-                                <div id="char-count2">250 characters remaining</div>
-                            </div>
-                            <hr>
+                           
                     
                             <div class="checkbox-container">
                                 <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork" required>
@@ -271,13 +281,15 @@
                                         By clicking this, I hereby certify that the information furnished above is true to my knowledge and conscience.
                                     </label>
                             </div>
+                            <label for="file7">Attach Your Signature:</label>
+                            <input type="file" name="file7" id="file7" accept=".png, .jpg, .jpeg"required>
 
-                            <input type="hidden" name="forms" value="Formal Complaint">
-                
-                            <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
                             <input id="submit" type="submit" class="green-submit-button">
+                        </form>
                         </div>
-                    </form>
+                   
+                    
+                   
 
                 <div id="formContainer1" style="display: none;">
                     <form action="/submit_report" method="POST" enctype="multipart/form-data">

@@ -1349,6 +1349,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
 
+       function handleFileChange(fileInputId, textInputId) {
+        var fileInput = document.getElementById(fileInputId);
+        var textInputLabel = document.getElementById(textInputId + 'Label');
+        var textInput = document.getElementById(textInputId);
+
+        if (fileInput.files.length > 0) {
+            textInputLabel.style.display = 'block';
+            textInput.style.display = 'block';
+            textInput.required = true;
+        } else {
+            textInputLabel.style.display = 'none';
+            textInput.style.display = 'none';
+            textInput.required = false;
+        }
+    }
+
 
     
     
