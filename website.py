@@ -46,7 +46,8 @@ db_config = {
 }
 
 try:
-    db_connection = mysql.connector.connect(**db_config)
+    db_connection = mysql.connector.connect(pool_name = "mypool",
+                              pool_size = 32, **db_config)
     end_time = time.time()
     print(f"Connected to the database (Time taken: {end_time - start_time} seconds)")
 except mysql.connector.Error as err:
