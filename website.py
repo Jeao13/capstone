@@ -1,6 +1,7 @@
 from flask import jsonify
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file, jsonify, make_response, Response
 import mysql.connector
+from mysql.connector import pooling
 import base64
 import io
 import os
@@ -33,24 +34,20 @@ from docx.shared import Inches
 
 
 
-start_time = time.time()
 
-db_config = {
-  
-    'host': os.environ.get('MYSQL_HOST', 'localhost'),
-    'user': os.environ.get('MYSQL_USER', 'root'),
-    'password': os.environ.get('MYSQL_PASSWORD', ''),
-    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
-   
-}
 
-try:
-    db_connection = mysql.connector.connect(**db_config)
-    end_time = time.time()
-    print(f"Connected to the database (Time taken: {end_time - start_time} seconds)")
-except mysql.connector.Error as err:
-    print(f"Error: {err}")
-    db_connection.reconnect()
+def create_connection_pool():
+    db_config = {
+    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
+    'user': os.environ.get('MYSQL_USER', 'mysql'),
+    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
+    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
+    'port': os.environ.get('MYSQL_PORT', '3306'),
+    }
+    cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
+
+    return cnxpool
+
 
 
 
@@ -85,10 +82,12 @@ def get_data(x):
 
 def notifs(user_id, message):
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute("INSERT INTO notifications (user_id  ,message) VALUES (%s, %s)",
                       (user_id, message))
-    db_connection.commit()
+    cursor1.commit()
 
     db_cursor.close()
 
@@ -453,18 +452,22 @@ def submit_notice():
     with open(pdfpath, "rb") as pdf_file:
         pdf_data = pdf_file.read()
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute("INSERT INTO notice_case (notice_id  ,complainant, name, coord, date, time, file, file_name,status) VALUES (%s, %s,%s, %s, %s, %s, %s, %s,%s)",
                       (random_code, complainant, student, Name_Coordinator, current_date, formatted_time, pdf_data, file_name, statusreport))
-    db_connection.commit()
+    cursor1.commit()
 
     db_cursor.close()
 
    
 
-    db_cursor_status = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_status = cursor1.cursor()
     db_cursor_status.execute("UPDATE reports SET status = %s WHERE report_id = %s", (statusreport, code))
-    db_connection.commit()
+    cursor1.commit()
     db_cursor_status.close()
 
     flash('The report is submitted', 'success')
@@ -513,181 +516,241 @@ def generate_report():
     formatted_date = current_date.strftime("/%m/%d/%Y")
     current_time = datetime.now()
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s;", (form, to))
     result = db_cursor.fetchone()
     db_cursor.close
 
-    db_cursor9 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor9 = cursor1.cursor()
     db_cursor9.execute(
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s;", (form, to))
     result9 = db_cursor9.fetchone()
     db_cursor9.close
 
-    db_cursor5 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor5 = cursor1.cursor()
     db_cursor5.execute(
         "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "COE",))
     result5 = db_cursor5.fetchone()
     db_cursor5.close
 
-    db_cursor6 = db_connection.cursor()
+    dcnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor6 = cursor1.cursor()
     db_cursor6.execute(
         "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "CICS",))
     result6 = db_cursor6.fetchone()
     db_cursor6.close
 
-    db_cursor7 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor7 = cursor1.cursor()
     db_cursor7.execute(
         "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "CAFAD",))
     result7 = db_cursor7.fetchone()
     db_cursor7.close
 
-    db_cursor8 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor8 = cursor1.cursor()
     db_cursor8.execute(
         "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "CIT",))
     result8 = db_cursor8.fetchone()
     db_cursor8.close
 
-    db_cursor10 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor10 = cursor1.cursor()
     db_cursor10.execute(
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "COE",))
     result10 = db_cursor10.fetchone()
     db_cursor10.close
 
-    db_cursor11 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor11 = cursor1.cursor()
     db_cursor11.execute(
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "CICS",))
     result11 = db_cursor11.fetchone()
     db_cursor11.close
 
-    db_cursor12 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor12 = cursor1.cursor()
     db_cursor12.execute(
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "CAFAD",))
     result12 = db_cursor12.fetchone()
     db_cursor12.close
 
-    db_cursor13 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor13 = cursor1.cursor()
     db_cursor13.execute(
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "CIT",))
     result13 = db_cursor13.fetchone()
     db_cursor13.close
 
-    db_cursor14 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor14 = cursor1.cursor()
     db_cursor14.execute(
         "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "COE", "Rejected"))
     result14 = db_cursor14.fetchone()
     db_cursor14.close
 
-    db_cursor15 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor15 = cursor1.cursor()
     db_cursor15.execute(
         "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "COE", "Case Closed"))
     result15 = db_cursor15.fetchone()
     db_cursor15.close
 
-    db_cursor16 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor16 = cursor1.cursor()
     db_cursor16.execute(
         "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CICS", "Rejected"))
     result16 = db_cursor16.fetchone()
     db_cursor16.close
 
-    db_cursor17 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor17 = cursor1.cursor()
     db_cursor17.execute(
         "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CICS", "Case Closed"))
     result17 = db_cursor17.fetchone()
     db_cursor17.close
 
-    db_cursor18 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor18 = cursor1.cursor()
     db_cursor18.execute(
         "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CAFAD", "Rejected"))
     result18 = db_cursor18.fetchone()
     db_cursor18.close
 
-    db_cursor19 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor19 = cursor1.cursor()
     db_cursor19.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s",
                         (form, to, "CAFAD", "Case Closed"))
     result19 = db_cursor19.fetchone()
     db_cursor19.close
 
-    db_cursor20 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor20 = cursor1.cursor()
     db_cursor20.execute(
         "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CIT", "Rejected"))
     result20 = db_cursor20.fetchone()
     db_cursor20.close
 
-    db_cursor21 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor21 = cursor1.cursor()
     db_cursor21.execute(
         "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CIT", "Case Closed"))
     result21 = db_cursor21.fetchone()
     db_cursor21.close
 
-    db_cursor22 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor22 = cursor1.cursor()
     db_cursor22.execute(
         "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form, to, "Rejected",))
     result22 = db_cursor22.fetchone()
     db_cursor22.close
 
-    db_cursor23 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor23 = cursor1.cursor()
     db_cursor23.execute(
         "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form, to, "Case Closed",))
     result23 = db_cursor23.fetchone()
     db_cursor23.close
 
-    db_cursor24 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor24 = cursor1.cursor()
     db_cursor24.execute(
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "COE", "Rejected"))
     result24 = db_cursor24.fetchone()
     db_cursor24.close
 
-    db_cursor25 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor25 = cursor1.cursor()
     db_cursor25.execute(
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "COE", "Approved"))
     result25 = db_cursor25.fetchone()
     db_cursor25.close
 
-    db_cursor26 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor26 = cursor1.cursor()
     db_cursor26.execute(
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CICS", "Rejected"))
     result26 = db_cursor26.fetchone()
     db_cursor26.close
 
-    db_cursor27 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor27 = cursor1.cursor()
     db_cursor27.execute(
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CICS", "Approved"))
     result27 = db_cursor27.fetchone()
     db_cursor27.close
 
-    db_cursor28 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor28 = cursor1.cursor()
     db_cursor28.execute(
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CAFAD", "Rejected"))
     result28 = db_cursor28.fetchone()
     db_cursor28.close
 
-    db_cursor29 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor29 = cursor1.cursor()
     db_cursor29.execute(
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CAFAD", "Approved"))
     result29 = db_cursor29.fetchone()
     db_cursor29.close
 
-    db_cursor30 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor30 = cursor1.cursor()
     db_cursor30.execute(
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CIT", "Rejected"))
     result30 = db_cursor30.fetchone()
     db_cursor30.close
 
-    db_cursor31 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor31 = cursor1.cursor()
     db_cursor31.execute(
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CIT", "Approved"))
     result31 = db_cursor31.fetchone()
     db_cursor31.close
 
-    db_cursor32 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor32 = cursor1.cursor()
     db_cursor32.execute(
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form, to, "Rejected"))
     result32 = db_cursor32.fetchone()
     db_cursor32.close
 
-    db_cursor33 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor33 = cursor1.cursor()
     db_cursor33.execute(
         "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form, to, "Approved"))
     result33 = db_cursor33.fetchone()
@@ -697,7 +760,9 @@ def generate_report():
     counts5={}
 
 
-    db_cursor34 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor34 = cursor1.cursor()
 
     minor_offenses_sum = 0
 
@@ -712,7 +777,9 @@ def generate_report():
 
     db_cursor34.close()
 
-    db_cursor35 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor35 = cursor1.cursor()
 
     major_offenses_sum = 0
 
@@ -1070,10 +1137,12 @@ def submit_report():
 
 
 
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support,file_support_name1, file_support_type1, file_support1, file_support_name2, file_support_type2, file_support2, username, date_time, status) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                             (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, support_filename1, support_extension1, support_data1,support_filename2, support_extension2, support_data2, username, current_datetime, "Pending"))
-        db_connection.commit()
+        cursor1.commit()
 
         db_cursor.close()
 
@@ -1184,10 +1253,12 @@ def submit_report():
             support_filename = "None"
             support_extension = "None"
 
-            db_cursor = db_connection.cursor()
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
             db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)",
                               (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
-            db_connection.commit()
+            cursor1.commit()
 
             db_cursor.close()
 
@@ -1207,10 +1278,12 @@ def submit_report():
             support_data = support_file.read()
 
             # Insert the report with file information into the database, including file data
-            db_cursor = db_connection.cursor()
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
             db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
                               (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
-            db_connection.commit()
+            cursor1.commit()
 
             db_cursor.close()
 
@@ -1334,10 +1407,12 @@ def submit_report1():
             support_filename = "None"
             support_extension = "None"
 
-            db_cursor = db_connection.cursor()
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
             db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)",
                               (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
-            db_connection.commit()
+            cursor1.commit()
 
             db_cursor.close()
 
@@ -1359,10 +1434,12 @@ def submit_report1():
             support_data = support_file.read()
 
             # Insert the report with file information into the database, including file data
-            db_cursor = db_connection.cursor()
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
             db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
                               (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
-            db_connection.commit()
+            cursor1.commit()
 
             db_cursor.close()
 
@@ -1469,10 +1546,12 @@ def submit_report1():
             support_filename = "None"
             support_extension = "None"
 
-            db_cursor = db_connection.cursor()
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
             db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)",
                               (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
-            db_connection.commit()
+            cursor1.commit()
 
             db_cursor.close()
 
@@ -1492,10 +1571,12 @@ def submit_report1():
             support_data = support_file.read()
 
             # Insert the report with file information into the database, including file data
-            db_cursor = db_connection.cursor()
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
             db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
                               (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
-            db_connection.commit()
+            cursor1.commit()
 
             db_cursor.close()
 
@@ -1592,10 +1673,12 @@ def submit_request():
             support_filename = "None"
             support_extension = "None"
 
-            db_cursor = db_connection.cursor()
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
             db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name,file_form_type, file_form, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
                               (random_code, department, remarks, file_name, pdf_data, ".pdf",support_filename, support_extension, support_data, username, current_datetime, "Pending",remarks))
-            db_connection.commit()
+            cursor1.commit()
 
             db_cursor.close()
 
@@ -1612,10 +1695,12 @@ def submit_request():
             support_data = support_file.read()
 
             # Insert the report with file information into the database, including file data
-            db_cursor = db_connection.cursor()
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
             db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
                               (random_code, department, remarks, file_name, pdf_data, ".pdf",support_filename, support_extension, support_data, username, current_datetime, "Pending",remarks))
-            db_connection.commit()
+            cursor1.commit()
 
             db_cursor.close()
 
@@ -1751,10 +1836,12 @@ def submit_request():
             support_filename = "None"
             support_extension = "None"
 
-            db_cursor = db_connection.cursor()
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
             db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
                               (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending",""))
-            db_connection.commit()
+            cursor1.commit()
 
             db_cursor.close()
 
@@ -1771,10 +1858,12 @@ def submit_request():
             support_data = support_file.read()
 
             # Insert the report with file information into the database, including file data
-            db_cursor = db_connection.cursor()
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
             db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
                               (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending",""))
-            db_connection.commit()
+            cursor1.commit()
 
             db_cursor.close()
 
@@ -1911,10 +2000,12 @@ def submit_request():
             support_filename = "None"
             support_extension = "None"
 
-            db_cursor = db_connection.cursor()
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
             db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
                               (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending",""))
-            db_connection.commit()
+            cursor1.commit()
 
             db_cursor.close()
 
@@ -1931,10 +2022,12 @@ def submit_request():
             support_data = support_file.read()
 
             # Insert the report with file information into the database, including file data
-            db_cursor = db_connection.cursor()
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
             db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
                               (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending",""))
-            db_connection.commit()
+            cursor1.commit()
 
             db_cursor.close()
 
@@ -1963,7 +2056,9 @@ def submit_call():
 
     username = session.get('namestudent', '')
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "SELECT * FROM accounts_cics WHERE Name = %s", (student,))
     result_cics = db_cursor.fetchone()
@@ -1980,11 +2075,15 @@ def submit_call():
 
     if result_cics:
         college = 'CICS'
-        db_cursor2 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor2 = cursor1.cursor()
         db_cursor2.execute(
             "SELECT Course FROM accounts_cics WHERE Name = %s", (student,))
         course1 = db_cursor2.fetchone()
-        db_cursor3 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor3 = cursor1.cursor()
         db_cursor3.execute(
             "SELECT Username FROM accounts_cics WHERE Name = %s", (student,))
         srcode1 = db_cursor3.fetchone()
@@ -1999,11 +2098,15 @@ def submit_call():
 
     elif result_cafad:
         college = 'CAFAD'
-        db_cursor2 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor2 = cursor1.cursor()
         db_cursor2.execute(
             "SELECT Course FROM accounts_cafad WHERE Name = %s", (student,))
         course1 = db_cursor2.fetchone()
-        db_cursor3 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor3 = cursor1.cursor()
         db_cursor3.execute(
             "SELECT Username FROM accounts_cafad WHERE Name = %s", (student,))
         srcode1 = db_cursor3.fetchone()
@@ -2018,11 +2121,15 @@ def submit_call():
 
     elif result_coe:
         college = 'COE'
-        db_cursor2 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor2 = cursor1.cursor()
         db_cursor2.execute(
             "SELECT Course FROM accounts_coe WHERE Name = %s", (student,))
         course1 = db_cursor2.fetchone()
-        db_cursor3 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor3 = cursor1.cursor()
         db_cursor3.execute(
             "SELECT Username FROM accounts_coe WHERE Name = %s", (student,))
         srcode1 = db_cursor3.fetchone()
@@ -2037,11 +2144,15 @@ def submit_call():
 
     elif result_cit:
         college = 'CIT'
-        db_cursor2 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor2 = cursor1.cursor()
         db_cursor2.execute(
             "SELECT Course FROM accounts_cit WHERE Name = %s", (student,))
         course1 = db_cursor2.fetchone()
-        db_cursor3 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor3 = cursor1.cursor()
         db_cursor3.execute(
             "SELECT Username FROM accounts_cit WHERE Name = %s", (student,))
         srcode1 = db_cursor3.fetchone()
@@ -2115,10 +2226,12 @@ def submit_call():
         pdf_data = pdf_file.read()
 
     notifs(srcode, "You have a new call slip")
-    db_cursor1 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor1 = cursor1.cursor()
     db_cursor1.execute("INSERT INTO callslip (call_id, name, coord,reason, date, time,file, file_name) VALUES (%s, %s, %s, %s, %s,%s,%s,%s)",
                        (random_code, student, username, remarks, current_date, formatted_time, pdf_data, file_name))
-    db_connection.commit()
+    cursor1.commit()
     db_cursor.close()
     db_cursor1.close()
     db_cursor2.close()
@@ -2149,22 +2262,30 @@ def submit_written():
 
         username = session.get('namestudent', '')
 
-        db_cursor1 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
             "SELECT Username FROM accounts_cics WHERE Name = %s;", (students,))
         result_cics = db_cursor1.fetchone()
 
-        db_cursor1 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
             "SELECT Username FROM accounts_cafad WHERE Name = %s;", (students,))
         result_cafad = db_cursor1.fetchone()
 
-        db_cursor1 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
             "SELECT Username FROM accounts_coe WHERE Name = %s;", (students,))
         result_coe = db_cursor1.fetchone()
 
-        db_cursor1 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
             "SELECT Username FROM accounts_cit WHERE Name = %s;", (students,))
         result_cit = db_cursor1.fetchone()
@@ -2302,10 +2423,12 @@ def submit_written():
             pdf_data = pdf_file.read()
 
         # Insert the report with file information into the database, including file data
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute("INSERT INTO sanctions (sanctions_id,username, course, date_time, sanction, written, written_name,type) VALUES (%s,%s, %s, %s, %s, %s,%s,%s)",
                           (random_code, students, courseorposition, current_datetime, sanction, pdf_data, file_name, kind))
-        db_connection.commit()
+        cursor1.commit()
         db_cursor.close()
 
         flash('Report submitted successfully')
@@ -2329,22 +2452,30 @@ def submit_written():
 
         username = session.get('namestudent', '')
 
-        db_cursor1 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
             "SELECT Username FROM accounts_cics WHERE Name = %s;", (students,))
         result_cics = db_cursor1.fetchone()
 
-        db_cursor1 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
             "SELECT Username FROM accounts_cafad WHERE Name = %s;", (students,))
         result_cafad = db_cursor1.fetchone()
 
-        db_cursor1 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
             "SELECT Username FROM accounts_coe WHERE Name = %s;", (students,))
         result_coe = db_cursor1.fetchone()
 
-        db_cursor1 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
             "SELECT Username FROM accounts_cit WHERE Name = %s;", (students,))
         result_cit = db_cursor1.fetchone()
@@ -2482,10 +2613,12 @@ def submit_written():
             pdf_data = pdf_file.read()
 
         # Insert the report with file information into the database, including file data
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute("INSERT INTO sanctions (sanctions_id,username, course, date_time, sanction, written, written_name,type) VALUES (%s,%s, %s, %s, %s, %s,%s,%s)",
                           (random_code, students, courseorposition, current_datetime, sanction, pdf_data, file_name, kind))
-        db_connection.commit()
+        cursor1.commit()
         db_cursor.close()
 
         flash('Report submitted successfully')
@@ -2512,22 +2645,30 @@ def submit_written():
 
         username = session.get('namestudent', '')
 
-        db_cursor1 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
             "SELECT Username FROM accounts_cics WHERE Name = %s;", (students,))
         result_cics = db_cursor1.fetchone()
 
-        db_cursor1 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
             "SELECT Username FROM accounts_cafad WHERE Name = %s;", (students,))
         result_cafad = db_cursor1.fetchone()
 
-        db_cursor1 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
             "SELECT Username FROM accounts_coe WHERE Name = %s;", (students,))
         result_coe = db_cursor1.fetchone()
 
-        db_cursor1 = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
             "SELECT Username FROM accounts_cit WHERE Name = %s;", (students,))
         result_cit = db_cursor1.fetchone()
@@ -2747,10 +2888,12 @@ def submit_written():
             pdf_data = pdf_file.read()
 
         # Insert the report with file information into the database, including file data
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute("INSERT INTO sanctions (sanctions_id,username, course, date_time, sanction, written, written_name,type) VALUES (%s,%s, %s, %s, %s, %s,%s,%s)",
                           (random_code, students, courseorposition, current_datetime, sanction, pdf_data, file_name, kind))
-        db_connection.commit()
+        cursor1.commit()
         db_cursor.close()
 
         flash('Report submitted successfully')
@@ -2767,10 +2910,12 @@ def submit_approve():
     print(remarks)
     status = "Approved"
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute("UPDATE forms_osd SET remarks = %s, status = %s, file_form = %s WHERE form_id = %s",
                       (remarks, status, support_data, report_id))
-    db_connection.commit()
+    cursor1.commit()
     db_cursor.close()
 
     return redirect('/head')
@@ -2784,10 +2929,12 @@ def submit_reject():
     print(remarks)
     status = "Rejected"
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "UPDATE forms_osd SET remarks = %s, status = %s WHERE form_id = %s", (remarks, status, report_id))
-    db_connection.commit()
+    cursor1.commit()
     db_cursor.close()
 
     return redirect('/head')
@@ -2800,10 +2947,12 @@ def delete_sanction():
     print(sanction_id)
 
     try:
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "DELETE FROM sanctions WHERE sanctions_id = %s;", (sanction_id,))
-        db_connection.commit()
+        cursor1.commit()
         db_cursor.close()
         return jsonify({"message": "Sanction deleted successfully"})
     except Exception as e:
@@ -2828,10 +2977,12 @@ def submit_sanction():
         # Get the username from the session
 
         # Insert the values into the database
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute("INSERT INTO sanctions (username, course, date_time, sanction) VALUES (%s, %s, %s, %s)",
                           (name, course, current_datetime, sanction))
-        db_connection.commit()
+        cursor1.commit()
         db_cursor.close()
         # Optionally, you can redirect to a success page or perform other actions
 
@@ -2849,7 +3000,9 @@ def manage_coord():
     user_source = session.get('source', '')
 
     # Query the database to retrieve reports for the logged-in user
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
 
     if user_role == 'accounts_coordinators':
         # If the user is an accounts coordinator, retrieve the course of the user
@@ -2874,7 +3027,9 @@ def manage_coord():
     # Close the cursor
     db_cursor.close()
 
-    db_cursor_all = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_all = cursor1.cursor()
     db_cursor_all.execute("SELECT * FROM accounts_coordinators")
     coordinators = db_cursor_all.fetchall()
     db_cursor_all.close()
@@ -2959,7 +3114,11 @@ def index():
             for table in tables:
                 query = "SELECT * FROM {} WHERE username = %s AND password = %s".format(
                     table)
-                db_cursor = db_connection.cursor()
+                
+                cnx = create_connection_pool()
+                cursor1=cnx.get_connection()
+                db_cursor = cursor1.cursor()
+                
                 db_cursor.execute(
                     query, (submitted_username, submitted_password))
                 result = db_cursor.fetchone()
@@ -3000,7 +3159,9 @@ def menu():
     user_source = session.get('source', '')
 
     # Query the database to retrieve reports for the logged-in user
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
 
     if user_role == 'accounts_coordinators':
         # If the user is an accounts coordinator, retrieve the course of the user
@@ -3042,7 +3203,9 @@ def requestpage():
     user_source = session.get('source', '')
 
     # Query the database to retrieve reports for the logged-in user
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
 
     if user_role == 'accounts_coordinators':
         # If the user is an accounts coordinator, retrieve the course of the user
@@ -3198,13 +3361,17 @@ def search_students():
         session['search_value'] = search_value
 
         # Perform a database query to search for students in the accounts_cics table
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "SELECT * FROM accounts_cics WHERE Name LIKE %s", ('%' + search_value + '%',))
         search_results = db_cursor.fetchall()
         db_cursor.close()
 
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "SELECT * FROM sanctions WHERE username LIKE %s", ('%' + search_value + '%',))
         search_results = db_cursor.fetchall()
@@ -3236,7 +3403,9 @@ def forms():
     print(f"Student Name: {user_role}")
 
     # Query the database to retrieve reports for the logged-in user
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
 
     if user_role == 'accounts_coordinators':
         # If the user is an accounts coordinator, retrieve the course of the user
@@ -3266,7 +3435,9 @@ def forms():
 
 @app.route('/download_form/<int:form_id>')
 def download_form(form_id):
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
 
     # Retrieve the file data for the given form_id from your database
     db_cursor.execute(
@@ -3291,7 +3462,9 @@ def download_form(form_id):
 
 @app.route('/download_handbook')
 def download_handbook():
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
 
     # Retrieve the file data for the given form_id from your database
     db_cursor.execute(
@@ -3316,7 +3489,9 @@ def download_handbook():
 
 @app.route('/download_manual')
 def download_manual():
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
 
     # Retrieve the file data for the given form_id from your database
     db_cursor.execute(
@@ -3341,7 +3516,9 @@ def download_manual():
 
 @app.route('/sanctions', methods=['GET', 'POST'])
 def sanctions():
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "SELECT * FROM sanctions WHERE username = %s", ("Aedrian Jeao De Torres",))
     sanctions = db_cursor.fetchall()
@@ -3363,13 +3540,17 @@ def homepage_head():
 
     # Determine the user source (accounts_cics or accounts_coordinators) and set the user_source variable
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
 
     db_cursor.execute(
         "SELECT * FROM accounts_head WHERE username = %s", (username,))
     result_head = db_cursor.fetchone()
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
 
     db_cursor.execute(
         "SELECT * FROM accounts_coordinators WHERE username = %s", (username,))
@@ -3391,7 +3572,9 @@ def homepage_head():
     db_cursor.close()
 
     # Retrieve the profile picture path, name, and course for the logged-in user from the database
-    db_cursor1 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor1 = cursor1.cursor()
 
     if user_source == 'accounts_head':
         db_cursor1.execute(
@@ -3427,37 +3610,49 @@ def homepage_head():
         course = "Course/Position not found"
 
      # Retrieve the sanctions data within the homepage route
-    db_cursor_sanctions = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_sanctions = cursor1.cursor()
     db_cursor_sanctions.execute(
         "SELECT * FROM sanctions WHERE username = %s AND type = %s", (name, 'Written Warning'))
     warning = db_cursor_sanctions.fetchall()
     db_cursor_sanctions.close()
 
-    db_cursor_sanctions1 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_sanctions1 = cursor1.cursor()
     db_cursor_sanctions1.execute(
         "SELECT * FROM sanctions WHERE username = %s AND type= %s", (name, "Written Reprimand"))
     reprimand = db_cursor_sanctions1.fetchall()
     db_cursor_sanctions1.close()
 
-    db_cursor_sanctions2 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_sanctions2 = cursor1.cursor()
     db_cursor_sanctions2.execute(
         "SELECT * FROM sanctions WHERE username = %s AND type = %s", (name, "Letter of Suspension"))
     suspension = db_cursor_sanctions2.fetchall()
     db_cursor_sanctions2.close()
 
-    db_cursor_call = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_call = cursor1.cursor()
     db_cursor_call.execute("SELECT * FROM callslip WHERE coord = %s", (name,))
     call = db_cursor_call.fetchall()
     db_cursor_call.close()
 
 
-    db_cursor_notice_student = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_notice_student = cursor1.cursor()
     db_cursor_notice_student.execute(
         "SELECT * FROM notice_case WHERE name = %s", (name,))
     reports1 = db_cursor_notice_student.fetchall()
     db_cursor_notice_student.close()
 
-    db_cursor_notice_complain = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_notice_complain = cursor1.cursor()
     db_cursor_notice_complain.execute(
         "SELECT * FROM notice_case WHERE complainant = %s", (name,))
     reports2 = db_cursor_notice_complain.fetchall()
@@ -3475,8 +3670,10 @@ def homepage_head():
     user_source = session.get('source', '')
 
     # Query the database to retrieve reports for the logged-in user
-    db_cursor_get = db_connection.cursor()
-    db_cursor_get1 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_get = cursor1.cursor()
+    db_cursor_get1 = cursor1.cursor()
 
     if user_role == 'accounts_coordinators':
         isCoordinator = "yes"
@@ -3516,7 +3713,9 @@ def homepage_head():
 
     # Create a dictionary to hold profile pictures as Base64
 
-    db_cursor_all_cics = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_all_cics = cursor1.cursor()
     db_cursor_all_cics.execute("SELECT * FROM accounts_cics")
     cics = db_cursor_all_cics.fetchall()
     db_cursor_all_cics.close()
@@ -3533,7 +3732,9 @@ def homepage_head():
                 image_data).decode('utf-8')
             profile_pictures1[student_id] = profile_picture_base64
 
-    db_cursor_all_cafad = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_all_cafad = cursor1.cursor()
     db_cursor_all_cafad.execute("SELECT * FROM accounts_cafad")
     cafad = db_cursor_all_cafad.fetchall()
     db_cursor_all_cafad.close()
@@ -3550,7 +3751,9 @@ def homepage_head():
                 image_data).decode('utf-8')
             profile_pictures2[student_id] = profile_picture_base64
 
-    db_cursor_all_coe = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_all_coe = cursor1.cursor()
     db_cursor_all_coe.execute("SELECT * FROM accounts_coe")
     coe = db_cursor_all_coe.fetchall()
     db_cursor_all_coe.close()
@@ -3567,7 +3770,9 @@ def homepage_head():
                 image_data).decode('utf-8')
             profile_pictures3[student_id] = profile_picture_base64
 
-    db_cursor_all_cit = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_all_cit = cursor1.cursor()
     db_cursor_all_cit.execute("SELECT * FROM accounts_cit")
     cit = db_cursor_all_cit.fetchall()
     db_cursor_all_cit.close()
@@ -3584,7 +3789,9 @@ def homepage_head():
                 image_data).decode('utf-8')
             profile_pictures4[student_id] = profile_picture_base64
 
-    db_cursor_all_coords = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_all_coords = cursor1.cursor()
     db_cursor_all_coords.execute("SELECT * FROM accounts_coordinators")
     coordinators = db_cursor_all_coords.fetchall()
     db_cursor_all_coords.close()
@@ -3639,7 +3846,9 @@ def homepage_head():
     counts4 = {}
     counts5 = {}
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
 
     for status in statuses:
         if status:
@@ -3653,7 +3862,9 @@ def homepage_head():
 
     db_cursor.close()
 
-    db_cursor1 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor1 = cursor1.cursor()
 
     for status in statuses1:
         if status:
@@ -3667,7 +3878,9 @@ def homepage_head():
 
     db_cursor1.close()
 
-    db_cursor2 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor2 = cursor1.cursor()
 
     for status in statuses:
         if status:
@@ -3681,7 +3894,9 @@ def homepage_head():
 
     db_cursor2.close()
 
-    db_cursor3 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor3 = cursor1.cursor()
 
     for status in statuses1:
         if status:
@@ -3695,7 +3910,9 @@ def homepage_head():
 
     db_cursor3.close()
 
-    db_cursor4 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor4 = cursor1.cursor()
 
     for status in minor:
   
@@ -3707,7 +3924,9 @@ def homepage_head():
 
     db_cursor4.close()
 
-    db_cursor5 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor5 = cursor1.cursor()
 
     for status in major:
       
@@ -3775,7 +3994,9 @@ def homepage_head():
 
 
     
-    db_cursor_call_student = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_call_student = cursor1.cursor()
     db_cursor_call_student.execute(
         "SELECT * FROM callslip WHERE coord = %s", (name,))
     reports = db_cursor_call_student.fetchall()
@@ -3800,22 +4021,30 @@ def homepage():
 
     # Determine the user source (accounts_cics or accounts_coordinators) and set the user_source variable
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "SELECT * FROM accounts_cics WHERE username = %s", (username,))
     result_cics = db_cursor.fetchone()
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "SELECT * FROM accounts_cafad WHERE username = %s", (username,))
     result_cafad = db_cursor.fetchone()
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "SELECT * FROM accounts_coe WHERE username = %s", (username,))
     result_coe = db_cursor.fetchone()
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "SELECT * FROM accounts_cit WHERE username = %s", (username,))
     result_cit = db_cursor.fetchone()
@@ -3860,7 +4089,9 @@ def homepage():
     db_cursor.close()
 
     # Retrieve the profile picture path, name, and course for the logged-in user from the database
-    db_cursor1 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor1 = cursor1.cursor()
 
     if user_source == 'accounts_cics':
         db_cursor1.execute(
@@ -3925,48 +4156,64 @@ def homepage():
         course = "Course/Position not found"
 
      # Retrieve the sanctions data within the homepage route
-    db_cursor_sanctions = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_sanctions = cursor1.cursor()
     db_cursor_sanctions.execute(
         "SELECT * FROM sanctions WHERE username = %s AND type = %s", (name, 'Written Warning'))
     warning = db_cursor_sanctions.fetchall()
     db_cursor_sanctions.close()
 
-    db_cursor_sanctions1 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_sanctions1 = cursor1.cursor()
     db_cursor_sanctions1.execute(
         "SELECT * FROM sanctions WHERE username = %s AND type= %s", (name, "Written Reprimand"))
     reprimand = db_cursor_sanctions1.fetchall()
     db_cursor_sanctions1.close()
 
-    db_cursor_sanctions2 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_sanctions2 = cursor1.cursor()
     db_cursor_sanctions2.execute(
         "SELECT * FROM sanctions WHERE username = %s AND type = %s", (name, "Letter of Suspension"))
     suspension = db_cursor_sanctions2.fetchall()
     db_cursor_sanctions2.close()
 
-    db_cursor_sanctions3 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_sanctions3 = cursor1.cursor()
     db_cursor_sanctions3.execute(
         "SELECT * FROM sanctions WHERE username = %s ", (name,))
     sanctions = db_cursor_sanctions3.fetchall()
     db_cursor_sanctions3.close()
 
-    db_cursor_call = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_call= cursor1.cursor()
     db_cursor_call.execute("SELECT * FROM callslip WHERE coord = %s", (name,))
     call = db_cursor_call.fetchall()
     db_cursor_call.close()
 
-    db_cursor_call_student = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_call_student = cursor1.cursor()
     db_cursor_call_student.execute(
         "SELECT * FROM callslip WHERE name = %s", (name,))
     reports = db_cursor_call_student.fetchall()
     db_cursor_call_student.close()
 
-    db_cursor_notice_student = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_notice_student = cursor1.cursor()
     db_cursor_notice_student.execute(
         "SELECT * FROM notice_case WHERE name = %s", (name,))
     reports1 = db_cursor_notice_student.fetchall()
     db_cursor_notice_student.close()
 
-    db_cursor_notice_complain = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_notice_complain = cursor1.cursor()
     db_cursor_notice_complain.execute(
         "SELECT * FROM notice_case WHERE complainant = %s", (name,))
     reports2 = db_cursor_notice_complain.fetchall()
@@ -3985,7 +4232,9 @@ def homepage():
     user_source = session.get('source', '')
 
     # Query the database to retrieve reports for the logged-in user
-    db_cursor_reports = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_reports = cursor1.cursor()
 
     if user_role == 'accounts_coordinators':
         # If the user is an accounts coordinator, retrieve the course of the user
@@ -4021,7 +4270,9 @@ def homepage():
     user_source = session.get('source', '')
 
     # Query the database to retrieve reports for the logged-in user
-    db_cursor_request = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_request = cursor1.cursor()
 
     if user_role == 'accounts_coordinators':
         # If the user is an accounts coordinator, retrieve the course of the user
@@ -4046,7 +4297,9 @@ def homepage():
     # Close the cursor
     db_cursor_request.close()
 
-    db_cursor_notif = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_notif = cursor1.cursor()
     db_cursor_notif.execute(
         "SELECT * FROM notifications WHERE user_id = %s", (username,))
     results_notif = db_cursor_notif.fetchall()
@@ -4083,7 +4336,9 @@ def lookup_student_info(username):
 
         for table in tables1:
             query = f"SELECT Name, Course FROM {table} WHERE username = %s"
-            db_cursor = db_connection.cursor(dictionary=True)
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
             db_cursor.execute(query, (username,))
             result = db_cursor.fetchone()
             db_cursor.close()
@@ -4129,31 +4384,41 @@ def count():
 
     username = session.get('courseall', '')
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "SELECT COUNT(*) FROM reports WHERE course = %s", (username,))
     result = db_cursor.fetchone()
     db_cursor.close
 
-    db_cursor1 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor1 = cursor1.cursor()
     db_cursor1.execute(
         "SELECT COUNT(*) FROM reports WHERE course = %s AND status = %s", (username, "Pending",))
     result1 = db_cursor1.fetchone()
     db_cursor1.close
 
-    db_cursor2 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor2 = cursor1.cursor()
     db_cursor2.execute(
         "SELECT COUNT(*) FROM reports WHERE course = %s AND status = %s", (username, "Ongoing"))
     result2 = db_cursor2.fetchone()
     db_cursor2.close
 
-    db_cursor3 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor3 = cursor1.cursor()
     db_cursor3.execute(
         "SELECT COUNT(*) FROM reports WHERE course = %s AND status = %s", (username, "Rejected"))
     result3 = db_cursor3.fetchone()
     db_cursor3.close
 
-    db_cursor4 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor4 = cursor1.cursor()
     db_cursor4.execute(
         "SELECT COUNT(*) FROM reports WHERE course = %s AND status = %s", (username, "Case Closed"))
     result4 = db_cursor4.fetchone()
@@ -4178,7 +4443,9 @@ def check():
 
     username = session.get('namestudent', '')
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "SELECT COUNT(*) FROM callslip WHERE name = %s", (username,))
     result = db_cursor.fetchone()
@@ -4220,7 +4487,9 @@ def check2():
 
 @app.route('/download_report_file/<string:report_id>')
 def download_report_file(report_id):
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "SELECT file_form, file_form_name FROM reports WHERE report_id = %s", (report_id,))
     result = db_cursor.fetchone()
@@ -4250,7 +4519,9 @@ def download_report_file(report_id):
 
 @app.route('/download_supporting_document/<string:report_id>')
 def download_supporting_document(report_id):
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "SELECT file_support_name, file_support_type, file_support FROM reports WHERE report_id = %s", (report_id,))
     result = db_cursor.fetchone()
@@ -4280,7 +4551,9 @@ def download_supporting_document(report_id):
 
 @app.route('/download_report_file1/<string:report_id>')
 def download_report_file1(report_id):
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "SELECT file_form, file_form_name FROM forms_osd WHERE form_id = %s", (report_id,))
     result = db_cursor.fetchone()
@@ -4310,7 +4583,9 @@ def download_report_file1(report_id):
 
 @app.route('/download_supporting_document1/<string:report_id>')
 def download_supporting_document1(report_id):
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "SELECT file_support_name, file_support_type, file_support FROM forms_osd WHERE form_id = %s", (report_id,))
     result = db_cursor.fetchone()
@@ -4344,13 +4619,17 @@ def change_report_status(report_id):
     print(new_status)
     print(report_id)
 
-    db_cursor1 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor1 = cursor1.cursor()
     db_cursor1.execute(
         "SELECT report_id FROM reports WHERE id = %s;", (report_id,))
     result = db_cursor1.fetchone()
     results = result[0]
 
-    db_cursor2 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor2 = cursor1.cursor()
     db_cursor2.execute(
         "SELECT username FROM reports WHERE id = %s;", (report_id,))
     result1 = db_cursor2.fetchone()
@@ -4361,10 +4640,12 @@ def change_report_status(report_id):
     db_cursor1.close()
     db_cursor2.close()
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "UPDATE reports SET status = %s WHERE id = %s;", (new_status, report_id))
-    db_connection.commit()  # Make sure to commit the changes to the database
+    cursor1.commit()  # Make sure to commit the changes to the database
     db_cursor.close()
 
     flash('Status has been successfully changed', 'success')
@@ -4378,7 +4659,9 @@ def change_report_status1(report_id):
     print(new_status)
     print(report_id)
 
-    db_cursor2 = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor2 = cursor1.cursor()
     db_cursor2.execute(
         "SELECT username FROM forms_osd WHERE form_id = %s;", (report_id,))
     result1 = db_cursor2.fetchone()
@@ -4388,10 +4671,12 @@ def change_report_status1(report_id):
 
     db_cursor2.close()
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "UPDATE forms_osd SET status = %s WHERE form_id = %s;", (new_status, report_id))
-    db_connection.commit()  # Make sure to commit the changes to the database
+    cursor1.commit()  # Make sure to commit the changes to the database
     db_cursor.close()
 
     flash('Status has been successfully changed', 'success')
@@ -4401,9 +4686,11 @@ def change_report_status1(report_id):
 
 @app.route('/delete_call/<string:report_id>', methods=['POST'])
 def delete_call(report_id):
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute("DELETE FROM callslip WHERE call_id = %s;", (report_id,))
-    db_connection.commit()  # Make sure to commit the changes to the database
+    cursor1.commit()  # Make sure to commit the changes to the database
     db_cursor.close()
 
     return redirect(url_for('homepage'))
@@ -4411,10 +4698,12 @@ def delete_call(report_id):
 
 @app.route('/delete_report/<string:report_id>', methods=['POST'])
 def delete_report(report_id):
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "DELETE FROM reports WHERE report_id = %s;", (report_id,))
-    db_connection.commit()  # Make sure to commit the changes to the database
+    cursor1.commit()  # Make sure to commit the changes to the database
     db_cursor.close()
 
     return redirect(url_for('homepage_head'))
@@ -4422,20 +4711,24 @@ def delete_report(report_id):
 
 @app.route('/delete_report1/<string:report_id>', methods=['POST'])
 def delete_report1(report_id):
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "DELETE FROM forms_osd WHERE form_id = %s;", (report_id,))
-    db_connection.commit()  # Make sure to commit the changes to the database
+    cursor1.commit()  # Make sure to commit the changes to the database
     db_cursor.close()
 
     return redirect(url_for('homepage_head'))
 
 @app.route('/delete_report2/<string:report_id>', methods=['POST'])
 def delete_report2(report_id):
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "DELETE FROM callslip WHERE call_id = %s;", (report_id,))
-    db_connection.commit()  # Make sure to commit the changes to the database
+    cursor1.commit()  # Make sure to commit the changes to the database
     db_cursor.close()
 
     return redirect(url_for('homepage_head'))
@@ -4444,27 +4737,33 @@ def delete_report2(report_id):
 @app.route('/delete_all_report1/<string:report_id>/<string:status>', methods=['POST'])
 def delete_all_report1(report_id, status):
     if status == "Result":
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "DELETE FROM forms_osd WHERE course = %s AND status = 'Approved' OR status = 'Rejected';", (report_id,))
-        db_connection.commit()  # Make sure to commit the changes to the database
+        cursor1.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
         return redirect(url_for('homepage_head'))
 
     else:
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "DELETE FROM forms_osd WHERE course = %s AND status = %s;", (report_id, status))
-        db_connection.commit()  # Make sure to commit the changes to the database
+        cursor1.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
         return redirect(url_for('homepage_head'))
 
 
 @app.route('/delete_all_report/<string:report_id>', methods=['POST'])
 def delete_all_report(report_id):
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute("DELETE FROM reports WHERE course = %s;", (report_id,))
-    db_connection.commit()  # Make sure to commit the changes to the database
+    cursor1.commit()  # Make sure to commit the changes to the database
     db_cursor.close()
 
     return redirect(url_for('homepage_head'))
@@ -4472,9 +4771,11 @@ def delete_all_report(report_id):
 
 @app.route('/delete_all_report2/', methods=['POST'])
 def delete_all_report2():
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute("DELETE FROM reports")
-    db_connection.commit()  # Make sure to commit the changes to the database
+    cursor1.commit()  # Make sure to commit the changes to the database
     db_cursor.close()
 
     return redirect(url_for('homepage_head'))
@@ -4486,10 +4787,12 @@ def delete_notification():
     notification_id = request.form.get('id')
     print(notification_id)
 
-    db_cursor = db_connection.cursor()
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor = cursor1.cursor()
     db_cursor.execute(
         "DELETE FROM notifications WHERE id = %s", (notification_id,))
-    db_connection.commit()
+    cursor1.commit()
     db_cursor.close()
 
     return 'Notification deleted successfully'
@@ -4501,7 +4804,9 @@ def lookup_sanctions():
         name = session.get('name', '')  # Updated to match the input name
 
         # Perform a database query to search for sanctions based on the username
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "SELECT date_time, sanction, sanctions_id, written_name FROM sanctions WHERE Username LIKE %s", ('%' + name + '%',))
         search_sanctions = db_cursor.fetchall()
@@ -4531,7 +4836,9 @@ def preview_call_file(report_id):
     db_cursor = None  # Initialize db_cursor to None
 
     try:
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "SELECT file FROM callslip WHERE call_id = %s", (report_id,))
         file_content = db_cursor.fetchone()
@@ -4564,7 +4871,9 @@ def preview_notice_file(report_id):
     db_cursor = None  # Initialize db_cursor to None
 
     try:
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "SELECT file FROM notice_case WHERE notice_id = %s", (report_id,))
         file_content = db_cursor.fetchone()
@@ -4597,7 +4906,9 @@ def preview_written_file(report_id):
     db_cursor = None  # Initialize db_cursor to None
 
     try:
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "SELECT written FROM sanctions WHERE sanctions_id = %s", (report_id,))
         file_content = db_cursor.fetchone()
@@ -4629,7 +4940,9 @@ def preview_report_file(report_id):
     db_cursor = None  # Initialize db_cursor to None
 
     try:
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "SELECT file_form FROM reports WHERE report_id = %s", (report_id,))
         file_content = db_cursor.fetchone()
@@ -4667,7 +4980,9 @@ def preview_support_file(report_id):
     db_cursor = None  # Initialize db_cursor to None
 
     try:
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "SELECT file_support FROM reports WHERE report_id = %s", (report_id,))
         file_content = db_cursor.fetchone()
@@ -4704,7 +5019,9 @@ def preview_report_file1(report_id):
     db_cursor = None  # Initialize db_cursor to None
 
     try:
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "SELECT file_form FROM forms_osd WHERE form_id = %s", (report_id,))
         file_content = db_cursor.fetchone()
@@ -4739,7 +5056,9 @@ def preview_support_file1(report_id):
     db_cursor = None  # Initialize db_cursor to None
 
     try:
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "SELECT file_support FROM forms_osd WHERE form_id = %s", (report_id,))
         file_content = db_cursor.fetchone()
@@ -4787,10 +5106,12 @@ def update_database():
         else:
             profile_pic = None  # Handle the case where there is no profile picture
 
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute("UPDATE accounts_coordinators SET username = %s, password = %s, image_data = %s, name = %s, course = %s WHERE id = %s;",
                           (username, password, profile_pic, name, course, id))
-        db_connection.commit()  # Make sure to commit the changes to the database
+        cursor1.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
 
         return jsonify({"message": "Database updated successfully"})
@@ -4820,10 +5141,12 @@ def update_database1():
         else:
             profile_pic = None  # Handle the case where there is no profile picture
 
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute("UPDATE accounts_cics SET username = %s, password = %s, image_data = %s, name = %s, course = %s WHERE id = %s;",
                           (username, password, profile_pic, name, course, id))
-        db_connection.commit()  # Make sure to commit the changes to the database
+        cursor1.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
 
         return jsonify({"message": "Database updated successfully"})
@@ -4850,10 +5173,12 @@ def update_database2():
         else:
             profile_pic = None  # Handle the case where there is no profile picture
 
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute("UPDATE accounts_cit SET username = %s, password = %s, image_data = %s, name = %s, course = %s WHERE id = %s;",
                           (username, password, profile_pic, name, course, id))
-        db_connection.commit()  # Make sure to commit the changes to the database
+        cursor1.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
 
         return jsonify({"message": "Database updated successfully"})
@@ -4880,10 +5205,12 @@ def update_database3():
         else:
             profile_pic = None  # Handle the case where there is no profile picture
 
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute("UPDATE accounts_cafad SET username = %s, password = %s, image_data = %s, name = %s, course = %s WHERE id = %s;",
                           (username, password, profile_pic, name, course, id))
-        db_connection.commit()  # Make sure to commit the changes to the database
+        cursor1.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
 
         return jsonify({"message": "Database updated successfully"})
@@ -4910,10 +5237,12 @@ def update_database4():
         else:
             profile_pic = None  # Handle the case where there is no profile picture
 
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute("UPDATE accounts_coe SET username = %s, password = %s, image_data = %s, name = %s, course = %s WHERE id = %s;",
                           (username, password, profile_pic, name, course, id))
-        db_connection.commit()  # Make sure to commit the changes to the database
+        cursor1.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
 
         return jsonify({"message": "Database updated successfully"})
@@ -4935,10 +5264,12 @@ def edit_pic():
         else:
             image_data = None  # Handle the case where there is no profile picture
 
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "UPDATE accounts_coordinators SET image_data = %s WHERE id = %s;", (image_data, ids))
-        db_connection.commit()  # Make sure to commit the changes to the database
+        cursor1.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
 
         return redirect(url_for('homepage_head'))
@@ -4960,10 +5291,12 @@ def edit_pic1():
         else:
             image_data = None  # Handle the case where there is no profile picture
 
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "UPDATE accounts_cics SET image_data = %s WHERE id = %s;", (image_data, ids))
-        db_connection.commit()  # Make sure to commit the changes to the database
+        cursor1.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
 
         return redirect(url_for('homepage_head'))
@@ -4985,10 +5318,12 @@ def edit_pic2():
         else:
             image_data = None  # Handle the case where there is no profile picture
 
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "UPDATE accounts_cit SET image_data = %s WHERE id = %s;", (image_data, ids))
-        db_connection.commit()  # Make sure to commit the changes to the database
+        cursor1.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
 
         return redirect(url_for('homepage_head'))
@@ -5012,10 +5347,12 @@ def edit_pic3():
         else:
             image_data = None  # Handle the case where there is no profile picture
 
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "UPDATE accounts_cafad SET image_data = %s WHERE id = %s;", (image_data, ids))
-        db_connection.commit()  # Make sure to commit the changes to the database
+        cursor1.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
 
         return redirect(url_for('homepage_head'))
@@ -5039,10 +5376,12 @@ def edit_pic4():
         else:
             image_data = None  # Handle the case where there is no profile picture
 
-        db_cursor = db_connection.cursor()
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
         db_cursor.execute(
             "UPDATE accounts_coe SET image_data = %s WHERE id = %s;", (image_data, ids))
-        db_connection.commit()  # Make sure to commit the changes to the database
+        cursor1.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
 
         return redirect(url_for('homepage_head'))
