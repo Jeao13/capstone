@@ -31,21 +31,27 @@
     <a class="logout" href="/logout">
         <i class="fas fa-sign-out-alt"></i> Sign Out
       </a>
+      
       <div class="containerx">
             <a class="notif" href="#" id="toggleLink"><i class="fas fa-bell"></i></a><br>
             <div id="notifications-container" class="notifications"  style="overflow:auto;">
-                {% if user_source == 'accounts_cics' %}
+                {% if user_source == 'student' %}
                 {% if notif == [] %}
                 <b>You have no notifications</b>
                 {% else %}
                 {% for row in notif %}
+               
                 <div class="report" >
+                    <button class="delete-button" onclick="deleteNotification(this, '{{ row[0] }}')">X</button>
+                   
                     <b>{{ row[2] }}</b> <br>
-                    <button class="delete-button" onclick="deleteNotification(this, '{{ row[0] }}')">Clear</button>
+                   
                     <div class="report_small">
+                        
                         <b>Date:</b> {{ row[4] }}<br>
                         <b>Time:</b> {{ row[3] }}<br>
                     </div>
+                   
                 </div>
                 {% endfor %}
                 {% endif %}
@@ -58,7 +64,7 @@
    
     </div>
 
-    {% if user_source == 'accounts_cics' or user_source == 'accounts_coordinators'%}
+    {% if user_source == 'student'%}
     <div class="image-container">
         <img src="static\headi.png" style="width: 100%; height: 30%;" alt="Background Image">
         <div class="user-profile">
@@ -69,7 +75,15 @@
             {% endif %}
             <div class="user-info">
                 <div class="overlay-text">{{ name }}</div>
+                {% if roles == 'student' or 'Student' %}
                 <div class="overlay-text1">{{ course }} - {{year}}</div>
+                {% elif roles == 'faculty' %}
+                <div class="overlay-text1">Faculty</div>
+                {% elif roles == 'staff' %}
+                <div class="overlay-text1">Staff</div>
+                {% elif roles == 'guard'%}
+                <div class="overlay-text1">Security Guard</div>
+                {% endif %}
             </div>
         
         </div>
@@ -92,7 +106,7 @@
         <div style=" margin-top: 15px; border-bottom: 1px solid #ccc;"></div>
 
 
-        <!-- Reminder content goes here -->
+       {% if name != 'Gemaica Cruzat'%}
         <div class="reminders-container">
             <!-- Reminder content goes here -->
             <ul style="list-style-type: disc; margin-left: 20px; padding-left: 0;">
@@ -102,6 +116,19 @@
                 <li style="margin-bottom: 10px;">If you need assistance or have questions about using the grievance system, don't hesitate to contact through following channels.</li>
             </ul>
         </div>
+        {%else%}
+        <div class="reminders-container">
+            <!-- Reminder content goes here -->
+            <ul style="list-style-type: disc; margin-left: 20px; padding-left: 0;">
+                <li style="margin-bottom: 10px;">Good Morning!</li>
+                <li style="margin-bottom: 10px;">Be Happy Everyday!</li>
+                <li style="margin-bottom: 10px;">Kaya mo yan!</li>
+                <li style="margin-bottom: 10px;">Wag ka papatalo sa problema!</li>
+            </ul>
+        </div>
+
+        {%endif%}
+
     </div>
     
         <div class="tab-container">
@@ -111,7 +138,9 @@
                 <a id="trackStatusLink"><i class="fas fa-search"></i> Track Status</a>
                 <div class="dropdown-content">
                   <a href="#tab2">Complaints</a>
+                  {% if roles == 'student' or 'Student'  %}
                   <a href="#tab3">Request</a>
+                  {%endif%}
                 </div>
               </span>
               <span class="tab"><a href="#tab4" id="trackStatusLink"><i class="fas fa-info-circle"></i> About</a></span>
@@ -121,12 +150,13 @@
         </div>
           
 
-    {% if user_source == 'accounts_cics'%}
+    {% if user_source == 'student'%}
 
     <div id="autoOpenModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeAutoOpenModalBtn">&times;</span>
-            <h1 id="modal-title">Hi {{name}} ! please report to OSD Office</h1>
+            <h1 id="modal-title">Hi {{name}} !</h1>
+            <h2>Kindly Report to the OSD Office</h2>
             <hr>
             {% for row in reports|sort(attribute='2', reverse=true) %}
             <div class="report">
@@ -165,6 +195,7 @@
 
                             <label class="form-label-main" for="department">Department to Send:</label> 
                                 <select name="department" id="department" required> 
+                                <option value="" selected disabled>Select the Department:</option>
                                 <option value="CAFAD">CAFAD</option> 
                                 <option value="CICS">CICS</option> 
                                 <option value="CIT">CIT</option> 
@@ -179,12 +210,13 @@
 
                             <div class="form-container">
                                 <div class="form-element">
-                                <label for="name">Name</label>
+                                <label for="name">Name<span style="color: red;">*</span></label>
                                 <input type="text" id="name" name="name" placeholder="Ex. Juan Dela Cruz" required>
+
                                 </div>
 
                                 <div class="form-element">
-                                <label for="section">Year And Section</label>
+                                <label for="section">Year And Section<span style="color: red;">*</span></label>
                                 <input type="text" id="section" name="section" placeholder="Ex. ITSM 4109" required>
                                 </div>
                             </div>
@@ -195,14 +227,14 @@
                                 <div style="display:none;" id="char-count">250 characters remaining</div>
                             </div>
                 
-                            <label id="narrate1" for="narrate" >Brief Narration of Facts and Circumstances:</label>
+                            <label id="narrate1" for="narrate" >Brief Narration of Facts and Circumstances:<span style="color: red;">*</span></label>
                             <h5 style="font-size:12px; color:red; font-weight:bold">*Only accepting reports in english language</h5>
                             <div style="position: relative;">
                                 <textarea id="narrate" name="narrate" rows="4" cols="20" maxlength="250" required></textarea><br>
                                 <div id="char-count1">250 characters remaining</div>
                             </div>
                 
-                            <label id="final1" for="final" >Final Word: <div class="tooltip">?
+                            <label id="final1" for="final" >Final Word:<span style="color: red;">*</span> <div class="tooltip">?
                                 <span class="tooltiptext">You can say here your final remarks for example: "I hope this issue wont happen again".</span>
                               </div></label>
                             <div style="position: relative;">
@@ -215,22 +247,24 @@
                             <hr>
                             <div class="form-container">
                                 <div class="form-element">
-                                    <label for="number">Contact Number:</label>
+                                    <label for="number">Contact Number:<span style="color: red;">*</span></label>
                                     <input type="tel" id="number" name="number" placeholder="Ex. 09498030745" pattern="[0-9]{11}">
                                 </div> 
 
                                 <div class="form-element">
-                                    <label for="email">Email Address</label>
+                                    <label for="email">Email Address<span style="color: red;">*</span></label>
                                     <input type="email" id="email" name="email"  placeholder="Ex. example@yahoo.com" required>
                                 </div>
                             </div>
-
+                        
                             <div class="form-row">
+                                
                                 <div class="file-input-group">
                                     <label for="file4">Attach Evidence 1:</label>
                                     <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx"  onchange="handleFileChange('file4', 'evi1')">
                                     <label for="evi1" id="evi1Label" style="display: none;">Small description about the file:</label>
                                     <input type="text" id="evi1" name="evi1" style="display: none;">
+                                  
                                 </div>
                             
                                 <div class="file-input-group">
@@ -238,6 +272,7 @@
                                     <input type="file" name="file5" id="file5" accept=".png, .jpg, .jpeg, .pdf, .docx"  onchange="handleFileChange('file5', 'evi2')">
                                     <label for="evi2" id="evi2Label" style="display: none;">Small description about the attached file:</label>
                                     <input type="text" id="evi2" name="evi2" style="display: none;">
+                                  
                                 </div>
                             
                                 <div class="file-input-group">
@@ -245,8 +280,12 @@
                                     <input type="file" name="file6" id="file6" accept=".png, .jpg, .jpeg, .pdf, .docx"  onchange="handleFileChange('file6', 'evi3')">
                                     <label for="evi3" id="evi3Label" style="display: none;">Small description about the attached file:</label>
                                     <input type="text" id="evi3" name="evi3" style="display: none;">
+                               
                                 </div>
+
                             </div>
+
+                            <h5 class="login-head5">*only accept png, .jpg, .jpeg, .pdf, .docx </h5>
                             
                             <div class="form-row">
                                 <div class="form-element">
@@ -273,7 +312,8 @@
                             </div>
 
 
-                           
+                            <label for="file7">Attach Your Signature:<span style="color: red;">*</span></label>
+                            <input type="file" name="file7" id="file7" accept=".png, .jpg, .jpeg"required>
                     
                             <div class="checkbox-container">
                                 <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork" required>
@@ -281,8 +321,7 @@
                                         By clicking this, I hereby certify that the information furnished above is true to my knowledge and conscience.
                                     </label>
                             </div>
-                            <label for="file7">Attach Your Signature:</label>
-                            <input type="file" name="file7" id="file7" accept=".png, .jpg, .jpeg"required>
+                          
 
                             <input id="submit" type="submit" class="green-submit-button">
                         </form>
@@ -294,7 +333,8 @@
                 <div id="formContainer1" style="display: none;">
                     <form action="/submit_report" method="POST" enctype="multipart/form-data">
                             <label class="form-label-main" for="department">Department to Send:</label> 
-                                <select name="department" id="department" required> 
+                                <select name="department" id="department" required>
+                                <option value="" selected disabled>Select the Department:</option> 
                                 <option value="CAFAD">CAFAD</option> 
                                 <option value="CICS">CICS</option> 
                                 <option value="CIT">CIT</option> 
@@ -302,17 +342,39 @@
                             </select>
                             <hr>
 
+                            <label class="form-label-main" for="subcomplaint">Subject of Complaint Details:</label> 
+                            <hr>
+
+                            <div class="form-row">
+                                <div class="form-element">
+                                    <label for="name1">Name of the Student:<span style="color: red;">*</span></label>
+                                    <input type="text" id="name1" name="name1" required>
+                                </div>
+
+                                <div class="form-element">
+                                    <label for="section1">Year And Section:<span style="color: red;">*</span></label>
+                                    <input type="text" id="section1" name="section1" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row1">
+                                <div class="form-element">
+                                    <label for="program">Program:<span style="color: red;">*</span></label>
+                                    <input type="text" id="program" name="program" required>
+                                </div>
+                            </div>
+
                             <label class="form-label-main" for="complainant">Complainant Details:</label> 
                             <hr>
 
                             <div class="form-row">
                                 <div class="form-element">
-                                    <label for="designation">Designation:</label>
+                                    <label for="designation">Designation:<span style="color: red;">*</span></label>
                                     <input type="text" id="designation" name="designation" required>
                                 </div>
 
                                 <div class="form-element">
-                                    <label for="file3">Attach Your Signature:</label>
+                                    <label for="file3">Attach Your Signature:<span style="color: red;">*</span></label>
                                     <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
                                 </div>
                             </div>
@@ -321,39 +383,22 @@
                                 <div class="form-element">
                                     <label for="file4">Attach Supporting Documents (if you have any):</label>
                                     <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx" required>
+                                    <h5 class="login-head5">*only accept png, .jpg, .jpeg, .pdf, .docx </h5>
                                 </div>
                             </div>
+
+                          
 
                             
-                            <label class="form-label-main" for="subcomplaint">Subject of Complaint Details:</label> 
-                            <hr>
-
-                            <div class="form-row">
-                                <div class="form-element">
-                                    <label for="name1">Name of the Student:</label>
-                                    <input type="text" id="name1" name="name1" required>
-                                </div>
-
-                                <div class="form-element">
-                                    <label for="section1">Year And Section:</label>
-                                    <input type="text" id="section1" name="section1" required>
-                                </div>
-                            </div>
-
-                            <div class="form-row1">
-                                <div class="form-element">
-                                    <label for="program">Program:</label>
-                                    <input type="text" id="program" name="program" required>
-                                </div>
-                            </div>
+                           
             
-                        <label id="incident1" for="incident" >Incident:</label>
+                        <label id="incident1" for="incident" >Incident:<span style="color: red;">*</span></label>
                             <div style="position: relative;">
                                 <textarea id="incident" name="Incident" rows="4" cols="20" maxlength="250" required></textarea><br>
                                 <div id="char-count3">250 characters remaining</div>
                             </div>
 
-                        <label id="provision1" for="remarks" >Remarks:</label>
+                        <label id="provision1" for="remarks" >Remarks:<span style="color: red;">*</span></label>
                             <div style="position: relative;">
                                 <textarea id="remarks" name="remarks" rows="4" cols="20" maxlength="250" required></textarea><br>
                                 <div id="char-count4">250 characters remaining</div>
@@ -407,12 +452,12 @@
     
                         <div class="form-row">
                             <div class="form-element">
-                                <label for="section">Year And Section:</label>
+                                <label for="section">Year And Section:<span style="color: red;">*</span></label>
                                 <input type="text" id="section2" name="section2" required><br>
                             </div>
                             
                             <div class="form-element">
-                                <label for="program">Program:</label>
+                                <label for="program">Program:<span style="color: red;">*</span></label>
                                 <input type="text" id="program" name="program" required><br>
                             </div>
                         </div>
@@ -422,6 +467,7 @@
                                 <label for="file5">Attach Supporting Documents (if you have any):</label>
                                 <input type="file" name="file5" id="file5" accept=".png, .jpg, .jpeg, .pdf, .docx" required>
                                 <input type="hidden" id = "forms"name="forms" value="Temporary Gate Pass">
+                                <h5 class="login-head5">*only accept png, .jpg, .jpeg, .pdf, .docx </h5>
                             </div>
                         </div>
     
@@ -437,7 +483,7 @@
                 <div id="formContainer3" style="display: none;">
                     <form action="/submit_request" method="POST" enctype="multipart/form-data">
                         <label for="department">Department to Send:</label> 
-                            <select name="department" id="department" required>
+                            <select name="department1" id="department1" required>
                                 <option value="" selected disabled>Select the Department:</option> 
                                 <option value="CAFAD">CAFAD</option> 
                                 <option value="CICS">CICS</option> 
@@ -451,12 +497,12 @@
                             
                             <div class="form-row">
                                 <div class="form-element">
-                                    <label for="section">Year And Section:</label>
+                                    <label for="section">Year And Section:<span style="color: red;">*</span></label>
                                     <input type="text" id="section2" name="section2" required><br>
                                 </div>
     
                                 <div class="form-element">
-                                    <label for="program">Program:</label>
+                                    <label for="program">Program:<span style="color: red;">*</span></label>
                                     <input type="text" id="program" name="program" required><br>
                                 </div>
                             </div>
@@ -464,7 +510,7 @@
                             
                             <div class="form-row">
                                 <div class="form-element">
-                                    <label for="file3">Attach Your Signature:</label>
+                                    <label for="file3">Attach Your Signature:<span style="color: red;">*</span></label>
                                     <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg" required>
                                 </div>
     
@@ -472,6 +518,7 @@
                                     <label for="file6">Attach Supporting Documents (if you have any):</label>
                                     <input type="file" name="file6" id="file6" accept=".png, .jpg, .jpeg, .pdf, .docx" required>
                                     <input type="hidden" name="forms" value="Request for Non-Wearing of Uniform">
+                                    <h5 class="login-head5">*only accept png, .jpg, .jpeg, .pdf, .docx </h5>
                                 </div>
                             </div>
                             
@@ -528,7 +575,7 @@
                 <div id="formContainer4" style="display: none;">
                     <form action="/submit_request" method="POST" enctype="multipart/form-data">
                         <label for="department">Department to Send:</label> 
-                            <select name="department" id="department" required>
+                            <select name="department1" id="department1" required>
                                 <option value="" selected disabled>Select the Department:</option> 
                                 <option value="CAFAD">CAFAD</option> 
                                 <option value="CICS">CICS</option> 
@@ -542,19 +589,19 @@
     
                             <div class="form-row">
                                 <div class="form-element">
-                                    <label for="section">Year Level:</label>
+                                    <label for="section">Year Level:<span style="color: red;">*</span></label>
                                     <input type="text" id="section1" name="section1" required><br><br>
                                 </div>
                                 
                                 <div class="form-element">
-                                    <label for="program">Program:</label>
+                                    <label for="program">Program:<span style="color: red;">*</span></label>
                                     <input type="text" id="program" name="program" required>
                                 </div>
                             </div>
                         
                             <div class="form-row">
                                 <div class="form-element">
-                                    <label for="file8">Attach Your Signature:</label>
+                                    <label for="file8">Attach Your Signature:<span style="color: red;">*</span></label>
                                     <input type="file" name="file8" id="file8" accept=".png, .jpg, .jpeg" required>
                                 </div>
     
@@ -562,6 +609,7 @@
                                     <label for="file4">Attach Supporting Documents (if you have any):</label>
                                     <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx"required>
                                     <input type="hidden" name="forms" value="Request for New ID">
+                                    <h5 class="login-head5">*only accept png, .jpg, .jpeg, .pdf, .docx </h5>
                                 </div>
                             </div>
                         
@@ -611,25 +659,28 @@
                     <i class="fas fa-file-alt"></i>
                     <span>Lodge Complaint</span>
                 </button>
-
+                {% if roles == 'student' or 'Student'%}
                 <button class="green-button" id="openModalBtn3">
                     <i class="fas fa-file-alt"></i>
                     <span>Request Documents</span>
                 </button>
+                {% endif %}
             </div>
             <div class="button-row">
+                {% if roles == 'student' or 'Student' %}
                 <button class="green-button" id="openModalBtn1">
                     <i class="fas fa-exclamation-triangle"></i>
                     <span>Sanctions</span>
                 </button>
             </div>
+            {% endif %}
         </div>
     </div>
 </div>
 
 
 <div id="tab2" class="tab-content">
-    {% if user_source == 'accounts_cics'  %}
+    {% if user_source == 'student'  %}
     {% for row in complaints|sort(attribute='2', reverse=true) %}
     <div class="report">
         <b>Report ID:</b> {{ row[1] }}<br>
@@ -1013,21 +1064,6 @@
     </div>
 
 </div>
-
-    
-    <!-- Conditionally show the "My Sanctions" button based on user source -->
-    {% if user_source == 'accounts_cics'%}
-   
-    {% endif %}
-
-    {% if user_source == 'accounts_cics'%}
-   
-    {% endif %}
-
-
-    {% if user_source == 'accounts_cics'%}
-   
-    {% endif %}
 
     <!-- Conditionally show the "Tag Sanction" button based on user source (accounts_coordinators) -->
     {% if user_source == 'accounts_coordinators' or user_source == 'accounts_head'%}

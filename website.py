@@ -38,10 +38,10 @@ from docx.shared import Inches
 
 def create_connection_pool():
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
--   'user': os.environ.get('MYSQL_USER', 'mysql'),
--   'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
--   'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
+    'host': os.environ.get('MYSQL_HOST', 'localhost'),
+    'user': os.environ.get('MYSQL_USER', 'root'),
+    'password': os.environ.get('MYSQL_PASSWORD', ''),
+    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
@@ -432,7 +432,7 @@ def submit_notice():
 
     doc.save("modified_document.docx")
     # Check the operating system
-    convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
+    convertapi.api_secret = 'Sd2iPUClWI3G827A'
 
     source_docx = 'modified_document.docx'
 
@@ -955,7 +955,7 @@ def generate_report():
 
     doc.save("modified_document.docx")
     # Check the operating system
-    convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
+    convertapi.api_secret = 'Sd2iPUClWI3G827A'
 
     source_docx = 'modified_document.docx'
 
@@ -987,6 +987,7 @@ def generate_report():
 def submit_report():
     role = request.form.get('role')
     kind = request.form.get('forms')
+    print(role)
     print(kind)
     print("test")
     if kind == "Formal Complaint":
@@ -1062,7 +1063,7 @@ def submit_report():
 
         doc.save("modified_document.docx")
 
-        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
+        convertapi.api_secret = 'Sd2iPUClWI3G827A'
 
         source_docx = 'modified_document.docx'
 
@@ -1218,300 +1219,7 @@ def submit_report():
 
         doc.save("modified_document.docx")
 
-        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
-
-        source_docx = 'modified_document.docx'
-
-        # Use upload IO wrapper to upload file only once to the API
-        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
-
-        saved_files = convertapi.convert(
-            'pdf', {'File': upload_io}).save_files('modified_document.pdf')
-
-        print("The PDF saved to %s" % saved_files)
-
-        pdfpath = os.path.join('modified_document.pdf')
-
-        convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
-                           'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
-
-        file_name = f'{random_code}_Incident Report Letter'
-        with open(pdfpath, "rb") as pdf_file:
-            pdf_data = pdf_file.read()
-
-        # Check if the POST request has the file part for the supporting document file
-        if 'file3' not in request.files:
-            flash('No supporting document file part')
-            return redirect(request.url)
-
-        support_file = request.files['file3']
-
-        # Check if the user submitted an empty supporting document file input
-
-        if support_file.filename == '':
-            support_data = None
-            support_filename = "None"
-            support_extension = "None"
-
-            cnx = create_connection_pool()
-            cursor1=cnx.get_connection()
-            db_cursor = cursor1.cursor()
-            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)",
-                              (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
-            cursor1.commit()
-
-            db_cursor.close()
-
-            flash('The report is submitted', 'success')
-            if role == "coord":
-                return redirect('/head')
-            else:
-                return redirect('/hello')
-        else:
-
-            support_filename = secure_filename(support_file.filename)
-
-            support_extension = os.path.splitext(support_filename)[1]
-
-            # Read the file data into memory
-
-            support_data = support_file.read()
-
-            # Insert the report with file information into the database, including file data
-            cnx = create_connection_pool()
-            cursor1=cnx.get_connection()
-            db_cursor = cursor1.cursor()
-            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
-                              (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
-            cursor1.commit()
-
-            db_cursor.close()
-
-            flash('The report is submitted', 'success')
-            if role == "coord":
-                return redirect('/head')
-            else:
-                return redirect('/hello')
-
-
-
-
-@app.route('/submit_report1', methods=['POST'])
-def submit_report1():
-    kind = request.form.get('forms')
-    print(kind)
-    role = request.form.get('role')
-    if kind == "Formal Complaint":
-        department = request.form.get('department')
-        provision = ""
-        final = request.form.get('final')
-        report_text = request.form.get('narrate')
-        name = request.form.get('name')
-        section = request.form.get('section')
-        number = request.form.get('number')
-        email = request.form.get('email')
-        namecomplain = request.form.get('namecomplain')
-        witness1 = request.form.get('witness1')
-        witness2 = request.form.get('witness2')
-        witness3 = request.form.get('witness3')
-        evidence1 = request.form.get('witness1')
-        evidence2 = request.form.get('witness2')
-        evidence3 = request.form.get('witness3')
-        pic = request.files['file9']
-        current_datetime = datetime.now()
-        current_date = current_datetime.date()
-        formatted_date = current_date.strftime("/%m/%d/%Y")
-        random_code = generate_random_code()
-
-
-
-        if pic is None:
-            pic = ""
-
-
-        if department == "CAFAD":
-            Name_Coordinator = "CAFAD Coordinator"
-
-        elif department == "CICS":
-            Name_Coordinator = "Lovely Rose Tipan Hernandez"
-
-
-        elif department == "CAFAD":
-            Name_Coordinator = "Lovely Rose Tipan Hernandez"
-
-
-        elif department == "COE":
-            Name_Coordinator = "Lovely Rose Tipan Hernandez"
-
-        username = session.get('username', '')
-        print(username)
-
-        pdf_filename = 'Formal Complaint Letter.docx'
-
-        doc = Document(pdf_filename)
-        # Replace placeholders
-
-        replace_table_cell_placeholder1(doc.tables[0], 2, 2, formatted_date, "(date)")
-        replace_table_cell_placeholder1(doc.tables[0], 4, 1, Name_Coordinator, "NAME")
-        replace_table_cell_placeholder1(doc.tables[0], 11, 8, name, "(student)")
-        replace_table_cell_placeholder1(doc.tables[0], 12, 8, department, "(college)")
-        replace_table_cell_placeholder1(doc.tables[0], 13, 8, section, "(section)")
-        replace_table_cell_placeholder1(doc.tables[0], 16, 3, provision, "(provision)")
-        replace_table_cell_placeholder1(doc.tables[0], 23, 3, report_text, "(narration)")
-        replace_table_cell_placeholder1(doc.tables[0], 30, 3, final, "(final)")
-        replace_table_cell_placeholder_with_image(doc.tables[0], 37, 18, pic, "lol")
-        replace_table_cell_placeholder1(doc.tables[0], 37, 18, namecomplain, "(NAME)")
-        replace_table_cell_placeholder1(doc.tables[0], 38, 18, number, "(number)")
-        replace_table_cell_placeholder1(doc.tables[0], 39, 18, email, "(email)")
-        replace_table_cell_placeholder1(doc.tables[0], 40, 6, witness1, "(witness1)")
-        replace_table_cell_placeholder1(doc.tables[0], 41, 6, witness2, "(witness2)")
-        replace_table_cell_placeholder1(doc.tables[0], 42, 6, witness3, "(witness3)")
-        replace_table_cell_placeholder1(doc.tables[0], 44, 9, evidence1, "(evidence1)")
-        replace_table_cell_placeholder1(doc.tables[0], 45, 9, evidence2, "(evidence2)")
-        replace_table_cell_placeholder1(doc.tables[0], 46, 9, evidence3, "(evidence3)")
-
-        doc.save("modified_document.docx")
-
-        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
-
-        source_docx = 'modified_document.docx'
-
-        # Use upload IO wrapper to upload file only once to the API
-        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
-
-        saved_files = convertapi.convert(
-            'pdf', {'File': upload_io}).save_files('modified_document.pdf')
-
-        print("The PDF saved to %s" % saved_files)
-
-        pdfpath = os.path.join('modified_document.pdf')
-
-        convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
-                           'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
-
-        file_name = f'{random_code}_Formal Complaint Letter'
-        with open(pdfpath, "rb") as pdf_file:
-            pdf_data = pdf_file.read()
-
-        # Check if the POST request has the file part for the supporting document file
-        if 'file1' not in request.files:
-            flash('No supporting document file part')
-            return redirect(request.url)
-
-        support_file = request.files['file1']
-
-        # Check if the user submitted an empty supporting document file input
-
-        if support_file.filename == '':
-            support_data = None
-            support_filename = "None"
-            support_extension = "None"
-
-            cnx = create_connection_pool()
-            cursor1=cnx.get_connection()
-            db_cursor = cursor1.cursor()
-            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)",
-                              (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
-            cursor1.commit()
-
-            db_cursor.close()
-
-            flash('The report is submitted', 'success')
-
-            if role == "coord":
-                return redirect('/head')
-            else:
-                return redirect('/hello')
-
-        else:
-            # Securely get the filenames and file extensions
-            support_filename = secure_filename(support_file.filename)
-
-            support_extension = os.path.splitext(support_filename)[1]
-
-            # Read the file data into memory
-
-            support_data = support_file.read()
-
-            # Insert the report with file information into the database, including file data
-            cnx = create_connection_pool()
-            cursor1=cnx.get_connection()
-            db_cursor = cursor1.cursor()
-            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
-                              (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
-            cursor1.commit()
-
-            db_cursor.close()
-
-            flash('The report is submitted', 'success')
-            if role == "coord":
-                return redirect('/head')
-            else:
-                return redirect('/hello')
-    else:
-        department = request.form.get('department')
-        remarks = request.form.get('remarks')
-        report_text = request.form.get('Incident')
-        name = request.form.get('name1')
-        print("lol")
-        section = request.form.get('section1')
-        designation = request.form.get('designation')
-        program = request.form.get('program')
-        namecomplain = request.form.get('namecomplain')
-        pic = request.files['file9']
-        current_datetime = datetime.now()
-        current_date = current_datetime.date()
-        formatted_date = current_date.strftime("/%m/%d/%Y")
-        current_time = current_datetime.strftime('%I:%M %p')
-        random_code = generate_random_code()
-
-        username = session.get('username', '')
-
-        pdf_filename = 'Incident Report.docx'
-        doc = Document(pdf_filename)
-        # Replace placeholders
-
-        replace_table_cell_placeholder(doc.tables[0], 2, 3, str(current_date))
-        replace_table_cell_placeholder(doc.tables[0], 3, 3, name)
-        replace_table_cell_placeholder(doc.tables[0], 4, 3, department)
-        replace_table_cell_placeholder(doc.tables[0], 5, 3, program)
-        replace_table_cell_placeholder(doc.tables[0], 6, 4, report_text)
-        replace_table_cell_placeholder(doc.tables[0], 10, 4, remarks)
-
-        replace_table_cell_placeholder_with_image(
-            doc.tables[0], 14, 1, pic, "(signature)", 2)
-        replace_table_cell_placeholder1(
-            doc.tables[0], 14, 1, namecomplain, "Amazing")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 14, 1, designation, "(designation)")
-        replace_table_cell_placeholder1(
-            doc.tables[0], 14, 1, str(current_date), "lol")
-        replace_table_cell_placeholder(doc.tables[0], 2, 8, current_time)
-        replace_table_cell_placeholder(doc.tables[0], 3, 10, username)
-        replace_table_cell_placeholder(doc.tables[0], 5, 8, section)
-
-        replace_table_cell_placeholder(doc.tables[1], 2, 3, str(current_date))
-        replace_table_cell_placeholder(doc.tables[1], 3, 3, name)
-        replace_table_cell_placeholder(doc.tables[1], 4, 3, department)
-        replace_table_cell_placeholder(doc.tables[1], 5, 3, program)
-        replace_table_cell_placeholder(doc.tables[1], 6, 4, report_text)
-        replace_table_cell_placeholder(doc.tables[1], 10, 4, remarks)
-
-        replace_table_cell_placeholder_with_image(
-            doc.tables[1], 14, 1, pic, "(signature)", 29)
-        replace_table_cell_placeholder1(
-            doc.tables[1], 14, 1, namecomplain, "Amazing")
-        replace_table_cell_placeholder1(
-            doc.tables[1], 14, 1, designation, "(designation)")
-        replace_table_cell_placeholder1(
-            doc.tables[1], 14, 1, str(current_date), "lol")
-        replace_table_cell_placeholder(doc.tables[1], 2, 8, current_time)
-        replace_table_cell_placeholder(doc.tables[1], 3, 10, username)
-        replace_table_cell_placeholder(doc.tables[1], 5, 8, section)
-
-        doc.save("modified_document.docx")
-
-        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
+        convertapi.api_secret = 'Sd2iPUClWI3G827A'
 
         source_docx = 'modified_document.docx'
 
@@ -1644,7 +1352,7 @@ def submit_request():
 
         doc.save("modified_document.docx")
         # Check the operating system
-        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
+        convertapi.api_secret = 'Sd2iPUClWI3G827A'
 
         source_docx = 'modified_document.docx'
 
@@ -1723,7 +1431,7 @@ def submit_request():
         internship = request.form.get('internship')
         specify = request.form.get('specify')
         remarks = "The details of the report is located in the document"
-        department = request.form.get('department')
+        department = request.form.get('department1')
         specify1 = request.form.get('specifyTextarea')
         print(specify1)
         print(department)
@@ -1811,9 +1519,10 @@ def submit_request():
         replace_table_cell_placeholder1(doc.tables[0], 2, 10, username, "(srcode)")
         replace_table_cell_placeholder1(doc.tables[0], 4, 10, section, "(section)")
         replace_table_cell_placeholder_with_image(doc.tables[0], 16, 1, pic, "(signature)", 29)
+        replace_table_cell_placeholder1(doc.tables[0], 16, 1, student, "(name)")
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
+        convertapi.api_secret = 'Sd2iPUClWI3G827A'
 
         source_docx = 'modified_document.docx'
 
@@ -1957,7 +1666,7 @@ def submit_request():
 
         replace_table_cell_placeholder1(doc.tables[0], 2, 3, formatted_date, "(date)")
         replace_table_cell_placeholder1(doc.tables[0], 10, 1, formatted_date, "(date1)")
-        replace_table_cell_placeholder1(doc.tables[0], 10, 8, Name_Coordinator1, "NAME")
+       
         replace_table_cell_placeholder1(doc.tables[0], 8, 8, specify3, "(specify)")
         replace_table_cell_placeholder1(doc.tables[0], 3, 3, student, "(name)")
         replace_table_cell_placeholder1(doc.tables[0], 4, 3, department, "(college)")
@@ -1965,6 +1674,7 @@ def submit_request():
         replace_table_cell_placeholder1(doc.tables[0], 3, 10, username, "(srcode)")
         replace_table_cell_placeholder1(doc.tables[0], 5, 10, section, "(yearlevel)")
         replace_table_cell_placeholder_with_image(doc.tables[0], 10, 1, pic, "(signature)", 29)
+        replace_table_cell_placeholder1(doc.tables[0], 10, 1, student, "(name)")
 
         replace_table_cell_placeholder2(doc.tables[1], 7, 0, status, "SHIFT")
         replace_table_cell_placeholder2(doc.tables[1], 7, 4, status1, "LOST")
@@ -1974,7 +1684,7 @@ def submit_request():
 
         replace_table_cell_placeholder1(doc.tables[1], 2, 3, formatted_date, "(date)")
         replace_table_cell_placeholder1(doc.tables[1], 10, 1, formatted_date, "(date1)")
-        replace_table_cell_placeholder1(doc.tables[1], 10, 8, Name_Coordinator1, "NAME")
+      
         replace_table_cell_placeholder1(doc.tables[1], 8, 8, specify3, "(specify)")
         replace_table_cell_placeholder1(doc.tables[1], 3, 3, student, "(name)")
         replace_table_cell_placeholder1(doc.tables[1], 4, 3, department, "(college)")
@@ -1982,9 +1692,10 @@ def submit_request():
         replace_table_cell_placeholder1(doc.tables[1], 3, 10, username, "(srcode)")
         replace_table_cell_placeholder1(doc.tables[1], 5, 10, section, "(yearlevel)")
         replace_table_cell_placeholder_with_image(doc.tables[1], 10, 1, pic, "(signature)", 29)
+        replace_table_cell_placeholder1(doc.tables[1], 10, 1, student, "(name)")
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
+        convertapi.api_secret = 'Sd2iPUClWI3G827A'
 
         source_docx = 'modified_document.docx'
 
@@ -2233,7 +1944,7 @@ def submit_call():
     replace_table_cell_placeholder1(doc.tables[2], 7, 1, username, "NAME")
 
     doc.save("modified_document.docx")
-    convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
+    convertapi.api_secret = 'Sd2iPUClWI3G827A'
 
     source_docx = 'modified_document.docx'
 
@@ -2430,7 +2141,7 @@ def submit_written():
 
         doc.save("modified_document.docx")
 
-        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
+        convertapi.api_secret = 'Sd2iPUClWI3G827A'
 
         source_docx = 'modified_document.docx'
 
@@ -2620,7 +2331,7 @@ def submit_written():
         replace_table_cell_placeholder1(doc.tables[0], 15, 2, username, "NAME")
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
+        convertapi.api_secret = 'Sd2iPUClWI3G827A'
 
         source_docx = 'modified_document.docx'
 
@@ -2895,7 +2606,7 @@ def submit_written():
 
         doc.save("modified_document.docx")
         # Check the operating system
-        convertapi.api_secret = 'D0Ns77Q3BZrKU9CB'
+        convertapi.api_secret = 'Sd2iPUClWI3G827A'
 
         source_docx = 'modified_document.docx'
 
@@ -3163,12 +2874,13 @@ def index():
                     else:
                         return redirect(url_for('homepage'))
 
+
         else:
             captcha = "Answer the Captcha"
             username = ""
             return render_template('index.html', username=username, captcha=captcha)
 
-    return render_template('index.html', username=username, error_message=error_message)
+    return render_template('index.html', username=username)
 
 
 @app.route('/about')
@@ -3556,6 +3268,7 @@ def sanctions():
 
 @app.route('/head', methods=['GET', 'POST'])
 def homepage_head():
+    success = request.args.get('success')
     username = session.get('username', '')
 
     if request.method == 'POST':
@@ -4038,6 +3751,7 @@ def homepage_head():
 @app.route('/hello', methods=['GET', 'POST'])
 def homepage():
     username = session.get('username', '')
+    print(username)
 
     if request.method == 'POST':
         # Handle the POST request (form submission)
@@ -4152,7 +3866,8 @@ def homepage():
     else:
         # Handle the case where user_source is unknown
         db_cursor1.execute(
-            "SELECT image_data, Name, Course, Year FROM accounts_cics WHERE username = %s", (username,))
+            "SELECT image_data, Name FROM accounts_guard WHERE username = %s", (username,))
+        role="guard"
 
     result_user_data = db_cursor1.fetchone()
 
@@ -4160,6 +3875,7 @@ def homepage():
         profile_picture_data, name, course, year, roles = result_user_data
         session['namestudent'] = name
         print(name)
+        print("Student")
 
     elif role == "coord":
         profile_picture_data, name, course = result_user_data
@@ -4172,6 +3888,14 @@ def homepage():
     elif role == "head":
         profile_picture_data, name, course = result_user_data
         year = ""
+        session['namestudent'] = name
+        print(name)
+
+    elif role == "guard":
+        profile_picture_data, name = result_user_data
+        course = ""
+        year = ""
+        roles = "guard"
         session['namestudent'] = name
         print(name)
 
@@ -4344,6 +4068,9 @@ def homepage():
         notifs.append(notif)  # Append each notification to the list
 
     db_cursor_notif.close()
+
+    if user_source == 'accounts_cics' or 'accounts_cafad' or 'accounts_coe' or 'accounts_cit':
+        user_source = 'student'
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
     return render_template('homepage.html', roles=roles, notif=notifs, sanctions=sanctions, request1=request1, complaints=complaints, reports1=reports1, reports=reports, reports2=reports2, username=username, profile_picture_base64=profile_picture_base64, name=name, course=course, year=year, user_source=user_source, warning=warning, reprimand=reprimand, suspension=suspension, call=call,)
@@ -4652,6 +4379,7 @@ def change_report_status(report_id):
         "SELECT report_id FROM reports WHERE id = %s;", (report_id,))
     result = db_cursor1.fetchone()
     results = result[0]
+    db_cursor1.close()
 
     cnx = create_connection_pool()
     cursor1=cnx.get_connection()
@@ -4663,7 +4391,7 @@ def change_report_status(report_id):
 
     notifs(results1, "Your Report ID."+results+" has change status")
 
-    db_cursor1.close()
+    
     db_cursor2.close()
 
     cnx = create_connection_pool()
@@ -4672,6 +4400,7 @@ def change_report_status(report_id):
     db_cursor.execute(
         "UPDATE reports SET status = %s WHERE id = %s;", (new_status, report_id))
     cursor1.commit()  # Make sure to commit the changes to the database
+    db_cursor.close()
     db_cursor.close()
 
     flash('Status has been successfully changed', 'success')
@@ -5001,32 +4730,85 @@ def preview_report_file(report_id):
 
 
 
-@app.route('/preview_support_file/<string:report_id>', methods=['GET'])
-def preview_support_file(report_id):
+@app.route('/preview_support_file/<string:report_id>/<int:idx>', methods=['GET'])
+def preview_support_file(report_id,idx):
     db_cursor = None  # Initialize db_cursor to None
 
     try:
-        cnx = create_connection_pool()
-        cursor1=cnx.get_connection()
-        db_cursor = cursor1.cursor()
-        db_cursor.execute(
-            "SELECT file_support FROM reports WHERE report_id = %s", (report_id,))
-        file_content = db_cursor.fetchone()
-        db_cursor.execute(
-            "SELECT file_support_type FROM reports WHERE report_id = %s", (report_id,))
-        file_type = db_cursor.fetchone()
+        if idx == 1:
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
+            db_cursor.execute(
+                "SELECT file_support FROM reports WHERE report_id = %s", (report_id,))
+            file_content = db_cursor.fetchone()
+            db_cursor.execute(
+                "SELECT file_support_name FROM reports WHERE report_id = %s", (report_id,))
+            file_type = db_cursor.fetchone()
 
-        if file_content:
-            file_content = file_content[0]
+            file_type = file_type[0]
 
-            response = send_file(
-                io.BytesIO(file_content),
-                mimetype='application/octet-stream',
-            )
+            if file_content:
+                file_content = file_content[0]
 
-            response.headers['Content-Disposition'] = f'inline; filename=report_{report_id}.pdf'
+                response = send_file(
+                    io.BytesIO(file_content),
+                    mimetype='application/octet-stream',
+                )
 
-            return response
+                response.headers['Content-Disposition'] = f'inline; filename={file_type}'
+
+                return response
+        elif idx == 2:
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
+            db_cursor.execute(
+                "SELECT file_support1 FROM reports WHERE report_id = %s", (report_id,))
+            file_content = db_cursor.fetchone()
+            db_cursor.execute(
+                "SELECT file_support_name1 FROM reports WHERE report_id = %s", (report_id,))
+            file_type = db_cursor.fetchone()
+
+            file_type = file_type[0]
+
+            if file_content:
+                file_content = file_content[0]
+
+                response = send_file(
+                    io.BytesIO(file_content),
+                    mimetype='application/octet-stream',
+                )
+
+                response.headers['Content-Disposition'] = f'inline; filename={file_type}'
+
+                return response
+
+        else:
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
+            db_cursor.execute(
+                "SELECT file_support2 FROM reports WHERE report_id = %s", (report_id,))
+            file_content = db_cursor.fetchone()
+            db_cursor.execute(
+                "SELECT file_support_name2 FROM reports WHERE report_id = %s", (report_id,))
+            file_type = db_cursor.fetchone()
+
+            file_type = file_type[0]
+
+            if file_content:
+                file_content = file_content[0]
+
+                response = send_file(
+                    io.BytesIO(file_content),
+                    mimetype='application/octet-stream',
+                )
+
+                response.headers['Content-Disposition'] = f'inline; filename={file_type}'
+
+                return response   
+        
 
     except Exception as e:
         # Handle any exceptions, e.g., log the error
@@ -5088,16 +4870,21 @@ def preview_support_file1(report_id):
         db_cursor.execute(
             "SELECT file_support FROM forms_osd WHERE form_id = %s", (report_id,))
         file_content = db_cursor.fetchone()
+        db_cursor.execute(
+            "SELECT file_support_name FROM forms_osd WHERE form_id = %s", (report_id,))
+        file_type = db_cursor.fetchone()
+
+        file_type = file_type[0]
 
         if file_content:
             file_content = file_content[0]
 
             response = send_file(
                 io.BytesIO(file_content),
-                mimetype='application/pdf',
+                mimetype='application/octet-stream',
             )
 
-            response.headers['Content-Disposition'] = f'inline; filename=report_{report_id}.pdf'
+            response.headers['Content-Disposition'] = f'inline; filename={file_type}'
 
             return response
 

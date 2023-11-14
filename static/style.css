@@ -702,7 +702,28 @@ select {
 .form-row1 {
   display: flex;
   flex-wrap: wrap;
-  width: 50%;
+}
+
+@media (max-width: 500px) {
+  .form-container {
+    flex-direction: column;
+    width: 190%;
+  }
+
+  .form-row {
+    flex-direction: column;
+    width: 190%;
+  }
+
+  .form-row1 {
+    flex-direction: column;
+    width: 190%;
+  }
+
+  .form-row-file {
+    flex-direction: column;
+    width: 190%;
+  }
 }
 
 .form-row-file {
@@ -765,6 +786,7 @@ select {
 .checkbox-container {
   display: flex;
   align-items: center;
+  margin-block: 20px;
 }
 
 /* Checkbox styles */
@@ -847,7 +869,7 @@ table a:hover {
 
 .notifications {
   display: none;
-  position: fixed; /* Fixed position for the overlay */
+  position: absolute; /* Fixed position for the overlay */
   top: 50%;
   left: 50%;
   
@@ -1555,13 +1577,11 @@ label {
 }
 
 .delete-button {
-  position: absolute;
-  top: 5px;
-  right: 5px;
   font-weight: bold;
-  font-size: 16px;
-  background: none;
+  font-size: 16px;  
+  float: right;
   border: none;
+  color:red;
 }
 .containerx {
   float:right;

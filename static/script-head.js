@@ -1,3 +1,60 @@
+function toggleInputTables1() {
+    var kindSelect = document.getElementById("departmentx");
+    var tablecontainer = document.getElementById("cics-table");
+    var tablecontainer1 = document.getElementById("cit-table");
+    var tablecontainer2 = document.getElementById("cafad-table");
+    var tablecontainer3 = document.getElementById("coe-table");
+
+   
+
+    if (kindSelect.value === "CICS") {
+        tablecontainer.style.display = "block";
+        tablecontainer1.style.display = "none";
+        tablecontainer2.style.display = "none";
+        tablecontainer3.style.display = "none";
+
+      
+    } else if (kindSelect.value === "CIT") {
+        tablecontainer.style.display = "none";
+        tablecontainer1.style.display = "block";
+        tablecontainer2.style.display = "none";
+        tablecontainer3.style.display = "none";
+
+    } else if (kindSelect.value === "CAFAD" || kindSelect.value === "") {
+        // Display "CAFAD" table by default if value is "CAFAD" or not set
+        tablecontainer.style.display = "none";
+        tablecontainer1.style.display = "none";
+        tablecontainer2.style.display = "block";
+        tablecontainer3.style.display = "none";
+        
+    } else {
+        tablecontainer.style.display = "none";
+        tablecontainer1.style.display = "none";
+        tablecontainer2.style.display = "none";
+        tablecontainer3.style.display = "block";
+    }
+}
+
+// Call the function when the page loads
+document.addEventListener("DOMContentLoaded", toggleInputTables1);
+
+
+function disableScroll() {
+    // Get the current scroll position
+    var scrollX = window.scrollX || window.pageXOffset;
+    var scrollY = window.scrollY || window.pageYOffset;
+    
+    // Save the current scroll position
+    window.onscroll = function () {
+        window.scrollTo(scrollX, scrollY);
+    };
+}
+
+// Enable scrolling
+function enableScroll() {
+    window.onscroll = null;
+}
+
 function w3_open() {
     document.getElementById("main").style.marginLeft = "10%";
     document.getElementById("mySidebar").style.width = "15%";
@@ -175,7 +232,7 @@ toggleContainer('pending');
         const searchInput4 = document.getElementById("searchInput4");
     
         searchButton4.addEventListener("click", function () {
-            const searchTerm = searchInput2.value.toLowerCase().trim();
+            const searchTerm = searchInput4.value.toLowerCase().trim();
             const tableContainer = document.getElementById("coe-table");
             const table = tableContainer.querySelector("table");
             const tableRows = table.querySelectorAll("tbody tr");
@@ -938,50 +995,7 @@ function toggleInputFields() {
         }
     }
 
-    function toggleInputTables1() {
-        var kindSelect = document.getElementById("departmentx");
-        var tablecontainer = document.getElementById("cics-table");
-        var tablecontainer1 = document.getElementById("cit-table");
-        var tablecontainer2 = document.getElementById("cafad-table");
-        var tablecontainer3 = document.getElementById("coe-table");
     
-       
-    
-        if (kindSelect.value === "CICS") {
-            tablecontainer.style.display = "block";
-            tablecontainer1.style.display = "none";
-            tablecontainer2.style.display = "none";
-            tablecontainer3.style.display = "none";
-   
-          
-        } 
-        
-        else if (kindSelect.value === "CIT"){
-            tablecontainer.style.display = "none";
-            tablecontainer1.style.display = "block";
-            tablecontainer2.style.display = "none";
-            tablecontainer3.style.display = "none";
-    
-        }
-
-        else if (kindSelect.value === "CAFAD") {
-            tablecontainer.style.display = "none";
-            tablecontainer1.style.display = "none";
-            tablecontainer2.style.display = "block";
-            tablecontainer3.style.display = "none";
-  
-          
-        } 
-        
-        
-        else {
-            tablecontainer.style.display = "none";
-            tablecontainer1.style.display = "none";
-            tablecontainer2.style.display = "none";
-            tablecontainer3.style.display = "block";
-         
-        }
-    }
 
 $(document).ready(function() {
     // When the page is loaded, check the initial state of the checkbox
@@ -1168,6 +1182,19 @@ function openAlgorithmModal(result,complain) {
     const offenseList = modal.querySelector("#offense-list");
     var reportContent1 = modal.querySelector('#reportContent1');
 
+    var targetScrollPosition = modal.offsetTop;
+        
+        // Scroll the page downward to the modal
+    window.scrollTo(0, targetScrollPosition);
+
+    modal.style.top = "50%";
+    modal.style.left = "50%";
+    modal.style.transform = "translate(-50%, -50%)";
+
+    disableScroll();
+
+    
+
     // Clear previous content
     offenseList.innerHTML = '';
 
@@ -1208,6 +1235,7 @@ function openAlgorithmModal(result,complain) {
 }
 function closeAlgoModal() {
     var modal = document.getElementById('myModal21');
+    enableScroll();
 
     // Hide the modal
     modal.style.display = 'none';
@@ -1444,6 +1472,17 @@ function validateCheckboxes1() {
 
 function coordedit(id) {
     const modal = document.getElementById('modalContainery');
+    var targetScrollPosition = modal.offsetTop;
+        
+        // Scroll the page downward to the modal
+    window.scrollTo(0, targetScrollPosition);
+
+    modal.style.top = "50%";
+    modal.style.left = "50%";
+    modal.style.transform = "translate(-50%, -50%)";
+
+    disableScroll();
+
     modal.style.display = 'block';
     // Create a new button element
     const newButton = document.createElement('input');
@@ -1460,6 +1499,7 @@ function coordedit(id) {
 }
 function closeModal6() {
     var modal = document.getElementById('modalContainery');
+    enableScroll();
 
     // Hide the modal
     modal.style.display = 'none';
@@ -1469,6 +1509,9 @@ function closeModal6() {
 function coordedit1(id) {
     const modal = document.getElementById('modalContainerx');
     console.log(id)
+        
+
+    disableScroll();
     modal.style.display = 'block';
     // Create a new button element
     const newButton = document.createElement('input');
@@ -1485,6 +1528,7 @@ function coordedit1(id) {
 }
 function closeModal7() {
     var modal = document.getElementById('modalContainerx');
+    enableScroll();
 
     // Hide the modal
     modal.style.display = 'none';
@@ -1493,6 +1537,8 @@ function closeModal7() {
 function coordedit2(id) {
     const modal = document.getElementById('modalContainera');
     console.log(id)
+   
+    disableScroll();
     modal.style.display = 'block';
     // Create a new button element
     const newButton = document.createElement('input');
@@ -1509,7 +1555,7 @@ function coordedit2(id) {
 }
 function closeModal8() {
     var modal = document.getElementById('modalContainera');
-
+    enableScroll();
     // Hide the modal
     modal.style.display = 'none';
 }
@@ -1518,6 +1564,8 @@ function closeModal8() {
 function coordedit3(id) {
     const modal = document.getElementById('modalContainerb');
     console.log(id)
+  
+    disableScroll();
     modal.style.display = 'block';
     // Create a new button element
     const newButton = document.createElement('input');
@@ -1534,7 +1582,7 @@ function coordedit3(id) {
 }
 function closeModal9() {
     var modal = document.getElementById('modalContainerb');
-
+    enableScroll();
     // Hide the modal
     modal.style.display = 'none';
 }
@@ -1543,6 +1591,8 @@ function closeModal9() {
 function coordedit4(id) {
     const modal = document.getElementById('modalContainerc');
     console.log(id)
+    
+    disableScroll();
     modal.style.display = 'block';
     // Create a new button element
     const newButton = document.createElement('input');
@@ -1559,6 +1609,7 @@ function coordedit4(id) {
 }
 function closeModal10() {
     var modal = document.getElementById('modalContainerc');
+    enableScroll();
 
     // Hide the modal
     modal.style.display = 'none';
@@ -1895,6 +1946,15 @@ function openModal5(reportText, reportFileLink, supportingDocumentLink) {
     var modal = document.getElementById('reportModal5');
     var reportContent = document.getElementById('reportContent5');
 
+    var targetScrollPosition = modal.offsetTop;
+        
+        // Scroll the page downward to the modal
+    window.scrollTo(0, targetScrollPosition);
+
+    modal.style.top = "50%";
+    modal.style.left = "50%";
+    modal.style.transform = "translate(-50%, -50%)";
+
     // Construct the HTML content for the modal
     var modalContent = '<b>Reason of Rejection:</b><br>' + reportText + '<br><br>';
 
@@ -1913,6 +1973,8 @@ function openModal5(reportText, reportFileLink, supportingDocumentLink) {
 
     // Show the modal
     modal.style.display = 'block';
+
+    disableScroll();
 }
 
 // JavaScript function to close the modal
@@ -1921,11 +1983,21 @@ function closeModal5() {
 
     // Hide the modal
     modal.style.display = 'none';
+    enableScroll();
 }
 
 function openModal(reportText, reportFileLink, supportingDocumentLink) {
     var modal = document.getElementById('reportModal');
     var reportContent = document.getElementById('reportContent');
+
+    var targetScrollPosition = modal.offsetTop;
+        
+        // Scroll the page downward to the modal
+    window.scrollTo(0, targetScrollPosition);
+
+    modal.style.top = "50%";
+    modal.style.left = "50%";
+    modal.style.transform = "translate(-50%, -50%)";
 
     // Construct the HTML content for the modal
     var modalContent = '<b>Report Text:</b><br>' + reportText + '<br><br>';
@@ -1945,6 +2017,9 @@ function openModal(reportText, reportFileLink, supportingDocumentLink) {
 
     // Show the modal
     modal.style.display = 'block';
+
+    
+    disableScroll();
 }
 
 // JavaScript function to close the modal
@@ -1953,7 +2028,26 @@ function closeModal() {
 
     // Hide the modal
     modal.style.display = 'none';
+    enableScroll();
 }
+
+
+function handleFileChange(fileInputId, textInputId) {
+        var fileInput = document.getElementById(fileInputId);
+        var textInputLabel = document.getElementById(textInputId + 'Label');
+        var textInput = document.getElementById(textInputId);
+
+        if (fileInput.files.length > 0) {
+            textInputLabel.style.display = 'block';
+            textInput.style.display = 'block';
+            textInput.required = true;
+        } else {
+            textInputLabel.style.display = 'none';
+            textInput.style.display = 'none';
+            textInput.required = false;
+        }
+    }
+
 
 
 

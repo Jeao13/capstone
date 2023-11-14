@@ -73,9 +73,106 @@
     
         
     </div>
+    <div class="modal" id="reportModal5">
+      <div class="modal-content">
+          <span class="close" onclick="closeModal5()">&times;</span>
+          <div id="reportContent5"></div>
+      </div>
+  </div>
+
+    <div class="modal" id="reportModal">
+      <div class="modal-content">
+          <span class="close" onclick="closeModal()">&times;</span>
+          <div id="reportContent"></div>
+      </div>
+  </div>
+
+  <div id="myModal21" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAlgoModal()">&times;</span>
+        <div id="reportContent1"></div>
+        <h2>Predicted Offenses</h2>
+        <ul id="offense-list">
+
+
+        </ul>
+    </div>
+</div>
+
+<div id="modalContainerx" class="modal">
+  <div class="modal-content">
+      <span class="close" onclick="closeModal7()">&times;</span>
+      <form id="statusChangeFormx" method="POST" action="/edit_pic1" enctype="multipart/form-data">
+          <label for="file3">Attach the New Profile Pic:</label>
+          <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
+          
+
+
+      <button type="submit">Change</button>
     
+  </form>
+  </div>
+  
+</div>
+</div>
+
+<div id="modalContainera" class="modal">
+<div class="modal-content">
+  <span class="close" onclick="closeModal7()">&times;</span>
+  <form id="statusChangeForma" method="POST" action="/edit_pic2" enctype="multipart/form-data">
+      <label for="file3">Attach the New Profile Pic:</label>
+      <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
+      
+
+
+  <button type="submit">Change</button>
+
+</form>
+</div>
+
+</div>
+
+<div id="modalContainerb" class="modal">
+<div class="modal-content">
+<span class="close" onclick="closeModal7()">&times;</span>
+<form id="statusChangeFormb" method="POST" action="/edit_pic3" enctype="multipart/form-data">
+    <label for="file3">Attach the New Profile Pic:</label>
+    <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
     
+
+
+<button type="submit">Change</button>
+
+</form>
+</div>
+
+</div>
+
+<div id="modalContainerc" class="modal">
+<div class="modal-content">
+<span class="close" onclick="closeModal7()">&times;</span>
+<form id="statusChangeFormc" method="POST" action="/edit_pic4" enctype="multipart/form-data">
+  <label for="file3">Attach the New Profile Pic:</label>
+  <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
+  
+
+
+<button type="submit">Change</button>
+
+</form>
+</div>
+
+</div>
+
+
+ 
+
         <div class="content">
+              
+   
+
+
+        
         
           <div id="tab1" class="tab-content active">
 
@@ -285,9 +382,9 @@
                 
                               
                                     <td>
-                                        <label for="lol" style="display: inline-block;">Evidence 1:</label><a class = "lol" href="{{ url_for('preview_support_file', report_id=row[1]) }}" target="_blank">{{ row[11] }}</a><br>
-                                        <label for="lol1" style = "display: inline-block;">Evidence 2:</label><a class = "lol1" href="{{ url_for('preview_support_file', report_id=row[1]) }}" target="_blank">{{ row[14] }}</a><br>
-                                        <label for="lol2" style = "display: inline-block;">Evidence 3:</label><a class = "lol2" href="{{ url_for('preview_support_file', report_id=row[1]) }}" target="_blank">{{ row[17] }}</a><br>
+                                        <label for="lol" style="display: inline-block;">Evidence 1:</label><a class = "lol" href="{{ url_for('preview_support_file', report_id=row[1],idx=1) }}" target="_blank">{{ row[11] }}</a><br>
+                                        <label for="lol1" style = "display: inline-block;">Evidence 2:</label><a class = "lol1" href="{{ url_for('preview_support_file', report_id=row[1],idx=2) }}" target="_blank">{{ row[14] }}</a><br>
+                                        <label for="lol2" style = "display: inline-block;">Evidence 3:</label><a class = "lol2" href="{{ url_for('preview_support_file', report_id=row[1],idx=3) }}" target="_blank">{{ row[17] }}</a><br>
                                     </td>
 
                                     
@@ -322,17 +419,7 @@
                 </div>
                 </div>
             
-                <div id="myModal21" class="modal">
-                  <div class="modal-content">
-                      <span class="close" onclick="closeAlgoModal()">&times;</span>
-                      <div id="reportContent1"></div>
-                      <h2>Predicted Offenses</h2>
-                      <ul id="offense-list">
-              
-              
-                      </ul>
-                  </div>
-              </div>
+                
 
               <div id="rejectModal" class="modal">
                 <div class="modal-content">
@@ -819,19 +906,9 @@
                         </div>
                     </div>
         
-                    <div class="modal" id="reportModal">
-                        <div class="modal-content">
-                            <span class="close" onclick="closeModal()">&times;</span>
-                            <div id="reportContent"></div>
-                        </div>
-                    </div>
+                    
                 
-                    <div class="modal" id="reportModal5">
-                        <div class="modal-content">
-                            <span class="close" onclick="closeModal5()">&times;</span>
-                            <div id="reportContent5"></div>
-                        </div>
-                    </div>
+                    
         
                     <div id="modalContainer0" class="modal">
                         <div class="modal-content">
@@ -850,142 +927,158 @@
                 </div>
 
                 <div id="tab9" class="tab-content">
-                  <h1 class="section-title">File Report</h1>
-                  <label for="kind" class="select-label">Kind of Report:</label>
-                  <select name="kind" id="kind" required onchange="toggleInputFields()">
-                    <option value="" selected disabled>Select a Report Type</option>
-                    <option value="Formal Complaint">Formal Complaint</option>
-                    <option value="Incident Report">Incident Report</option>
+                  <h3>File Report</h3>
+                  <label class="form-label" for="kind">Kind of Report:</label> 
+                  <select name="kind" id="kind" required onchange="toggleInputFields()"> 
+                      <option value="" selected disabled>Select a Report Type</option>
+                      <option value="Formal Complaint">Formal Complaint</option> 
+                      <option value="Incident Report">Incident Report</option> 
                   </select>
                   <hr>
+  
+                      <div id="formContainer" style="display: none;">
+                          <form action="/submit_report" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="role" value="coord">
+                              
+                              <input type="hidden" name="forms" value="Formal Complaint">
                   
-                  <div id="formContainer" class="form-container" style="display: none;">
-                    <form action="/submit_report1" method="POST" enctype="multipart/form-data">
-                      <label for="department" class="select-label">Department to Send:</label>
-                      <select name="department" id="department" required class="form-select">
-                        <option value="CAFAD">CAFAD</option>
-                        <option value="CICS">CICS</option>
-                        <option value="CIT">CIT</option>
-                        <option value="COE">COE</option>
-                      </select><br>
-                      <div style=" margin-top: 15px; border-bottom: 1px solid #3c3c3c;"></div>
+                              <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
+  
+                              <label class="form-label-main" for="department">Department to Send:</label> 
+                                  <select name="department" id="department" required> 
+                                  <option value="CAFAD">CAFAD</option> 
+                                  <option value="CICS">CICS</option> 
+                                  <option value="CIT">CIT</option> 
+                                  <option value="COE">COE</option> 
+                              </select>
+                              <hr>
 
-                      <label class="form-label-main" for="complainant">Complainant Details:</label> 
-                      <div style=" margin-top: 15px; border-bottom: 1px solid #3c3c3c;"></div>
+                              <div style="border-bottom: 1px solid #3c3c3c;"></div>
+  
+                              <label class="form-label-main" for="subcomplaint">Subject of Complaint Details: <div class="tooltip">?
+                                  <span class="tooltiptext">This is where you will input the details of the person you want to report</span>
+                                </div></label> 
+                              <hr>
+  
+                              <div class="form-container">
+                                  <div class="form-element">
+                                  <label for="name">Name:<span style="color: red;">*</span></label>
+                                  <input type="text" id="name" name="name" placeholder="Ex. Juan Dela Cruz" required>
+                                  </div>
+  
+                                  <div class="form-element">
+                                  <label for="section">Year And Section:<span style="color: red;">*</span></label>
+                                  <input type="text" id="section" name="section" placeholder="Ex. ITSM 4109" required>
+                                  </div>
+                              </div>
+  
+                              <label id="provision1" for="provision" style="display:none;">Provision in the Norms of Conduct Violated by the Student/s:</label>
+                              <div style="position: relative;" style="display:none;">
+                                  <textarea style="display:none;" id="provision" name="provision" rows="4" cols="20" maxlength="250"></textarea>
+                                  <div style="display:none;" id="char-count">250 characters remaining</div>
+                              </div>
+                  
+                              <label id="narrate1" for="narrate" >Brief Narration of Facts and Circumstances:<span style="color: red;">*</span></label>
+                              <h5 style="font-size:12px; color:red; font-weight:bold">*Only accepting reports in english language</h5>
+                              <div style="position: relative;">
+                                  <textarea id="narrate" name="narrate" rows="4" cols="20" maxlength="250" required></textarea><br>
+                                  <div id="char-count1">250 characters remaining</div>
+                              </div>
+                  
+                              <label id="final1" for="final" >Final Word: <span style="color: red;">*</span><div class="tooltip">?
+                                  <span class="tooltiptext">You can say here your final remarks for example: "I hope this issue wont happen again".</span>
+                                </div></label>
+                              <div style="position: relative;">
+                                  <textarea id="final" name="final" rows="4" cols="20" maxlength="250" required></textarea><br>
+                                  <div id="char-count2">250 characters remaining</div>
+                              </div>
+                              <hr>
+                              <div style="border-bottom: 1px solid #3c3c3c;"></div>
+                              <label class="form-label-main" for="complainant">Complainant Details:</label> 
+                              <hr>
+                              <div class="form-container">
+                                  <div class="form-element">
+                                      <label for="number">Contact Number:<span style="color: red;">*</span></label>
+                                      <input type="tel" id="number" name="number" placeholder="Ex. 09498030745" pattern="[0-9]{11}">
+                                  </div> 
+  
+                                  <div class="form-element">
+                                      <label for="email">Email Address:<span style="color: red;">*</span></label>
+                                      <input type="email" id="email" name="email"  placeholder="Ex. example@yahoo.com" required>
+                                  </div>
+                              </div>
+  
+                              <div class="form-row">
+                                  <div class="file-input-group">
+                                      <label for="file4">Attach Evidence 1:</label>
+                                      <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx"  onchange="handleFileChange('file4', 'evi1')">
+                                      <label for="evi1" id="evi1Label" style="display: none;">Small description about the file:</label>
+                                      <input type="text" id="evi1" name="evi1" style="display: none;">
+                                  </div>
+                              
+                                  <div class="file-input-group">
+                                      <label for="file5">Attach Evidence 2:</label>
+                                      <input type="file" name="file5" id="file5" accept=".png, .jpg, .jpeg, .pdf, .docx"  onchange="handleFileChange('file5', 'evi2')">
+                                      <label for="evi2" id="evi2Label" style="display: none;">Small description about the attached file:</label>
+                                      <input type="text" id="evi2" name="evi2" style="display: none;">
+                                  </div>
+                              
+                                  <div class="file-input-group">
+                                      <label for="file6">Attach Evidence 3:</label>
+                                      <input type="file" name="file6" id="file6" accept=".png, .jpg, .jpeg, .pdf, .docx"  onchange="handleFileChange('file6', 'evi3')">
+                                      <label for="evi3" id="evi3Label" style="display: none;">Small description about the attached file:</label>
+                                      <input type="text" id="evi3" name="evi3" style="display: none;">
+                                  </div>
+                              </div>
 
-                      <div class="form-row">
-                        <div class="form-element">
-                          <label for="number" class="form-label">Contact Number:</label>
-                          <input type="tel" id="number" name="number" required class="form-input">
-                        </div>
+                              <h5 class="login-head5">*only accept png, .jpg, .jpeg, .pdf, .docx </h5>
+                              
+                              <div class="form-row">
+                                  <div class="form-element">
+                                      <label for="witness1">Witness 1:</label>
+                                      <input type="text" id="witness1" name="witness1">
+                                  </div>
+  
+                                  <div class="form-element">
+                                      <label for="witness2">Witness 2:</label>
+                                      <input type="text" id="witness2" name="witness2">
+                                  </div>
+  
+                                  <div class="form-element">
+                                      <label for="witness3">Witness 3:</label>
+                                      <input type="text" id="witness3" name="witness3">
+                                  </div>
+                              </div>
+                              
+  
+  
+                             <div style="margin-block: 20px;">
+                              <label for="file7">Attach Your Signature:<span style="color: red;">*</span></label>
+                              <input type="file" name="file7" id="file7" accept=".png, .jpg, .jpeg"required>
+                            </div>
+                            <br>
 
-                        <div class="form-element">
-                          <label for="email" class="form-label">Email Address</label>
-                          <input type="email" id="email" name="email" required class="form-input">
-                        </div>
-                      </div>
-                      
-                      <hr>
 
-                      <p class="form-text">Leave it blank if N/A</p>
-                      <div class="form-row">
-                        <div class="form-element">
-                          <label for="witness1" class="form-label">Witness 1:</label>
-                          <input type="text" id="witness1" name="witness1" class="form-input">
-                        </div>
+                            <div style="border-bottom: 1px solid #3c3c3c;"></div>
                         
 
-                        <div class="form-element">
-                          <label for="witness2" class="form-label">Witness 2:</label>
-                          <input type="text" id="witness2" name="witness2" class="form-input">
-                        </div>
-                        
+                              <div class="checkbox-container">
+                                  <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork" required>
+                                      <label for="fieldwork">
+                                          By clicking this, I hereby certify that the information furnished above is true to my knowledge and conscience.
+                                      </label>
+                              </div>
 
-                        <div class="form-element">
-                          <label for="witness3" class="form-label">Witness 3:</label>
-                          <input type="text" id="witness3" name="witness3" class="form-input">
-                        </div>
-                      </div>
-                      
-                      <div class="form-row">
-                        <div class="form-element">
-                          <label for="evidence1" class="form-label">Evidence 1:</label>
-                          <input type="text" id="evidence1" name="evidence1" class="form-input">
-                        </div>
-
-                        <div class="form-element">
-                          <label for="evidence2" class="form-label">Evidence 2:</label>
-                          <input type="text" id="evidence2" name="evidence2" class="form-input">
-                        </div>
-
-                        <div class="form-element">
-                          <label for="evidence3" class="form-label">Evidence 3:</label>
-                          <input type="text" id="evidence3" name="evidence3" class="form-input">
-                        </div>
-                      </div>
-                      
-                      <div class="form-row">
-                        <div class="form-element">
-                          <label class="form-label">Attach Your Signature:</label>
-                          <input type="file" name="file9" id="file9" accept=".png, .jpg, .jpeg" required class="form-input">
-                        </div>
-
-                        <div class="form-element">
-                          <label class="form-label">Attach Supporting Documents (if you have any):</label>
-                          <input type="file" name="file1" id="file1" accept=".png, .jpg, .jpeg, .pdf, .docx" class="form-input">
-                        </div>
-                      </div>
-                      
-                      <label class="form-label-main" for="subcomplaint">Subject of Complaint Details:</label> 
-                      <div style=" margin-top: 15px; border-bottom: 1px solid #3c3c3c;"></div>
-
-                      <div class="form-row">
-                        <div class="form-element">
-                          <label for="name" class="form-label">Name</label>
-                          <input type="text" id="name" name="name" required class="form-input">
-                        </div>
-
-                        <div class="form-element">
-                          <label for="section" class="form-label">Year And Section</label>
-                          <input type="text" id="section" name="section" required class="form-input">
-                        </div>
-                      </div>
-                      
-                      <label for="provision1" class="form-label" style="display:none;">Provision in the Norms of Conduct Violated by the Student/s:</label>
-                      <div style="position: relative; display:none;">
-                        <textarea style="display:none;" id="provision" name="provision" rows="4" cols="20" maxlength="250" class="form-textarea"></textarea>
-                        <div id="char-count" style="display:none;">250 characters remaining</div>
-                      </div>
-
-                      <label for="narrate1" class="form-label">Brief Narration of Facts and Circumstances:</label>
-                      <h5 style="font-size:12px; color:red; font-weight:bold">*Only accepting reports in english language</h5>
-                      <div style="position: relative;">
-                        <textarea id="narrate" name="narrate" rows="4" cols="20" maxlength="250" required class="form-textarea"></textarea><br>
-                        <div id="char-count1">250 characters remaining</div>
-                      </div>
-
-                      <label for="final1" class="form-label">Final Word</label>
-                      <div style="position: relative;">
-                        <textarea id="final" name="final" rows="4" cols="20" maxlength="250" required class="form-textarea"></textarea><br>
-                        <div id="char-count2">250 characters remaining</div>
-                      </div>
-                    
-                      <div class="checkbox-container">
-                        <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork" required class="form-checkbox">
-                        <label for="fieldwork" class="form-text">
-                          By clicking this, I hereby certify that the information furnished above is true to my knowledge and conscience.
-                        </label>
-                      </div>
-                      
-                      <input type="hidden" name="forms" value="Formal Complaint">
-                      <input type="hidden" name="role" value="coord">
-                      <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
-                      <input id="submit" type="submit" value="Submit" class="form-button">
-                    </form>
+                              <hr>
+                             
+  
+                              <input id="submit" type="submit" class="green-submit-button">
+                          </form>
                   </div>
                 
                   <div id="formContainer1" class="form-container" style="display: none;">
                     <form action="/submit_report" method="POST" enctype="multipart/form-data">
+                      <input type="hidden" name="role" value="coord">
                       <label for="department" class="select-label">Department to Send:</label>
                         <select name="department" id="department" required class="form-select">
                           <option value="CAFAD">CAFAD</option>
@@ -996,14 +1089,14 @@
 
                         <div style=" margin-top: 15px; border-bottom: 1px solid #3c3c3c;"></div>
 
-                        <label for="incident1" class="form-label">Incident:</label>
+                        <label for="incident1" class="form-label">Incident:<span style="color: red;">*</span></label>
                         <h5 style="font-size:12px; color:red; font-weight:bold">*Only accepting reports in english language</h5>
                           <div style="position: relative;">
                             <textarea id="incident" name="Incident" rows="4" cols="20" maxlength="250" required class="form-textarea"></textarea><br>
                             <div id="char-count3">250 characters remaining</div>
                           </div>
                         
-                          <label for="provision1" class="form-label">Remarks:</label>
+                          <label for="provision1" class="form-label">Remarks:<span style="color: red;">*</span></label>
                           <div style="position: relative;">
                             <textarea id="remarks" name="remarks" rows="4" cols="20" maxlength="250" required class="form-textarea"></textarea><br>
                             <div id="char-count4">250 characters remaining</div>
@@ -1016,13 +1109,13 @@
                         
                         <div class="form-row">
                           <div class="form-element">
-                            <label for="designation" class="form-label">Designation:</label>
+                            <label for="designation" class="form-label">Designation:<span style="color: red;">*</span></label>
                             <input type="text" id="designation" name="designation" required class="form-input">
                           </div>
 
                           <div class="form-element">
-                            <label class="form-label">Attach Your Signature:</label>
-                            <input type="file" name="file9" id="file9" accept=".png, .jpg, .jpeg" required class="form-input">
+                            <label class="form-label">Attach Your Signature:<span style="color: red;">*</span></label>
+                            <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg" required class="form-input">
                           </div>
                         </div>
                         
@@ -1030,27 +1123,30 @@
                           <div class="form-element">
                             <label class="form-label">Attach Supporting Documents (if you have any):</label>
                             <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx" class="form-input">
+                            <h5 class="login-head5">*only accept png, .jpg, .jpeg, .pdf, .docx </h5>
                           </div>
                         </div>
+
+
                         
                         <label class="form-label-main" for="subcomplaint">Subject of Complaint Details:</label> 
                         <div style=" margin-top: 15px; border-bottom: 1px solid #3c3c3c;"></div>
 
                         <div class="form-row">
                           <div class="form-element">
-                            <label for="name1" class="form-label">Name of the Student:</label>
+                            <label for="name1" class="form-label">Name of the Student:<span style="color: red;">*</span></label>
                             <input type="text" id="name1" name="name1" required class="form-input">
                           </div>
 
                           <div class="form-element">
-                            <label for="section" class="form-label">Year And Section:</label>
+                            <label for="section" class="form-label">Year And Section:<span style="color: red;">*</span></label>
                             <input type="text" id="section1" name="section1" required class="form-input">
                           </div>
                         </div>
                         
                         <div class="form-row1">
                           <div class="form-element">
-                            <label for="program" class="form-label">Program:</label>
+                            <label for="program" class="form-label">Program:<span style="color: red;">*</span></label>
                             <input type="text" id="program" name="program" required class="form-input">
                           </div>
                         </div>
@@ -1062,7 +1158,7 @@
                         <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
                       </div>
                       
-                      <input type="hidden" name="role" value="coord">
+                     
                       <input id="submit" type="submit" value="Submit" class="form-button">
                     </form>
                   </div>
@@ -1452,7 +1548,7 @@
                 <th>Username</th>
                 <th>Password</th>
                 <th>Name</th>
-                <th>Course</th>
+                <th>Department</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -1496,7 +1592,6 @@
         <div id="tab8" class="tab-content">
           <h1 class="form-title">Manage Users</h1>
           <select name="departmentx" id="departmentx" onchange="toggleInputTables1()">
-              <option value="" selected disabled>Select the Department:</option> 
               <option value="CAFAD">CAFAD</option> 
               <option value="CICS">CICS</option> 
               <option value="CIT">CIT</option> 
@@ -1670,70 +1765,7 @@
 
      
 
-          <div id="modalContainerx" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal7()">&times;</span>
-                <form id="statusChangeFormx" method="POST" action="/edit_pic1" enctype="multipart/form-data">
-                    <label for="file3">Attach the New Profile Pic:</label>
-                    <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
-                    
     
-    
-                <button type="submit">Change</button>
-              
-            </form>
-            </div>
-            
-        </div>
-      </div>
-
-      <div id="modalContainera" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal7()">&times;</span>
-            <form id="statusChangeForma" method="POST" action="/edit_pic2" enctype="multipart/form-data">
-                <label for="file3">Attach the New Profile Pic:</label>
-                <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
-                
-
-
-            <button type="submit">Change</button>
-          
-        </form>
-        </div>
-        
-    </div>
-
-    <div id="modalContainerb" class="modal">
-      <div class="modal-content">
-          <span class="close" onclick="closeModal7()">&times;</span>
-          <form id="statusChangeFormb" method="POST" action="/edit_pic3" enctype="multipart/form-data">
-              <label for="file3">Attach the New Profile Pic:</label>
-              <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
-              
-
-
-          <button type="submit">Change</button>
-        
-      </form>
-      </div>
-      
-  </div>
-
-  <div id="modalContainerb" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal7()">&times;</span>
-        <form id="statusChangeFormb" method="POST" action="/edit_pic4" enctype="multipart/form-data">
-            <label for="file3">Attach the New Profile Pic:</label>
-            <input type="file" name="file3" id="file3" accept=".png, .jpg, .jpeg"required>
-            
-
-
-        <button type="submit">Change</button>
-      
-    </form>
-    </div>
-    
-</div>
 </div>
 
 
