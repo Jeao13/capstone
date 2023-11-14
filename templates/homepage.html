@@ -385,14 +385,16 @@
                     <option value="Temporary Gate Pass">Temporary Gate Pass</option> 
                     <option value="Request for Non-Wearing of Uniform">Request for Non-Wearing of Uniform</option> 
                     <option value="Request for New ID">Request for New ID</option> 
-                </select><br><br>
+                </select>
+                
+                <br><br>
                 <hr>
                 
                 <div id="formContainer2" style="display: none;">
                     <form action="/submit_request" method="POST" enctype="multipart/form-data">
                         <label for="department1">Department to Send:</label> 
-                            <select name="department1" id="department1">
-                                <option value="" selected disabled>Select the Department:</option> 
+                            <select name="department1" id="department1" required>
+                                <option value=""selected disabled>Select the Department:</option> 
                                 <option value="CAFAD">CAFAD</option> 
                                 <option value="CICS">CICS</option> 
                                 <option value="CIT">CIT</option> 
@@ -526,7 +528,7 @@
                 <div id="formContainer4" style="display: none;">
                     <form action="/submit_request" method="POST" enctype="multipart/form-data">
                         <label for="department">Department to Send:</label> 
-                            <select name="department" id="department">
+                            <select name="department" id="department" required>
                                 <option value="" selected disabled>Select the Department:</option> 
                                 <option value="CAFAD">CAFAD</option> 
                                 <option value="CICS">CICS</option> 

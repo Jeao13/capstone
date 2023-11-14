@@ -39,9 +39,9 @@ from docx.shared import Inches
 def create_connection_pool():
     db_config = {
     'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
-    'user': os.environ.get('MYSQL_USER', 'mysql'),
-    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
-    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
+-   'user': os.environ.get('MYSQL_USER', 'mysql'),
+-   'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
+-   'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
@@ -1613,11 +1613,17 @@ def submit_request():
         elif department == "CICS":
             Name_Coordinator1 = "Lovely Rose Tipan Hernandez"
 
+        elif department == "COE":
+            Name_Coordinator1 = "Dolfus G. Miciano"
+
+        elif department == "CIT":
+            Name_Coordinator1 = "Nenita G. Hornilla"
+
         pdf_filename = 'Temporary Gate Pass.docx'
         doc = Document(pdf_filename)
 
         replace_table_cell_placeholder1(doc.tables[0], 2, 11, formatted_date, "(date)")
-        replace_table_cell_placeholder1(doc.tables[0], 11, 1, formatted_date, "(date1)")
+        
         replace_table_cell_placeholder1(doc.tables[0], 11, 1, Name_Coordinator1, "(Coord)")
         replace_table_cell_placeholder1(doc.tables[0], 3, 3, student, "(name)")
         replace_table_cell_placeholder1(doc.tables[0], 6, 4, remarks, "(remarks)")
@@ -1627,7 +1633,7 @@ def submit_request():
         replace_table_cell_placeholder1(doc.tables[0], 5, 3, program, "(program)")
 
         replace_table_cell_placeholder1( doc.tables[1], 2, 11, formatted_date, "(date)")
-        replace_table_cell_placeholder1(doc.tables[1], 11, 1, formatted_date, "(date1)")
+        
         replace_table_cell_placeholder1(doc.tables[1], 11, 1, Name_Coordinator1, "(Coord)")
         replace_table_cell_placeholder1(doc.tables[1], 3, 3, student, "(name)")
         replace_table_cell_placeholder1(doc.tables[1], 6, 4, remarks, "(remarks)")
@@ -1779,6 +1785,12 @@ def submit_request():
         elif department == "CICS":
             Name_Coordinator1 = "Lovely Rose Tipan Hernandez"
 
+        elif department == "COE":
+            Name_Coordinator1 = "Dolfus G. Miciano"
+
+        elif department == "CIT":
+            Name_Coordinator1 = "Nenita G. Hornilla"
+
         pdf_filename = 'Request for Non-Wearing of Uniform.docx'
         doc = Document(pdf_filename)
 
@@ -1879,7 +1891,7 @@ def submit_request():
         specify2 = request.form.get('specify1')
         print(specify2)
         remarks = "The details of the report is located in the document"
-        department = request.form.get('department')
+        department = request.form.get('department1')
         print(department)
         specify3 = request.form.get('specifyTextarea1')
         section = request.form.get('section1')
@@ -1927,6 +1939,12 @@ def submit_request():
 
         elif department == "CICS":
             Name_Coordinator1 = "Lovely Rose Tipan Hernandez"
+
+        elif department == "COE":
+            Name_Coordinator1 = "Dolfus G. Miciano"
+
+        elif department == "CIT":
+            Name_Coordinator1 = "Nenita G. Hornilla"
 
         pdf_filename = 'request for new id.docx'
         doc = Document(pdf_filename)
@@ -2048,6 +2066,7 @@ def submit_call():
     formatted_time = parsed_time.strftime("%I:%M %p")
 
     date2 = request.form.get('date2')
+    
     remarks = request.form.get('remarks')
     current_datetime = datetime.now()
     random_code = generate_random_code()
@@ -2072,6 +2091,8 @@ def submit_call():
 
     db_cursor.execute("SELECT * FROM accounts_cit WHERE Name = %s", (student,))
     result_cit = db_cursor.fetchone()
+
+    db_cursor.close()
 
     if result_cics:
         college = 'CICS'
@@ -2104,6 +2125,7 @@ def submit_call():
         db_cursor2.execute(
             "SELECT Course FROM accounts_cafad WHERE Name = %s", (student,))
         course1 = db_cursor2.fetchone()
+        db_cursor2.close()
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor3 = cursor1.cursor()
@@ -2127,6 +2149,7 @@ def submit_call():
         db_cursor2.execute(
             "SELECT Course FROM accounts_coe WHERE Name = %s", (student,))
         course1 = db_cursor2.fetchone()
+        db_cursor2.close()
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor3 = cursor1.cursor()
@@ -2150,6 +2173,9 @@ def submit_call():
         db_cursor2.execute(
             "SELECT Course FROM accounts_cit WHERE Name = %s", (student,))
         course1 = db_cursor2.fetchone()
+
+        db_cursor2.close()
+
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor3 = cursor1.cursor()
@@ -2167,6 +2193,8 @@ def submit_call():
 
     else:
         user_source = 'CAFAD'  # Handle the case where the user source is not found
+
+    
 
     pdf_filename = 'call slip.docx'
     doc = Document(pdf_filename)
@@ -2232,9 +2260,9 @@ def submit_call():
     db_cursor1.execute("INSERT INTO callslip (call_id, name, coord,reason, date, time,file, file_name) VALUES (%s, %s, %s, %s, %s,%s,%s,%s)",
                        (random_code, student, username, remarks, current_date, formatted_time, pdf_data, file_name))
     cursor1.commit()
-    db_cursor.close()
+    
     db_cursor1.close()
-    db_cursor2.close()
+    
 
     return redirect('/head')
 
@@ -2904,8 +2932,6 @@ def submit_written():
 def submit_approve():
     remarks = request.form.get('remarks')
     report_id = request.form.get('id')
-    modified_file = request.files['file4']
-    support_data = modified_file.read()
     print(report_id)
     print(remarks)
     status = "Approved"
@@ -2913,8 +2939,8 @@ def submit_approve():
     cnx = create_connection_pool()
     cursor1=cnx.get_connection()
     db_cursor = cursor1.cursor()
-    db_cursor.execute("UPDATE forms_osd SET remarks = %s, status = %s, file_form = %s WHERE form_id = %s",
-                      (remarks, status, support_data, report_id))
+    db_cursor.execute("UPDATE forms_osd SET remarks = %s, status = %s, WHERE form_id = %s",
+                      (remarks, status, report_id))
     cursor1.commit()
     db_cursor.close()
 
@@ -4333,15 +4359,14 @@ tables1 = [
 def lookup_student_info(username):
     try:
         student_name, student_course = None, None  # Initialize the variables
+        cnx = create_connection_pool()
+        cursor1 = cnx.get_connection()
+        db_cursor = cursor1.cursor(dictionary=True)
 
         for table in tables1:
             query = f"SELECT Name, Course FROM {table} WHERE username = %s"
-            cnx = create_connection_pool()
-            cursor1=cnx.get_connection()
-            db_cursor = cursor1.cursor()
             db_cursor.execute(query, (username,))
             result = db_cursor.fetchone()
-            db_cursor.close()
 
             if result:
                 student_name = result['Name']
@@ -4356,6 +4381,7 @@ def lookup_student_info(username):
         return None, None
     finally:
         db_cursor.close()
+
 
 # Usage example:
 

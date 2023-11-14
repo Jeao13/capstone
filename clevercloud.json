@@ -1,9 +1,0 @@
-{
-  "deploy": {
-    "type": "python",
-    "version": "3.7",
-    "build": "pip install -r requirements",
-    "start": "gunicorn website:app",
-    "web": "gunicorn"
-  }
-}
