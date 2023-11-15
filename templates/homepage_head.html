@@ -176,7 +176,7 @@
         
           <div id="tab1" class="tab-content active">
 
-            <h1>Dashboard</h1>
+            <h1 class="form-title">Dashboard</h1>
             {% if user_source == 'accounts_coordinator' %}
               <div class="chart-container-wrapper">
                 <div class="dashboard-section">
@@ -980,12 +980,12 @@
                               <div class="form-container">
                                   <div class="form-element">
                                   <label for="name">Name:<span style="color: red;">*</span></label>
-                                  <input type="text" id="name" name="name" placeholder="Ex. Juan Dela Cruz" required>
+                                  <input type="text" id="name" class="form-input" name="name" placeholder="Ex. Juan Dela Cruz" required>
                                   </div>
   
                                   <div class="form-element">
                                   <label for="section">Year And Section:<span style="color: red;">*</span></label>
-                                  <input type="text" id="section" name="section" placeholder="Ex. ITSM 4109" required>
+                                  <input type="text" id="section" class="form-input" name="section" placeholder="Ex. ITSM 4109" required>
                                   </div>
                               </div>
   
@@ -1016,33 +1016,33 @@
                               <div class="form-container">
                                   <div class="form-element">
                                       <label for="number">Contact Number:<span style="color: red;">*</span></label>
-                                      <input type="tel" id="number" name="number" placeholder="Ex. 09498030745" pattern="[0-9]{11}">
+                                      <input type="tel" class="form-input" id="number" name="number" placeholder="Ex. 09498030745" pattern="[0-9]{11}">
                                   </div> 
   
                                   <div class="form-element">
                                       <label for="email">Email Address:<span style="color: red;">*</span></label>
-                                      <input type="email" id="email" name="email"  placeholder="Ex. example@yahoo.com" required>
+                                      <input type="email" class="form-input" id="email" name="email"  placeholder="Ex. example@yahoo.com" required>
                                   </div>
                               </div>
   
                               <div class="form-row">
                                   <div class="file-input-group">
                                       <label for="file4">Attach Evidence 1:</label>
-                                      <input type="file" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx"  onchange="handleFileChange('file4', 'evi1')">
+                                      <input type="file" class="form-input" name="file4" id="file4" accept=".png, .jpg, .jpeg, .pdf, .docx"  onchange="handleFileChange('file4', 'evi1')">
                                       <label for="evi1" id="evi1Label" style="display: none;">Small description about the file:</label>
                                       <input type="text" id="evi1" name="evi1" style="display: none;">
                                   </div>
                               
                                   <div class="file-input-group">
                                       <label for="file5">Attach Evidence 2:</label>
-                                      <input type="file" name="file5" id="file5" accept=".png, .jpg, .jpeg, .pdf, .docx"  onchange="handleFileChange('file5', 'evi2')">
+                                      <input type="file" class="form-input" name="file5" id="file5" accept=".png, .jpg, .jpeg, .pdf, .docx"  onchange="handleFileChange('file5', 'evi2')">
                                       <label for="evi2" id="evi2Label" style="display: none;">Small description about the attached file:</label>
                                       <input type="text" id="evi2" name="evi2" style="display: none;">
                                   </div>
                               
                                   <div class="file-input-group">
                                       <label for="file6">Attach Evidence 3:</label>
-                                      <input type="file" name="file6" id="file6" accept=".png, .jpg, .jpeg, .pdf, .docx"  onchange="handleFileChange('file6', 'evi3')">
+                                      <input type="file" class="form-input" name="file6" id="file6" accept=".png, .jpg, .jpeg, .pdf, .docx"  onchange="handleFileChange('file6', 'evi3')">
                                       <label for="evi3" id="evi3Label" style="display: none;">Small description about the attached file:</label>
                                       <input type="text" id="evi3" name="evi3" style="display: none;">
                                   </div>
@@ -1053,17 +1053,17 @@
                               <div class="form-row">
                                   <div class="form-element">
                                       <label for="witness1">Witness 1:</label>
-                                      <input type="text" id="witness1" name="witness1">
+                                      <input type="text" class="form-input" id="witness1" name="witness1">
                                   </div>
   
                                   <div class="form-element">
                                       <label for="witness2">Witness 2:</label>
-                                      <input type="text" id="witness2" name="witness2">
+                                      <input type="text" class="form-input" id="witness2" name="witness2">
                                   </div>
   
                                   <div class="form-element">
                                       <label for="witness3">Witness 3:</label>
-                                      <input type="text" id="witness3" name="witness3">
+                                      <input type="text" class="form-input" id="witness3" name="witness3">
                                   </div>
                               </div>
                               
@@ -1071,7 +1071,7 @@
   
                              <div style="margin-block: 20px;">
                               <label for="file7">Attach Your Signature:<span style="color: red;">*</span></label>
-                              <input type="file" name="file7" id="file7" accept=".png, .jpg, .jpeg"required>
+                              <input type="file" name="file7" class="form-input" id="file7" accept=".png, .jpg, .jpeg"required>
                             </div>
                             <br>
 
@@ -1128,7 +1128,7 @@
                         <div class="form-row">
                           <div class="form-element">
                             <label for="designation" class="form-label">Designation:<span style="color: red;">*</span></label>
-                            <input type="text" id="designation" name="designation" required class="form-input">
+                            <input type="text" id="designation" placeholder="Ex: Student/Faculty/Staff/Guard" name="designation" required class="form-input">
                           </div>
 
                           <div class="form-element">

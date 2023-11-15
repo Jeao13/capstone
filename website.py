@@ -38,10 +38,10 @@ from docx.shared import Inches
 
 def create_connection_pool():
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
-    'user': os.environ.get('MYSQL_USER', 'mysql'),
-    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
-    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
+    'host': os.environ.get('MYSQL_HOST', 'localhost'),
+    'user': os.environ.get('MYSQL_USER', 'root'),
+    'password': os.environ.get('MYSQL_PASSWORD', ''),
+    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
@@ -1012,9 +1012,9 @@ def submit_report():
         witness1 = request.form.get('witness1')
         witness2 = request.form.get('witness2')
         witness3 = request.form.get('witness3')
-        evidence1 = request.form.get('witness1')
-        evidence2 = request.form.get('witness2')
-        evidence3 = request.form.get('witness3')
+        evidence1 = request.form.get('evi1')
+        evidence2 = request.form.get('evi2')
+        evidence3 = request.form.get('evi3')
         pic = request.files['file7']
         current_datetime = datetime.now()
         current_date = current_datetime.date()
@@ -1054,7 +1054,7 @@ def submit_report():
         replace_table_cell_placeholder1(doc.tables[0], 11, 8, name, "(student)")
         replace_table_cell_placeholder1(doc.tables[0], 12, 8, department, "(college)")
         replace_table_cell_placeholder1(doc.tables[0], 13, 8, section, "(section)")
-        replace_table_cell_placeholder1(doc.tables[0], 16, 3, provision, "(provision)")
+
         replace_table_cell_placeholder1(doc.tables[0], 23, 3, report_text, "(narration)")
         replace_table_cell_placeholder1(doc.tables[0], 30, 3, final, "(final)")
         replace_table_cell_placeholder_with_image(doc.tables[0], 37, 18, pic, "lol")
@@ -2676,8 +2676,8 @@ def submit_approve():
     cnx = create_connection_pool()
     cursor1=cnx.get_connection()
     db_cursor = cursor1.cursor()
-    db_cursor.execute("UPDATE forms_osd SET remarks = %s, status = %s, WHERE form_id = %s",
-                      (remarks, status, report_id))
+    db_cursor.execute(
+        "UPDATE forms_osd SET remarks = %s, status = %s WHERE form_id = %s", (remarks, status, report_id))
     cursor1.commit()
     db_cursor.close()
 

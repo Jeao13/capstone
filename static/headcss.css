@@ -456,20 +456,22 @@ form textarea {
 
 /* Form input style */
 .form-input {
+  width:300px;
+  font-size: 16px;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
   margin: 5px 0;
-  font-size: 14px;
+  
 }
 
 .form-input1 {
-  width: 40%;
+  width:300px;
+  font-size: 16px;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
   margin: 5px 0;
-  font-size: 14px;
 }
 
 /* Form textarea style */
@@ -1125,7 +1127,7 @@ table thead {
   font-weight: bold;
   color: #000000;
   text-decoration: none;
-  padding: 10px 20px;
+  padding-inline: 50px;
   cursor: pointer;
   transition: color 0.3s;
 }
@@ -1312,12 +1314,10 @@ span {
 
 /* Styles for the custom select dropdown */
 .custom-select {
-  appearance: none; /* Remove the default arrow button */
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 10px;
-  width: 30%;
   font-size: 16px;
   color: #333;
 }
