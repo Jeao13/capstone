@@ -440,7 +440,6 @@ form textarea {
 .form-element {
   flex: 1;
   margin: 10px;
-  width: 50%; /* Adjust as needed to control the width of individual elements */
 }
 
 .checkbox-container {
@@ -1410,7 +1409,7 @@ span {
 /* Tooltip text */
 .tooltip .tooltiptext {
   visibility: hidden;
-  width: 120px;
+  width: 500px;
   top: 100%;
   left: 50%;
   margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
@@ -1419,6 +1418,7 @@ span {
   text-align: center;
   padding: 5px 0;
   border-radius: 6px;
+  font-size: 10px;
  
   /* Position the tooltip text - see examples below! */
   position: absolute;

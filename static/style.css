@@ -1627,3 +1627,20 @@ label {
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+.terms-check {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  margin-block: 20px;
+}
+
+.terms-check p {
+  margin-left: 8px; /* Adjust the margin as needed */
+  font-weight: 500;
+  font-size: medium;
+}
+
+.terms-check input[type="checkbox"] {
+  transform: scale(1.3); /* Adjust the scale factor as needed */
+}

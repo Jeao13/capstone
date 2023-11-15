@@ -38,10 +38,10 @@ from docx.shared import Inches
 
 def create_connection_pool():
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
-    'user': os.environ.get('MYSQL_USER', 'mysql'),
-    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
-    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
+    'host': os.environ.get('MYSQL_HOST', 'localhost'),
+    'user': os.environ.get('MYSQL_USER', 'root'),
+    'password': os.environ.get('MYSQL_PASSWORD', ''),
+    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
@@ -328,7 +328,7 @@ def submit_notice():
     current_datetime = datetime.now()
     random_code = generate_random_code()
     current_date = current_datetime.date()
-    formatted_date = current_date.strftime("/%m/%d/%Y")
+    formatted_date = current_date.strftime("%m/%d/%Y")
     current_time = datetime.now()
 
 
@@ -351,9 +351,17 @@ def submit_notice():
 
 
     if program == "CAFAD":
-        Name_Coordinator = "CAFAD Coordinator"
+            Name_Coordinator = "Paula Joyce A. Buisan"
 
     elif program == "CICS":
+        Name_Coordinator = "Lovely Rose Tipan Hernandez"
+
+
+    elif program == "CIT":
+        Name_Coordinator = "Dolfus G. Miciano"
+
+
+    elif program == "COE":
         Name_Coordinator = "Lovely Rose Tipan Hernandez"
 
     if gender == "male":
@@ -513,7 +521,7 @@ def generate_report():
     current_datetime = datetime.now()
     random_code = generate_random_code()
     current_date = current_datetime.date()
-    formatted_date = current_date.strftime("/%m/%d/%Y")
+    formatted_date = current_date.strftime("%m/%d/%Y")
     current_time = datetime.now()
 
     cnx = create_connection_pool()
@@ -1010,7 +1018,7 @@ def submit_report():
         pic = request.files['file7']
         current_datetime = datetime.now()
         current_date = current_datetime.date()
-        formatted_date = current_date.strftime("/%m/%d/%Y")
+        formatted_date = current_date.strftime("%m/%d/%Y")
         random_code = generate_random_code()
 
 
@@ -1020,14 +1028,14 @@ def submit_report():
 
 
         if department == "CAFAD":
-            Name_Coordinator = "CAFAD Coordinator"
+            Name_Coordinator = "Paula Joyce A. Buisan"
 
         elif department == "CICS":
             Name_Coordinator = "Lovely Rose Tipan Hernandez"
 
 
-        elif department == "CAFAD":
-            Name_Coordinator = "Lovely Rose Tipan Hernandez"
+        elif department == "CIT":
+            Name_Coordinator = "Dolfus G. Miciano"
 
 
         elif department == "COE":
@@ -1169,7 +1177,7 @@ def submit_report():
         pic = request.files['file3']
         current_datetime = datetime.now()
         current_date = current_datetime.date()
-        formatted_date = current_date.strftime("/%m/%d/%Y")
+        formatted_date = current_date.strftime("%m/%d/%Y")
         current_time = current_datetime.strftime('%I:%M %p')
         random_code = generate_random_code()
 
@@ -1310,7 +1318,7 @@ def submit_request():
         current_datetime = datetime.now()
         random_code = generate_random_code()
         current_date = current_datetime.date()
-        formatted_date = current_date.strftime("/%m/%d/%Y")
+        formatted_date = current_date.strftime("%m/%d/%Y")
 
         student = session.get('namestudent', '')
         username = session.get('username', '')
@@ -1429,7 +1437,7 @@ def submit_request():
         current_datetime = datetime.now()
         random_code = generate_random_code()
         current_date = current_datetime.date()
-        formatted_date = current_date.strftime("/%m/%d/%Y")
+        formatted_date = current_date.strftime("%m/%d/%Y")
         pic = request.files['file3']
 
         student = session.get('namestudent', '')
@@ -1597,7 +1605,7 @@ def submit_request():
         current_datetime = datetime.now()
         random_code = generate_random_code()
         current_date = current_datetime.date()
-        formatted_date = current_date.strftime("/%m/%d/%Y")
+        formatted_date = current_date.strftime("%m/%d/%Y")
         pic = request.files['file8']
         print(pic)
 
@@ -1757,6 +1765,7 @@ def submit_call():
 
     student = request.form.get('student')
     section = request.form.get('section')
+    pic = request.files['file7']
     Time = request.form.get('meeting-time')
     # Parse the input time
     parsed_time = datetime.strptime(Time, "%H:%M")
@@ -1765,6 +1774,9 @@ def submit_call():
     formatted_time = parsed_time.strftime("%I:%M %p")
 
     date2 = request.form.get('date2')
+    date_format = '%Y-%m-%d'
+    formatted_date1 = datetime.strptime(date2, date_format) 
+    formatted_date_string = formatted_date1.strftime('%m/%d/%Y')
     
     remarks = request.form.get('remarks')
     current_datetime = datetime.now()
@@ -1778,17 +1790,17 @@ def submit_call():
     cursor1=cnx.get_connection()
     db_cursor = cursor1.cursor()
     db_cursor.execute(
-        "SELECT * FROM accounts_cics WHERE Name = %s", (student,))
+        "SELECT * FROM accounts_cics WHERE Username = %s", (student,))
     result_cics = db_cursor.fetchone()
 
     db_cursor.execute(
-        "SELECT * FROM accounts_cafad WHERE Name = %s", (student,))
+        "SELECT * FROM accounts_cafad WHERE Username = %s", (student,))
     result_cafad = db_cursor.fetchone()
 
-    db_cursor.execute("SELECT * FROM accounts_coe WHERE Name = %s", (student,))
+    db_cursor.execute("SELECT * FROM accounts_coe WHERE Username = %s", (student,))
     result_coe = db_cursor.fetchone()
 
-    db_cursor.execute("SELECT * FROM accounts_cit WHERE Name = %s", (student,))
+    db_cursor.execute("SELECT * FROM accounts_cit WHERE Username = %s", (student,))
     result_cit = db_cursor.fetchone()
 
     db_cursor.close()
@@ -1799,13 +1811,13 @@ def submit_call():
         cursor1=cnx.get_connection()
         db_cursor2 = cursor1.cursor()
         db_cursor2.execute(
-            "SELECT Course FROM accounts_cics WHERE Name = %s", (student,))
+            "SELECT Course FROM accounts_cics WHERE Username = %s", (student,))
         course1 = db_cursor2.fetchone()
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor3 = cursor1.cursor()
         db_cursor3.execute(
-            "SELECT Username FROM accounts_cics WHERE Name = %s", (student,))
+            "SELECT Name FROM accounts_cics WHERE Username = %s", (student,))
         srcode1 = db_cursor3.fetchone()
 
         if course1:
@@ -1822,14 +1834,14 @@ def submit_call():
         cursor1=cnx.get_connection()
         db_cursor2 = cursor1.cursor()
         db_cursor2.execute(
-            "SELECT Course FROM accounts_cafad WHERE Name = %s", (student,))
+            "SELECT Course FROM accounts_cafad WHERE Username = %s", (student,))
         course1 = db_cursor2.fetchone()
         db_cursor2.close()
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor3 = cursor1.cursor()
         db_cursor3.execute(
-            "SELECT Username FROM accounts_cafad WHERE Name = %s", (student,))
+            "SELECT Name FROM accounts_cafad WHERE Username = %s", (student,))
         srcode1 = db_cursor3.fetchone()
 
         if course1:
@@ -1846,14 +1858,14 @@ def submit_call():
         cursor1=cnx.get_connection()
         db_cursor2 = cursor1.cursor()
         db_cursor2.execute(
-            "SELECT Course FROM accounts_coe WHERE Name = %s", (student,))
+            "SELECT Course FROM accounts_coe WHERE Username = %s", (student,))
         course1 = db_cursor2.fetchone()
         db_cursor2.close()
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor3 = cursor1.cursor()
         db_cursor3.execute(
-            "SELECT Username FROM accounts_coe WHERE Name = %s", (student,))
+            "SELECT Name FROM accounts_coe WHERE Username = %s", (student,))
         srcode1 = db_cursor3.fetchone()
 
         if course1:
@@ -1870,7 +1882,7 @@ def submit_call():
         cursor1=cnx.get_connection()
         db_cursor2 = cursor1.cursor()
         db_cursor2.execute(
-            "SELECT Course FROM accounts_cit WHERE Name = %s", (student,))
+            "SELECT Course FROM accounts_cit WHERE Username = %s", (student,))
         course1 = db_cursor2.fetchone()
 
         db_cursor2.close()
@@ -1879,7 +1891,7 @@ def submit_call():
         cursor1=cnx.get_connection()
         db_cursor3 = cursor1.cursor()
         db_cursor3.execute(
-            "SELECT Username FROM accounts_cit WHERE Name = %s", (student,))
+            "SELECT Name FROM accounts_cit WHERE Username = %s", (student,))
         srcode1 = db_cursor3.fetchone()
 
         if course1:
@@ -1898,38 +1910,44 @@ def submit_call():
     pdf_filename = 'call slip.docx'
     doc = Document(pdf_filename)
 
-    replace_table_cell_placeholder1(doc.tables[0], 2, 3, student, "(name)")
+    replace_table_cell_placeholder1(doc.tables[0], 2, 3, srcode, "(name)")
     replace_table_cell_placeholder1(doc.tables[0], 4, 9, section, "(section)")
     replace_table_cell_placeholder1(
         doc.tables[0], 6, 6, formatted_time, "(time)")
-    replace_table_cell_placeholder1(doc.tables[0], 6, 3, date2, "(date1)")
+    replace_table_cell_placeholder1(doc.tables[0], 6, 3, formatted_date_string, "(date1)")
     replace_table_cell_placeholder1(doc.tables[0], 3, 3, college, "(college)")
     replace_table_cell_placeholder1(doc.tables[0], 4, 3, course, "(program)")
     replace_table_cell_placeholder1(
         doc.tables[0], 2, 8, formatted_date, "(date)")
     replace_table_cell_placeholder1(doc.tables[0], 7, 1, username, "NAME")
+    replace_table_cell_placeholder_with_image(doc.tables[0], 7, 1, pic, "(signature)")
+    replace_table_cell_placeholder1(doc.tables[0], 7, 1, formatted_date, "DATE2")
 
-    replace_table_cell_placeholder1(doc.tables[1], 2, 3, student, "(name)")
+    replace_table_cell_placeholder1(doc.tables[1], 2, 3, srcode, "(name)")
     replace_table_cell_placeholder1(doc.tables[1], 4, 9, section, "(section)")
     replace_table_cell_placeholder1(
         doc.tables[1], 6, 6, formatted_time, "(time)")
-    replace_table_cell_placeholder1(doc.tables[1], 6, 3, date2, "(date1)")
+    replace_table_cell_placeholder1(doc.tables[1], 6, 3, formatted_date_string, "(date1)")
     replace_table_cell_placeholder1(doc.tables[1], 3, 3, college, "(college)")
     replace_table_cell_placeholder1(doc.tables[1], 4, 3, course, "(program)")
     replace_table_cell_placeholder1(
         doc.tables[1], 2, 8, formatted_date, "(date)")
     replace_table_cell_placeholder1(doc.tables[1], 7, 1, username, "NAME")
+    replace_table_cell_placeholder_with_image(doc.tables[1], 7, 1, pic, "(signature)")
+    replace_table_cell_placeholder1(doc.tables[1], 7, 1, formatted_date, "DATE2")
 
-    replace_table_cell_placeholder1(doc.tables[2], 2, 3, student, "(name)")
+    replace_table_cell_placeholder1(doc.tables[2], 2, 3, srcode, "(name)")
     replace_table_cell_placeholder1(doc.tables[2], 4, 9, section, "(section)")
     replace_table_cell_placeholder1(
         doc.tables[2], 6, 6, formatted_time, "(time)")
-    replace_table_cell_placeholder1(doc.tables[2], 6, 3, date2, "(date1)")
+    replace_table_cell_placeholder1(doc.tables[2], 6, 3, formatted_date_string, "(date1)")
     replace_table_cell_placeholder1(doc.tables[2], 3, 3, college, "(college)")
     replace_table_cell_placeholder1(doc.tables[2], 4, 3, course, "(program)")
     replace_table_cell_placeholder1(
         doc.tables[2], 2, 8, formatted_date, "(date)")
     replace_table_cell_placeholder1(doc.tables[2], 7, 1, username, "NAME")
+    replace_table_cell_placeholder_with_image(doc.tables[2], 7, 1, pic, "(signature)")
+    replace_table_cell_placeholder1(doc.tables[2], 7, 1, formatted_date, "DATE2")
 
     doc.save("modified_document.docx")
     convertapi.api_secret = 'Sd2iPUClWI3G827A'
@@ -1956,8 +1974,8 @@ def submit_call():
     cnx = create_connection_pool()
     cursor1=cnx.get_connection()
     db_cursor1 = cursor1.cursor()
-    db_cursor1.execute("INSERT INTO callslip (call_id, name, coord,reason, date, time,file, file_name) VALUES (%s, %s, %s, %s, %s,%s,%s,%s)",
-                       (random_code, student, username, remarks, current_date, formatted_time, pdf_data, file_name))
+    db_cursor1.execute("INSERT INTO callslip (call_id, name, coord,reason, date, time,file, file_name, date_issued) VALUES (%s, %s, %s, %s, %s,%s,%s,%s,%s)",
+                       (random_code, srcode, username, remarks, formatted_date_string, formatted_time, pdf_data, file_name,formatted_date))
     cursor1.commit()
     
     db_cursor1.close()
@@ -1993,41 +2011,45 @@ def submit_written():
         cursor1=cnx.get_connection()
         db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
-            "SELECT Username FROM accounts_cics WHERE Name = %s;", (students,))
+            "SELECT Name FROM accounts_cics WHERE Username = %s;", (students,))
         result_cics = db_cursor1.fetchone()
 
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
-            "SELECT Username FROM accounts_cafad WHERE Name = %s;", (students,))
+            "SELECT Name FROM accounts_cafad WHERE Username = %s;", (students,))
         result_cafad = db_cursor1.fetchone()
 
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
-            "SELECT Username FROM accounts_coe WHERE Name = %s;", (students,))
+            "SELECT Name FROM accounts_coe WHERE Username = %s;", (students,))
         result_coe = db_cursor1.fetchone()
 
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
-            "SELECT Username FROM accounts_cit WHERE Name = %s;", (students,))
+            "SELECT Name FROM accounts_cit WHERE Username = %s;", (students,))
         result_cit = db_cursor1.fetchone()
 
         if result_cics:
-            srcode = result_cics[0]
+            srcode = students
+            name = result_cics[0]
 
         elif result_cafad:
-            srcode = result_cafad[0]
+            srcode = students
+            name = result_cafad[0]
 
         elif result_coe:
             srcode = result_coe[0]
+            name = result_coe[0]
 
         elif result_cit:
-            srcode = result_cit[0]
+            srcode = students
+            name = result_cit[0]
 
         print(srcode+"lol")
 
@@ -2122,7 +2144,7 @@ def submit_written():
         doc = Document(pdf_filename)
 
         replace_table_cell_placeholder1(doc.tables[0], 2, 12, formatted_date,"(date)")
-        replace_table_cell_placeholder1(doc.tables[0], 3, 3, students,"(name)")
+        replace_table_cell_placeholder1(doc.tables[0], 3, 3, name,"(name)")
         replace_table_cell_placeholder1(doc.tables[0], 6, 7, date2,"(date2)")
         replace_table_cell_placeholder1(doc.tables[0], 7, 10, remarks,"(complain)")
         replace_table_cell_placeholder1(doc.tables[0], 6, 10, complainant,"(name1)")
@@ -2158,7 +2180,7 @@ def submit_written():
         cursor1=cnx.get_connection()
         db_cursor = cursor1.cursor()
         db_cursor.execute("INSERT INTO sanctions (sanctions_id,username, course, date_time, sanction, written, written_name,type) VALUES (%s,%s, %s, %s, %s, %s,%s,%s)",
-                          (random_code, students, courseorposition, current_datetime, sanction, pdf_data, file_name, kind))
+                          (random_code, name, courseorposition, current_datetime, sanction, pdf_data, file_name, kind))
         cursor1.commit()
         db_cursor.close()
 
@@ -2191,41 +2213,45 @@ def submit_written():
         cursor1=cnx.get_connection()
         db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
-            "SELECT Username FROM accounts_cics WHERE Name = %s;", (students,))
+            "SELECT Name FROM accounts_cics WHERE Username = %s;", (students,))
         result_cics = db_cursor1.fetchone()
 
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
-            "SELECT Username FROM accounts_cafad WHERE Name = %s;", (students,))
+            "SELECT Name FROM accounts_cafad WHERE Username = %s;", (students,))
         result_cafad = db_cursor1.fetchone()
 
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
-            "SELECT Username FROM accounts_coe WHERE Name = %s;", (students,))
+            "SELECT Name FROM accounts_coe WHERE Username = %s;", (students,))
         result_coe = db_cursor1.fetchone()
 
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
-            "SELECT Username FROM accounts_cit WHERE Name = %s;", (students,))
+            "SELECT Name FROM accounts_cit WHERE Username = %s;", (students,))
         result_cit = db_cursor1.fetchone()
 
         if result_cics:
-            srcode = result_cics[0]
+            srcode = students
+            name = result_cics[0]
 
         elif result_cafad:
-            srcode = result_cafad[0]
+            srcode = students
+            name = result_cafad[0]
 
         elif result_coe:
             srcode = result_coe[0]
+            name = result_coe[0]
 
         elif result_cit:
-            srcode = result_cit[0]
+            srcode = students
+            name = result_cit[0]
 
         print(srcode+"lol")
 
@@ -2320,7 +2346,7 @@ def submit_written():
         replace_table_cell_placeholder1(
             doc.tables[0], 2, 8, formatted_date, "(date)")
         replace_table_cell_placeholder1(
-            doc.tables[0], 3, 3, students, "(name)")
+            doc.tables[0], 3, 3, name, "(name)")
         replace_table_cell_placeholder1(
             doc.tables[0], 6, 8, sanction_number, "(section)")
         replace_table_cell_placeholder1(doc.tables[0], 7, 2, norms, "norms")
@@ -2352,7 +2378,7 @@ def submit_written():
         cursor1=cnx.get_connection()
         db_cursor = cursor1.cursor()
         db_cursor.execute("INSERT INTO sanctions (sanctions_id,username, course, date_time, sanction, written, written_name,type) VALUES (%s,%s, %s, %s, %s, %s,%s,%s)",
-                          (random_code, students, courseorposition, current_datetime, sanction, pdf_data, file_name, kind))
+                          (random_code, name, courseorposition, current_datetime, sanction, pdf_data, file_name, kind))
         cursor1.commit()
         db_cursor.close()
 
@@ -2384,41 +2410,45 @@ def submit_written():
         cursor1=cnx.get_connection()
         db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
-            "SELECT Username FROM accounts_cics WHERE Name = %s;", (students,))
+            "SELECT Name FROM accounts_cics WHERE Username = %s;", (students,))
         result_cics = db_cursor1.fetchone()
 
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
-            "SELECT Username FROM accounts_cafad WHERE Name = %s;", (students,))
+            "SELECT Name FROM accounts_cafad WHERE Username = %s;", (students,))
         result_cafad = db_cursor1.fetchone()
 
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
-            "SELECT Username FROM accounts_coe WHERE Name = %s;", (students,))
+            "SELECT Name FROM accounts_coe WHERE Username = %s;", (students,))
         result_coe = db_cursor1.fetchone()
 
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor1 = cursor1.cursor()
         db_cursor1.execute(
-            "SELECT Username FROM accounts_cit WHERE Name = %s;", (students,))
+            "SELECT Name FROM accounts_cit WHERE Username = %s;", (students,))
         result_cit = db_cursor1.fetchone()
 
         if result_cics:
-            srcode = result_cics[0]
+            srcode = students
+            name = result_cics[0]
 
         elif result_cafad:
-            srcode = result_cafad[0]
+            srcode = students
+            name = result_cafad[0]
 
         elif result_coe:
             srcode = result_coe[0]
+            name = result_coe[0]
 
         elif result_cit:
-            srcode = result_cit[0]
+            srcode = students
+            name = result_cit[0]
 
         print(srcode+"lol")
 
@@ -2579,7 +2609,7 @@ def submit_written():
         replace_table_cell_placeholder1(
             doc.tables[0], 2, 13, formatted_date, "(date)")
         replace_table_cell_placeholder1(
-            doc.tables[0], 3, 3, students, "(name)")
+            doc.tables[0], 3, 3, name, "(name)")
         replace_table_cell_placeholder1(
             doc.tables[0], 13, 6, sanction_number1, "(offense)")
         replace_table_cell_placeholder1(doc.tables[0], 13, 14, days, "(days)")
@@ -2594,7 +2624,7 @@ def submit_written():
         replace_table_cell_placeholder1(
             doc.tables[0], 18, 16, verified, "TEST")
         replace_table_cell_placeholder1(
-            doc.tables[0], 20, 5, students, "STUDENT")
+            doc.tables[0], 20, 5, name, "STUDENT")
         replace_table_cell_placeholder1(
             doc.tables[0], 20, 16, verified, "PARENT")
 
@@ -2627,7 +2657,7 @@ def submit_written():
         cursor1=cnx.get_connection()
         db_cursor = cursor1.cursor()
         db_cursor.execute("INSERT INTO sanctions (sanctions_id,username, course, date_time, sanction, written, written_name,type) VALUES (%s,%s, %s, %s, %s, %s,%s,%s)",
-                          (random_code, students, courseorposition, current_datetime, sanction, pdf_data, file_name, kind))
+                          (random_code, name, courseorposition, current_datetime, sanction, pdf_data, file_name, kind))
         cursor1.commit()
         db_cursor.close()
 
@@ -4191,6 +4221,7 @@ def count():
 def check():
 
     username = session.get('namestudent', '')
+    print(username)
 
     cnx = create_connection_pool()
     cursor1=cnx.get_connection()
@@ -4201,7 +4232,8 @@ def check():
 
     checks = result[0]
 
-    if checks <= 1:
+
+    if checks:
         tf = "true"
         session['oneshow'] = "true"
 
