@@ -381,7 +381,7 @@
                                     </td>
                 
                               
-                                    <td>
+                                    <td style=" text-overflow:ellipsis; overflow: hidden; max-width:200px;">
                                         <label for="lol" style="display: inline-block;">Evidence 1:</label><a class = "lol" href="{{ url_for('preview_support_file', report_id=row[1],idx=1) }}" target="_blank">{{ row[11] }}</a><br>
                                         <label for="lol1" style = "display: inline-block;">Evidence 2:</label><a class = "lol1" href="{{ url_for('preview_support_file', report_id=row[1],idx=2) }}" target="_blank">{{ row[14] }}</a><br>
                                         <label for="lol2" style = "display: inline-block;">Evidence 3:</label><a class = "lol2" href="{{ url_for('preview_support_file', report_id=row[1],idx=3) }}" target="_blank">{{ row[17] }}</a><br>
@@ -743,7 +743,7 @@
                                      
                                         <td>{{ row[5] }}</td>
                                         <td><a href="{{ url_for('preview_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
-                                        <td> <a href="{{ url_for('preview_support_file1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
+                                        <td > <a href="{{ url_for('preview_support_file1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
                                         <td><button class="modern-sleek-view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
                                         <td>
                                             <!-- Add a form to change the status -->

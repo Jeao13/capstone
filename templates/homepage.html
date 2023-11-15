@@ -34,14 +34,14 @@
       
       <div class="containerx">
             <a class="notif" href="#" id="toggleLink"><i class="fas fa-bell"></i></a><br>
-            <div id="notifications-container" class="notifications"  style="overflow:auto;">
+            <div id="notifications-container" class="notifications" >
                 {% if user_source == 'student' %}
                 {% if notif == [] %}
                 <b>You have no notifications</b>
                 {% else %}
                 {% for row in notif %}
                
-                <div class="report" >
+                <div class="report">
                     <button class="delete-button" onclick="deleteNotification(this, '{{ row[0] }}')">X</button>
                    
                     <b>{{ row[2] }}</b> <br>

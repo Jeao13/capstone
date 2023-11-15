@@ -882,8 +882,8 @@ table a:hover {
   width: 80%; /* Adjust the width as needed */
   max-width: 460px; /* Adjust the maximum width as needed */
   color: #000000; /* Text color */
-  font-family: Arial, sans-serif; /* Choose a modern font */
-  overflow: auto;
+  overflow : scroll;
+  height: 50%;
 }
 
 /* To make the content of the notifications appear sleek and modern, you can style the text, links, and other elements as needed within the .notifications container. */

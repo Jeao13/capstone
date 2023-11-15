@@ -719,12 +719,17 @@ document.addEventListener("DOMContentLoaded", function () {
                         data: { username: username },
                         success: function (response) {
                             console.log("Sanctions data received:", response);
+
                     
                           
                                 // Initialize an empty HTML string to store the formatted sanctions
                                 var formattedSanctions = "";
                     
                                 if (Array.isArray(response.sanctions) && response.sanctions.length > 0) {
+
+                                    response.sanctions.sort(function (a, b) {
+                                        return new Date(b.date_time) - new Date(a.date_time);
+                                    });
                                     // Loop through the array of sanctions
                                     response.sanctions.forEach(function (sanction) {
                                         // Convert the date_time string to a JavaScript Date object
@@ -754,32 +759,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 
                                 // Update the DOM element with the formatted sanctions
                                 studentSanctions.html(formattedSanctions);
-                                
-                           
-                    
-                            // Now, you need to attach a click event to the delete buttons
-                            $(".delete-button").click(function () {
-                                var buttonId = $(this).attr("id");
-                                var sanctionId = buttonId.replace("delete-button-", "");
-                                console.log(sanctionId); // Extract the sanction ID from the button ID
-                    
-                                // Make an AJAX request to delete the selected sanction (use the sanctionId)
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/delete_sanction",
-                                    data: { sanctionId: sanctionId },
-                                    success: function (response) {
-                                        // Remove the sanction from the UI
-                                        // You can choose to remove the entire .sanction div or just hide it
-                                        // For example:
-                                        $(this).closest(".sanction").remove();
-                                        $("#searchSrCode").submit();
-                                    },
-                                    error: function (error) {
-                                        console.error("Error deleting sanction:", error);
-                                    }
-                                });
-                            });
+                            
                         },
                         error: function (error) {
                             console.error("Error fetching sanctions:", error);
@@ -791,7 +771,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
         });
-});
+     });
 
 $(document).ready(function() {
     $('.js-example-basic-single').select2();

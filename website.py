@@ -2121,11 +2121,15 @@ def submit_written():
         pdf_filename = 'written warning.docx'
         doc = Document(pdf_filename)
 
-        replace_table_cell_placeholder1(doc.tables[0], 2, 13, formatted_date, "(date)")
-        replace_table_cell_placeholder1(doc.tables[0], 3, 3, students, "(name)")
-        replace_table_cell_placeholder1(doc.tables[0], 13, 6, sanction_number, "(offense)")
-        replace_table_cell_placeholder1(doc.tables[0], 6, 14, sanction_number, "(section)")
-        replace_table_cell_placeholder1(doc.tables[0], 7, 2, norms, "norms")
+        replace_table_cell_placeholder1(doc.tables[0], 2, 12, formatted_date,"(date)")
+        replace_table_cell_placeholder1(doc.tables[0], 3, 3, students,"(name)")
+        replace_table_cell_placeholder1(doc.tables[0], 6, 7, date2,"(date2)")
+        replace_table_cell_placeholder1(doc.tables[0], 7, 10, remarks,"(complain)")
+        replace_table_cell_placeholder1(doc.tables[0], 6, 10, complainant,"(name1)")
+        replace_table_cell_placeholder1(doc.tables[0], 11, 6, sanction_number,"(section)")
+        replace_table_cell_placeholder1(doc.tables[0], 19, 8, username, "coord")
+        replace_table_cell_placeholder1(doc.tables[0], 22, 2, username, "NAME")
+        replace_table_cell_placeholder1(doc.tables[0], 12, 2, norms, "norms")
 
         doc.save("modified_document.docx")
 
@@ -2158,7 +2162,11 @@ def submit_written():
         cursor1.commit()
         db_cursor.close()
 
-        flash('Report submitted successfully')
+
+
+
+        flash('Report submitted successfully'
+              )
         return redirect('/head')
 
     elif kind == 'Written Reprimand':
