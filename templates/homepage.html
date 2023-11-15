@@ -681,7 +681,7 @@
 
 <div id="tab2" class="tab-content">
     {% if user_source == 'student'  %}
-    {% for row in complaints|sort(attribute='2', reverse=true) %}
+    {% for row in complaints|sort(attribute='3', reverse=true) %}
     <div class="report">
         <b>Report ID:</b> {{ row[1] }}<br>
             <div class="report_small">
@@ -743,7 +743,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for row in reports|sort(attribute='3', reverse=true) %}
+                {% for row in reports|sort(reverse=true) %}
                 <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
                 <tr>
                     <td>{{ row[1] }}</td>
@@ -809,7 +809,7 @@
 
 <div id="reports-container">
     <div id="pending">
-    {% for row in request1 %}
+    {% for row in request1 |sort(attribute='2', reverse=true) %}
     {% if row[5] == 'Pending' %}
         <div class="report">
             <b>Report ID</b> {{ row[0] }}<br>
@@ -826,7 +826,7 @@
 </div>
 
 <div id="ongoing" style="display: none;">
-    {% for row in request1 %}
+    {% for row in request1 |sort(attribute='2', reverse=true) %}
     {% if row[5] == 'Ongoing' %}
         <div class="report">
             <b>Report ID</b> {{ row[0] }}<br>
@@ -842,7 +842,7 @@
 {% endfor %}
 </div>
 <div id="result" style="display: none;">
-    {% for row in request1 %}
+    {% for row in request1 |sort(attribute='2', reverse=true) %}
     {% if row[5] == 'Approved' or row[5] == 'Rejected' %}
         <div class="report">
             <b>Report ID</b> {{ row[0] }}<br>
@@ -916,7 +916,7 @@
 
 <div id="tab4" class="tab-content"><div class="reminders-container1">
     <!-- Header -->
-    <div class="header">
+    <div class="header-title">
         <!-- Icon -->
         
         <!-- Add some space between the icon and title -->
@@ -934,7 +934,7 @@
 
 
 <div class="reminders-container1">
-<div class="header">
+<div class="header-title">
     <!-- Icon -->
     
     <!-- Add some space between the icon and title -->
@@ -958,7 +958,7 @@
 
 
     <div class="reminders-container1">
-    <div class="header">
+    <div class="header-title">
         <!-- Icon -->
         
         <!-- Add some space between the icon and title -->

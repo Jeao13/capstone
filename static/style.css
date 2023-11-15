@@ -700,6 +700,7 @@ select {
 }
 
 .form-row1 {
+  width:50%;
   display: flex;
   flex-wrap: wrap;
 }
@@ -882,7 +883,7 @@ table a:hover {
   width: 80%; /* Adjust the width as needed */
   max-width: 460px; /* Adjust the maximum width as needed */
   color: #000000; /* Text color */
-  overflow : scroll;
+  overflow : auto;
   height: 50%;
 }
 
@@ -1411,7 +1412,9 @@ label {
   border-radius: 5px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
-  margin: 10px 0;
+  margin: 0 auto;
+  width: 70%;
+  margin-block: 10px;
 }
 
 /* Style the view report buttons */
@@ -1430,14 +1433,16 @@ label {
   background-color: #437a45; /* Darker background on hover */
 }
 
-/* Style the report containers */
+
 #tab2 .report {
   background-color: #f7f7f7; /* Background color for the report container */
   border: 1px solid #e0e0e0; /* Add a subtle border */
   border-radius: 5px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
-  margin: 10px 0;
+  margin: 0 auto;
+  margin-block: 10px;
+  width: 70%;
 }
 
 /* Style the view report buttons */
@@ -1581,7 +1586,6 @@ label {
   font-size: 16px;  
   float: right;
   border: none;
-  color:red;
 }
 .containerx {
   float:right;
