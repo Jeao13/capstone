@@ -38,10 +38,10 @@ from docx.shared import Inches
 
 def create_connection_pool():
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', 'localhost'),
-    'user': os.environ.get('MYSQL_USER', 'root'),
-    'password': os.environ.get('MYSQL_PASSWORD', ''),
-    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
+    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
+    'user': os.environ.get('MYSQL_USER', 'mysql'),
+    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
+    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
@@ -528,7 +528,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor = cursor1.cursor()
     db_cursor.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s;", (form, to))
+        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s;", (form, to))
     result = db_cursor.fetchone()
     db_cursor.close
 
@@ -536,7 +536,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor9 = cursor1.cursor()
     db_cursor9.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s;", (form, to))
+        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s;", (form, to))
     result9 = db_cursor9.fetchone()
     db_cursor9.close
 
@@ -544,7 +544,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor5 = cursor1.cursor()
     db_cursor5.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "COE",))
+        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s", (form, to, "COE",))
     result5 = db_cursor5.fetchone()
     db_cursor5.close
 
@@ -552,7 +552,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor6 = cursor1.cursor()
     db_cursor6.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "CICS",))
+        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s", (form, to, "CICS",))
     result6 = db_cursor6.fetchone()
     db_cursor6.close
 
@@ -560,7 +560,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor7 = cursor1.cursor()
     db_cursor7.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "CAFAD",))
+        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s", (form, to, "CAFAD",))
     result7 = db_cursor7.fetchone()
     db_cursor7.close
 
@@ -568,7 +568,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor8 = cursor1.cursor()
     db_cursor8.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "CIT",))
+        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s", (form, to, "CIT",))
     result8 = db_cursor8.fetchone()
     db_cursor8.close
 
@@ -576,7 +576,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor10 = cursor1.cursor()
     db_cursor10.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "COE",))
+        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s", (form, to, "COE",))
     result10 = db_cursor10.fetchone()
     db_cursor10.close
 
@@ -584,7 +584,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor11 = cursor1.cursor()
     db_cursor11.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "CICS",))
+        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s", (form, to, "CICS",))
     result11 = db_cursor11.fetchone()
     db_cursor11.close
 
@@ -592,7 +592,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor12 = cursor1.cursor()
     db_cursor12.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "CAFAD",))
+        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s", (form, to, "CAFAD",))
     result12 = db_cursor12.fetchone()
     db_cursor12.close
 
@@ -600,7 +600,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor13 = cursor1.cursor()
     db_cursor13.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s", (form, to, "CIT",))
+        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s", (form, to, "CIT",))
     result13 = db_cursor13.fetchone()
     db_cursor13.close
 
@@ -608,7 +608,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor14 = cursor1.cursor()
     db_cursor14.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "COE", "Rejected"))
+        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s", (form, to, "COE", "Rejected"))
     result14 = db_cursor14.fetchone()
     db_cursor14.close
 
@@ -616,7 +616,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor15 = cursor1.cursor()
     db_cursor15.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "COE", "Case Closed"))
+        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s", (form, to, "COE", "Case Closed"))
     result15 = db_cursor15.fetchone()
     db_cursor15.close
 
@@ -624,7 +624,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor16 = cursor1.cursor()
     db_cursor16.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CICS", "Rejected"))
+        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s", (form, to, "CICS", "Rejected"))
     result16 = db_cursor16.fetchone()
     db_cursor16.close
 
@@ -632,7 +632,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor17 = cursor1.cursor()
     db_cursor17.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CICS", "Case Closed"))
+        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s", (form, to, "CICS", "Case Closed"))
     result17 = db_cursor17.fetchone()
     db_cursor17.close
 
@@ -640,14 +640,14 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor18 = cursor1.cursor()
     db_cursor18.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CAFAD", "Rejected"))
+        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s ", (form, to, "CAFAD", "Rejected"))
     result18 = db_cursor18.fetchone()
     db_cursor18.close
 
     cnx = create_connection_pool()
     cursor1=cnx.get_connection()
     db_cursor19 = cursor1.cursor()
-    db_cursor19.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s",
+    db_cursor19.execute("SELECT COUNT(*) FROM reports WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s",
                         (form, to, "CAFAD", "Case Closed"))
     result19 = db_cursor19.fetchone()
     db_cursor19.close
@@ -656,7 +656,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor20 = cursor1.cursor()
     db_cursor20.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CIT", "Rejected"))
+        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s", (form, to, "CIT", "Rejected"))
     result20 = db_cursor20.fetchone()
     db_cursor20.close
 
@@ -664,7 +664,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor21 = cursor1.cursor()
     db_cursor21.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CIT", "Case Closed"))
+        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s", (form, to, "CIT", "Case Closed"))
     result21 = db_cursor21.fetchone()
     db_cursor21.close
 
@@ -672,7 +672,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor22 = cursor1.cursor()
     db_cursor22.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form, to, "Rejected",))
+        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND status = %s", (form, to, "Rejected",))
     result22 = db_cursor22.fetchone()
     db_cursor22.close
 
@@ -680,7 +680,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor23 = cursor1.cursor()
     db_cursor23.execute(
-        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form, to, "Case Closed",))
+        "SELECT COUNT(*) FROM reports WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND status = %s", (form, to, "Case Closed",))
     result23 = db_cursor23.fetchone()
     db_cursor23.close
 
@@ -688,7 +688,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor24 = cursor1.cursor()
     db_cursor24.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "COE", "Rejected"))
+        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s", (form, to, "COE", "Rejected"))
     result24 = db_cursor24.fetchone()
     db_cursor24.close
 
@@ -696,7 +696,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor25 = cursor1.cursor()
     db_cursor25.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "COE", "Approved"))
+        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s", (form, to, "COE", "Approved"))
     result25 = db_cursor25.fetchone()
     db_cursor25.close
 
@@ -704,7 +704,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor26 = cursor1.cursor()
     db_cursor26.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CICS", "Rejected"))
+        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s", (form, to, "CICS", "Rejected"))
     result26 = db_cursor26.fetchone()
     db_cursor26.close
 
@@ -712,7 +712,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor27 = cursor1.cursor()
     db_cursor27.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CICS", "Approved"))
+        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s", (form, to, "CICS", "Approved"))
     result27 = db_cursor27.fetchone()
     db_cursor27.close
 
@@ -720,7 +720,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor28 = cursor1.cursor()
     db_cursor28.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CAFAD", "Rejected"))
+        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s", (form, to, "CAFAD", "Rejected"))
     result28 = db_cursor28.fetchone()
     db_cursor28.close
 
@@ -728,7 +728,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor29 = cursor1.cursor()
     db_cursor29.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CAFAD", "Approved"))
+        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s", (form, to, "CAFAD", "Approved"))
     result29 = db_cursor29.fetchone()
     db_cursor29.close
 
@@ -736,7 +736,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor30 = cursor1.cursor()
     db_cursor30.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CIT", "Rejected"))
+        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s", (form, to, "CIT", "Rejected"))
     result30 = db_cursor30.fetchone()
     db_cursor30.close
 
@@ -744,7 +744,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor31 = cursor1.cursor()
     db_cursor31.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND course = %s AND status = %s", (form, to, "CIT", "Approved"))
+        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND course = %s AND status = %s", (form, to, "CIT", "Approved"))
     result31 = db_cursor31.fetchone()
     db_cursor31.close
 
@@ -752,7 +752,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor32 = cursor1.cursor()
     db_cursor32.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form, to, "Rejected"))
+        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND status = %s", (form, to, "Rejected"))
     result32 = db_cursor32.fetchone()
     db_cursor32.close
 
@@ -760,7 +760,7 @@ def generate_report():
     cursor1=cnx.get_connection()
     db_cursor33 = cursor1.cursor()
     db_cursor33.execute(
-        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) > %s AND DATE(date_time) < %s AND status = %s", (form, to, "Approved"))
+        "SELECT COUNT(*) FROM forms_osd WHERE DATE(date_time) >= %s AND DATE(date_time) <= %s AND status = %s", (form, to, "Approved"))
     result33 = db_cursor33.fetchone()
     db_cursor33.close
 
@@ -816,7 +816,7 @@ def generate_report():
     reject1 = str(result14[0])
     reject2 = str(result16[0])
     reject3 = str(result18[0])
-    reject4 = str(result19[0])
+    reject4 = str(result20[0])
     closed1 = str(result15[0])
     closed2 = str(result17[0])
     closed3 = str(result19[0])
@@ -855,14 +855,14 @@ def generate_report():
     replace_table_cell_placeholder1(doc.tables[1], 2, 1, count2, "CICS")
     replace_table_cell_placeholder1(doc.tables[1], 3, 1, count3, "CAFAD")
     replace_table_cell_placeholder1(doc.tables[1], 4, 1, count4, "CIT")
-    replace_table_cell_placeholder1(
-        doc.tables[1], 5, 1, countreports, "(total)")
+    replace_table_cell_placeholder1(doc.tables[1], 5, 1, countreports, "(total)")
+
     replace_table_cell_placeholder1(doc.tables[1], 1, 2, reject1, "(coe2)")
     replace_table_cell_placeholder1(doc.tables[1], 2, 2, reject2, "CICS")
     replace_table_cell_placeholder1(doc.tables[1], 3, 2, reject3, "CAFAD")
     replace_table_cell_placeholder1(doc.tables[1], 4, 2, reject4, "CIT")
-    replace_table_cell_placeholder1(
-        doc.tables[1], 5, 2, totalreject, "(total)")
+    replace_table_cell_placeholder1(doc.tables[1], 5, 2, totalreject, "(total)")
+
     replace_table_cell_placeholder1(doc.tables[1], 1, 3, closed1, "(coe2)")
     replace_table_cell_placeholder1(doc.tables[1], 2, 3, closed2, "CICS")
     replace_table_cell_placeholder1(doc.tables[1], 3, 3, closed3, "CAFAD")
