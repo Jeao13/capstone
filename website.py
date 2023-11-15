@@ -38,10 +38,10 @@ from docx.shared import Inches
 
 def create_connection_pool():
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
--   'user': os.environ.get('MYSQL_USER', 'mysql'),
--   'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
--   'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
+    'host': os.environ.get('MYSQL_HOST', 'localhost'),
+    'user': os.environ.get('MYSQL_USER', 'root'),
+    'password': os.environ.get('MYSQL_PASSWORD', ''),
+    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
@@ -1315,24 +1315,13 @@ def submit_request():
         student = session.get('namestudent', '')
         username = session.get('username', '')
 
-        if department == "CAFAD":
-            Name_Coordinator1 = "CAFAD Coordinator"
-
-        elif department == "CICS":
-            Name_Coordinator1 = "Lovely Rose Tipan Hernandez"
-
-        elif department == "COE":
-            Name_Coordinator1 = "Dolfus G. Miciano"
-
-        elif department == "CIT":
-            Name_Coordinator1 = "Nenita G. Hornilla"
 
         pdf_filename = 'Temporary Gate Pass.docx'
         doc = Document(pdf_filename)
 
         replace_table_cell_placeholder1(doc.tables[0], 2, 11, formatted_date, "(date)")
         
-        replace_table_cell_placeholder1(doc.tables[0], 11, 1, Name_Coordinator1, "(Coord)")
+        
         replace_table_cell_placeholder1(doc.tables[0], 3, 3, student, "(name)")
         replace_table_cell_placeholder1(doc.tables[0], 6, 4, remarks, "(remarks)")
         replace_table_cell_placeholder1(doc.tables[0], 3, 11, username, "(code)")
@@ -1342,7 +1331,6 @@ def submit_request():
 
         replace_table_cell_placeholder1( doc.tables[1], 2, 11, formatted_date, "(date)")
         
-        replace_table_cell_placeholder1(doc.tables[1], 11, 1, Name_Coordinator1, "(Coord)")
         replace_table_cell_placeholder1(doc.tables[1], 3, 3, student, "(name)")
         replace_table_cell_placeholder1(doc.tables[1], 6, 4, remarks, "(remarks)")
         replace_table_cell_placeholder1(doc.tables[1], 3, 11, username, "(code)")
@@ -4489,27 +4477,45 @@ def delete_report2(report_id):
     return redirect(url_for('homepage_head'))
 
 
-@app.route('/delete_all_report1/<string:report_id>/<string:status>', methods=['POST'])
-def delete_all_report1(report_id, status):
+@app.route('/delete_all_report1/<string:status>', methods=['POST'])
+def delete_all_report1(status):
+
+    print(status)
+
     if status == "Result":
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor = cursor1.cursor()
         db_cursor.execute(
-            "DELETE FROM forms_osd WHERE course = %s AND status = 'Approved' OR status = 'Rejected';", (report_id,))
+            "DELETE FROM forms_osd WHERE  status = %s", ("Approved",))
         cursor1.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
+
+
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
+        db_cursor.execute(
+            "DELETE FROM forms_osd WHERE  status = %s", ("Rejected",))
+        cursor1.commit()  # Make sure to commit the changes to the database
+        db_cursor.close()
+
+
         return redirect(url_for('homepage_head'))
+
 
     else:
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor = cursor1.cursor()
         db_cursor.execute(
-            "DELETE FROM forms_osd WHERE course = %s AND status = %s;", (report_id, status))
+            "DELETE FROM forms_osd WHERE  status = %s;", (status,))
         cursor1.commit()  # Make sure to commit the changes to the database
         db_cursor.close()
         return redirect(url_for('homepage_head'))
+
+
+    
 
 
 @app.route('/delete_all_report/<string:report_id>', methods=['POST'])

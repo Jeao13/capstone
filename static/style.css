@@ -704,7 +704,7 @@ select {
   flex-wrap: wrap;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 650px) {
   .form-container {
     flex-direction: column;
     width: 190%;

@@ -158,11 +158,11 @@
             <h1 id="modal-title">Hi {{name}} !</h1>
             <h2>Kindly Report to the OSD Office</h2>
             <hr>
-            {% for row in reports|sort(attribute='2', reverse=true) %}
+            {% for row in reports|sort(attribute='4', reverse=true) %}
             <div class="report">
                 <b>Call Slip No.:</b>{{row[0]}}<br>
                 <div class="call_id">
-                    <b>Date:</b> {{ row[4] }}<br>
+                    <b>Date Issued:</b> {{ row[4] }}<br>
                     <b>Time:</b> {{ row[5] }}<br>
                     <b>Reason:</b> {{ row[3] }}<br>
                     <b>Summoned by:</b> {{ row[2] }}<br>
@@ -342,7 +342,9 @@
                             </select>
                             <hr>
 
-                            <label class="form-label-main" for="subcomplaint">Subject of Complaint Details:</label> 
+                            <label class="form-label-main" for="subcomplaint">Subject of Complaint Details:</label><div class="tooltip">?
+                                <span class="tooltiptext">This is where you will input the details of the person you want to report</span>
+                              </div> 
                             <hr>
 
                             <div class="form-row">
@@ -370,7 +372,7 @@
                             <div class="form-row">
                                 <div class="form-element">
                                     <label for="designation">Designation:<span style="color: red;">*</span></label>
-                                    <input type="text" id="designation" name="designation" required>
+                                    <input type="text" id="designation" name="designation" placeholder="Ex: Student/Faculty/Staff/Guard" required>
                                 </div>
 
                                 <div class="form-element">

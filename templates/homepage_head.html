@@ -368,7 +368,7 @@
                         </thead>
                        
                             <tbody>
-                            {% for row in reports3|sort(attribute='3', reverse=true) %}
+                              {% for row in reports3|sort(reverse=true) %}
                             <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
                             <tr >
                                 <td>{{ row[1] }}</td>
@@ -709,7 +709,7 @@
                     <div id="table-container">
                         
                         <div id="pending">
-                            <form method="POST" action="{{ url_for('delete_all_report1', report_id=user_course, status="Pending")}}"
+                            <form method="POST" action="{{ url_for('delete_all_report1', status="Pending")}}"
                         onsubmit="return confirm('Are you sure you want to delete all this report?');">
                           <button class="del-btn" type="submit">Delete All Report</button> 
                       </form>
@@ -775,7 +775,7 @@
                         </div>
                     
                         <div id="ongoing" style="display:none;">
-                            <form method="POST" action="{{ url_for('delete_all_report1', report_id=user_course, status="Ongoing")}}"
+                            <form method="POST" action="{{ url_for('delete_all_report1', status="Ongoing")}}"
                             onsubmit="return confirm('Are you sure you want to delete all this report?');">
                           <button class="del-btn" type="submit">Delete All Report</button> 
                       </form>
@@ -838,7 +838,7 @@
                         </div>
                     
                         <div id="result" style="display:none;">
-                            <form method="POST" action="{{ url_for('delete_all_report1', report_id=user_course, status="Result")}}"
+                            <form method="POST" action="{{ url_for('delete_all_report1', status="Result")}}"
                             onsubmit="return confirm('Are you sure you want to delete all this report?');">
                           <button class="del-btn" type="submit">Delete All Report</button> 
                       </form>
