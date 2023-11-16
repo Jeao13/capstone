@@ -1075,7 +1075,7 @@ def submit_report():
 
         source_docx = 'modified_document.docx'
 
-        url = "libreoffice-y4in:3000"
+        url = "http://libreoffice-y4in:3000"
     
         files = {'file': ('document.docx', open(source_docx, 'rb'))}
         response = requests.post(url, files=files)
