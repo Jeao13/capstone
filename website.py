@@ -1174,7 +1174,7 @@ def submit_report():
         designation = request.form.get('designation')
         program = request.form.get('program')
         namecomplain = request.form.get('namecomplain')
-        pic = request.files['file3']
+        pic = request.files['file8']
         current_datetime = datetime.now()
         current_date = current_datetime.date()
         formatted_date = current_date.strftime("%m/%d/%Y")
@@ -1249,11 +1249,11 @@ def submit_report():
             pdf_data = pdf_file.read()
 
         # Check if the POST request has the file part for the supporting document file
-        if 'file3' not in request.files:
+        if 'file4' not in request.files:
             flash('No supporting document file part')
             return redirect(request.url)
 
-        support_file = request.files['file3']
+        support_file = request.files['file4']
 
         # Check if the user submitted an empty supporting document file input
 
