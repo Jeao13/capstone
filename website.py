@@ -38,10 +38,10 @@ from docx.shared import Inches
 
 def create_connection_pool():
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
-    'user': os.environ.get('MYSQL_USER', 'mysql'),
-    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
-    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
+    'host': os.environ.get('MYSQL_HOST', 'localhost'),
+    'user': os.environ.get('MYSQL_USER', 'root'),
+    'password': os.environ.get('MYSQL_PASSWORD', ''),
+    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
@@ -440,7 +440,7 @@ def submit_notice():
 
     doc.save("modified_document.docx")
     # Check the operating system
-    convertapi.api_secret = 'Sd2iPUClWI3G827A'
+    convertapi.api_secret = 'Kwa54nHXwGq5dhps'
 
     source_docx = 'modified_document.docx'
 
@@ -963,7 +963,7 @@ def generate_report():
 
     doc.save("modified_document.docx")
     # Check the operating system
-    convertapi.api_secret = 'Sd2iPUClWI3G827A'
+    convertapi.api_secret = 'Kwa54nHXwGq5dhps'
 
     source_docx = 'modified_document.docx'
 
@@ -1071,7 +1071,7 @@ def submit_report():
 
         doc.save("modified_document.docx")
 
-        convertapi.api_secret = 'Sd2iPUClWI3G827A'
+        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
 
         source_docx = 'modified_document.docx'
 
@@ -1227,7 +1227,7 @@ def submit_report():
 
         doc.save("modified_document.docx")
 
-        convertapi.api_secret = 'Sd2iPUClWI3G827A'
+        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
 
         source_docx = 'modified_document.docx'
 
@@ -1348,7 +1348,7 @@ def submit_request():
 
         doc.save("modified_document.docx")
         # Check the operating system
-        convertapi.api_secret = 'Sd2iPUClWI3G827A'
+        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
 
         source_docx = 'modified_document.docx'
 
@@ -1518,7 +1518,7 @@ def submit_request():
         replace_table_cell_placeholder1(doc.tables[0], 16, 1, student, "(name)")
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = 'Sd2iPUClWI3G827A'
+        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
 
         source_docx = 'modified_document.docx'
 
@@ -1691,7 +1691,7 @@ def submit_request():
         replace_table_cell_placeholder1(doc.tables[1], 10, 1, student, "(name)")
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = 'Sd2iPUClWI3G827A'
+        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
 
         source_docx = 'modified_document.docx'
 
@@ -1950,7 +1950,7 @@ def submit_call():
     replace_table_cell_placeholder1(doc.tables[2], 7, 1, formatted_date, "DATE2")
 
     doc.save("modified_document.docx")
-    convertapi.api_secret = 'Sd2iPUClWI3G827A'
+    convertapi.api_secret = 'Kwa54nHXwGq5dhps'
 
     source_docx = 'modified_document.docx'
 
@@ -2155,7 +2155,7 @@ def submit_written():
 
         doc.save("modified_document.docx")
 
-        convertapi.api_secret = 'Sd2iPUClWI3G827A'
+        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
 
         source_docx = 'modified_document.docx'
 
@@ -2353,7 +2353,7 @@ def submit_written():
         replace_table_cell_placeholder1(doc.tables[0], 15, 2, username, "NAME")
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = 'Sd2iPUClWI3G827A'
+        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
 
         source_docx = 'modified_document.docx'
 
@@ -2632,7 +2632,7 @@ def submit_written():
 
         doc.save("modified_document.docx")
         # Check the operating system
-        convertapi.api_secret = 'Sd2iPUClWI3G827A'
+        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
 
         source_docx = 'modified_document.docx'
 
