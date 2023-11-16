@@ -38,10 +38,10 @@ from docx.shared import Inches
 
 def create_connection_pool():
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', 'localhost'),
-    'user': os.environ.get('MYSQL_USER', 'root'),
-    'password': os.environ.get('MYSQL_PASSWORD', ''),
-    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
+    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
+    'user': os.environ.get('MYSQL_USER', 'mysql'),
+    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
+    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
@@ -3900,8 +3900,8 @@ def homepage():
     if role == "student":
         profile_picture_data, name, course, year, roles = result_user_data
         session['namestudent'] = name
+        print(roles)
         print(name)
-        print("Student")
 
     elif role == "coord":
         profile_picture_data, name, course = result_user_data
@@ -3922,6 +3922,7 @@ def homepage():
         course = ""
         year = ""
         roles = "guard"
+        print(roles)
         session['namestudent'] = name
         print(name)
 
@@ -4097,6 +4098,9 @@ def homepage():
 
     if user_source == 'accounts_cics' or 'accounts_cafad' or 'accounts_coe' or 'accounts_cit':
         user_source = 'student'
+
+
+    print(roles)
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
     return render_template('homepage.html', roles=roles, notif=notifs, sanctions=sanctions, request1=request1, complaints=complaints, reports1=reports1, reports=reports, reports2=reports2, username=username, profile_picture_base64=profile_picture_base64, name=name, course=course, year=year, user_source=user_source, warning=warning, reprimand=reprimand, suspension=suspension, call=call,)

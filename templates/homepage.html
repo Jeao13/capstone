@@ -75,13 +75,13 @@
             {% endif %}
             <div class="user-info">
                 <div class="overlay-text">{{ name }}</div>
-                {% if roles == 'student' or 'Student' %}
+                {% if roles in ['student', 'Student'] %}
                 <div class="overlay-text1">{{ course }} - {{year}}</div>
                 {% elif roles == 'faculty' %}
                 <div class="overlay-text1">Faculty</div>
                 {% elif roles == 'staff' %}
                 <div class="overlay-text1">Staff</div>
-                {% elif roles == 'guard'%}
+                {% else %}
                 <div class="overlay-text1">Security Guard</div>
                 {% endif %}
             </div>
@@ -138,7 +138,7 @@
                 <a id="trackStatusLink"><i class="fas fa-search"></i> Track Status</a>
                 <div class="dropdown-content">
                   <a href="#tab2">Complaints</a>
-                  {% if roles == 'student' or 'Student'  %}
+                  {% if roles in ['student', 'Student'] %}
                   <a href="#tab3">Request</a>
                   {%endif%}
                 </div>
@@ -659,7 +659,7 @@
                     <i class="fas fa-file-alt"></i>
                     <span>Lodge Complaint</span>
                 </button>
-                {% if roles == 'student' or 'Student'%}
+                {% if roles in ['student', 'Student'] %}
                 <button class="green-button" id="openModalBtn3">
                     <i class="fas fa-file-alt"></i>
                     <span>Request Documents</span>
@@ -667,7 +667,7 @@
                 {% endif %}
             </div>
             <div class="button-row">
-                {% if roles == 'student' or 'Student' %}
+                {% if roles in ['student', 'Student']%}
                 <button class="green-button" id="openModalBtn1">
                     <i class="fas fa-exclamation-triangle"></i>
                     <span>Sanctions</span>
@@ -849,11 +849,13 @@
             <div class="report_small">
                 <b>Date and Time:</b> {{ row[2] }}<br>
                 <button class="view-report-button" onclick="openModal1('{{ row[12] }}')">View Remarks</button>
-                {% if row[5] == 'Approved'%}
-                <b>Document:</b><a href="{{ url_for('preview_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a><br>
-                {% endif %}
                 <b>Department:</b> {{ row[4] }}<br>   
                 <b>Status:</b> {{ row[5] }}<br>
+                {% if row[5] == 'Approved'%}
+                <div style="margin-top:20px;"></div>
+                <hr>
+                <b>Please go to the OSD Office for acquiring of the request</b>
+                {% endif %}
             </div>
         </div>
        
