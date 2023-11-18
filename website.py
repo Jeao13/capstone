@@ -30,7 +30,7 @@ from docx.oxml import OxmlElement
 from PIL import Image
 import io
 from docx.shared import Inches
-
+import subprocess
 
 
 
@@ -38,10 +38,10 @@ from docx.shared import Inches
 
 def create_connection_pool():
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
-    'user': os.environ.get('MYSQL_USER', 'mysql'),
-    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
-    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
+    'host': os.environ.get('MYSQL_HOST', 'localhost'),
+    'user': os.environ.get('MYSQL_USER', 'root'),
+    'password': os.environ.get('MYSQL_PASSWORD', ''),
+    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
@@ -1075,16 +1075,23 @@ def submit_report():
 
         source_docx = 'modified_document.docx'
 
-        url = "http://libreoffice-y4in:3000"
-    
-        files = {'file': ('document.docx', open(source_docx, 'rb'))}
-        response = requests.post(url, files=files)
+        print("Current working directory:", os.getcwd())
 
+        
+        
         pdfpath = os.path.join('modified_document.pdf')
 
-        with open(pdfpath, 'wb') as pdf_file:
-            pdf_file.write(response.content)
 
+        # Make a request to LibreOffice to convert the document
+        libreoffice_url = 'http://libreoffice-y4in:3000/convert'
+        response = requests.post(libreoffice_url, files={'file': open('input.docx', 'rb')})
+
+        # Assuming LibreOffice returns the converted PDF
+        pdf_data = response.content
+
+     
+
+        
         file_name = f'{random_code}_Formal Complaint Letter'
         with open(pdfpath, "rb") as pdf_file:
             pdf_data = pdf_file.read()
