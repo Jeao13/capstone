@@ -1075,7 +1075,7 @@ def submit_report():
 
         source_docx = 'modified_document.docx'
 
-        print("Current working directory:", os.getcwd())
+       
 
         
         
@@ -1083,18 +1083,10 @@ def submit_report():
 
 
         # Make a request to LibreOffice to convert the document
-        libreoffice_url = 'http://libreoffice-y4in:3000/convert'
-        response = requests.post(libreoffice_url, files={'file': open(source_docx, 'rb')})
+        libreoffice_url = 'http://libreoffice-y4in:3000'
+        subprocess.run([libreoffice_url, "--headless", "--convert-to", "pdf", source_docx])
 
-        # Assuming LibreOffice returns the converted PDF
-        pdf_data = response.content
-        print(pdf_data)
-
-        with open(pdfpath, 'wb') as pdf_file:
-            pdf_file.write(pdf_data)
-
-     
-
+    
         
         file_name = f'{random_code}_Formal Complaint Letter'
         with open(pdfpath, "rb") as pdf_file:
