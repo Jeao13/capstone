@@ -1084,10 +1084,13 @@ def submit_report():
 
         # Make a request to LibreOffice to convert the document
         libreoffice_url = 'http://libreoffice-y4in:3000/convert'
-        response = requests.post(libreoffice_url, files={'file': open('input.docx', 'rb')})
+        response = requests.post(libreoffice_url, files={'file': open('source_docx', 'rb')})
 
         # Assuming LibreOffice returns the converted PDF
         pdf_data = response.content
+
+        with open(pdfpath, 'wb') as pdf_file:
+            pdf_file.write(pdf_data)
 
      
 
