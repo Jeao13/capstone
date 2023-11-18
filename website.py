@@ -1075,8 +1075,7 @@ def submit_report():
 
         source_docx = 'modified_document.docx'
 
-        # Use upload IO wrapper to upload file only once to the API
-        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
+        print("Current working directory:", os.getcwd())
 
         saved_files = convertapi.convert(
             'pdf', {'File': upload_io}).save_files('modified_document.pdf')
@@ -1085,8 +1084,13 @@ def submit_report():
 
         pdfpath = os.path.join('modified_document.pdf')
 
-        convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
-                           'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
+
+        # Make a request to LibreOffice to convert the document
+        libreoffice_url = 'http://libreoffice-y4in:3000/convert'
+        response = requests.post(libreoffice_url, files={'file': open('input.docx', 'rb')})
+
+        # Assuming LibreOffice returns the converted PDF
+        pdf_data = response.content
 
      
 
