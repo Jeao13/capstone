@@ -38,10 +38,10 @@ import subprocess
 
 def create_connection_pool():
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', 'localhost'),
-    'user': os.environ.get('MYSQL_USER', 'root'),
-    'password': os.environ.get('MYSQL_PASSWORD', ''),
-    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
+    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
+    'user': os.environ.get('MYSQL_USER', 'mysql'),
+    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
+    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
@@ -1075,19 +1075,18 @@ def submit_report():
 
         source_docx = 'modified_document.docx'
 
-        print("Current working directory:", os.getcwd())
+        # Use upload IO wrapper to upload file only once to the API
+        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
 
-        
-        
+        saved_files = convertapi.convert(
+            'pdf', {'File': upload_io}).save_files('modified_document.pdf')
+
+        print("The PDF saved to %s" % saved_files)
+
         pdfpath = os.path.join('modified_document.pdf')
 
-
-        # Make a request to LibreOffice to convert the document
-        libreoffice_url = 'http://libreoffice-y4in:3000/convert'
-        response = requests.post(libreoffice_url, files={'file': open('input.docx', 'rb')})
-
-        # Assuming LibreOffice returns the converted PDF
-        pdf_data = response.content
+        convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
+                           'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
 
      
 
