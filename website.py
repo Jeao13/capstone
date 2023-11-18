@@ -1088,6 +1088,7 @@ def submit_report():
 
         # Assuming LibreOffice returns the converted PDF
         pdf_data = response.content
+        print(pdf_data)
 
         with open(pdfpath, 'wb') as pdf_file:
             pdf_file.write(pdf_data)
