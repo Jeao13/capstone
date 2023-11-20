@@ -30,7 +30,6 @@ from docx.oxml import OxmlElement
 from PIL import Image
 import io
 from docx.shared import Inches
-import aspose.words as aw
 import subprocess
 
 
