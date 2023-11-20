@@ -993,29 +993,16 @@ def generate_report():
 
 
     doc.save("modified_document.docx")
-    # Check the operating system
-    convertapi.api_secret = 'Kwa54nHXwGq5dhps'
+   
 
-    source_docx = 'modified_document.docx'
+    pdfpath = os.path.join('modified_document.docx')
 
-    # Use upload IO wrapper to upload file only once to the API
-    upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
-
-    saved_files = convertapi.convert(
-        'pdf', {'File': upload_io}).save_files('modified_document.pdf')
-
-    print("The PDF saved to %s" % saved_files)
-
-    pdfpath = os.path.join('modified_document.pdf')
-    convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
-                       'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
-
-    file_name = f'{random_code}_Reports.pdf'
+    file_name = f'{random_code}_Reports.docx'
     with open(pdfpath, "rb") as pdf_file:
         pdf_data = pdf_file.read()
 
-    response = Response(pdf_data, content_type='application/pdf')
-    response.headers['Content-Disposition'] = f'attachment; filename="{file_name}"'
+    response = Response(pdf_data, content_type='application/octet-stream')
+    response.headers['Content-Disposition'] = f'attachment; filename="{file_name}".docx'
 
     flash('The report is submitted', 'success')
 
