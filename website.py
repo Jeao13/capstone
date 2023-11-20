@@ -30,6 +30,7 @@ from docx.oxml import OxmlElement
 from PIL import Image
 import io
 from docx.shared import Inches
+import aspose.words as aw
 import subprocess
 
 
@@ -38,10 +39,10 @@ import subprocess
 
 def create_connection_pool():
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
-    'user': os.environ.get('MYSQL_USER', 'mysql'),
-    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
-    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
+    'host': os.environ.get('MYSQL_HOST', 'localhost'),
+    'user': os.environ.get('MYSQL_USER', 'root'),
+    'password': os.environ.get('MYSQL_PASSWORD', ''),
+    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
@@ -69,6 +70,37 @@ pdfkit_options = {
 }
 
 # Define the function to periodically ping the database
+
+def extract_information(docx_path):
+    doc = Document(docx_path)
+    content = []
+
+    for paragraph in doc.paragraphs:
+        # Assuming the document structure is consistent
+        # Check for specific patterns to identify sections of interest
+        if "Name of Student" in paragraph.text:
+            content.append(paragraph.text.split(":")[1].strip())
+        elif "College" in paragraph.text:
+            content.append(paragraph.text.split(":")[1].strip())
+        elif "Year and Section" in paragraph.text:
+            content.append(paragraph.text.split(":")[1].strip())
+        elif "Subject of Complaint" in paragraph.text:
+            content.append(paragraph.text.split(":")[1].strip())
+        elif "Brief Narration" in paragraph.text:
+            # Assuming you want to extract a fixed number of lines for the brief narration
+            for _ in range(10):
+                content.append(doc.paragraphs.pop(0).text)
+    
+    return content
+
+def create_pdf(content, pdf_path):
+    pdf_canvas = canvas.Canvas(pdf_path, pagesize=letter)
+    pdf_canvas.drawString(72, 800, content)  # Adjust the coordinates as needed
+    pdf_canvas.save()
+
+def convert_docx_to_pdf(docx_path, pdf_path):
+    doc_content = extract_information(docx_path)
+    create_pdf(doc_content, pdf_path)
 
 
 
@@ -1071,22 +1103,8 @@ def submit_report():
 
         doc.save("modified_document.docx")
 
-        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
-
-        source_docx = 'modified_document.docx'
-
-        # Use upload IO wrapper to upload file only once to the API
-        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
-
-        saved_files = convertapi.convert(
-            'pdf', {'File': upload_io}).save_files('modified_document.pdf')
-
-        print("The PDF saved to %s" % saved_files)
-
-        pdfpath = os.path.join('modified_document.pdf')
-
-        convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
-                           'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
+       
+        pdfpath = os.path.join('modified_document.docx')
 
      
 
@@ -1350,23 +1368,8 @@ def submit_request():
         replace_table_cell_placeholder1(doc.tables[1], 5, 3, program, "(program)")
 
         doc.save("modified_document.docx")
-        # Check the operating system
-        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
-
-        source_docx = 'modified_document.docx'
-
-        # Use upload IO wrapper to upload file only once to the API
-        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
-
-        saved_files = convertapi.convert(
-            'pdf', {'File': upload_io}).save_files('modified_document.pdf')
-
-        print("The PDF saved to %s" % saved_files)
-
-        pdfpath = os.path.join('modified_document.pdf')
-
-        convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
-                           'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
+       
+        pdfpath = os.path.join('modified_document.docx')
 
         file_name = f'{random_code}_Temporary Gate Pass Letter'
         with open(pdfpath, "rb") as pdf_file:
@@ -1521,22 +1524,7 @@ def submit_request():
         replace_table_cell_placeholder1(doc.tables[0], 16, 1, student, "(name)")
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
-
-        source_docx = 'modified_document.docx'
-
-        # Use upload IO wrapper to upload file only once to the API
-        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
-
-        saved_files = convertapi.convert(
-            'pdf', {'File': upload_io}).save_files('modified_document.pdf')
-
-        print("The PDF saved to %s" % saved_files)
-
-        pdfpath = os.path.join('modified_document.pdf')
-
-        convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
-                           'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
+        pdfpath = os.path.join('modified_document.docx')
 
         file_name = f'{random_code}_Request for Non-Wearing of Uniform'
         with open(pdfpath, "rb") as pdf_file:
@@ -1694,22 +1682,7 @@ def submit_request():
         replace_table_cell_placeholder1(doc.tables[1], 10, 1, student, "(name)")
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
-
-        source_docx = 'modified_document.docx'
-
-        # Use upload IO wrapper to upload file only once to the API
-        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
-
-        saved_files = convertapi.convert(
-            'pdf', {'File': upload_io}).save_files('modified_document.pdf')
-
-        print("The PDF saved to %s" % saved_files)
-
-        pdfpath = os.path.join('modified_document.pdf')
-
-        convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
-                           'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
+        pdfpath = os.path.join('modified_document.docx')
 
         file_name = f'{random_code}_Request for New ID'
         with open(pdfpath, "rb") as pdf_file:
@@ -1953,21 +1926,7 @@ def submit_call():
     replace_table_cell_placeholder1(doc.tables[2], 7, 1, formatted_date, "DATE2")
 
     doc.save("modified_document.docx")
-    convertapi.api_secret = 'Kwa54nHXwGq5dhps'
-
-    source_docx = 'modified_document.docx'
-
-    # Use upload IO wrapper to upload file only once to the API
-    upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
-
-    saved_files = convertapi.convert(
-        'pdf', {'File': upload_io}).save_files('modified_document.pdf')
-
-    print("The PDF saved to %s" % saved_files)
-
-    pdfpath = os.path.join('modified_document.pdf')
-    convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
-                       'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
+    pdfpath = os.path.join('modified_document.docx')
 
     file_name = f'{random_code}_Call Slip'
     with open(pdfpath, "rb") as pdf_file:
@@ -2158,21 +2117,7 @@ def submit_written():
 
         doc.save("modified_document.docx")
 
-        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
-
-        source_docx = 'modified_document.docx'
-
-        # Use upload IO wrapper to upload file only once to the API
-        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
-
-        saved_files = convertapi.convert(
-            'pdf', {'File': upload_io}).save_files('modified_document.pdf')
-
-        print("The PDF saved to %s" % saved_files)
-
-        pdfpath = os.path.join('modified_document.pdf')
-        convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
-                           'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
+        pdfpath = os.path.join('modified_document.docx')
 
         file_name = f'{random_code}_Written Warning'
         with open(pdfpath, "rb") as pdf_file:
@@ -2356,21 +2301,7 @@ def submit_written():
         replace_table_cell_placeholder1(doc.tables[0], 15, 2, username, "NAME")
 
         doc.save("modified_document.docx")
-        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
-
-        source_docx = 'modified_document.docx'
-
-        # Use upload IO wrapper to upload file only once to the API
-        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
-
-        saved_files = convertapi.convert(
-            'pdf', {'File': upload_io}).save_files('modified_document.pdf')
-
-        print("The PDF saved to %s" % saved_files)
-
-        pdfpath = os.path.join('modified_document.pdf')
-        convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
-                           'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
+        pdfpath = os.path.join('modified_document.docx')
 
         file_name = f'{random_code}_Written Reprimand'
         with open(pdfpath, "rb") as pdf_file:
@@ -2634,22 +2565,7 @@ def submit_written():
         replace_table_cell_placeholder1(doc.tables[0], 7, 2, norms, "norms")
 
         doc.save("modified_document.docx")
-        # Check the operating system
-        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
-
-        source_docx = 'modified_document.docx'
-
-        # Use upload IO wrapper to upload file only once to the API
-        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
-
-        saved_files = convertapi.convert(
-            'pdf', {'File': upload_io}).save_files('modified_document.pdf')
-
-        print("The PDF saved to %s" % saved_files)
-
-        pdfpath = os.path.join('modified_document.pdf')
-        convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
-                           'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
+        pdfpath = os.path.join('modified_document.docx')
 
         file_name = f'{random_code}_Letter of Suspension'
         with open(pdfpath, "rb") as pdf_file:
@@ -2893,6 +2809,7 @@ def index():
                 if result:
                     # User exists in the table, set the role and continue
                     session['username'] = submitted_username
+                    session['password'] = submitted_password
                     session['role'] = table
                     if 'head' in table:
                         return redirect(url_for('homepage_head'))
@@ -4639,145 +4556,220 @@ def logout():
     return redirect('/')
 
 
-@app.route('/preview_call_file/<string:report_id>', methods=['GET'])
-def preview_call_file(report_id):
+@app.route('/preview_call_file', methods=['GET','POST'])
+def preview_call_file():
+    password = session.get('password', '')
+    print(password)
+    password1 = request.form.get('complainant')
+    print(password1)
+    report_id = request.form.get('id')
+    print(report_id)
     db_cursor = None  # Initialize db_cursor to None
 
-    try:
-        cnx = create_connection_pool()
-        cursor1=cnx.get_connection()
-        db_cursor = cursor1.cursor()
-        db_cursor.execute(
-            "SELECT file FROM callslip WHERE call_id = %s", (report_id,))
-        file_content = db_cursor.fetchone()
 
-        if file_content:
-            file_content = file_content[0]
+    if password == password1:
 
-            response = send_file(
-                io.BytesIO(file_content),
-                mimetype='application/pdf',
-            )
-
-            response.headers[
-                'Content-Disposition'] = f'inline; filename=Call Slip_{report_id}.pdf'
-
-            return response
-    except Exception as e:
-        # Handle any exceptions, e.g., log the error
-        pass  # Add your error handling code here
-    finally:
-        if db_cursor is not None:
-            db_cursor.close()  # Close the cursor if it's not None
-
-    # Handle the case where the file was not found
-    return "File not found", 404
+        print("wow")
 
 
-@app.route('/preview_notice_file/<string:report_id>', methods=['GET'])
-def preview_notice_file(report_id):
+        try:
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
+            db_cursor.execute("SELECT file, file_name FROM callslip WHERE call_id = %s", (report_id,))
+            result = db_cursor.fetchone()
+
+            
+
+            if result:
+                print("wow1")
+                file_content, file_type = result
+
+                response = send_file(
+                    io.BytesIO(file_content),
+                    mimetype='application/octet-stream',
+                )
+
+                response.headers['Content-Disposition'] = f'inline; filename={file_type}.docx'
+
+                db_cursor.close()
+
+                return response
+
+        except Exception as e:
+            # Handle any exceptions, e.g., log the error
+            pass  # Add your error handling code here
+
+        # Handle the case where the file was not found
+        return "File not found", 404,
+
+    else:
+
+        flash('Invalid password')
+        return redirect('/head')
+
+
+@app.route('/preview_notice_file', methods=['GET','POST'])
+def preview_notice_file():
+    password = session.get('password', '')
+    print(password)
+    password1 = request.form.get('complainant')
+    print(password1)
+    report_id = request.form.get('id')
+    print(report_id)
     db_cursor = None  # Initialize db_cursor to None
 
-    try:
-        cnx = create_connection_pool()
-        cursor1=cnx.get_connection()
-        db_cursor = cursor1.cursor()
-        db_cursor.execute(
-            "SELECT file FROM notice_case WHERE notice_id = %s", (report_id,))
-        file_content = db_cursor.fetchone()
 
-        if file_content:
-            file_content = file_content[0]
+    if password == password1:
 
-            response = send_file(
-                io.BytesIO(file_content),
-                mimetype='application/pdf',
-            )
-
-            response.headers[
-                'Content-Disposition'] = f'inline; filename=Case Dismisal_{report_id}.pdf'
-
-            return response
-    except Exception as e:
-        # Handle any exceptions, e.g., log the error
-        pass  # Add your error handling code here
-    finally:
-        if db_cursor is not None:
-            db_cursor.close()  # Close the cursor if it's not None
-
-    # Handle the case where the file was not found
-    return "File not found", 404
+        print("wow")
 
 
-@app.route('/preview_written_file/<string:report_id>', methods=['GET'])
-def preview_written_file(report_id):
+        try:
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
+            db_cursor.execute("SELECT file, file_name FROM notice_case WHERE notice_id = %s", (report_id,))
+            result = db_cursor.fetchone()
+
+            
+
+            if result:
+                print("wow1")
+                file_content, file_type = result
+
+                response = send_file(
+                    io.BytesIO(file_content),
+                    mimetype='application/octet-stream',
+                )
+
+                response.headers['Content-Disposition'] = f'inline; filename={file_type}.docx'
+
+                db_cursor.close()
+
+                return response 
+
+        except Exception as e:
+            # Handle any exceptions, e.g., log the error
+            pass  # Add your error handling code here
+
+        # Handle the case where the file was not found
+        return "File not found", 404,
+
+    else:
+
+        flash('Invalid password')
+        return redirect('/hello')
+
+
+@app.route('/preview_written_file', methods=['GET','POST'])
+def preview_written_file():
+    password = session.get('password', '')
+    print(password)
+    password1 = request.form.get('complainant')
+    print(password1)
+    report_id = request.form.get('id')
+    print(report_id)
     db_cursor = None  # Initialize db_cursor to None
 
-    try:
-        cnx = create_connection_pool()
-        cursor1=cnx.get_connection()
-        db_cursor = cursor1.cursor()
-        db_cursor.execute(
-            "SELECT written FROM sanctions WHERE sanctions_id = %s", (report_id,))
-        file_content = db_cursor.fetchone()
 
-        if file_content:
-            file_content = file_content[0]
+    if password == password1:
 
-            response = send_file(
-                io.BytesIO(file_content),
-                mimetype='application/pdf',
-            )
-
-            response.headers['Content-Disposition'] = f'inline; filename=report_{report_id}.pdf'
-
-            return response
-    except Exception as e:
-        # Handle any exceptions, e.g., log the error
-        pass  # Add your error handling code here
-    finally:
-        if db_cursor is not None:
-            db_cursor.close()  # Close the cursor if it's not None
-
-    # Handle the case where the file was not found
-    return "File not found", 404
+        print("wow")
 
 
-@app.route('/preview_report_file/<string:report_id>', methods=['GET'])
-def preview_report_file(report_id):
+        try:
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
+            db_cursor.execute("SELECT written, written_name FROM sanctions WHERE sanctions_id = %s", (report_id,))
+            result = db_cursor.fetchone()
+
+            
+
+            if result:
+                print("wow1")
+                file_content, file_type = result
+
+                response = send_file(
+                    io.BytesIO(file_content),
+                    mimetype='application/octet-stream',
+                )
+
+                response.headers['Content-Disposition'] = f'inline; filename={file_type}.docx'
+
+                db_cursor.close()
+
+                return response
+
+        except Exception as e:
+            # Handle any exceptions, e.g., log the error
+            pass  # Add your error handling code here
+
+        # Handle the case where the file was not found
+        return "File not found", 404,
+
+    else:
+
+        flash('Invalid password')
+        return redirect('/head')
+
+
+@app.route('/preview_report_file', methods=['GET','POST'])
+def preview_report_file():
+    password = session.get('password', '')
+    print(password)
+    password1 = request.form.get('complainant')
+    print(password1)
+    report_id = request.form.get('id')
+    print(report_id)
     db_cursor = None  # Initialize db_cursor to None
 
-    try:
-        cnx = create_connection_pool()
-        cursor1=cnx.get_connection()
-        db_cursor = cursor1.cursor()
-        db_cursor.execute(
-            "SELECT file_form FROM reports WHERE report_id = %s", (report_id,))
-        file_content = db_cursor.fetchone()
 
-        if file_content:
-            file_content = file_content[0]
+    if password == password1:
 
-            response = send_file(
-                io.BytesIO(file_content),
-                mimetype='application/pdf',
-            )
+        print("wow")
 
-            response.headers['Content-Disposition'] = f'inline; filename=report_{report_id}.pdf'
 
-            return response
+        try:
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
+            db_cursor.execute("SELECT file_form, file_form_name FROM reports WHERE id = %s", (report_id,))
+            result = db_cursor.fetchone()
 
-    except Exception as e:
-        # Handle any exceptions, e.g., log the error
-        pass  # Add your error handling code here
+            
 
-    finally:
-        if db_cursor is not None:
+            if result:
+                print("wow1")
+                file_content, file_type = result
 
-            db_cursor.close()  # Close the cursor if it's not None
+                print(file_content)
+                print(file_type)
 
-    # Handle the case where the file was not found
-    return "File not found", 404,
+                response = send_file(
+                    io.BytesIO(file_content),
+                    mimetype='application/octet-stream',
+                )
+
+                response.headers['Content-Disposition'] = f'inline; filename={file_type}.docx'
+
+                db_cursor.close()
+
+                return response
+
+        except Exception as e:
+            # Handle any exceptions, e.g., log the error
+            pass  # Add your error handling code here
+
+        # Handle the case where the file was not found
+        return "File not found", 404,
+
+    else:
+
+        flash('Invalid password')
+        return redirect('/head')
+        
 
 
 
@@ -4875,41 +4867,58 @@ def preview_support_file(report_id,idx):
     return "File not found", 404
 
 
-@app.route('/preview_report_file1/<string:report_id>', methods=['GET'])
-def preview_report_file1(report_id):
+@app.route('/preview_report_file1', methods=['GET','POST'])
+def preview_report_file1():
+    password = session.get('password', '')
+    print(password)
+    password1 = request.form.get('complainant')
+    print(password1)
+    report_id = request.form.get('id')
+    print(report_id)
     db_cursor = None  # Initialize db_cursor to None
 
-    try:
-        cnx = create_connection_pool()
-        cursor1=cnx.get_connection()
-        db_cursor = cursor1.cursor()
-        db_cursor.execute(
-            "SELECT file_form FROM forms_osd WHERE form_id = %s", (report_id,))
-        file_content = db_cursor.fetchone()
 
-        if file_content:
-            file_content = file_content[0]
+    if password == password1:
 
-            response = send_file(
-                io.BytesIO(file_content),
-                mimetype='application/pdf',
-            )
+        print("wow")
 
-            response.headers['Content-Disposition'] = f'inline; filename=report_{report_id}.pdf'
 
-            return response
+        try:
+            cnx = create_connection_pool()
+            cursor1=cnx.get_connection()
+            db_cursor = cursor1.cursor()
+            db_cursor.execute("SELECT file_form, file_form_name FROM forms_osd WHERE form_id = %s", (report_id,))
+            result = db_cursor.fetchone()
 
-    except Exception as e:
-        # Handle any exceptions, e.g., log the error
-        pass  # Add your error handling code here
+            
 
-    finally:
-        if db_cursor is not None:
+            if result:
+                print("wow1")
+                file_content, file_type = result
 
-            db_cursor.close()  # Close the cursor if it's not None
+                response = send_file(
+                    io.BytesIO(file_content),
+                    mimetype='application/octet-stream',
+                )
 
-    # Handle the case where the file was not found
-    return "File not found", 404,
+                response.headers['Content-Disposition'] = f'inline; filename={file_type}.docx'
+
+                db_cursor.close()
+
+                return response
+
+        except Exception as e:
+            # Handle any exceptions, e.g., log the error
+            pass  # Add your error handling code here
+
+        # Handle the case where the file was not found
+        return "File not found", 404,
+
+    else:
+
+        flash('Invalid password')
+        return redirect('/head')
+        
 
 
 @app.route('/preview_support_file1/<string:report_id>', methods=['GET'])

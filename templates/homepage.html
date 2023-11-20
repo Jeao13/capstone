@@ -153,6 +153,17 @@
     {% if user_source == 'student'%}
 
     <div id="autoOpenModal" class="modal">
+        <div id="modalContainer18" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal19()">&times;</span>
+                <form id="statusChangeForm7" method="POST" action="/preview_call_file" enctype="multipart/form-data" onsubmit="closeModal19()">
+                <label id="provision1" for="remarks" >Input Password:</label><br>
+                <input type="password" id="complainant" name="complainant" required><br><br>
+
+                <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
         <div class="modal-content">
             <span class="close" id="closeAutoOpenModalBtn">&times;</span>
             <h1 id="modal-title">Hi {{name}} !</h1>
@@ -167,7 +178,7 @@
                     <b>Time:</b> {{ row[5] }}<br>
                     <b>Reason:</b> {{ row[3] }}<br>
                     <b>Summoned by:</b> {{ row[2] }}<br>
-                    <b>Call Slip Form:</b><a href="{{ url_for('preview_call_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a><br>
+                    <b>Call Slip Form:</b><a style="text-decoration: underline; cursor: pointer;" onclick="openModal15('{{ row[0] }}')" target="_blank">{{ row[7] }}</a><br>
                 </div>
             </div>
             {% endfor %}
@@ -1190,6 +1201,17 @@
             {% endif %}
         </div>
         <div id="table-container1" style="display:none;">
+            <div id="modalContainer16" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal17()">&times;</span>
+                    <form id="statusChangeForm5" method="POST" action="/preview_notice_file" enctype="multipart/form-data" onsubmit="closeModal17()">
+                    <label id="provision1" for="remarks" >Input Password:</label><br>
+                    <input type="password" id="complainant" name="complainant" required><br><br>
+
+                    <button type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
             <h3>Notice of Case Dismissal - Subject of Complaint</h3>
             {% if reports1 == [] %}
             <p>You have no sanctions</p>
@@ -1214,7 +1236,7 @@
                         <td>{{ row[2] }}</td>
                         <td>{{ row[1] }}</td>
                         <td> 
-                            <a href="{{ url_for('preview_notice_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
+                            <a style="text-decoration: underline; cursor: pointer;" onclick="openModal13('{{ row[0] }}')" target="_blank">{{ row[7] }}</a>
                         </td>
                         <td>{{ row[8] }}</td>
                     
@@ -1225,6 +1247,17 @@
             {% endif %}
         </div>
         <div id="table-container2" style="display:none;">
+            <div id="modalContainer17" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal18()">&times;</span>
+                    <form id="statusChangeForm6" method="POST" action="/preview_notice_file" enctype="multipart/form-data" onsubmit="closeModal18()">
+                    <label id="provision1" for="remarks" >Input Password:</label><br>
+                    <input type="password" id="complainant" name="complainant" required><br><br>
+
+                    <button type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
             <h3>Notice of Case Dismissal - Complainant</h3>
             {% if reports2 == [] %}
             <p>You have no sanctions</p>
@@ -1249,7 +1282,7 @@
                         <td>{{ row[2] }}</td>
                         <td>{{ row[1] }}</td>
                         <td> 
-                            <a href="{{ url_for('preview_notice_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
+                            <a style="text-decoration: underline; cursor: pointer;" onclick="openModal14('{{ row[0] }}')" target="_blank">{{ row[7] }}</a>
                         </td>
                         <td>{{ row[8] }}</td>
                     

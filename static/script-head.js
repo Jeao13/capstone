@@ -381,6 +381,99 @@ function closeModal12() {
     modal.style.display = 'none';
 }
 
+function openModal7(id) {
+    const modal = document.getElementById('modalContainer10');
+    modal.style.display = 'block';
+    const newButton = document.createElement('input');
+    newButton.type = 'hidden';
+    newButton.value = id;
+    newButton.id = 'id';
+    newButton.name = 'id';
+
+    const form = document.getElementById('statusChangeForm1');
+    form.appendChild(newButton);
+
+    
+
+}
+function closeModal13() {
+    var modal = document.getElementById('modalContainer10');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
+
+function openModal8(id) {
+    const modal = document.getElementById('modalContainer11');
+    console.log(id)
+
+    modal.style.display = 'block';
+    const newButton = document.createElement('input');
+    newButton.type = 'hidden';
+    newButton.value = id;
+    newButton.id = 'id';
+    newButton.name = 'id';
+
+    const form = document.getElementById('statusChangeForm3');
+    form.appendChild(newButton);
+
+    
+
+}
+function closeModal14() {
+    var modal = document.getElementById('modalContainer11');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
+
+function openModal9(id) {
+    const modal = document.getElementById('modalContainer12');
+    console.log(id)
+
+    modal.style.display = 'block';
+    const newButton = document.createElement('input');
+    newButton.type = 'hidden';
+    newButton.value = id;
+    newButton.id = 'id';
+    newButton.name = 'id';
+
+    const form = document.getElementById('statusChangeForm4');
+    form.appendChild(newButton);
+
+    
+
+}
+function closeModal15() {
+    var modal = document.getElementById('modalContainer12');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
+
+function openModal10(id) {
+    const modal = document.getElementById('modalContainer13');
+    console.log(id)
+
+    modal.style.display = 'block';
+    const newButton = document.createElement('input');
+    newButton.type = 'hidden';
+    newButton.value = id;
+    newButton.id = 'id';
+    newButton.name = 'id';
+
+    const form = document.getElementById('statusChangeForm5');
+    form.appendChild(newButton);
+
+    
+
+}
+function closeModal16() {
+    var modal = document.getElementById('modalContainer13');
+
+    // Hide the modal
+    modal.style.display = 'none';
+}
 
 function openModal2(id1) {
     const modal = document.getElementById('modalContainer0');
@@ -740,7 +833,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                         var sanitizedSanctionsId = encodeURIComponent(sanction.sanctions_id);
 
-                                        var previewUrl = "/preview_written_file/" + sanitizedSanctionsId;
+                                        console.log(sanitizedSanctionsId)
+
                                 
                                         // Create a delete button with a unique ID based on the sanction ID
                                         
@@ -748,7 +842,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         formattedSanctions += '<p><strong>Sanction Id:</strong> ' + sanction.sanctions_id + '</p>';
                                         formattedSanctions += '<p><strong>Date and Time:</strong> ' + formattedDate + '</p>';
                                         formattedSanctions += '<p><strong>Sanction:</strong> ' + sanction.sanction + '</p>';
-                                        formattedSanctions += '<p><strong>File:</strong> <a href="' + previewUrl + '" target="_blank">' + sanction.written_name + '</a>';
+                                        formattedSanctions += '<p><strong>File:</strong> <a style="text-decoration: underline; cursor: pointer;" onclick= openModal10("'+sanction.sanctions_id+'")>' + sanction.written_name + '</a>';
                                       
                                         formattedSanctions += '<hr>'; // Add a horizontal line to separate sanctions
                                     });

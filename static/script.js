@@ -1370,6 +1370,81 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function openModal13(id) {
+        const modal = document.getElementById('modalContainer16');
+        console.log(id)
+    
+        modal.style.display = 'block';
+        const newButton = document.createElement('input');
+        newButton.type = 'hidden';
+        newButton.value = id;
+        newButton.id = 'id';
+        newButton.name = 'id';
+    
+        const form = document.getElementById('statusChangeForm5');
+        form.appendChild(newButton);
+    
+        
+    
+    }
+    function closeModal17() {
+        var modal = document.getElementById('modalContainer16');
+    
+        // Hide the modal
+        modal.style.display = 'none';
+    }
+
+    function openModal14(id) {
+        const modal = document.getElementById('modalContainer17');
+        console.log(id)
+    
+        modal.style.display = 'block';
+        const newButton = document.createElement('input');
+        newButton.type = 'hidden';
+        newButton.value = id;
+        newButton.id = 'id';
+        newButton.name = 'id';
+    
+        const form = document.getElementById('statusChangeForm6');
+        form.appendChild(newButton);
+    
+        
+    
+    }
+    function closeModal18() {
+        var modal = document.getElementById('modalContainer17');
+    
+        // Hide the modal
+        modal.style.display = 'none';
+    }
+
+    function openModal15(id) {
+        const modal = document.getElementById('modalContainer18');
+        console.log(id)
+    
+        modal.style.display = 'block';
+        const newButton = document.createElement('input');
+        newButton.type = 'hidden';
+        newButton.value = id;
+        newButton.id = 'id';
+        newButton.name = 'id';
+    
+        const form = document.getElementById('statusChangeForm7');
+        form.appendChild(newButton);
+    
+        
+    
+    }
+    function closeModal19() {
+        var modal = document.getElementById('modalContainer18');
+    
+        // Hide the modal
+        modal.style.display = 'none';
+    }
+
+    
+    
+
 
     
     

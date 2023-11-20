@@ -325,6 +325,19 @@
 
             
             <div id="tab2" class="tab-content"><h1 class="form-title">Complaints</h1>
+
+              <div id="modalContainer10" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal13()">&times;</span>
+                     <form id="statusChangeForm1" method="POST" action="/preview_report_file" enctype="multipart/form-data">
+                    <label id="provision1" for="remarks" >Input Password:</label><br>
+                    <input type="password" id="complainant" name="complainant" required><br><br>
+
+                    <button type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+
               <div>
                     <form id="searchForm">
                       <input type="text" id="searchInput" name="searchQuery" placeholder="Search...">
@@ -377,7 +390,7 @@
                                 <td>{{ row[5] }}</td>
                                 <td>{{ row[6] }}</td>
                                     <td>
-                                        <a href="{{ url_for('preview_report_file', report_id=row[1]) }}" target="_blank">{{ row[8] }}</a>
+                                        <a style="text-decoration: underline; cursor: pointer;" onclick="openModal7('{{ row[0] }}')" target="_blank">{{ row[8] }}</a>
                                     </td>
                 
                               
@@ -710,6 +723,17 @@
               </div>
             
                 <div id="tab3" class="tab-content">
+                  <div id="modalContainer11" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal14()">&times;</span>
+                        <form id="statusChangeForm3" method="POST" action="/preview_report_file1" enctype="multipart/form-data">
+                        <label id="provision1" for="remarks" >Input Password:</label><br>
+                        <input type="password" id="complainant" name="complainant" required><br><br>
+    
+                        <button type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
                     <h1 class="form-title">Request</h1>
                     <div class="modern-sleek-navbar-container">
                         
@@ -758,8 +782,8 @@
                                         <td>{{ row[2] }}</td>
                                      
                                         <td>{{ row[5] }}</td>
-                                        <td><a href="{{ url_for('preview_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
-                                        <td > <a href="{{ url_for('preview_support_file1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
+                                        <td><a style="text-decoration: underline; cursor: pointer;" onclick="openModal8('{{ row[0] }}')" target="_blank">{{ row[7] }}</a></td>
+                                        <td> <a href="{{ url_for('preview_support_file1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
                                         <td><button class="modern-sleek-view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
                                         <td>
                                             <!-- Add a form to change the status -->
@@ -823,7 +847,7 @@
                                         <td>{{ row[2] }}</td>
                                       
                                         <td>{{ row[5] }}</td>
-                                        <td><a href="{{ url_for('preview_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
+                                        <td><a style="text-decoration: underline; cursor: pointer;" onclick="openModal8('{{ row[0] }}')" target="_blank">{{ row[7] }}</a></td>
                                         <td><a href="{{ url_for('preview_support_file1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
                                         <td><button class="modern-sleek-view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
                                         <td>
@@ -885,7 +909,7 @@
                                         <td>{{ row[2] }}</td>
                                     
                                         <td>{{ row[5] }}</td>
-                                        <td><a href="{{ url_for('preview_report_file1', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a></td>
+                                        <td><a style="text-decoration: underline; cursor: pointer;" onclick="openModal8('{{ row[0] }}')" target="_blank">{{ row[7] }}</a></td>
                                         <td><a href="{{ url_for('preview_support_file1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
                                         <td><button class="modern-sleek-view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
                                         <td>
@@ -1184,6 +1208,17 @@
               </div>
 
         <div id="tab10" class="tab-content">
+          <div id="modalContainer12" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal15()">&times;</span>
+                <form id="statusChangeForm4" method="POST" action="/preview_call_file" enctype="multipart/form-data">
+                <label id="provision1" for="remarks" >Input Password:</label><br>
+                <input type="password" id="complainant" name="complainant" required><br><br>
+
+                <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
           <h1 class="section-title">Call Slip Section</h1>
 
           <div style="margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
@@ -1257,7 +1292,7 @@
                       <td>{{ row[4] }}</td>
                       <td>{{ row[5] }}</td>
                           <td>
-                              <a href="{{ url_for('preview_call_file', report_id=row[0]) }}" target="_blank">{{ row[7] }}</a>
+                            <a style="text-decoration: underline; cursor: pointer;" onclick="openModal9('{{ row[0] }}')" target="_blank">{{ row[7] }}</a>
                           </td>
       
                         
@@ -1276,6 +1311,17 @@
           
             
                 <div id="tab5" class="tab-content">
+                  <div id="modalContainer13" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal16()">&times;</span>
+                        <form id="statusChangeForm5" method="POST" action="/preview_written_file" enctype="multipart/form-data">
+                        <label id="provision1" for="remarks" >Input Password:</label><br>
+                        <input type="password" id="complainant" name="complainant" required><br><br>
+        
+                        <button type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
                     <h1 class="section-title">Sanctions</h1>
                     
                     <div class="search-section">
