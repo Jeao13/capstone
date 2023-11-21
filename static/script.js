@@ -1413,6 +1413,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     function closeModal18() {
         var modal = document.getElementById('modalContainer17');
+        const input = document.getElementById('complainant');
+        const form = document.getElementById('statusChangeForm6');
+    
+        var newButton = document.getElementById('id');
+        if (newButton) {
+            // Add a delay of 1000 milliseconds (1 second)
+            setTimeout(function() {
+                // Remove the newButton from the form
+                form.removeChild(newButton);
+                
+                // Clear the input value
+                input.value = "";
+            }, 1000);
+        }
     
         // Hide the modal
         modal.style.display = 'none';
@@ -1437,6 +1451,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     function closeModal19() {
         var modal = document.getElementById('modalContainer18');
+        const input = document.getElementById('complainant1');
+        const form = document.getElementById('statusChangeForm7');
+    
+        var newButton = document.getElementById('id');
+        if (newButton) {
+            // Add a delay of 1000 milliseconds (1 second)
+            setTimeout(function() {
+                // Remove the newButton from the form
+                form.removeChild(newButton);
+                
+                // Clear the input value
+                input.value = "";
+            }, 1000);
+        }
+    
     
         // Hide the modal
         modal.style.display = 'none';

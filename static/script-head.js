@@ -382,6 +382,7 @@ function closeModal12() {
 }
 
 function openModal7(id) {
+    console.log(id)
     const modal = document.getElementById('modalContainer10');
     modal.style.display = 'block';
     const newButton = document.createElement('input');
@@ -398,6 +399,23 @@ function openModal7(id) {
 }
 function closeModal13() {
     var modal = document.getElementById('modalContainer10');
+    const input = document.getElementById('complainant');
+    const form = document.getElementById('statusChangeForm1');
+
+    var newButton = document.getElementById('id');
+    if (newButton) {
+        // Add a delay of 1000 milliseconds (1 second)
+        setTimeout(function() {
+            // Remove the newButton from the form
+            form.removeChild(newButton);
+            
+            // Clear the input value
+            input.value = "";
+        }, 1000);
+    }
+
+    
+
 
     // Hide the modal
     modal.style.display = 'none';
@@ -422,6 +440,23 @@ function openModal8(id) {
 }
 function closeModal14() {
     var modal = document.getElementById('modalContainer11');
+    const input = document.getElementById('complainant2');
+    const form = document.getElementById('statusChangeForm3');
+
+    var newButton = document.getElementById('id');
+    
+    var newButton = document.getElementById('id');
+    if (newButton) {
+        // Add a delay of 1000 milliseconds (1 second)
+        setTimeout(function() {
+            // Remove the newButton from the form
+            form.removeChild(newButton);
+            input.value = "";
+
+        }, 1000);
+    }
+
+   
 
     // Hide the modal
     modal.style.display = 'none';
@@ -446,6 +481,24 @@ function openModal9(id) {
 }
 function closeModal15() {
     var modal = document.getElementById('modalContainer12');
+    const input = document.getElementById('complainant1');
+    const form = document.getElementById('statusChangeForm4');
+
+    var newButton = document.getElementById('id');
+    if (newButton) {
+        // Add a delay of 1000 milliseconds (1 second)
+        setTimeout(function() {
+            // Remove the newButton from the form
+            form.removeChild(newButton);
+            input.value = "";
+            
+            // Clear the input value
+            
+        }, 1000);
+    }
+
+
+
 
     // Hide the modal
     modal.style.display = 'none';
@@ -470,6 +523,23 @@ function openModal10(id) {
 }
 function closeModal16() {
     var modal = document.getElementById('modalContainer13');
+    const input = document.getElementById('complainant3');
+    const form = document.getElementById('statusChangeForm5');
+
+    var newButton = document.getElementById('id');
+    if (newButton) {
+        // Add a delay of 1000 milliseconds (1 second)
+        setTimeout(function() {
+            // Remove the newButton from the form
+            form.removeChild(newButton);
+            
+            // Clear the input value
+            input.value = "";
+        }, 1000);
+    }
+
+   
+
 
     // Hide the modal
     modal.style.display = 'none';

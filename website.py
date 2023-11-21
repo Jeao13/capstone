@@ -462,22 +462,10 @@ def submit_notice():
     replace_table_cell_placeholder1(doc.tables[1], 14, 2, Name_Coordinator, "NAME")
 
     doc.save("modified_document.docx")
-    # Check the operating system
-    convertapi.api_secret = 'Kwa54nHXwGq5dhps'
 
-    source_docx = 'modified_document.docx'
 
-    # Use upload IO wrapper to upload file only once to the API
-    upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
-
-    saved_files = convertapi.convert(
-        'pdf', {'File': upload_io}).save_files('modified_document.pdf')
-
-    print("The PDF saved to %s" % saved_files)
-
-    pdfpath = os.path.join('modified_document.pdf')
-    convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
-                       'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
+    pdfpath = os.path.join('modified_document.docx')
+   
 
     file_name = f'{random_code}_Notice of Case Dismissal'
     with open(pdfpath, "rb") as pdf_file:
@@ -1009,6 +997,15 @@ def submit_report():
     print(kind)
     print("test")
     if kind == "Formal Complaint":
+
+        if role == "coord":
+            course1 = session.get('courseall', '')
+
+        else:
+            course1 = session.get('course1', '')
+
+
+        
         print("test1")
         department = request.form.get('department')
         provision = ""
@@ -1148,8 +1145,8 @@ def submit_report():
         cnx = create_connection_pool()
         cursor1=cnx.get_connection()
         db_cursor = cursor1.cursor()
-        db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support,file_support_name1, file_support_type1, file_support1, file_support_name2, file_support_type2, file_support2, username, date_time, status) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                            (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, support_filename1, support_extension1, support_data1,support_filename2, support_extension2, support_data2, username, current_datetime, "Pending"))
+        db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support,file_support_name1, file_support_type1, file_support1, file_support_name2, file_support_type2, file_support2, username, date_time, status, course1) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)",
+                            (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, support_filename1, support_extension1, support_data1,support_filename2, support_extension2, support_data2, username, current_datetime, "Pending", course1))
         cursor1.commit()
 
         db_cursor.close()
@@ -1164,6 +1161,12 @@ def submit_report():
         
             
     else:
+        if role == "coord":
+            course1 = session.get('courseall', '')
+
+        else:
+            course1 = session.get('course1', '')
+
         department = request.form.get('department')
         remarks = request.form.get('remarks')
         report_text = request.form.get('Incident')
@@ -1173,7 +1176,7 @@ def submit_report():
         designation = request.form.get('designation')
         program = request.form.get('program')
         namecomplain = request.form.get('namecomplain')
-        pic = request.files['file8']
+        pic = request.files['file3']
         current_datetime = datetime.now()
         current_date = current_datetime.date()
         formatted_date = current_date.strftime("%m/%d/%Y")
@@ -1226,23 +1229,9 @@ def submit_report():
 
         doc.save("modified_document.docx")
 
-        convertapi.api_secret = 'Kwa54nHXwGq5dhps'
+        pdfpath = os.path.join('modified_document.docx')
 
-        source_docx = 'modified_document.docx'
-
-        # Use upload IO wrapper to upload file only once to the API
-        upload_io = convertapi.UploadIO(open(source_docx, 'rb'))
-
-        saved_files = convertapi.convert(
-            'pdf', {'File': upload_io}).save_files('modified_document.pdf')
-
-        print("The PDF saved to %s" % saved_files)
-
-        pdfpath = os.path.join('modified_document.pdf')
-
-        convertapi.convert('encrypt', {'File': pdfpath, 'UserPassword': random_code,
-                           'OwnerPassword': 'hornbill'}, from_format='pdf').save_files('modified_document.pdf')
-
+        
         file_name = f'{random_code}_Incident Report Letter'
         with open(pdfpath, "rb") as pdf_file:
             pdf_data = pdf_file.read()
@@ -1264,8 +1253,8 @@ def submit_report():
             cnx = create_connection_pool()
             cursor1=cnx.get_connection()
             db_cursor = cursor1.cursor()
-            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)",
-                              (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form,file_form_name,file_support_name, file_support_type, file_support, username, date_time, status,course1) VALUES (%s,%s, %s,%s, %s, %s, %s, %s, %s, %s, %s,%s)",
+                              (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending",course1))
             cursor1.commit()
 
             db_cursor.close()
@@ -1289,8 +1278,8 @@ def submit_report():
             cnx = create_connection_pool()
             cursor1=cnx.get_connection()
             db_cursor = cursor1.cursor()
-            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name, file_support_name, file_support_type, file_support, username, date_time, status) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
-                              (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending"))
+            db_cursor.execute("INSERT INTO reports (report_id, course, report, file_form, file_form_name, file_support_name, file_support_type, file_support, username, date_time, status,course1) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s)",
+                              (random_code, department, report_text, pdf_data, file_name, support_filename, support_extension, support_data, username, current_datetime, "Pending",course1))
             cursor1.commit()
 
             db_cursor.close()
@@ -1307,6 +1296,8 @@ def submit_request():
     kind = request.form.get('forms')
     print(kind)
     if kind == "Temporary Gate Pass":
+       
+        course1 = session.get('course1', '')
 
         remarks = request.form.get('remarks')
         print(remarks)
@@ -1370,8 +1361,8 @@ def submit_request():
             cnx = create_connection_pool()
             cursor1=cnx.get_connection()
             db_cursor = cursor1.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name,file_form_type, file_form, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
-                              (random_code, department, remarks, file_name, pdf_data, ".pdf",support_filename, support_extension, support_data, username, current_datetime, "Pending",remarks))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name,file_form_type, file_form, file_support_name, file_support_type, file_support, username, date_time, status,remarks,course1) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s)",
+                              (random_code, department, remarks, file_name, pdf_data, ".pdf",support_filename, support_extension, support_data, username, current_datetime, "Pending",remarks,course1))
             cursor1.commit()
 
             db_cursor.close()
@@ -1392,8 +1383,8 @@ def submit_request():
             cnx = create_connection_pool()
             cursor1=cnx.get_connection()
             db_cursor = cursor1.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
-                              (random_code, department, remarks, file_name, pdf_data, ".pdf",support_filename, support_extension, support_data, username, current_datetime, "Pending",remarks))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks,course1) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s)",
+                              (random_code, department, remarks, file_name, pdf_data, ".pdf",support_filename, support_extension, support_data, username, current_datetime, "Pending",remarks,course1))
             cursor1.commit()
 
             db_cursor.close()
@@ -1402,6 +1393,8 @@ def submit_request():
             return redirect('/hello')
 
     elif kind == "Request for Non-Wearing of Uniform":
+        
+        course1 = session.get('course1', '')
         fieldwork = request.form.get('fieldwork')
         prolonged = request.form.get('prolonged')
         foreign = request.form.get('foreign')
@@ -1525,8 +1518,8 @@ def submit_request():
             cnx = create_connection_pool()
             cursor1=cnx.get_connection()
             db_cursor = cursor1.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
-                              (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending",""))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks,course1) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s)",
+                              (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending","",course1))
             cursor1.commit()
 
             db_cursor.close()
@@ -1547,8 +1540,8 @@ def submit_request():
             cnx = create_connection_pool()
             cursor1=cnx.get_connection()
             db_cursor = cursor1.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
-                              (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending",""))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks,course1) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s)",
+                              (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending","",course1))
             cursor1.commit()
 
             db_cursor.close()
@@ -1558,6 +1551,8 @@ def submit_request():
 
             # Request for new id
     elif kind == "Request for New ID":
+     
+        course1 = session.get('course1', '')
         fieldwork = request.form.get('fieldwork')
         prolonged = request.form.get('prolonged')
         foreign = request.form.get('foreign')
@@ -1682,8 +1677,8 @@ def submit_request():
             cnx = create_connection_pool()
             cursor1=cnx.get_connection()
             db_cursor = cursor1.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
-                              (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending",""))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks,course1) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s)",
+                              (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending","",course1))
             cursor1.commit()
 
             db_cursor.close()
@@ -1704,8 +1699,8 @@ def submit_request():
             cnx = create_connection_pool()
             cursor1=cnx.get_connection()
             db_cursor = cursor1.cursor()
-            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)",
-                              (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending",""))
+            db_cursor.execute("INSERT INTO forms_osd (form_id,course,report,file_form_name, file_form,file_form_type, file_support_name, file_support_type, file_support, username, date_time, status,remarks,course1) VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s)",
+                              (random_code, department, remarks, file_name, pdf_data,".pdf", support_filename, support_extension, support_data, username, current_datetime, "Pending","",course1))
             cursor1.commit()
 
             db_cursor.close()
@@ -2807,11 +2802,6 @@ def index():
     return render_template('index.html', username=username)
 
 
-@app.route('/about')
-def about():
-
-    return render_template('about.html')
-
 
 @app.route('/menu')
 def menu():
@@ -3798,6 +3788,7 @@ def homepage():
     if role == "student":
         profile_picture_data, name, course, year, roles = result_user_data
         session['namestudent'] = name
+        session['course1'] = course
         print(roles)
         print(name)
 
@@ -4722,8 +4713,7 @@ def preview_report_file():
                 print("wow1")
                 file_content, file_type = result
 
-                print(file_content)
-                print(file_type)
+                
 
                 response = send_file(
                     io.BytesIO(file_content),
@@ -4733,6 +4723,7 @@ def preview_report_file():
                 response.headers['Content-Disposition'] = f'inline; filename={file_type}.docx'
 
                 db_cursor.close()
+                
 
                 return response
 

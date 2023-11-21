@@ -329,7 +329,7 @@
               <div id="modalContainer10" class="modal">
                 <div class="modal-password-content">
                     <span class="close" onclick="closeModal13()">&times;</span>
-                    <form id="statusChangeForm1" method="POST" action="/preview_report_file" enctype="multipart/form-data">
+                    <form id="statusChangeForm1" method="POST" action="/preview_report_file" enctype="multipart/form-data" onsubmit="closeModal13()">
                     <h3 id="provision1" for="remarks" >Input Password:</h3><br>
                     <input type="password" id="complainant" name="complainant" class="form-input" required><br><br>
 
@@ -369,6 +369,7 @@
                             <tr>
                                 <th>Report ID</th>               
                                 <th>Complainant's Username</th>
+                                <th>Course</th>
                                 <th>Date and Time</th>
                                 <th>Department</th>
                                 <th>Status</th>
@@ -386,7 +387,9 @@
                             <tr >
                                 <td>{{ row[1] }}</td>
                                 <td>{{ row[2] }}</td>
+                                <td>{{ row[19] }}</td>
                                 <td>{{ row[3] }}</td>
+                                
                                 <td>{{ row[5] }}</td>
                                 <td>{{ row[6] }}</td>
                                     <td>
@@ -409,6 +412,7 @@
                                         <!-- Add a form to change the status -->
                                         <form id="statusChangeForm" onsubmit="checkStatus('{{ row[0] }}','{{ row[1] }}'); return false; ">
                                             <select name="new_status" id="new_status_select_{{ row[0] }}">
+                                              <option value="" selected disabled>Select Status:</option>
                                               <option value="On Going">On Going</option>
                                               <option value="Rejected">Rejected</option>
                                               <option value="Case Closed">Case Closed</option>
@@ -763,9 +767,9 @@
                   <div id="modalContainer11" class="modal">
                     <div class="modal-password-content">
                         <span class="close" onclick="closeModal14()">&times;</span>
-                        <form id="statusChangeForm3" method="POST" action="/preview_report_file1" enctype="multipart/form-data">
+                        <form id="statusChangeForm3" method="POST" action="/preview_report_file1" enctype="multipart/form-data" onsubmit="closeModal14()">
                         <h3 id="provision1" for="remarks" >Input Password:</h3><br>
-                        <input type="password" id="complainant" name="complainant" class="form-input" required><br><br>
+                        <input type="password" id="complainant2" name="complainant" class="form-input" required><br><br>
     
                         <button type="submit">Gain Access</button>
                         </form>
@@ -796,8 +800,8 @@
                                     <tr>
                                         <th>Report ID</th>               
                                         <th>SR-CODE</th>
+                                        <th>Course</th>
                                         <th>Date and Time</th>
-                                     
                                         <th>Status</th>
                                         <th>Attached Form</th>
                                         <th>Attached Supporting Document</th>
@@ -816,8 +820,9 @@
                                     <tr>
                                         <td>{{ row[0] }}</td>
                                         <td>{{ row[1] }}</td>
+                                        <td>{{ row[13] }}</td>
                                         <td>{{ row[2] }}</td>
-                                     
+                                       
                                         <td>{{ row[5] }}</td>
                                         <td><a style="text-decoration: underline; cursor: pointer;" onclick="openModal8('{{ row[0] }}')" target="_blank">{{ row[7] }}</a></td>
                                         <td> <a href="{{ url_for('preview_support_file1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
@@ -863,8 +868,9 @@
                                     <tr>
                                         <th>Report ID</th>               
                                         <th>SR-CODE</th>
+                                        <th>Course</th>
                                         <th>Date and Time</th>
-                                       
+                                        
                                         <th>Status</th>
                                         <th>Attached Form</th>
                                         <th>Attached Supporting Document</th>
@@ -881,8 +887,9 @@
                                     <tr>
                                         <td>{{ row[0] }}</td>
                                         <td>{{ row[1] }}</td>
+                                        <td>{{ row[13] }}</td>
                                         <td>{{ row[2] }}</td>
-                                      
+                                        
                                         <td>{{ row[5] }}</td>
                                         <td><a style="text-decoration: underline; cursor: pointer;" onclick="openModal8('{{ row[0] }}')" target="_blank">{{ row[7] }}</a></td>
                                         <td><a href="{{ url_for('preview_support_file1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
@@ -925,8 +932,8 @@
                                     <tr>
                                         <th>Report ID</th>               
                                         <th>SR-CODE</th>
+                                        <th>Course</th>
                                         <th>Date and Time</th>
-                                    
                                         <th>Status</th>
                                         <th>Attached Form</th>
                                         <th>Attached Supporting Document</th>
@@ -943,6 +950,7 @@
                                     <tr>
                                         <td>{{ row[0] }}</td>
                                         <td>{{ row[1] }}</td>
+                                        <td>{{ row[13] }}</td>
                                         <td>{{ row[2] }}</td>
                                     
                                         <td>{{ row[5] }}</td>
@@ -1242,9 +1250,9 @@
           <div id="modalContainer12" class="modal">
             <div class="modal-password-content">
                 <span class="close" onclick="closeModal15()">&times;</span>
-                <form id="statusChangeForm4" method="POST" action="/preview_call_file" enctype="multipart/form-data">
+                <form id="statusChangeForm4" method="POST" action="/preview_call_file" enctype="multipart/form-data" onsubmit="closeModal15()">
                 <h3 id="provision1" for="remarks" >Input Password:</h3><br>
-                <input type="password" id="complainant" name="complainant" class="form-input" required><br><br>
+                <input type="password" id="complainant1" name="complainant" class="form-input" required><br><br>
 
                 <button type="submit">Gain Access</button>
                 </form>
@@ -1345,9 +1353,9 @@
                   <div id="modalContainer13" class="modal">
                     <div class="modal-password-content">
                         <span class="close" onclick="closeModal16()">&times;</span>
-                        <form id="statusChangeForm5" method="POST" action="/preview_written_file" enctype="multipart/form-data">
+                        <form id="statusChangeForm5" method="POST" action="/preview_written_file" enctype="multipart/form-data" onsubmit="closeModal16()">
                         <h3 id="provision1" for="remarks" >Input Password:</h3><br>
-                        <input type="password" id="complainant" name="complainant" class="form-input" required><br><br>
+                        <input type="password" id="complainant3" name="complainant" class="form-input" required><br><br>
         
                         <button type="submit">Gain Access</button>
                         </form>
