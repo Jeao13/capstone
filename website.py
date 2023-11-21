@@ -38,10 +38,10 @@ import subprocess
 
 def create_connection_pool():
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
-    'user': os.environ.get('MYSQL_USER', 'mysql'),
-    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
-    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
+    'host': os.environ.get('MYSQL_HOST', 'localhost'),
+    'user': os.environ.get('MYSQL_USER', 'root'),
+    'password': os.environ.get('MYSQL_PASSWORD', ''),
+    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
     
@@ -394,33 +394,50 @@ def submit_notice():
         status1 = "checked"
         status = "not"
 
+
+    print(offense)
+
     if offense == "minor":
-        status2 = "checked"
-        status3 = "not"
-    else:
         status3 = "checked"
         status2 = "not"
+    elif offense == "major":
+        print("wow")
+        status2 = "checked"
+        status3 = "not"
 
     if offense1 == "minor":
-        status2 = "checked"
-        status3 = "not"
-    else:
         status3 = "checked"
         status2 = "not"
+    elif offense1 == "major":
+        status2 = "checked"
+        status3 = "not"
 
     if fieldwork1 == "fieldwork":
         status4 = "checked"
-        status5 = "not"
+        
     else:
         status4 = "not"
-        status5 = "checked"
+
 
     if fieldwork2 == "fieldwork1":
         status4 = "checked"
-        status5 = "not"
+        
     else:
         status4 = "not"
+
+    if prolonged1 == "prolonged":
         status5 = "checked"
+        
+    else:
+        status5 = "not"
+
+
+    if prolonged2 == "prolonged1":
+        status5 = "checked"
+        
+    else:
+        status5 = "not"
+        
 
     pdf_filename = 'notice.docx'
     doc = Document(pdf_filename)

@@ -657,7 +657,7 @@
                           <div class="form-element">
                             <label for="offense">Indicate Offense:</label> 
                               <p for="minor">
-                              <input type="radio" id="minor1" name="offense_type" value="minor">Minor Offense</p>
+                              <input type="radio" id="minor1" name="offense_type1" value="minor">Minor Offense</p>
                               <select list="sanctions" id="sanctionsInputminor1" style="display:none;" name="sanctionsminor1" placeholder="Select Section:" required>
                               <datalist id="sanctions">
                                 <option value="" selected disabled>Select Type of Sanction:</option>
@@ -680,7 +680,7 @@
 
 
                             <p for="major">
-                            <input type="radio" id="major1" name="offense_type" value="major">Major Offense</p>
+                            <input type="radio" id="major1" name="offense_type1" value="major">Major Offense</p>
                             <select list="sanctions" id="sanctionsInputmajor1" name="sanctionsmajor1" style="display:none;" placeholder="Select Section:" required>
                             <datalist id="sanctions">
                               <option value="" selected disabled>Select Type of Sanction:</option>
@@ -745,15 +745,15 @@
                           <div class="form-element">
                             <label for="dismiss">Reason for Dismissal:</label> 
                               <p for="fieldwork">
-                              <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork">The complaint is without merit.</p>
+                              <input type="checkbox" id="fieldwork1" name="fieldwork1" value="fieldwork1">The complaint is without merit.</p>
                               <p for="prolonged">
-                              <input type="checkbox" id="prolonged" name="prolonged" value="prolonged" onclick="toggleInput4()">Others, please specify:</p>
-                              <input type="text" id="specify2" name="specify2" style="display: none">
+                              <input type="checkbox" id="prolonged1" name="prolonged1" value="prolonged1" onclick="toggleInput5()">Others, please specify:</p>
+                              <input type="text" id="specify3" name="specify3" style="display: none">
                               <input type="hidden" name="status" value="Case Closed">
                           </div>
                         </div> 
                         <br><br>
-                        <button onclick="validateCheckboxes()">Submit</button>
+                        <button onclick="validateCheckboxes1()">Submit</button>
                     </form>
                 </div>
             </div>
