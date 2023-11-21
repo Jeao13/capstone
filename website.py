@@ -44,6 +44,7 @@ def create_connection_pool():
     'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
+    
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
 
     return cnxpool
@@ -91,15 +92,6 @@ def extract_information(docx_path):
                 content.append(doc.paragraphs.pop(0).text)
     
     return content
-
-def create_pdf(content, pdf_path):
-    pdf_canvas = canvas.Canvas(pdf_path, pagesize=letter)
-    pdf_canvas.drawString(72, 800, content)  # Adjust the coordinates as needed
-    pdf_canvas.save()
-
-def convert_docx_to_pdf(docx_path, pdf_path):
-    doc_content = extract_information(docx_path)
-    create_pdf(doc_content, pdf_path)
 
 
 

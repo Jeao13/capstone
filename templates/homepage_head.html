@@ -327,13 +327,13 @@
             <div id="tab2" class="tab-content"><h1 class="form-title">Complaints</h1>
 
               <div id="modalContainer10" class="modal">
-                <div class="modal-content">
+                <div class="modal-password-content">
                     <span class="close" onclick="closeModal13()">&times;</span>
-                     <form id="statusChangeForm1" method="POST" action="/preview_report_file" enctype="multipart/form-data">
-                    <label id="provision1" for="remarks" >Input Password:</label><br>
-                    <input type="password" id="complainant" name="complainant" required><br><br>
+                    <form id="statusChangeForm1" method="POST" action="/preview_report_file" enctype="multipart/form-data">
+                    <h3 id="provision1" for="remarks" >Input Password:</h3><br>
+                    <input type="password" id="complainant" name="complainant" class="form-input" required><br><br>
 
-                    <button type="submit">Submit</button>
+                    <button type="submit">Gain Access</button>
                     </form>
                 </div>
             </div>
@@ -437,140 +437,157 @@
               <div id="rejectModal" class="modal">
                 <div class="modal-content">
                     <span class="close" onclick="closeRejectModal()">&times;</span>
-                    <h1>Notice of Case Dismissal - Reject</h1>
+                    <h1 class="form-title">Notice of Case Dismissal - Reject</h1>
+                    <div style="margin-top:20px; margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
                     <form id="noticeformx" action="/submit_notice" method="POST" enctype="multipart/form-data">
-            
-                        <label for="complainant">Name of Complainant:</label><br>
-                        <input type="text" id="complainant" name="complainant" required><br><br>
-                
-                        <hr>
-                
-                        <label for="student">Name of the Student:</label><br>
-                        <input type="text" id="student" name="student" required><br><br>
-                
-                        <label for="srcode">SR-Code of the Student:</label><br>
-                        <input type="text" id="srcode" name="srcode" required><br><br>
-                
-                        <label for="section">Year and Section:</label><br>
-                        <input type="text" id="section" name="section" required><br><br>
-                
-                        <label for="department">Program:</label> 
-                        <select name="department" id="department" required>
-                            <option value="" selected disabled>Select the Department:</option> 
-                            <option value="CAFAD">CAFAD</option> 
-                            <option value="CICS">CICS</option> 
-                            <option value="CIT">CIT</option> 
-                            <option value="COE">COE</option> 
-                        </select><br><br>
-                
-                        <hr>
-                        <h3>Gender</h3>
-                
-                        <label for="male">
-                          <input type="radio" id="male" name="gender" value="male" required>
-                          Male
-                      </label>
-                      
-                      <label for="female">
-                          <input type="radio" id="female" name="gender" value="female">
-                          Female
-                      </label>
-                      
-                        
-                        <hr>
-                        <h3>Indicate Offense</h3>
-                        <label for="minor">
-                        <input type="radio" id="minor" name="offense_type" value="minor">
-                        Minor Offense</label>
-                        <input list="sanctions" id="sanctionsInputminor" style="display:none;" name="sanctionsminor" placeholder="Select Section:" required>
-                        <datalist id="sanctions">
-                            <option value="12.1.1 - attendance, punctuality, cutting classes">12.1.1 - attendance, punctuality, cutting classes</option> 
-                            <option value="12.1.2 - dress code, uniform">12.1.2 - dress code, uniform</option> 
-                            <option value="12.1.3 - property misuse">12.1.3 - property misuse</option> 
-                            <option value="12.1.4 - noise disturbance">12.1.4 - noise disturbance</option>
-                            <option value="12.1.5 - posting violation">12.1.5 - posting violation</option> 
-                            <option value="12.1.6 - notice removal">12.1.6 - notice removal</option> 
-                            <option value="12.1.7 - littering">12.1.7 - littering</option> 
-                            <option value="12.1.8 - smoking violation">12.1.8 - smoking violation</option>
-                            <option value="12.1.9 - trespassing">12.1.9 - trespassing</option> 
-                            <option value="12.1.10 - misconduct">12.1.10 - misconduct</option> 
-                            <option value="12.1.11 - harassment">12.1.11 - harassment</option> 
-                            <option value="12.1.12 - provocation, fight">12.1.12 - provocation, fight</option> 
-                            <option value="12.1.13 - PDA">12.1.13 - PDA</option> 
-                            <option value="12.1.14 - truancy">12.1.14 - truancy</option> 
-                        </datalist><br><br>
 
-                        <label for="major">
-                        <input type="radio" id="major" name="offense_type" value="major">
-                        Major Offense</label>
-                        <input list="sanctions" id="sanctionsInputmajor" name="sanctionsmajor" style="display:none;" placeholder="Select Section:" required>
-                        <datalist id="sanctions">
-                            <option value="13.1 - repeat offenses">13.1 - repeat offenses</option> 
-                            <option value="13.2 - insubordination">13.2 - insubordination</option>
-                            <option value="13.3 - smoking violation">13.3 - smoking violation</option> 
-                            <option value="13.4 - alcohol violation">13.4 - alcohol violation</option> 
-                            <option value="13.5 - intoxication">13.5 - intoxication</option> 
-                            <option value="13.6 - trespassing">13.6 - trespassing</option>
-                            <option value="13.7 - property misuse">13.7 - property misuse</option> 
-                            <option value="13.8 - Reckless endangerment">13.8 - Reckless endangerment</option> 
-                            <option value="13.9 - Gambling">13.9 - Gambling</option> 
-                            <option value="13.10 - Identity fraud">13.10 - Identity fraud</option> 
-                            <option value="13.11 - Misuse of university name/logo">13.11 - Misuse of university name/logo</option> 
-                            <option value="13.12 - Unauthorized representation">13.12 - Unauthorized representation</option> 
-                            <option value="13.13 - abusive behavior">13.13 - abusive behavior</option> 
-                            <option value="13.14 - unauthorized membership">13.14 - unauthorized membership</option> 
-                            <option value="13.15 - online misconduct">13.15 - online misconduct</option>
-                            <option value="13.16 - vandalism">13.16 - vandalism</option> 
-                            <option value="13.17 - academic disruption">13.17 - academic disruption</option> 
-                            <option value="13.18 - solicitation">13.18 - solicitation</option> 
-                            <option value="13.19 - physical harm">13.19 - physical harm</option>
-                            <option value="13.20 - weapons possession">13.20 - weapons possession</option> 
-                            <option value="13.21 - theft">13.21 - theft</option> 
-                            <option value="13.22 - bribery">13.22 - bribery</option> 
-                            <option value="13.23 - sexual misconduct">13.23 - sexual misconduct</option>
-                            <option value="13.24 - obscenity">13.24 - obscenity</option> 
-                            <option value="13.25 - defamation">13.25 - defamation</option> 
-                            <option value="13.26 - physical harm">13.26 - physical harm</option> 
-                            <option value="13.27 - falsification">13.27 - falsification</option>
-                            <option value="13.28 - disrepute">13.28 - disrepute</option> 
-                            <option value="13.29 - riot">13.29 - riot</option> 
-                            <option value="13.30 - destruction of property">13.30 - destruction of property</option> 
-                            <option value="13.31 - burglary">13.31 - burglary</option> 
-                            <option value="13.32 - hazing">13.32 - hazing</option> 
-                            <option value="13.33 - drugs">13.33 - drugs</option> 
-                            <option value="13.34 - firearms possession">13.34 - firearms possession</option> 
-                            <option value="13.35 - threats">13.35 - threats</option> 
-                            <option value="13.36 - felonies">13.36 - felonies</option> 
-                            <option value="13.37 - moral turpitude">13.37 - moral turpitude</option> 
-                            <option value="14.1 - cheating, mobile phone">14.1 - cheating, mobile phone</option> 
-                            <option value="14.2 - cheating, talking">14.2 - cheating, talking</option> 
-                            <option value="14.3 - cheating, dictating answers">14.3 - cheating, dictating answers</option> 
-                            <option value="14.4 - cheating, notes possession">14.4 - cheating, notes possession</option> 
-                            <option value="14.5 - cheating, outside information">14.5 - cheating, outside information</option> 
-                            <option value="14.6 - cheating, leakage facilitation">14.6 - cheating, leakage facilitation</option> 
-                            <option value="14.7 - cheating, buying/selling questions">14.7 - cheating, buying/selling questions</option> 
-                            <option value="14.8 - cheating, copying answers">14.8 - cheating, copying answers</option> 
-                            <option value="14.9 - cheating, covert devices">14.9 - cheating, covert devices</option> 
-                            <option value="14.10 - cheating, impersonation">14.10 - cheating, impersonation</option> 
-                            <option value="14.11 - plagiarism">14.11 - plagiarism</option> 
-                            <option value="14.12 - cheating, surrogate attendance">14.12 - cheating, surrogate attendance</option> 
-                            <option value="14.13 - plagiarism">14.13 - plagiarism</option> 
-                            <option value="14.14 - cheating, caught">14.14 - cheating, caught</option> 
-                            <option value="14.15 - cheating, aiding">14.15 - cheating, aiding</option> 
-            
-                        </datalist><br><br>
-                       
-                        <hr>
-                        <h3>Reason for Dismissal:</h3>
-                        <label for="fieldwork">
-                        <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork">
-                        The complaint is without merit.</label><br>
-                        <label for="prolonged">
-                        <input type="checkbox" id="prolonged" name="prolonged" value="prolonged" onclick="toggleInput4()">
-                        Others, please specify:</label><br>
-                        <input type="text" id="specify2" name="specify2" style="display: none"><br>
-                        <input type="hidden" name="status" value="Rejected">
-                            
+                        <label class="form-label-main" for="complainant">Complainant Details:</label> 
+                        <div style="margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
+                        <label for="complainant">Name of Complainant:</label>
+                        <input type="text" id="complainant" name="complainant" class="form-input" required>
+                
+                
+                        <label class="form-label-main" for="subcomplaint">Subject of Complaint Details:</label>
+                        <div style="margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
+
+                        <div class="form-row">
+                          <div class="form-element">
+                            <label for="student">Name of the Subject of Complaint:</label>
+                            <input type="text" id="student" name="student" class="form-input" required>
+                          </div>
+                          
+                          <div class="form-element">
+                            <label for="srcode">SR-Code of the Student:</label>
+                            <input type="text" id="srcode" name="srcode" class="form-input" required>
+                          </div>
+                        </div>
+
+                        <div class="form-row">
+                          <div class="form-element">
+                            <label for="section">Year and Section:</label>
+                            <input type="text" id="section" name="section" class="form-input" required>
+                          </div>
+                          
+                          <div class="form-element">
+                            <label for="department">Program:</label> 
+                              <select name="department" class="form-input" id="department" required>
+                                  <option value="" selected disabled>Select the Department:</option> 
+                                  <option value="CAFAD">CAFAD</option> 
+                                  <option value="CICS">CICS</option> 
+                                  <option value="CIT">CIT</option> 
+                                  <option value="COE">COE</option> 
+                              </select>
+                          </div>
+                        </div>
+
+                        <div class="form-row">
+                          <div class="form-element">
+                            <label for="gender">Gender:</label> 
+                            <p for="male">
+                            <input type="radio" id="male" name="gender" value="male" required>Male</p>
+                      
+                            <p for="female">
+                            <input type="radio" id="female" name="gender" value="female">Female</p>
+                          </div>
+                          
+                        <div class="form-element">
+                          <label for="offense">Indicate Offense:</label> 
+                          <p for="minor">
+                          <input type="radio" id="minor" name="offense_type" value="minor">Minor Offense</p>
+                          <select list="sanctions" id="sanctionsInputminor" style="display:none;" name="sanctionsminor" placeholder="Select Section:" required>
+                          <datalist id="sanctions">
+                            <option value="" selected disabled>Select Type of Sanction:</option>
+                            <option value="12.1.1 - attendance, punctuality, cutting classes">Section 12, item 12.1.1 - Violation of the usual classroom rules and regulations, such as cutting of classes set by the instructor.</option> 
+                            <option value="12.1.2 - dress code, uniform">Section 12, item 12.1.2 - Violation of Section 10 (Proper Uniform, Dress Code and Related Rules/Regulations).</option> 
+                            <option value="12.1.3 - property misuse">Section 12, item 12.1.3 - Unauthorized use of materials like chalk, board marker, board, and others inside the classrooms, laboratory rooms, library, audio visual room, auditorium, amphitheatre, multi-faith chapel, and other function rooms.</option> 
+                            <option value="12.1.4 - noise disturbance">Section 12, item 12.1.4 - Making all forms of disturbances such as excessive noise, loud use of mobile phones and other gadgets that tend to disrupt classes, meetings, the general peaceful atmosphere, and the like, of hallways, corridors, classrooms, laboratory rooms, library, audio visual room, auditorium, amphitheatre, multi-faith chapel, and other function rooms.</option>
+                            <option value="12.1.5 - posting violation">Section 12, item 12.1.5 - Posting, distributing or disseminating notices, posters, leaflets, broadsheets, opinionaires, questionnaires, streamers, tarpaulins without prior approval of University authorities through the OSAS (although the content is legal and not in any way vulgar, defamatory, slanderous, libelous).</option> 
+                            <option value="12.1.6 - notice removal">Section 12, item 12.1.6 - Unauthorized removal of official notices, posters, streamers, tarpaulins; and the like.</option> 
+                            <option value="12.1.7 - littering">Section 12, item 12.1.7 - Littering within University premises.</option> 
+                            <option value="12.1.8 - smoking violation">Section 12, item 12.1.8 - Smoking outside within 30-meter radius from the campus perimeter.</option>
+                            <option value="12.1.9 - trespassing">Section 12, item 12.1.9 - Breaking into a class or College-sponsored activities (in-campus/off-campus) without the permission of the organizer.</option> 
+                            <option value="12.1.10 - misconduct">Section 12, item 12.1.10 - Acts of mischief and/or misbehavior during in-campus/off-campus University-sponsored activities.</option> 
+                            <option value="12.1.11 - harassment">Section 12, item 12.1.11 - Unjust vexation or annoying/pestering any individual in the University.</option> 
+                            <option value="12.1.12 - provocation, fight">Section 12, item 12.1.12 - Provocation to a fight (quarrel or fistfight).</option> 
+                            <option value="12.1.13 - PDA">Section 12, item 12.1.13 - Public Display of Affection (PDA).</option> 
+                            <option value="12.1.14 - truancy">Section 12, item 12.1.14 - Failure to attend required university activities and programs.</option> 
+                          </datalist>
+                          </select>
+                        
+
+                        <p for="major">
+                          <input type="radio" id="major" name="offense_type" value="major">Major Offense</p>
+                          <select list="sanctions" id="sanctionsInputmajor" name="sanctionsmajor" style="display:none;" placeholder="Select Section:" required>
+                            <datalist id="sanctions">
+                              <option value="" selected disabled>Select Type of Sanction:</option>
+                              <option value="13.1 - repeat offenses">Section 13, item 13.1 - Committing more than three (3) minor offenses of any nature within a semester.</option> 
+                              <option value="13.2 - insubordination">Section 13, item 13.2 - Refusal to obey legal order of a person of authority such as (but not exclusively) refusing to identify himself when asked lawfully to do so, or refusal to receive the Memorandum of Disciplinary Action (MDA).</option>
+                              <option value="13.3 - smoking violation">Section 13, item 13.3 - Smoking anytime within University premises.</option> 
+                              <option value="13.4 - alcohol violation">Section 13, item 13.4 - Possession of and/or intoxication with alcoholic beverages within University premises or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.5 - intoxication">Section 13, item 13.5 - Entering University premises or attending off-campus University- sponsored activities in a drunken state.</option> 
+                              <option value="13.6 - trespassing">Section 13, item 13.6 - Unauthorized entry to the University premises or facilities.</option>
+                              <option value="13.7 - property misuse">Section 13, item 13.7 - Unauthorized use of University facilities and properties (projectors, ICT machines, air conditioners, classrooms, laboratory rooms, gymnasium, amphitheater, auditorium, audio-visual room, multi-faith chapel, and other function rooms).</option> 
+                              <option value="13.8 - Reckless endangerment">Section 13, item 13.8 - Acts which endanger the safety of any individual within University premises or during any off-campus University sponsored, and that which may cause harm to persons or cause damage to property of any member of the University community.</option> 
+                              <option value="13.9 - Gambling">Section 13, item 13.9 - Possession of any gambling paraphernalia and/or engaging in any form of gambling within University premises or outside within a 50-meter radius from the campus perimeter or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.10 - Identity fraud">Section 13, item 13.10 - Using the ID, registration form, examination permit, clearance form, official receipt (and other official school documents) of another student and/or lending the same for somebody else to use.</option> 
+                              <option value="13.11 - Misuse of university name/logo">Section 13, item 13.11 - Unauthorized use of the University name and seal/logo in connection with any activity, advertisement, merchandise or publication.</option> 
+                              <option value="13.12 - Unauthorized representation">Section 13, item 13.12 - Involvement in any off-campus activity such as (but not limited to) contest, play, band, choir, conference, congress, forum, seminar/workshop, training, association, society, or group, claiming as representative of the University or any of its recognized student organizations without written authorization from the respective University authority.</option> 
+                              <option value="13.13 - abusive behavior">Section 13, item 13.13 - Abusive behavior such as (but not limited to) use of rude language (utterances or written), offensive gestures, threatening remarks, intimidating acts, or bullying, within University premises or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.14 - unauthorized membership">Section 13, item 13.14 - Membership, affiliation or mere association to organizations such as fraternities or sororities which are not duly recognized by the University.</option> 
+                              <option value="13.15 - online misconduct">Section 13, item 13.15 - Use of the internet, mobile phones and other electronic communication/media devices with an extremely malicious and morally offensive content directed specifically against any individual.</option>
+                              <option value="13.16 - vandalism">Section 13, item 13.16 - Destructive acts, due to vandalism or drunkenness or recklessness that destroy campus property or property inside the campus owned by any member of the University community.</option> 
+                              <option value="13.17 - academic disruption">Section 13, item 13.17 - Instigating any activity leading to: stoppage of classes; preventing students and faculty members from attending classes; hindering employees/officials from entering the University premises/offices.</option> 
+                              <option value="13.18 - solicitation">Section 13, item 13.18 - Soliciting funds elsewhere without written permit or approval.</option> 
+                              <option value="13.19 - physical harm">Section 13, item 13.19 - Acts that result to slight physical injury against any individual within the University premises or during any off-campus University-sponsored activities.</option>
+                              <option value="13.20 - weapons possession">Section 13, item 13.20 - Bringing bladed objects and similar objects require written permission from concerned instructors.</option> 
+                              <option value="13.21 - theft">Section 13, item 13.21 - Stealing any personal property (money, cellphone, calculator, laptop.) owned by any member of the University community within University premises or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.22 - bribery">Section 13, item 13.22 - Bribery of any nature given to any employee of the University or facilitate office transactions and the like to obtain favor.</option> 
+                              <option value="13.23 - sexual misconduct">Section 13, item 13.23 - Engaging in lewd, indecent, obscene or immoral conduct (such as necking, petting, peeping, exhibitionism, sexual solicitation, lasciviousness, etc.) within University premises or during any off-campus University-sponsored activities.</option>
+                              <option value="13.24 - obscenity">Section 13, item 13.24 - Producing, possessing, distributing, publishing, exhibiting and/or disseminating literature, films, prints, plays, shows or similar forms such as (but not limited to) pornographic materials, of all kinds and types, which are offensive to morals, contrary to law, public order, good custom, and University policies.</option> 
+                              <option value="13.25 - defamation">Section 13, item 13.25 - Making, publishing or circulating defamatory information, in any form, means or kind, about the University, and any member of the University community with an extremely libelous, defamatory, seditious content.</option> 
+                              <option value="13.26 - physical harm">Section 13, item 13.26 - Acts that cause serious physical injury which may include damage to property, such as dangerous driving of vehicles inside the campus or participation in brawls or physical assault against any individual, within University premises or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.27 - falsification">Section 13, item 13.27 - Furnishing false or fraudulent information to the University in connection with official documents he/she submits or with any official investigation or fact-finding activities; and/or submission of fake or spurious document as an academic requirement and/or forgery, alteration or misuse of University documents, records or credentials.</option>
+                              <option value="13.28 - disrepute">Section 13, item 13.28 - Acts that bring into disrepute the name of the University.</option> 
+                              <option value="13.29 - riot">Section 13, item 13.29 - Student protests whose distinctive character is intimidation, obstruction and/or destruction.</option> 
+                              <option value="13.30 - destruction of property">Section 13, item 13.30 - Hooliganism or other serious acts of willful destruction of assets and properties owned by the University.</option> 
+                              <option value="13.31 - burglary">Section 13, item 13.31 - Burglary, robbery or other serious acts of thievery of any property owned by the University or property inside the campus owned by any member of the University community.</option> 
+                              <option value="13.32 - hazing">Section 13, item 13.32 - Involvement in hazing (even outside the jurisdiction of the University) which is an initiation rite used as a prerequisite for admission in a fraternity, sorority or organization by placing the applicant, recruit or neophyte, either by force or deception, in humiliating situations or subjecting him/her to psychological suffering or physical injury.</option> 
+                              <option value="13.33 - drugs">Section 13, item 13.33 - Possession, illegal use, selling and/or distribution of dangerous drugs or prohibited chemicals/substances and their derivatives, including but not limited to narcotic elements such as marijuana, heroin, cocaine, opium, morphine, amphetamine-based drugs within University premises or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.34 - firearms possession">Section 13, item 13.34 - Unlawful possession of firearms, explosives, incendiary devices, chemical or biological substances, or other various deadly weapons, within University premises or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.35 - threats">Section 13, item 13.35 - Serious threat on someone else’s life and/or property.</option> 
+                              <option value="13.36 - felonies">Section 13, item 13.36 - Acts that constitute high crime, whether attempted or consummated, such as (but not limited to) prostitution, rape, arson, etc., within University premises or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.37 - moral turpitude">Section 13, item 13.37 - Conviction of a criminal offense before any court of law involving moral turpitude against any person or property other than through reckless imprudence.</option> 
+                              <option value="14.1 - cheating, mobile phone">Section 14, item 14.1 - Use of mobile phones during examinations.</option> 
+                              <option value="14.2 - cheating, talking">Section 14, item 14.2 - Talking with one another during examinations.</option> 
+                              <option value="14.3 - cheating, dictating answers">Section 14, item 14.3 - Assisting or dictating answers to fellow examinees.</option> 
+                              <option value="14.4 - cheating, notes possession">Section 14, item 14.4 - Possession or passing of lecture notes or any materials during examination.</option> 
+                              <option value="14.5 - cheating, outside information">Section 14, item 14.5 - Receiving information related to the exam from outside the examination room.</option> 
+                              <option value="14.6 - cheating, leakage facilitation">Section 14, item 14.6 - Facilitating/aiding in the dissemination of leakage.</option> 
+                              <option value="14.7 - cheating, buying/selling questions">Section 14, item 14.7 - Buying or selling of test questionnaires/papers or any portion thereof.</option> 
+                              <option value="14.8 - cheating, copying answers">Section 14, item 14.8 - Copying from or allowing another to copy from one’s examination paper.</option> 
+                              <option value="14.9 - cheating, covert devices">Section 14, item 14.9 - Use of improvised or covert means/devices to carry out a cheating act during examination.</option> 
+                              <option value="14.10 - cheating, impersonation">Section 14, item 14.10 - Having somebody else to take the examination in his/her behalf.</option> 
+                              <option value="14.11 - plagiarism">Section 14, item 14.11 - Passing as one’s work any assigned report, case analysis, reaction paper, experiment report, laboratory report, research homework, term paper, thesis, projects, and the like when copied from another.</option> 
+                              <option value="14.12 - cheating, surrogate attendance">Section 14, item 14.12 - Asking another person to attend symposium, seminar, and exams in his /her behalf.</option> 
+                              <option value="14.13 - plagiarism">Section 14, item 14.13 - Plagiarism in connection with any academic work.</option> 
+                              <option value="14.14 - cheating, caught">Section 14, item 14.14 - Misdeeds “caught in the act” or reported by the faculty, student or any member of the University community which may be determined by the OSD or Discipline Board as academic dishonesty after due process.</option> 
+                              <option value="14.15 - cheating, aiding">Section 14, item 14.15 - Aiding or abetting a cheating act when she/he is not a member of the class.</option> 
+                          </datalist>
+                        </select>
+                          </div>
+                        </div>
+
+                        <div class="form-row">
+                          <div class="form-element">
+                            <label for="dismiss">Reason for Dismissal:</label>
+                              <p for="fieldwork">
+                              <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork">The complaint is without merit.</p>
+                              <p for="prolonged">
+                              <input type="checkbox" id="prolonged" name="prolonged" value="prolonged" onclick="toggleInput4()">Others, please specify:</p>
+                              <input type="text" id="specify2" name="specify2" style="display: none">
+                              <input type="hidden" name="status" value="Rejected">
+                          </div>
+                        </div> 
                         <button onclick="validateCheckboxes()">Submit</button>
                     </form>
                 </div>
@@ -580,138 +597,158 @@
             <div id="caseModal" class="modal">
                 <div class="modal-content">
                     <span class="close" onclick="closeCaseModal()">&times;</span>
-                    <h1>Notice of Case Dismissal - Case Closed</h1>
+                    <h1 class="form-title">Notice of Case Dismissal - Case Closed</h1>
+                    <div style="margin-top:20px; margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
                     <form id="noticeform1" action="/submit_notice" method="POST" enctype="multipart/form-data">
-            
-                        <label for="complainant">Name of Complainant:</label><br>
-                        <input type="text" id="complainant" name="complainant" required><br><br>
-                
-                        <hr>
-                
-                        <label for="student">Name of the Student:</label><br>
-                        <input type="text" id="student" name="student" required><br><br>
-                
-                        <label for="srcode">SR-Code of the Student:</label><br>
-                        <input type="text" id="srcode" name="srcode" required><br><br>
-                
-                        <label for="section">Year and Section:</label><br>
-                        <input type="text" id="section" name="section" required><br><br>
-                
-                        <label for="department">Program:</label> 
-                        <select name="department" id="department" required>
-                            <option value="" selected disabled>Select the Department:</option> 
-                            <option value="CAFAD">CAFAD</option> 
-                            <option value="CICS">CICS</option> 
-                            <option value="CIT">CIT</option> 
-                            <option value="COE">COE</option> 
-                        </select><br><br>
-                
-                        <hr>
-                        <h3>Gender</h3>
-                        <label for="male">
-                        <input type="radio" id="male" name="gender" value="male" required>
-                        Male</label>
 
-                        <label for="female">
-                        <input type="radio" id="female" name="gender" value="female">
-                        Female</label>
-
-                        <hr>
-                        <h3>Indicate Offense</h3>
-
-                        <label for="minor">
-                        <input type="radio" id="minor1" name="offense_type" value="minor">
-                        Minor Offense</label>
-                        <input list="sanctions" id="sanctionsInputminor1" style="display:none;" name="sanctionsminor1" placeholder="Select Section:" required>
-                        <datalist id="sanctions">
-                            <option value="12.1.1 - attendance, punctuality, cutting classes">12.1.1 - attendance, punctuality, cutting classes</option> 
-                            <option value="12.1.2 - dress code, uniform">12.1.2 - dress code, uniform</option> 
-                            <option value="12.1.3 - property misuse">12.1.3 - property misuse</option> 
-                            <option value="12.1.4 - noise disturbance">12.1.4 - noise disturbance</option>
-                            <option value="12.1.5 - posting violation">12.1.5 - posting violation</option> 
-                            <option value="12.1.6 - notice removal">12.1.6 - notice removal</option> 
-                            <option value="12.1.7 - littering">12.1.7 - littering</option> 
-                            <option value="12.1.8 - smoking violation">12.1.8 - smoking violation</option>
-                            <option value="12.1.9 - trespassing">12.1.9 - trespassing</option> 
-                            <option value="12.1.10 - misconduct">12.1.10 - misconduct</option> 
-                            <option value="12.1.11 - harassment">12.1.11 - harassment</option> 
-                            <option value="12.1.12 - provocation, fight">12.1.12 - provocation, fight</option> 
-                            <option value="12.1.13 - PDA">12.1.13 - PDA</option> 
-                            <option value="12.1.14 - truancy">12.1.14 - truancy</option> 
-                        </datalist><br><br>
+                        <label class="form-label-main" for="complainant">Complainant Details:</label> 
+                        <div style="margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
+                        <label for="complainant">Name of Complainant:</label>
+                        <input type="text" id="complainant" name="complainant" class="form-input" required>
 
 
-                        <label for="major">
-                        <input type="radio" id="major1" name="offense_type" value="major">
-                        Major Offense</label>
-                        <input list="sanctions" id="sanctionsInputmajor1" name="sanctionsmajor1" style="display:none;" placeholder="Select Section:" required>
-                        <datalist id="sanctions">
-                            <option value="13.1 - repeat offenses">13.1 - repeat offenses</option> 
-                            <option value="13.2 - insubordination">13.2 - insubordination</option>
-                            <option value="13.3 - smoking violation">13.3 - smoking violation</option> 
-                            <option value="13.4 - alcohol violation">13.4 - alcohol violation</option> 
-                            <option value="13.5 - intoxication">13.5 - intoxication</option> 
-                            <option value="13.6 - trespassing">13.6 - trespassing</option>
-                            <option value="13.7 - property misuse">13.7 - property misuse</option> 
-                            <option value="13.8 - Reckless endangerment">13.8 - Reckless endangerment</option> 
-                            <option value="13.9 - Gambling">13.9 - Gambling</option> 
-                            <option value="13.10 - Identity fraud">13.10 - Identity fraud</option> 
-                            <option value="13.11 - Misuse of university name/logo">13.11 - Misuse of university name/logo</option> 
-                            <option value="13.12 - Unauthorized representation">13.12 - Unauthorized representation</option> 
-                            <option value="13.13 - abusive behavior">13.13 - abusive behavior</option> 
-                            <option value="13.14 - unauthorized membership">13.14 - unauthorized membership</option> 
-                            <option value="13.15 - online misconduct">13.15 - online misconduct</option>
-                            <option value="13.16 - vandalism">13.16 - vandalism</option> 
-                            <option value="13.17 - academic disruption">13.17 - academic disruption</option> 
-                            <option value="13.18 - solicitation">13.18 - solicitation</option> 
-                            <option value="13.19 - physical harm">13.19 - physical harm</option>
-                            <option value="13.20 - weapons possession">13.20 - weapons possession</option> 
-                            <option value="13.21 - theft">13.21 - theft</option> 
-                            <option value="13.22 - bribery">13.22 - bribery</option> 
-                            <option value="13.23 - sexual misconduct">13.23 - sexual misconduct</option>
-                            <option value="13.24 - obscenity">13.24 - obscenity</option> 
-                            <option value="13.25 - defamation">13.25 - defamation</option> 
-                            <option value="13.26 - physical harm">13.26 - physical harm</option> 
-                            <option value="13.27 - falsification">13.27 - falsification</option>
-                            <option value="13.28 - disrepute">13.28 - disrepute</option> 
-                            <option value="13.29 - riot">13.29 - riot</option> 
-                            <option value="13.30 - destruction of property">13.30 - destruction of property</option> 
-                            <option value="13.31 - burglary">13.31 - burglary</option> 
-                            <option value="13.32 - hazing">13.32 - hazing</option> 
-                            <option value="13.33 - drugs">13.33 - drugs</option> 
-                            <option value="13.34 - firearms possession">13.34 - firearms possession</option> 
-                            <option value="13.35 - threats">13.35 - threats</option> 
-                            <option value="13.36 - felonies">13.36 - felonies</option> 
-                            <option value="13.37 - moral turpitude">13.37 - moral turpitude</option> 
-                            <option value="14.1 - cheating, mobile phone">14.1 - cheating, mobile phone</option> 
-                            <option value="14.2 - cheating, talking">14.2 - cheating, talking</option> 
-                            <option value="14.3 - cheating, dictating answers">14.3 - cheating, dictating answers</option> 
-                            <option value="14.4 - cheating, notes possession">14.4 - cheating, notes possession</option> 
-                            <option value="14.5 - cheating, outside information">14.5 - cheating, outside information</option> 
-                            <option value="14.6 - cheating, leakage facilitation">14.6 - cheating, leakage facilitation</option> 
-                            <option value="14.7 - cheating, buying/selling questions">14.7 - cheating, buying/selling questions</option> 
-                            <option value="14.8 - cheating, copying answers">14.8 - cheating, copying answers</option> 
-                            <option value="14.9 - cheating, covert devices">14.9 - cheating, covert devices</option> 
-                            <option value="14.10 - cheating, impersonation">14.10 - cheating, impersonation</option> 
-                            <option value="14.11 - plagiarism">14.11 - plagiarism</option> 
-                            <option value="14.12 - cheating, surrogate attendance">14.12 - cheating, surrogate attendance</option> 
-                            <option value="14.13 - plagiarism">14.13 - plagiarism</option> 
-                            <option value="14.14 - cheating, caught">14.14 - cheating, caught</option> 
-                            <option value="14.15 - cheating, aiding">14.15 - cheating, aiding</option> 
-            
-                        </datalist><br><br>
-    
-                        <hr>
-                        <h3>Reason for Dismissal:</h3>
-                        <label for="fieldwork">
-                        <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork">
-                        The complaint is without merit.</label><br>
-                        <label for="prolonged1">
-                        <input type="checkbox" id="prolonged1" name="prolonged1" value="prolonged1" onclick="toggleInput5()">
-                        Others, please specify:</label><br>
-                        <input type="text" id="specify3" name="specify3" style="display: none"><br>
-                        <input type="hidden" name="status" value="Case Closed">
-                
+                        <label class="form-label-main" for="subcomplaint">Subject of Complaint Details:</label>
+                        <div style="margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
+
+                        <div class="form-row">
+                          <div class="form-element">
+                            <label for="student">Name of the Subject of Complaint:</label>
+                            <input type="text" id="student" name="student" class="form-input" required>
+                          </div>
+                          
+                          <div class="form-element">
+                            <label for="srcode">SR-Code of the Student:</label>
+                            <input type="text" id="srcode" name="srcode" class="form-input" required>
+                          </div>
+                        </div>
+
+                        <div class="form-row">
+                          <div class="form-element">
+                            <label for="section">Year and Section:</label>
+                            <input type="text" id="section" name="section" class="form-input" required>
+                          </div>
+                          
+                          <div class="form-element">
+                            <label for="department">Program:</label> 
+                              <select name="department" class="form-input" id="department" required>
+                                  <option value="" selected disabled>Select the Department:</option> 
+                                  <option value="CAFAD">CAFAD</option> 
+                                  <option value="CICS">CICS</option> 
+                                  <option value="CIT">CIT</option> 
+                                  <option value="COE">COE</option> 
+                              </select>
+                          </div>
+                        </div>
+
+                        <div class="form-row">
+                          <div class="form-element">
+                            <label for="gender">Gender:</label> 
+                            <p for="male">
+                            <input type="radio" id="male" name="gender" value="male" required>Male</p>
+                      
+                            <p for="female">
+                            <input type="radio" id="female" name="gender" value="female">Female</p>
+                          </div>
+
+                          <div class="form-element">
+                            <label for="offense">Indicate Offense:</label> 
+                              <p for="minor">
+                              <input type="radio" id="minor1" name="offense_type" value="minor">Minor Offense</p>
+                              <select list="sanctions" id="sanctionsInputminor1" style="display:none;" name="sanctionsminor1" placeholder="Select Section:" required>
+                              <datalist id="sanctions">
+                                <option value="" selected disabled>Select Type of Sanction:</option>
+                                <option value="12.1.1 - attendance, punctuality, cutting classes">Section 12, item 12.1.1 - Violation of the usual classroom rules and regulations, such as cutting of classes set by the instructor.</option> 
+                                <option value="12.1.2 - dress code, uniform">Section 12, item 12.1.2 - Violation of Section 10 (Proper Uniform, Dress Code and Related Rules/Regulations).</option> 
+                                <option value="12.1.3 - property misuse">Section 12, item 12.1.3 - Unauthorized use of materials like chalk, board marker, board, and others inside the classrooms, laboratory rooms, library, audio visual room, auditorium, amphitheatre, multi-faith chapel, and other function rooms.</option> 
+                                <option value="12.1.4 - noise disturbance">Section 12, item 12.1.4 - Making all forms of disturbances such as excessive noise, loud use of mobile phones and other gadgets that tend to disrupt classes, meetings, the general peaceful atmosphere, and the like, of hallways, corridors, classrooms, laboratory rooms, library, audio visual room, auditorium, amphitheatre, multi-faith chapel, and other function rooms.</option>
+                                <option value="12.1.5 - posting violation">Section 12, item 12.1.5 - Posting, distributing or disseminating notices, posters, leaflets, broadsheets, opinionaires, questionnaires, streamers, tarpaulins without prior approval of University authorities through the OSAS (although the content is legal and not in any way vulgar, defamatory, slanderous, libelous).</option> 
+                                <option value="12.1.6 - notice removal">Section 12, item 12.1.6 - Unauthorized removal of official notices, posters, streamers, tarpaulins; and the like.</option> 
+                                <option value="12.1.7 - littering">Section 12, item 12.1.7 - Littering within University premises.</option> 
+                                <option value="12.1.8 - smoking violation">Section 12, item 12.1.8 - Smoking outside within 30-meter radius from the campus perimeter.</option>
+                                <option value="12.1.9 - trespassing">Section 12, item 12.1.9 - Breaking into a class or College-sponsored activities (in-campus/off-campus) without the permission of the organizer.</option> 
+                                <option value="12.1.10 - misconduct">Section 12, item 12.1.10 - Acts of mischief and/or misbehavior during in-campus/off-campus University-sponsored activities.</option> 
+                                <option value="12.1.11 - harassment">Section 12, item 12.1.11 - Unjust vexation or annoying/pestering any individual in the University.</option> 
+                                <option value="12.1.12 - provocation, fight">Section 12, item 12.1.12 - Provocation to a fight (quarrel or fistfight).</option> 
+                                <option value="12.1.13 - PDA">Section 12, item 12.1.13 - Public Display of Affection (PDA).</option> 
+                                <option value="12.1.14 - truancy">Section 12, item 12.1.14 - Failure to attend required university activities and programs.</option> 
+                              </datalist>
+                              </select>
+
+
+                            <p for="major">
+                            <input type="radio" id="major1" name="offense_type" value="major">Major Offense</p>
+                            <select list="sanctions" id="sanctionsInputmajor1" name="sanctionsmajor1" style="display:none;" placeholder="Select Section:" required>
+                            <datalist id="sanctions">
+                              <option value="" selected disabled>Select Type of Sanction:</option>
+                              <option value="13.1 - repeat offenses">Section 13, item 13.1 - Committing more than three (3) minor offenses of any nature within a semester.</option> 
+                              <option value="13.2 - insubordination">Section 13, item 13.2 - Refusal to obey legal order of a person of authority such as (but not exclusively) refusing to identify himself when asked lawfully to do so, or refusal to receive the Memorandum of Disciplinary Action (MDA).</option>
+                              <option value="13.3 - smoking violation">Section 13, item 13.3 - Smoking anytime within University premises.</option> 
+                              <option value="13.4 - alcohol violation">Section 13, item 13.4 - Possession of and/or intoxication with alcoholic beverages within University premises or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.5 - intoxication">Section 13, item 13.5 - Entering University premises or attending off-campus University- sponsored activities in a drunken state.</option> 
+                              <option value="13.6 - trespassing">Section 13, item 13.6 - Unauthorized entry to the University premises or facilities.</option>
+                              <option value="13.7 - property misuse">Section 13, item 13.7 - Unauthorized use of University facilities and properties (projectors, ICT machines, air conditioners, classrooms, laboratory rooms, gymnasium, amphitheater, auditorium, audio-visual room, multi-faith chapel, and other function rooms).</option> 
+                              <option value="13.8 - Reckless endangerment">Section 13, item 13.8 - Acts which endanger the safety of any individual within University premises or during any off-campus University sponsored, and that which may cause harm to persons or cause damage to property of any member of the University community.</option> 
+                              <option value="13.9 - Gambling">Section 13, item 13.9 - Possession of any gambling paraphernalia and/or engaging in any form of gambling within University premises or outside within a 50-meter radius from the campus perimeter or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.10 - Identity fraud">Section 13, item 13.10 - Using the ID, registration form, examination permit, clearance form, official receipt (and other official school documents) of another student and/or lending the same for somebody else to use.</option> 
+                              <option value="13.11 - Misuse of university name/logo">Section 13, item 13.11 - Unauthorized use of the University name and seal/logo in connection with any activity, advertisement, merchandise or publication.</option> 
+                              <option value="13.12 - Unauthorized representation">Section 13, item 13.12 - Involvement in any off-campus activity such as (but not limited to) contest, play, band, choir, conference, congress, forum, seminar/workshop, training, association, society, or group, claiming as representative of the University or any of its recognized student organizations without written authorization from the respective University authority.</option> 
+                              <option value="13.13 - abusive behavior">Section 13, item 13.13 - Abusive behavior such as (but not limited to) use of rude language (utterances or written), offensive gestures, threatening remarks, intimidating acts, or bullying, within University premises or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.14 - unauthorized membership">Section 13, item 13.14 - Membership, affiliation or mere association to organizations such as fraternities or sororities which are not duly recognized by the University.</option> 
+                              <option value="13.15 - online misconduct">Section 13, item 13.15 - Use of the internet, mobile phones and other electronic communication/media devices with an extremely malicious and morally offensive content directed specifically against any individual.</option>
+                              <option value="13.16 - vandalism">Section 13, item 13.16 - Destructive acts, due to vandalism or drunkenness or recklessness that destroy campus property or property inside the campus owned by any member of the University community.</option> 
+                              <option value="13.17 - academic disruption">Section 13, item 13.17 - Instigating any activity leading to: stoppage of classes; preventing students and faculty members from attending classes; hindering employees/officials from entering the University premises/offices.</option> 
+                              <option value="13.18 - solicitation">Section 13, item 13.18 - Soliciting funds elsewhere without written permit or approval.</option> 
+                              <option value="13.19 - physical harm">Section 13, item 13.19 - Acts that result to slight physical injury against any individual within the University premises or during any off-campus University-sponsored activities.</option>
+                              <option value="13.20 - weapons possession">Section 13, item 13.20 - Bringing bladed objects and similar objects require written permission from concerned instructors.</option> 
+                              <option value="13.21 - theft">Section 13, item 13.21 - Stealing any personal property (money, cellphone, calculator, laptop.) owned by any member of the University community within University premises or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.22 - bribery">Section 13, item 13.22 - Bribery of any nature given to any employee of the University or facilitate office transactions and the like to obtain favor.</option> 
+                              <option value="13.23 - sexual misconduct">Section 13, item 13.23 - Engaging in lewd, indecent, obscene or immoral conduct (such as necking, petting, peeping, exhibitionism, sexual solicitation, lasciviousness, etc.) within University premises or during any off-campus University-sponsored activities.</option>
+                              <option value="13.24 - obscenity">Section 13, item 13.24 - Producing, possessing, distributing, publishing, exhibiting and/or disseminating literature, films, prints, plays, shows or similar forms such as (but not limited to) pornographic materials, of all kinds and types, which are offensive to morals, contrary to law, public order, good custom, and University policies.</option> 
+                              <option value="13.25 - defamation">Section 13, item 13.25 - Making, publishing or circulating defamatory information, in any form, means or kind, about the University, and any member of the University community with an extremely libelous, defamatory, seditious content.</option> 
+                              <option value="13.26 - physical harm">Section 13, item 13.26 - Acts that cause serious physical injury which may include damage to property, such as dangerous driving of vehicles inside the campus or participation in brawls or physical assault against any individual, within University premises or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.27 - falsification">Section 13, item 13.27 - Furnishing false or fraudulent information to the University in connection with official documents he/she submits or with any official investigation or fact-finding activities; and/or submission of fake or spurious document as an academic requirement and/or forgery, alteration or misuse of University documents, records or credentials.</option>
+                              <option value="13.28 - disrepute">Section 13, item 13.28 - Acts that bring into disrepute the name of the University.</option> 
+                              <option value="13.29 - riot">Section 13, item 13.29 - Student protests whose distinctive character is intimidation, obstruction and/or destruction.</option> 
+                              <option value="13.30 - destruction of property">Section 13, item 13.30 - Hooliganism or other serious acts of willful destruction of assets and properties owned by the University.</option> 
+                              <option value="13.31 - burglary">Section 13, item 13.31 - Burglary, robbery or other serious acts of thievery of any property owned by the University or property inside the campus owned by any member of the University community.</option> 
+                              <option value="13.32 - hazing">Section 13, item 13.32 - Involvement in hazing (even outside the jurisdiction of the University) which is an initiation rite used as a prerequisite for admission in a fraternity, sorority or organization by placing the applicant, recruit or neophyte, either by force or deception, in humiliating situations or subjecting him/her to psychological suffering or physical injury.</option> 
+                              <option value="13.33 - drugs">Section 13, item 13.33 - Possession, illegal use, selling and/or distribution of dangerous drugs or prohibited chemicals/substances and their derivatives, including but not limited to narcotic elements such as marijuana, heroin, cocaine, opium, morphine, amphetamine-based drugs within University premises or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.34 - firearms possession">Section 13, item 13.34 - Unlawful possession of firearms, explosives, incendiary devices, chemical or biological substances, or other various deadly weapons, within University premises or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.35 - threats">Section 13, item 13.35 - Serious threat on someone else’s life and/or property.</option> 
+                              <option value="13.36 - felonies">Section 13, item 13.36 - Acts that constitute high crime, whether attempted or consummated, such as (but not limited to) prostitution, rape, arson, etc., within University premises or during any off-campus University-sponsored activities.</option> 
+                              <option value="13.37 - moral turpitude">Section 13, item 13.37 - Conviction of a criminal offense before any court of law involving moral turpitude against any person or property other than through reckless imprudence.</option> 
+                              <option value="14.1 - cheating, mobile phone">Section 14, item 14.1 - Use of mobile phones during examinations.</option> 
+                              <option value="14.2 - cheating, talking">Section 14, item 14.2 - Talking with one another during examinations.</option> 
+                              <option value="14.3 - cheating, dictating answers">Section 14, item 14.3 - Assisting or dictating answers to fellow examinees.</option> 
+                              <option value="14.4 - cheating, notes possession">Section 14, item 14.4 - Possession or passing of lecture notes or any materials during examination.</option> 
+                              <option value="14.5 - cheating, outside information">Section 14, item 14.5 - Receiving information related to the exam from outside the examination room.</option> 
+                              <option value="14.6 - cheating, leakage facilitation">Section 14, item 14.6 - Facilitating/aiding in the dissemination of leakage.</option> 
+                              <option value="14.7 - cheating, buying/selling questions">Section 14, item 14.7 - Buying or selling of test questionnaires/papers or any portion thereof.</option> 
+                              <option value="14.8 - cheating, copying answers">Section 14, item 14.8 - Copying from or allowing another to copy from one’s examination paper.</option> 
+                              <option value="14.9 - cheating, covert devices">Section 14, item 14.9 - Use of improvised or covert means/devices to carry out a cheating act during examination.</option> 
+                              <option value="14.10 - cheating, impersonation">Section 14, item 14.10 - Having somebody else to take the examination in his/her behalf.</option> 
+                              <option value="14.11 - plagiarism">Section 14, item 14.11 - Passing as one’s work any assigned report, case analysis, reaction paper, experiment report, laboratory report, research homework, term paper, thesis, projects, and the like when copied from another.</option> 
+                              <option value="14.12 - cheating, surrogate attendance">Section 14, item 14.12 - Asking another person to attend symposium, seminar, and exams in his /her behalf.</option> 
+                              <option value="14.13 - plagiarism">Section 14, item 14.13 - Plagiarism in connection with any academic work.</option> 
+                              <option value="14.14 - cheating, caught">Section 14, item 14.14 - Misdeeds “caught in the act” or reported by the faculty, student or any member of the University community which may be determined by the OSD or Discipline Board as academic dishonesty after due process.</option> 
+                              <option value="14.15 - cheating, aiding">Section 14, item 14.15 - Aiding or abetting a cheating act when she/he is not a member of the class.</option> 
+                            </datalist>
+                            </select>
+                          </div>
+                        </div>
+                        
+                        <div class="form-row">
+                          <div class="form-element">
+                            <label for="dismiss">Reason for Dismissal:</label> 
+                              <p for="fieldwork">
+                              <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork">The complaint is without merit.</p>
+                              <p for="prolonged">
+                              <input type="checkbox" id="prolonged" name="prolonged" value="prolonged" onclick="toggleInput4()">Others, please specify:</p>
+                              <input type="text" id="specify2" name="specify2" style="display: none">
+                              <input type="hidden" name="status" value="Case Closed">
+                          </div>
+                        </div> 
+                        <br><br>
                         <button onclick="validateCheckboxes()">Submit</button>
                     </form>
                 </div>
@@ -724,13 +761,13 @@
             
                 <div id="tab3" class="tab-content">
                   <div id="modalContainer11" class="modal">
-                    <div class="modal-content">
+                    <div class="modal-password-content">
                         <span class="close" onclick="closeModal14()">&times;</span>
                         <form id="statusChangeForm3" method="POST" action="/preview_report_file1" enctype="multipart/form-data">
-                        <label id="provision1" for="remarks" >Input Password:</label><br>
-                        <input type="password" id="complainant" name="complainant" required><br><br>
+                        <h3 id="provision1" for="remarks" >Input Password:</h3><br>
+                        <input type="password" id="complainant" name="complainant" class="form-input" required><br><br>
     
-                        <button type="submit">Submit</button>
+                        <button type="submit">Gain Access</button>
                         </form>
                     </div>
                 </div>
@@ -969,7 +1006,7 @@
                 <div id="tab9" class="tab-content">
                   <h3>File Report</h3>
                   <label class="form-label" for="kind">Kind of Report:</label> 
-                  <select name="kind" id="kind" required onchange="toggleInputFields()"> 
+                  <select name="kind" class="form-input" id="kind" required onchange="toggleInputFields()"> 
                       <option value="" selected disabled>Select a Report Type</option>
                       <option value="Formal Complaint">Formal Complaint</option> 
                       <option value="Incident Report">Incident Report</option> 
@@ -985,7 +1022,7 @@
                               <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
   
                               <label class="form-label-main" for="department">Department to Send:</label> 
-                                  <select name="department" id="department" required> 
+                                  <select name="department" class="form-input" id="department" required> 
                                   <option value="" selected disabled>Select the Department:</option> 
                                   <option value="CAFAD">CAFAD</option> 
                                   <option value="CICS">CICS</option> 
@@ -1099,20 +1136,15 @@
                             </div>
                             <br>
 
-
                             <div style="border-bottom: 1px solid #3c3c3c;"></div>
                         
-
                               <div class="checkbox-container">
                                   <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork" required>
-                                      <label for="fieldwork">
-                                          By clicking this, I hereby certify that the information furnished above is true to my knowledge and conscience.
-                                      </label>
+                                    <label for="fieldwork">
+                                        By clicking this, I hereby certify that the information furnished above is true to my knowledge and conscience.
+                                    </label>
                               </div>
-
-                              <hr>
-                             
-  
+                           
                               <input id="submit" type="submit" class="green-submit-button">
                           </form>
                   </div>
@@ -1121,7 +1153,7 @@
                     <form action="/submit_report" method="POST" enctype="multipart/form-data">
                       <input type="hidden" name="role" value="coord">
                       <label for="department" class="select-label">Department to Send:</label>
-                        <select name="department" id="department" required class="form-select">
+                        <select name="department" class="form-input" id="department" required class="form-select">
                           <option value="" selected disabled>Select the Department:</option> 
                           <option value="CAFAD">CAFAD</option>
                           <option value="CICS">CICS</option>
@@ -1193,14 +1225,13 @@
                           </div>
                         </div>
                       
-                  
+                        <div style="border-bottom: 1px solid #3c3c3c;"></div>
                       <div class="checkbox-container">
                         <input type="checkbox" id="fieldwork" name="fieldwork" value="fieldwork" required class="form-checkbox">
                         <label for="fieldwork" class="form-text">By clicking this, I hereby certify that the information furnished above is true to my knowledge and conscience.</label><br>
                         <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
                       </div>
                       
-                     
                       <input id="submit" type="submit" value="Submit" class="form-button">
                     </form>
                   </div>
@@ -1209,13 +1240,13 @@
 
         <div id="tab10" class="tab-content">
           <div id="modalContainer12" class="modal">
-            <div class="modal-content">
+            <div class="modal-password-content">
                 <span class="close" onclick="closeModal15()">&times;</span>
                 <form id="statusChangeForm4" method="POST" action="/preview_call_file" enctype="multipart/form-data">
-                <label id="provision1" for="remarks" >Input Password:</label><br>
-                <input type="password" id="complainant" name="complainant" required><br><br>
+                <h3 id="provision1" for="remarks" >Input Password:</h3><br>
+                <input type="password" id="complainant" name="complainant" class="form-input" required><br><br>
 
-                <button type="submit">Submit</button>
+                <button type="submit">Gain Access</button>
                 </form>
             </div>
         </div>
@@ -1227,11 +1258,11 @@
             <div class="form-container">
               <div class="form-element">
                 <label for="student" class="form-label">SR-CODE of the Student:</label>
-                        <input type="text" id="student" name="student" pattern="[0-9]{2}-[0-9]{5}" placeholder="Ex: 20-06193" class="form-input">
+                        <input type="text" id="student" name="student" pattern="[0-9]{2}-[0-9]{5}" placeholder="Ex: 20-XXXXX" class="form-input">
               </div>
 
               <div class="form-element">
-                <label for="section" class="form-label">Section:</label>
+                <label for="section" class="form-label">Year and Section:</label>
                 <input type="text" id="section" name="section" class="form-input">
               </div>
             </div>
@@ -1312,20 +1343,21 @@
             
                 <div id="tab5" class="tab-content">
                   <div id="modalContainer13" class="modal">
-                    <div class="modal-content">
+                    <div class="modal-password-content">
                         <span class="close" onclick="closeModal16()">&times;</span>
                         <form id="statusChangeForm5" method="POST" action="/preview_written_file" enctype="multipart/form-data">
-                        <label id="provision1" for="remarks" >Input Password:</label><br>
-                        <input type="password" id="complainant" name="complainant" required><br><br>
+                        <h3 id="provision1" for="remarks" >Input Password:</h3><br>
+                        <input type="password" id="complainant" name="complainant" class="form-input" required><br><br>
         
-                        <button type="submit">Submit</button>
+                        <button type="submit">Gain Access</button>
                         </form>
                     </div>
                 </div>
                     <h1 class="section-title">Sanctions</h1>
+                    <div style="margin-top:20px; margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
                     
                     <div class="search-section">
-                      <h4 >Check Records</h4>
+                      <h3 >Check Student Records:</h3>
                       <form method="POST" action="/search_students" id="searchSrCode" required>
                         <div class="form-container">
                           <div class="form-element">
@@ -1669,14 +1701,14 @@
                   <div class="form-container">
                     <div class="form-element">
                       <label for="checked" class="form-label">Checked By:<div class="tooltip">?
-                        <span class="tooltiptext">Department/Program Chairperson /Adviser</span>
+                        <span class="tooltiptext">Department/ Program Chairperson /Adviser Name</span>
                       </div></label>
                       <input type="text"  id="checked" name="checked" class="form-input">
                     </div>
         
                     <div class="form-element">
                       <label for="verified" class="form-label">Verified By:<div class="tooltip">?
-                        <span class="tooltiptext">Dean/ Head, Academic Affairs</span>
+                        <span class="tooltiptext">Dean/ Head, Academic Affairs Name</span>
                       </div></label>
                       <input type="text" id="verified" name="verified" class="form-input">
                     </div>

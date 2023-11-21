@@ -20,7 +20,9 @@ body {
 
 /* Styles for the dropdown container */
 .dropdown {
-  display: flex; /* Display dropdown as a flex container */
+  box-shadow: none;
+  position: relative;
+  display: inline-block; /* Added to make the dropdown appear on the right side */
 }
 
 /* Styles for the profile button on the right side of the navbar */
@@ -198,13 +200,6 @@ body {
   background-position: 0;
 }
 
-/* Dropdown styles */
-.dropdown {
-  box-shadow: none;
-  position: relative;
-  display: inline-block; /* Added to make the dropdown appear on the right side */
-}
-
 .dropdown-menu {
   border-radius: 5px;
   display: none;
@@ -356,8 +351,7 @@ hr.separator {
 }
 
 #statusChangeForm > form > button {
-  
-  background-color:#1da333; /* Red button background color */
+  background-color:rgb(223, 190, 24); /* Red button background color */
 }
 
  /* Style for the modal container */
@@ -378,16 +372,18 @@ hr.separator {
 
 /* Style for the modal content */
 .modal-content {
-  background-color: #fefefe; 
+  background-color: #fefefe;
   padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
+  width: 60%;
   max-height: 80vh; /* Adjust the maximum height as needed */
   overflow-y: auto; /* Add overflow-y property to enable vertical scrolling */
-  margin-bottom: 20px; 
   border-radius: 10px;
- 
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
+
 .modal-content-button{
   float: left;
 }
@@ -462,7 +458,6 @@ form textarea {
   border: 1px solid #ccc;
   border-radius: 5px;
   margin: 5px 0;
-  
 }
 
 .form-input1 {
@@ -1409,17 +1404,17 @@ span {
 /* Tooltip text */
 .tooltip .tooltiptext {
   visibility: hidden;
-  width: 500px;
+  width: 350px;
   top: 100%;
   left: 50%;
   margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
-  background-color: black;
-  color: #fff;
+  background-color: rgb(255, 255, 255);
+  color: #000000;
   text-align: center;
   padding: 5px 0;
   border-radius: 6px;
   font-size: 10px;
- 
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   /* Position the tooltip text - see examples below! */
   position: absolute;
   z-index: 1;
@@ -1428,4 +1423,16 @@ span {
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
   visibility: visible;
+}
+
+.modal-password-content {
+  background-color: #fefefe;
+  padding: 35px;
+  max-height: 80vh; /* Adjust the maximum height as needed */
+  overflow-y: auto; /* Add overflow-y property to enable vertical scrolling */
+  border-radius: 10px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
