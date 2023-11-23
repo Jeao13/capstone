@@ -38,10 +38,10 @@ import subprocess
 
 def create_connection_pool():
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', 'localhost'),
-    'user': os.environ.get('MYSQL_USER', 'root'),
-    'password': os.environ.get('MYSQL_PASSWORD', ''),
-    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
+    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
+    'user': os.environ.get('MYSQL_USER', 'mysql'),
+    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
+    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
     
@@ -69,30 +69,6 @@ pdfkit_options = {
     'encoding': 'UTF-8',
 }
 
-# Define the function to periodically ping the database
-
-def extract_information(docx_path):
-    doc = Document(docx_path)
-    content = []
-
-    for paragraph in doc.paragraphs:
-        # Assuming the document structure is consistent
-        # Check for specific patterns to identify sections of interest
-        if "Name of Student" in paragraph.text:
-            content.append(paragraph.text.split(":")[1].strip())
-        elif "College" in paragraph.text:
-            content.append(paragraph.text.split(":")[1].strip())
-        elif "Year and Section" in paragraph.text:
-            content.append(paragraph.text.split(":")[1].strip())
-        elif "Subject of Complaint" in paragraph.text:
-            content.append(paragraph.text.split(":")[1].strip())
-        elif "Brief Narration" in paragraph.text:
-            # Assuming you want to extract a fixed number of lines for the brief narration
-            for _ in range(10):
-                content.append(doc.paragraphs.pop(0).text)
-    
-    return content
-
 
 
 @app.route('/get_data_endpoint', methods=['GET'])
@@ -113,44 +89,6 @@ def notifs(user_id, message):
     cursor1.commit()
 
     db_cursor.close()
-
-
-
-def replace_table_cell_placeholder_with_blob(table, row_index, col_index, blob_data, placeholder):
-    cell = table.cell(row_index, col_index)
-
-    # Clear existing content in the cell
-    for paragraph in cell.paragraphs:
-        for run in paragraph.runs:
-            run.clear()
-
-    # Create an in-memory file-like object
-    blob_stream = io.BytesIO(blob_data)
-
-    # Check file type and add accordingly
-    if placeholder.lower().endswith(('.png', '.jpg', '.jpeg')):
-
-        image = Image.open(blob_stream)
-        cell.paragraphs[0].runs[0].add_picture(blob_stream, width=Inches(1.0))
-    elif placeholder.lower().endswith('.pdf'):
-        print("pdf")
-        pdf_icon = OxmlElement('a:object')
-        pdf_icon.set('d:type', 'pdf')
-        pdf_icon.set('d:iconsrc', 'file://{}/path/to/pdf_icon.png'.format(os.getcwd()))
-        pdf_icon.set('d:iconupdate', 'always')
-
-        # Encode the binary data as base64
-        blob_base64 = base64.b64encode(blob_data).decode('utf-8')
-
-        pdf_icon.set('d:href', 'data:application/pdf;base64,' + blob_base64)
-        cell.paragraphs[0].runs[0].paragraph.insert_before(pdf_icon)
-        cell.paragraphs[0].runs[0].add_text(' [PDF]')
-    elif placeholder.lower().endswith('.mp4'):
-        # Handle video
-        pass
-    else:
-        # Handle other file types as needed
-        pass
 
 
 def replace_placeholder1(doc, placeholder, image_path, font_size=12, alignment=WD_ALIGN_PARAGRAPH.LEFT, bold=False, indentation_spaces=0):

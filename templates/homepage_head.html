@@ -377,7 +377,7 @@
                                 <th>Attached Evidence/s</th>
                                 <th>Action</th>
                                 <th>Change Status</th>
-                                <th>Delete Report</th>
+            
                             </tr>
                         </thead>
                        
@@ -422,13 +422,7 @@
                                     </td>
                                    
                                   
-                                <td style="justify-content:center">
-                                    <!-- Add a form to change the status -->
-                                    <form method="POST" action="{{ url_for('delete_report', report_id=row[1]) }}"
-                                          onsubmit="return confirm('Are you sure you want to delete this report?');">
-                                        <button type="submit" class="delete-button">Delete</button>
-                                    </form>
-                                </td>
+    
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -807,7 +801,7 @@
                                         <th>Attached Supporting Document</th>
                                         <th>Action</th>
                                         <th>Change Status</th>
-                                        <th>Delete Report</th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -838,13 +832,7 @@
                                             <button type="submit"><i class="fa-solid fa-pen-to-square"></i></button>
                                         </form>
                                         </td>
-                                        <td>
-                                            <!-- Add a form to change the status -->
-                                            <form method="POST" action="{{ url_for('delete_report1', report_id=row[0]) }}"
-                                                  onsubmit="return confirm('Are you sure you want to delete this report?');">
-                                                <button type="submit">Delete</button>
-                                            </form>
-                                        </td>
+                                      
                                     </tr>
                                     {% endif %}
                                     {% endfor %}
@@ -876,7 +864,7 @@
                                         <th>Attached Supporting Document</th>
                                         <th>Action</th>
                                         <th>Change Status</th>
-                                        <th>Delete Report</th>
+                                       
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -903,13 +891,7 @@
                                            
                                      
                                         </td>
-                                        <td>
-                                            <!-- Add a form to change the status -->
-                                            <form method="POST" action="{{ url_for('delete_report1', report_id=row[0]) }}"
-                                                  onsubmit="return confirm('Are you sure you want to delete this report?');">
-                                                <button type="submit">Delete</button>
-                                            </form>
-                                        </td>
+                                      
                                     </tr>
                                     {% endif %}
                                     {% endfor %}
@@ -938,7 +920,7 @@
                                         <th>Attached Form</th>
                                         <th>Attached Supporting Document</th>
                                         <th>Report</th>
-                                        <th>Delete Report</th>
+                                        
                                         <th>Remarks</th>
                                     </tr>
                                 </thead>
@@ -957,13 +939,7 @@
                                         <td><a style="text-decoration: underline; cursor: pointer;" onclick="openModal8('{{ row[0] }}')" target="_blank">{{ row[7] }}</a></td>
                                         <td><a href="{{ url_for('preview_support_file1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
                                         <td><button class="modern-sleek-view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
-                                        <td>
-                                            <!-- Add a form to change the status -->
-                                            <form method="POST" action="{{ url_for('delete_report1', report_id=row[0]) }}"
-                                                  onsubmit="return confirm('Are you sure you want to delete this report?');">
-                                                <button type="submit">Delete</button>
-                                            </form>
-                                        </td>
+
                                         <td><button class="modern-sleek-view-report-button" onclick="openModal5('{{ row[12] }}')">View Remarks</button></td>
                                     </tr>
                                     {% endif %}
