@@ -357,9 +357,7 @@
                     <option value="CIT">CIT</option> 
                     <option value="COE">COE</option> 
                 </select><br><br>
-                <form method="POST" action="{{ url_for('delete_all_report2') }}" onsubmit="return confirm('Are you sure you want to delete all this report?');">
-                  <button class="delete_all_report" type="submit">Delete All Report</button>
-                </form>
+             
                 {% endif %}
             
               
@@ -784,10 +782,7 @@
                     <div id="table-container">
                         
                         <div id="pending">
-                            <form method="POST" action="{{ url_for('delete_all_report1', status="Pending")}}"
-                        onsubmit="return confirm('Are you sure you want to delete all this report?');">
-                          <button class="del-btn" type="submit">Delete All Report</button> 
-                      </form>
+                           
                       {% if request|selectattr('5', 'equalto', 'Pending')|list %}
                             <table class="rep-table">
                                 <thead>
@@ -845,10 +840,7 @@
                         </div>
                     
                         <div id="ongoing" style="display:none;">
-                            <form method="POST" action="{{ url_for('delete_all_report1', status="Ongoing")}}"
-                            onsubmit="return confirm('Are you sure you want to delete all this report?');">
-                          <button class="del-btn" type="submit">Delete All Report</button> 
-                      </form>
+                           
                       {% if request|selectattr('5', 'equalto', 'Ongoing')|list %}
                             
                             <table class="rep-table">
@@ -904,10 +896,7 @@
                         </div>
                     
                         <div id="result" style="display:none;">
-                            <form method="POST" action="{{ url_for('delete_all_report1', status="Result")}}"
-                            onsubmit="return confirm('Are you sure you want to delete all this report?');">
-                          <button class="del-btn" type="submit">Delete All Report</button> 
-                      </form>
+                          
                       {% if request|selectattr('5', 'equalto', 'Approved')|list or request|selectattr('5', 'equalto', 'Rejected')|list %}
                             <table class="rep-table">
                                 <thead>
@@ -958,7 +947,7 @@
                     <div id="modalContainer9" class="modal">
                         <div class="modal-content">
                             <span class="close" onclick="closeModal11()">&times;</span>
-                             <form id="statusChangeForm1" method="POST" action="/submit_approve" enctype="multipart/form-data">
+                             <form id="statusChangeForm0" method="POST" action="/submit_approve" enctype="multipart/form-data">
                             <label id="provision1" for="remarks" >Message:</label><br>
                             <textarea id="remarks" name="remarks" rows="16" cols="100" style="resize: none;" ></textarea>
         
@@ -974,7 +963,7 @@
                     <div id="modalContainer0" class="modal">
                         <div class="modal-content">
                             <span class="close" onclick="closeModalx()">&times;</span>
-                            <form id="statusChangeForm2" method="POST" action="/submit_reject">
+                            <form id="statusChangeForm00" method="POST" action="/submit_reject">
                             <label id="provision1" for="remarks" >Reasons for Rejection:</label>
                             <textarea id="remarks" name="remarks" rows="5" cols="50" style="resize: none;" ></textarea><br><br>
                            
@@ -1787,6 +1776,7 @@
                 <th>Password</th>
                 <th>Name</th>
                 <th>Course</th>
+                <th>Role</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -1800,6 +1790,7 @@
               
                 <td style="color: transparent; user-select: none;"><input class="text-table" type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly>{{ row[4] }}</td>
                 <td style="color: transparent; user-select: none;"><input  class="text-table" type="text" name="course" value="{{ row[5] }}" readonly>{{ row[5] }}</td>
+                <td>{{ row[7] }}</td>
                 <td>
                   <button class="edit-button" onclick="toggleReadonly1(this,'{{ row[0] }}')"><i class="fa-solid fa-user-pen"></i></button>
                   <button id="changebutton1_{{ row[0] }}" class="change-button" onclick="updateRow1(this)" disabled><i class="fa-solid fa-pen-to-square"></i></button>
@@ -1829,6 +1820,7 @@
             <th>Password</th>
             <th>Name</th>
             <th>Course</th>
+            <th>Role</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -1842,6 +1834,7 @@
           
             <td style="color: transparent; user-select: none;"><input  class="text-table" type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly>{{ row[4] }}</td>
             <td style="color: transparent; user-select: none;"><input  class="text-table" type="text" name="course" value="{{ row[5] }}" readonly>{{ row[5] }}</td>
+            <td>{{ row[7] }}</td>
             <td>
               <button class="edit-button" onclick="toggleReadonly2(this,'{{ row[0] }}')"><i class="fa-solid fa-user-pen"></i></button>
               <button id="changebutton2_{{ row[0] }}" class="change-button" onclick="updateRow2(this)" disabled><i class="fa-solid fa-pen-to-square"></i></button>
@@ -1870,6 +1863,7 @@
         <th>Password</th>
         <th>Name</th>
         <th>Course</th>
+        <th>Role</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -1883,6 +1877,7 @@
       
         <td style="color: transparent; user-select: none;"><input  class="text-table"  type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly>{{ row[4] }}</td>
         <td style="color: transparent; user-select: none;"><input class="text-table"  type="text" name="course" value="{{ row[5] }}" readonly>{{ row[5] }}</td>
+        <td>{{ row[7] }}</td>
         <td>
           <button class="edit-button" onclick="toggleReadonly3(this,'{{ row[0] }}')"><i class="fa-solid fa-user-pen"></i></button>
           <button id="changebutton3_{{ row[0] }}" class="change-button" onclick="updateRow3(this)" disabled><i class="fa-solid fa-pen-to-square"></i></button>
@@ -1910,6 +1905,7 @@
     <th>Password</th>
     <th>Name</th>
     <th>Course</th>
+    <th>Role</th>
     <th>Action</th>
   </tr>
 </thead>
@@ -1923,6 +1919,7 @@
   
     <td style="color: transparent; user-select: none;"><input class="text-table"  type="text" name="name" style="width:80%;" value="{{ row[4] }}" readonly>{{ row[4] }}</td>
     <td style="color: transparent; user-select: none;"><input  class="text-table" type="text" name="course" value="{{ row[5] }}" readonly>{{ row[5] }}</td>
+    <td>{{ row[7] }}</td>
     <td>
       <button class="edit-button" onclick="toggleReadonly4(this,'{{ row[0] }}')"><i class="fa-solid fa-user-pen"></i></button>
       <button id="changebutton4_{{ row[0] }}" class="change-button" onclick="updateRow4(this)" disabled><i class="fa-solid fa-pen-to-square"></i></button>

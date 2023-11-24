@@ -354,7 +354,7 @@ function openModal1(id2) {
     newButton.id = 'id';
     newButton.name = 'id';
 
-    const form = document.getElementById('statusChangeForm1');
+    const form = document.getElementById('statusChangeForm0');
     form.appendChild(newButton);
 
     
@@ -555,7 +555,7 @@ function openModal2(id1) {
     newButton.id = 'id';
     newButton.name = 'id';
 
-    const form = document.getElementById('statusChangeForm2');
+    const form = document.getElementById('statusChangeForm00');
     form.appendChild(newButton);
 
     
