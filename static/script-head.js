@@ -1541,7 +1541,18 @@ function checkStatus(id,code) {
     }
 
     else if (selectedValue === 'Case Closed') {
-        showCaseModal(id,code);
+        $.ajax({
+            type: 'POST',  // Or 'GET' if your server expects a GET request
+            url: '/change_report_status/' + ReportId,  // Replace with your server URL
+            data: { new_status: 'Case Closed' },  // Send data to the server
+            success: function() {
+                location.reload()
+            },
+            error: function(error) {
+                // Handle errors, if any
+                console.error(error);
+            }
+        });
         return false; // Prevent the form submission
     }
 
