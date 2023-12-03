@@ -53,6 +53,9 @@
         <ul >
             <li><a href="#tab1"><i class="fa-solid fa-house"></i>Dashboard</a></li>
             <hr><li><a href="#tab2"><i class="fa-solid fa-file"></i>Complaints</a></li>
+            {% if user_source == 'accounts_coordinator'%}
+            <li><a href="#tab11"><i class="fa-solid fa-file"></i>My Complaints</a></li>
+            {% endif %}
             <li><a href="#tab3"><i class="fa-solid fa-file-export"></i>Form Requests</a></li>
             {% if user_source == 'accounts_coordinator'%}
             <li><a href="#tab9"><i class="fa-solid fa-file-lines"></i>Lodge Complaint</a></li>   
@@ -172,7 +175,25 @@
    
 
 
-        
+          <div id="tab11" class="tab-content">
+            {% if complaints1 %}
+    {% for row in complaints1|sort(attribute='3', reverse=true) %}
+        <div class="report" style="border:1px solid black;">
+            <b>Report ID:</b> {{ row[1] }}<br>
+            <div class="report_small">
+                <b>Date and Time:</b> {{ row[3] }}<br>
+                <button class="view-report-button" onclick="openModal('{{ row[4] }}')">View Report</button>
+                <b>Department:</b> {{ row[5] }}<br>   
+                <b>Status:</b> {{ row[6] }}<br>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>You have no reports.</p>
+{% endif %}
+            
+
+          </div>
         
           <div id="tab1" class="tab-content active">
 
@@ -350,7 +371,7 @@
                   </div>
                 {% if user_source == 'accounts_head' %}
                 <label for="department1">Department:</label> 
-                <select name="department1" id="department1">
+                <select name="department1" id="department1" required>
                     <option value="" selected disabled>Select the Department:</option> 
                     <option value="CAFAD">CAFAD</option> 
                     <option value="CICS">CICS</option> 
@@ -861,7 +882,7 @@
                                 </thead>
                                 <tbody>
                         
-                                    {% for row in request|sort(attribute='2load', reverse=true) %}
+                                    {% for row in request|sort(attribute='2', reverse=true) %}
                                     {% if row[5] == 'Ongoing' %}
                                     <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
                                     <tr>
@@ -994,14 +1015,16 @@
                   
                               <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
   
-                              <label class="form-label-main" for="department">Department to Send:</label> 
-                                  <select name="department" class="form-input" id="department" required> 
-                                  <option value="" selected disabled>Select the Department:</option> 
-                                  <option value="CAFAD">CAFAD</option> 
-                                  <option value="CICS">CICS</option> 
-                                  <option value="CIT">CIT</option> 
-                                  <option value="COE">COE</option> 
-                              </select>
+                              <label class="form-label-main" for="department">College to Send:</label> 
+                              <select name="department" class="form-input" id="department" required> 
+                                <option value="" selected disabled>Select the College:</option>
+                                <option value="CAFAD">CAFAD</option> 
+                                <option value="CICS">CICS</option> 
+                                <option value="CIT">CIT</option> 
+                                <option value="COE">COE</option> 
+                                <option value="COE1">COE1</option> 
+                                <option value="COE2">COE2</option> 
+                            </select>
                               <hr>
 
                               <div style="border-bottom: 1px solid #3c3c3c;"></div>
@@ -1125,14 +1148,16 @@
                   <div id="formContainer1" class="form-container" style="display: none;">
                     <form action="/submit_report" method="POST" enctype="multipart/form-data">
                       <input type="hidden" name="role" value="coord">
-                      <label for="department" class="select-label">Department to Send:</label>
-                        <select name="department" class="form-input" id="department" required class="form-select">
-                          <option value="" selected disabled>Select the Department:</option> 
-                          <option value="CAFAD">CAFAD</option>
-                          <option value="CICS">CICS</option>
-                          <option value="CIT">CIT</option>
-                          <option value="COE">COE</option>
-                        </select><br>
+                      <label for="department" class="select-label">College to Send:</label>
+                        <select name="department" class="form-input" id="department" required> 
+                                <option value="" selected disabled>Select the College:</option>
+                                <option value="CAFAD">CAFAD</option> 
+                                <option value="CICS">CICS</option> 
+                                <option value="CIT">CIT</option> 
+                                <option value="COE">COE</option> 
+                                <option value="COE1">COE1</option> 
+                                <option value="COE2">COE2</option> 
+                            </select><br>
 
                         <div style=" margin-top: 15px; border-bottom: 1px solid #3c3c3c;"></div>
 

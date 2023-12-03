@@ -192,6 +192,42 @@
         <div class="modal-content">
             <span class="close" id="closeModalBtn">&times;</span>
             <h3>File Report</h3>
+            <hr>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Reminders:</h4>
+                            <p style="margin-left: 20px;">1. If the subject of the complaint is from the following departments, select COE.</p>
+                                <div style="margin-left: 50px;">
+                                    <li >BS Electrical Engineering</li>
+                                    <li >BS Computer Engineering</li>
+                                    <li >BS Electronics Engineering</li>
+                                    <li >BS Instrumentation and Control Engineering</li>
+                                    <li >BS Mechatronics Engineering</li>
+                                    <li >BS Aerospace Engineering</li>
+                                    <li >BS Biomedical Engineering</li>
+                                </div>
+                            
+                            <p style="margin-left: 20px;">2. If the subject of the complaint is from the following departments, select COE1.</p>
+                                <div style="margin-left: 50px;">
+                                    <li >BS Civil Engineering</li>
+                                    <li >BS Sanitary Engineering</li>
+                                    <li >BS Geodetic Engineering</li>
+                                    <li >BS Geological Engineering</li>
+                                    <li >BS Transportation Engineering</li>
+                                    <li >BS Chemical Engineering</li>
+                                    <li >BS Food Engineering</li>
+                                    <li >BS Ceramics Engineering</li>
+                                    <li >BS Metallurgical Engineering</li>
+                                </div>
+                                
+                            <p style="margin-left: 20px;">3. If the subject of the complaint is from the following departments, select COE2.</p>
+                                <div style="margin-left: 50px;">
+                                    <li >BS Mechanical Engineering</li>
+                                    <li >BS Petroleum Engineering</li>
+                                    <li >BS Automotive Engineering</li>
+                                    <li >BS Naval Architecture and Marine Engineering</li>
+                                    <li >BS Industrial Engineering</li>
+                                </div>
+                    </div>
                 <label class="form-label" for="kind">Kind of Report:</label> 
                 <select name="kind" class="form-input" id="kind" required onchange="toggleInputFields()"> 
                     <option value="" selected disabled>Select a Report Type</option>
@@ -207,13 +243,15 @@
                 
                             <input type="hidden" id="namecomplain" name="namecomplain" value="{{name}}">
 
-                            <label class="form-label-main" for="department">Department to Send:</label> 
+                            <label class="form-label-main" for="department">College to Send:</label> 
                                 <select name="department" class="form-input" id="department" required> 
-                                <option value="" selected disabled>Select the Department:</option>
+                                <option value="" selected disabled>Select the College:</option>
                                 <option value="CAFAD">CAFAD</option> 
                                 <option value="CICS">CICS</option> 
                                 <option value="CIT">CIT</option> 
                                 <option value="COE">COE</option> 
+                                <option value="COE1">COE1</option> 
+                                <option value="COE2">COE2</option> 
                             </select>
                             <hr>
 
@@ -344,13 +382,15 @@
 
                 <div id="formContainer1" style="display: none;">
                     <form action="/submit_report" method="POST" enctype="multipart/form-data">
-                            <label class="form-label-main" for="department">Department to Send:</label> 
-                                <select name="department" class="form-input" id="department" required>
-                                <option value="" selected disabled>Select the Department:</option> 
+                            <label class="form-label-main" for="department">College to Send:</label> 
+                            <select name="department" class="form-input" id="department" required> 
+                                <option value="" selected disabled>Select the College:</option>
                                 <option value="CAFAD">CAFAD</option> 
                                 <option value="CICS">CICS</option> 
                                 <option value="CIT">CIT</option> 
                                 <option value="COE">COE</option> 
+                                <option value="COE1">COE1</option> 
+                                <option value="COE2">COE2</option> 
                             </select>
                             <hr>
 
@@ -436,6 +476,43 @@
         <div class="modal-content">
             <span class="close" id="closeModalBtn3">&times;</span>
             <h3>Request Form</h3>
+            <hr>
+            <div style="margin-bottom: 20px;">
+                <h4>Reminders:</h4>
+                <p style="margin-left: 20px;">1. If you are a requester individual from this following departments, select COE.</p>
+                    <div style="margin-left: 50px;">
+                        <li >BS Electrical Engineering</li>
+                        <li >BS Computer Engineering</li>
+                        <li >BS Electronics Engineering</li>
+                        <li >BS Instrumentation and Control Engineering</li>
+                        <li >BS Mechatronics Engineering</li>
+                        <li >BS Aerospace Engineering</li>
+                        <li >BS Biomedical Engineering</li>
+                    </div>
+                
+                <p style="margin-left: 20px;">2. If you are a requester individual from this following departments, select COE1.</p>
+                    <div style="margin-left: 50px;">
+                        <li >BS Civil Engineering</li>
+                        <li >BS Sanitary Engineering</li>
+                        <li >BS Geodetic Engineering</li>
+                        <li >BS Geological Engineering</li>
+                        <li >BS Transportation Engineering</li>
+                        <li >BS Chemical Engineering</li>
+                        <li >BS Food Engineering</li>
+                        <li >BS Ceramics Engineering</li>
+                        <li >BS Metallurgical Engineering</li>
+                    </div>
+
+                <p style="margin-left: 20px;">3. If you are a requester individual from this following departments, select COE2.</p>
+                    <div style="margin-left: 50px;">
+                        <li >BS Mechanical Engineering</li>
+                        <li >BS Petroleum Engineering</li>
+                        <li >BS Automotive Engineering</li>
+                        <li >BS Naval Architecture and Marine Engineering</li>
+                        <li >BS Industrial Engineering</li>
+                    </div>
+            </div>
+            
                 <label for="forms">Forms:</label> 
                 <select name="forms" class="form-input" id="forms" required onchange="toggleInputFields1()"> 
                     <option value="" selected disabled>Select Form:</option> 
@@ -449,14 +526,16 @@
                 
                 <div id="formContainer2" style="display: none;">
                     <form action="/submit_request" method="POST" enctype="multipart/form-data">
-                        <label for="department1">Department to Send:</label> 
-                            <select name="department1" class="form-input" id="department1" required>
-                                <option value=""selected disabled>Select the Department:</option> 
-                                <option value="CAFAD">CAFAD</option> 
-                                <option value="CICS">CICS</option> 
-                                <option value="CIT">CIT</option> 
-                                <option value="COE">COE</option> 
-                            </select><br>
+                        <label for="department1">College to Send:</label> 
+                        <select name="department1" class="form-input" id="department1" required> 
+                            <option value="" selected disabled>Select the College:</option>
+                            <option value="CAFAD">CAFAD</option> 
+                            <option value="CICS">CICS</option> 
+                            <option value="CIT">CIT</option> 
+                            <option value="COE">COE</option> 
+                            <option value="COE1">COE1</option> 
+                            <option value="COE2">COE2</option> 
+                        </select><br>
                         <hr>
                         
                         <label class="form-label-main" for="subcomplaint">Requesting Individual Details:</label> 
@@ -496,14 +575,16 @@
                 
                 <div id="formContainer3" style="display: none;">
                     <form action="/submit_request" method="POST" enctype="multipart/form-data">
-                        <label for="department">Department to Send:</label> 
-                            <select name="department1" class="form-input" id="department1" required>
-                                <option value="" selected disabled>Select the Department:</option> 
-                                <option value="CAFAD">CAFAD</option> 
-                                <option value="CICS">CICS</option> 
-                                <option value="CIT">CIT</option> 
-                                <option value="COE">COE</option> 
-                            </select><br>
+                        <label for="department">College to Send:</label> 
+                        <select name="department1" class="form-input" id="department1" required> 
+                            <option value="" selected disabled>Select the College:</option>
+                            <option value="CAFAD">CAFAD</option> 
+                            <option value="CICS">CICS</option> 
+                            <option value="CIT">CIT</option> 
+                            <option value="COE">COE</option> 
+                            <option value="COE1">COE1</option> 
+                            <option value="COE2">COE2</option> 
+                        </select><br>
                             <hr>
     
                             <label class="form-label-main" for="subcomplaint">Requesting Individual Details:</label> 
@@ -590,14 +671,16 @@
     
                 <div id="formContainer4" style="display: none;">
                     <form action="/submit_request" method="POST" enctype="multipart/form-data">
-                        <label for="department">Department to Send:</label> 
-                            <select name="department1" class="form-input" id="department1" required>
-                                <option value="" selected disabled>Select the Department:</option> 
-                                <option value="CAFAD">CAFAD</option> 
-                                <option value="CICS">CICS</option> 
-                                <option value="CIT">CIT</option> 
-                                <option value="COE">COE</option> 
-                            </select><br>
+                        <label for="department">College to Send:</label> 
+                        <select name="department1" class="form-input" id="department1" required> 
+                            <option value="" selected disabled>Select the College:</option>
+                            <option value="CAFAD">CAFAD</option> 
+                            <option value="CICS">CICS</option> 
+                            <option value="CIT">CIT</option> 
+                            <option value="COE">COE</option> 
+                            <option value="COE1">COE1</option> 
+                            <option value="COE2">COE2</option> 
+                        </select><br>
                             <hr>
                             
                             <label class="form-label-main" for="subcomplaint">Requesting Individual Details:</label> 
@@ -733,9 +816,9 @@
                             <button type="submit">Delete All Report</button>
                         </form>
     {% if user_source == 'accounts_head' %}
-    <label for="department1">Sort Department:</label> 
+    <label for="department1">Sort College:</label> 
     <select name="department1" id="department1">
-        <option value="" selected disabled>Select the Department:</option> 
+        <option value="" selected disabled>Select the College:</option> 
         <option value="CAFAD">CAFAD</option> 
         <option value="CICS">CICS</option> 
         <option value="CIT">CIT</option> 

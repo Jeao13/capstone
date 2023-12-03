@@ -38,13 +38,13 @@ import subprocess
 
 def create_connection_pool():
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', '127.0.0.1'),
-    'user': os.environ.get('MYSQL_USER', 'root'),
-    'password': os.environ.get('MYSQL_PASSWORD', 'hornbill'),
-    'database': os.environ.get('MYSQL_DATABASE', 'sys'),
+    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
+    'user': os.environ.get('MYSQL_USER', 'mysql'),
+    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
+    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
-    
+        
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
 
     return cnxpool
@@ -1001,7 +1001,13 @@ def submit_report():
 
 
         elif department == "COE":
-            Name_Coordinator = "Lovely Rose Tipan Hernandez"
+            Name_Coordinator = "Dolfus G. Miciano"
+
+        elif department == "COE1":
+            Name_Coordinator = "Therezia O. Conti"
+
+        elif department == "COE2":
+            Name_Coordinator = "Belen E. Bagui"
 
         username = session.get('username', '')
         print(username)
@@ -1011,10 +1017,44 @@ def submit_report():
         doc = Document(pdf_filename)
         # Replace placeholders
 
+        cnx = create_connection_pool()
+        cursor1=cnx.get_connection()
+        db_cursor = cursor1.cursor()
+        db_cursor.execute(
+            "SELECT * FROM accounts_cics WHERE Name = %s", (name,))
+        result_cics = db_cursor.fetchone()
+
+        db_cursor.execute(
+            "SELECT * FROM accounts_cafad WHERE Name = %s", (name,))
+        result_cafad = db_cursor.fetchone()
+
+        db_cursor.execute(
+            "SELECT * FROM accounts_coe WHERE Name = %s", (name,))
+        result_coe = db_cursor.fetchone()
+
+        db_cursor.execute(
+            "SELECT * FROM accounts_cit WHERE Name = %s", (name,))
+        result_cit = db_cursor.fetchone()
+
+        db_cursor.close()
+
+
+        if result_cics:
+            department1 = "CICS"
+        
+        elif result_cafad:
+            department1 = "CAFAD"
+
+        elif result_coe:
+            department1 = "COE"
+
+        elif result_cit:
+            department1 = "CIT"
+
         replace_table_cell_placeholder1(doc.tables[0], 2, 2, formatted_date, "(date)")
         replace_table_cell_placeholder1(doc.tables[0], 4, 1, Name_Coordinator, "NAME")
         replace_table_cell_placeholder1(doc.tables[0], 11, 8, name, "(student)")
-        replace_table_cell_placeholder1(doc.tables[0], 12, 8, department, "(college)")
+        replace_table_cell_placeholder1(doc.tables[0], 12, 8, department1, "(college)")
         replace_table_cell_placeholder1(doc.tables[0], 13, 8, section, "(section)")
 
         replace_table_cell_placeholder1(doc.tables[0], 23, 3, report_text, "(narration)")
@@ -1415,18 +1455,6 @@ def submit_request():
         else:
             status7 = "not"
 
-        if department == "CAFAD":
-            Name_Coordinator1 = "CAFAD Coordinator"
-
-        elif department == "CICS":
-            Name_Coordinator1 = "Lovely Rose Tipan Hernandez"
-
-        elif department == "COE":
-            Name_Coordinator1 = "Dolfus G. Miciano"
-
-        elif department == "CIT":
-            Name_Coordinator1 = "Nenita G. Hornilla"
-
         pdf_filename = 'Request for Non-Wearing of Uniform.docx'
         doc = Document(pdf_filename)
 
@@ -1558,17 +1586,6 @@ def submit_request():
         else:
             status7 = "not"
 
-        if department == "CAFAD":
-            Name_Coordinator1 = "CAFAD Coordinator"
-
-        elif department == "CICS":
-            Name_Coordinator1 = "Lovely Rose Tipan Hernandez"
-
-        elif department == "COE":
-            Name_Coordinator1 = "Dolfus G. Miciano"
-
-        elif department == "CIT":
-            Name_Coordinator1 = "Nenita G. Hornilla"
 
         pdf_filename = 'request for new id.docx'
         doc = Document(pdf_filename)
@@ -2024,11 +2041,7 @@ def submit_written():
         elif sanction in sanction_mapping2:
             sanction_number = "14"
 
-        if department == "CAFAD":
-            Name_Coordinator1 = "CAFAD Coordinator"
 
-        elif department == "CICS":
-            Name_Coordinator1 = "Lovely Rose Tipan Hernandez"
 
         pdf_filename = 'written warning.docx'
         doc = Document(pdf_filename)
@@ -2209,12 +2222,6 @@ def submit_written():
             sanction_number = "13"
         elif sanction in sanction_mapping2:
             sanction_number = "14"
-
-        if department == "CAFAD":
-            Name_Coordinator1 = "CAFAD Coordinator"
-
-        elif department == "CICS":
-            Name_Coordinator1 = "Lovely Rose Tipan Hernandez"
 
         pdf_filename = 'Written Reprimand.docx'
         doc = Document(pdf_filename)
@@ -2459,11 +2466,6 @@ def submit_written():
         }
         sanction_number1 = sanction_mapping3.get(sanction, "Unknown")
 
-        if department == "CAFAD":
-            Name_Coordinator1 = "CAFAD Coordinator"
-
-        elif department == "CICS":
-            Name_Coordinator1 = "Lovely Rose Tipan Hernandez"
 
         pdf_filename = 'letter of suspension.docx'
         doc = Document(pdf_filename)
@@ -2891,7 +2893,6 @@ def algorithm(complaint_text):
             for fold_idx, accuracy in enumerate(accuracies):
                 entries.append((model_name, fold_idx, accuracy))
 
-        # Initialize and train the KNeighborsClassifier model
         model = LinearSVC()
         model.fit(tfidf.transform(X_train), y_train)
 
@@ -3139,6 +3140,15 @@ def sanctions():
 def homepage_head():
     success = request.args.get('success')
     username = session.get('username', '')
+    cnx = create_connection_pool()
+    cursor1=cnx.get_connection()
+    db_cursor_reports = cursor1.cursor()
+
+    db_cursor_reports.execute(
+            "SELECT * FROM reports WHERE username = %s", (username,))
+    complaints1 = db_cursor_reports.fetchall()
+
+    db_cursor_reports.close()
 
     if request.method == 'POST':
         # Handle the POST request (form submission)
@@ -3209,6 +3219,7 @@ def homepage_head():
         year = ""
         session['namestudent'] = name
         session['courseall'] = course
+        print(course)
         print(name)
 
     else:
@@ -3610,11 +3621,14 @@ def homepage_head():
     reports = db_cursor_call_student.fetchall()
     db_cursor_call_student.close()
 
+    
+    
+
 
 
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage_head.html',counts5=filtered_counts5,counts4= filtered_counts4, counts2=counts2, counts3=counts3, counts=counts, counts1=counts1, isCoordinator=isCoordinator, request=reports4, profile_pictures=profile_pictures, coordinators=coordinators, reports3=reports3, reports1=reports1, reports=reports, reports2=reports2, username=username, profile_picture_base64=profile_picture_base643, name=name, course=course, year=year, user_source=user_source, warning=warning, reprimand=reprimand, suspension=suspension, call=call, profile_pictures1=profile_pictures1, profile_pictures2=profile_pictures2, profile_pictures3=profile_pictures3, profile_pictures4=profile_pictures4, cics=cics, cafad=cafad, coe=coe, cit=cit)
+    return render_template('homepage_head.html',complaints1=complaints1,counts5=filtered_counts5,counts4= filtered_counts4, counts2=counts2, counts3=counts3, counts=counts, counts1=counts1, isCoordinator=isCoordinator, request=reports4, profile_pictures=profile_pictures, coordinators=coordinators, reports3=reports3, reports1=reports1, reports=reports, reports2=reports2, username=username, profile_picture_base64=profile_picture_base643, name=name, course=course, year=year, user_source=user_source, warning=warning, reprimand=reprimand, suspension=suspension, call=call, profile_pictures1=profile_pictures1, profile_pictures2=profile_pictures2, profile_pictures3=profile_pictures3, profile_pictures4=profile_pictures4, cics=cics, cafad=cafad, coe=coe, cit=cit)
 
 
 @app.route('/hello', methods=['GET', 'POST'])
@@ -3946,8 +3960,10 @@ def homepage():
 
     print(roles)
 
+    
+
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage.html', roles=roles, notif=notifs, sanctions=sanctions, request1=request1, complaints=complaints, reports1=reports1, reports=reports, reports2=reports2, username=username, profile_picture_base64=profile_picture_base64, name=name, course=course, year=year, user_source=user_source, warning=warning, reprimand=reprimand, suspension=suspension, call=call,)
+    return render_template('homepage.html' ,roles=roles, notif=notifs, sanctions=sanctions, request1=request1, complaints=complaints, reports1=reports1, reports=reports, reports2=reports2, username=username, profile_picture_base64=profile_picture_base64, name=name, course=course, year=year, user_source=user_source, warning=warning, reprimand=reprimand, suspension=suspension, call=call,)
 
 
 tables1 = [
