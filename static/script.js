@@ -1473,7 +1473,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     
     
-
+    function validateForm() {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        var atLeastOneChecked = false;
+    
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                atLeastOneChecked = true;
+            }
+        });
+    
+        if (!atLeastOneChecked) {
+            alert('Please check at least one checkbox');
+            return false; // Prevent form submission
+        }
+    
+        // Form is valid, continue with submission
+        return true;
+    }
 
     
     

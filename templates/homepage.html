@@ -574,7 +574,7 @@
                 </div>
                 
                 <div id="formContainer3" style="display: none;">
-                    <form action="/submit_request" method="POST" enctype="multipart/form-data">
+                    <form onsubmit="return validateForm()" action="/submit_request" method="POST" enctype="multipart/form-data">
                         <label for="department">College to Send:</label> 
                         <select name="department1" class="form-input" id="department1" required> 
                             <option value="" selected disabled>Select the College:</option>
@@ -670,7 +670,7 @@
                 </div>
     
                 <div id="formContainer4" style="display: none;">
-                    <form action="/submit_request" method="POST" enctype="multipart/form-data">
+                    <form onsubmit="return validateForm()" action="/submit_request" method="POST" enctype="multipart/form-data">
                         <label for="department">College to Send:</label> 
                         <select name="department1" class="form-input" id="department1" required> 
                             <option value="" selected disabled>Select the College:</option>
