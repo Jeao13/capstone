@@ -781,19 +781,24 @@
 
 <div id="tab2" class="tab-content">
     {% if user_source == 'student'  %}
-    {% for row in complaints|sort(attribute='3', reverse=true) %}
-    <div class="report">
-        <b>Report ID:</b> {{ row[1] }}<br>
-            <div class="report_small">
-                <b>Date and Time:</b> {{ row[3] }}<br>
-                <button class="view-report-button" onclick="openModal('{{ row[4] }}')">View Report</button>
-                <b>Department:</b> {{ row[5] }}<br>   
-                <b>Status:</b> {{ row[6] }}<br>
+    {% if complaints %}
+        {% for row in complaints|sort(attribute='3', reverse=true) %}
+            <div class="report">
+                <b>Report ID:</b> {{ row[1] }}<br>
+                <div class="report_small">
+                    {% if complaints %}
+                        <b>Date and Time:</b> {{ row[3] }}<br>
+                        <button class="view-report-button" onclick="openModal('{{ row[4] }}')">View Report</button>
+                        <b>Department:</b> {{ row[5] }}<br>   
+                        <b>Status:</b> {{ row[6] }}<br>
+                    {% endif %}
+                </div>
             </div>
-    </div>
-   
-    {% endfor %}
+        {% endfor %}
+    {% else %}
+        <p style="margin-left:50px;">You have no reports.</p>
     {% endif %}
+{% endif %}
 
        <!-- The Modal -->
        <div class="modal" id="reportModal">
@@ -920,9 +925,15 @@
                 <b>Status:</b> {{ row[5] }}<br>
             </div>
         </div>
-       
+        
+      
+
     {% endif %}
 {% endfor %}
+
+{% if request1|selectattr('5', 'eq', 'Pending')|list|length == 0%}
+<p style="margin-left:50px;">You have no request in this status.</p>
+{% endif %}
 </div>
 
 <div id="ongoing" style="display: none;">
@@ -937,9 +948,15 @@
                 <b>Status:</b> {{ row[5] }}<br>
             </div>
         </div>
+
+
         
     {% endif %}
 {% endfor %}
+
+{% if request1|selectattr('5', 'eq', 'Ongoing')|list|length == 0%}
+<p style="margin-left:50px;">You have no request in this status.</p>
+{% endif %}
 </div>
 <div id="result" style="display: none;">
     {% for row in request1 |sort(attribute='2', reverse=true) %}
@@ -961,6 +978,10 @@
        
     {% endif %}
 {% endfor %}
+
+{% if request1|selectattr('5', 'eq', 'Approved')|list|length == 0 and request1|selectattr('5', 'eq', 'Rejected')|list|length == 0 %}
+<p style="margin-left:50px;">You have no request in this status.</p>
+{% endif %}
 </div>
 
 

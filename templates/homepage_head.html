@@ -176,6 +176,7 @@
 
 
           <div id="tab11" class="tab-content">
+            <h1 class="form-title">My Complaints</h1>
             {% if complaints1 %}
     {% for row in complaints1|sort(attribute='3', reverse=true) %}
         <div class="report" style="border:1px solid black;">
@@ -999,6 +1000,42 @@
 
                 <div id="tab9" class="tab-content">
                   <h3>File Report</h3>
+                  <hr>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Reminders:</h4>
+                            <p style="margin-left: 20px;">1. If the subject of the complaint is from the following departments, select COE.</p>
+                                <div style="margin-left: 50px;">
+                                    <li >BS Electrical Engineering</li>
+                                    <li >BS Computer Engineering</li>
+                                    <li >BS Electronics Engineering</li>
+                                    <li >BS Instrumentation and Control Engineering</li>
+                                    <li >BS Mechatronics Engineering</li>
+                                    <li >BS Aerospace Engineering</li>
+                                    <li >BS Biomedical Engineering</li>
+                                </div>
+                            
+                            <p style="margin-left: 20px;">2. If the subject of the complaint is from the following departments, select COE1.</p>
+                                <div style="margin-left: 50px;">
+                                    <li >BS Civil Engineering</li>
+                                    <li >BS Sanitary Engineering</li>
+                                    <li >BS Geodetic Engineering</li>
+                                    <li >BS Geological Engineering</li>
+                                    <li >BS Transportation Engineering</li>
+                                    <li >BS Chemical Engineering</li>
+                                    <li >BS Food Engineering</li>
+                                    <li >BS Ceramics Engineering</li>
+                                    <li >BS Metallurgical Engineering</li>
+                                </div>
+                                
+                            <p style="margin-left: 20px;">3. If the subject of the complaint is from the following departments, select COE2.</p>
+                                <div style="margin-left: 50px;">
+                                    <li >BS Mechanical Engineering</li>
+                                    <li >BS Petroleum Engineering</li>
+                                    <li >BS Automotive Engineering</li>
+                                    <li >BS Naval Architecture and Marine Engineering</li>
+                                    <li >BS Industrial Engineering</li>
+                                </div>
+                    </div>
                   <label class="form-label" for="kind">Kind of Report:</label> 
                   <select name="kind" class="form-input" id="kind" required onchange="toggleInputFields()"> 
                       <option value="" selected disabled>Select a Report Type</option>

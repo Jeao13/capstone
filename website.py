@@ -3149,7 +3149,7 @@ def homepage_head():
     complaints1 = db_cursor_reports.fetchall()
 
     db_cursor_reports.close()
-
+    
     if request.method == 'POST':
         # Handle the POST request (form submission)
         username = request.form['username']
