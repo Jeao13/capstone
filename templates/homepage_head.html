@@ -179,7 +179,7 @@
             <h1 class="form-title">My Complaints</h1>
             {% if complaints1 %}
     {% for row in complaints1|sort(attribute='3', reverse=true) %}
-        <div class="report" style="border:1px solid black;">
+        <div class="report">
             <b>Report ID:</b> {{ row[1] }}<br>
             <div class="report_small">
                 <b>Date and Time:</b> {{ row[3] }}<br>
@@ -999,12 +999,12 @@
                 </div>
 
                 <div id="tab9" class="tab-content">
-                  <h3>File Report</h3>
+                  <h3 class="form-title">File Report</h3>
                   <hr>
                     <div style="margin-bottom: 20px;">
                         <h4>Reminders:</h4>
-                            <p style="margin-left: 20px;">1. If the subject of the complaint is from the following departments, select COE.</p>
-                                <div style="margin-left: 50px;">
+                            <p style="margin-left: 20px; ">1. If the subject of the complaint is from the following departments, select COE.</p>
+                                <div style="margin-left: 50px; width:75%;">
                                     <li >BS Electrical Engineering</li>
                                     <li >BS Computer Engineering</li>
                                     <li >BS Electronics Engineering</li>
@@ -1015,7 +1015,7 @@
                                 </div>
                             
                             <p style="margin-left: 20px;">2. If the subject of the complaint is from the following departments, select COE1.</p>
-                                <div style="margin-left: 50px;">
+                                <div style="margin-left: 50px; width:75%;">
                                     <li >BS Civil Engineering</li>
                                     <li >BS Sanitary Engineering</li>
                                     <li >BS Geodetic Engineering</li>
@@ -1028,7 +1028,7 @@
                                 </div>
                                 
                             <p style="margin-left: 20px;">3. If the subject of the complaint is from the following departments, select COE2.</p>
-                                <div style="margin-left: 50px;">
+                                <div style="margin-left: 50px; width:75%;">
                                     <li >BS Mechanical Engineering</li>
                                     <li >BS Petroleum Engineering</li>
                                     <li >BS Automotive Engineering</li>
@@ -1547,7 +1547,7 @@
           
                       <div class="form-element">
                         <label for="sactions">Select a Sanction:</label>
-                          <select id="sanctionsInput" name="sanctions" placeholder="Select Section:" class="form-input">
+                          <select id="sanctionsInput" name="sanctions" placeholder="Select Section:" class="form-input" required>
                             <option value="" selected disabled>Select Type of Sanction:</option>
                             <option value="12.1.1 - attendance, punctuality, cutting classes">Section 12, item 12.1.1 - Violation of the usual classroom rules and regulations, such as cutting of classes set by the instructor.</option> 
                             <option value="12.1.2 - dress code, uniform">Section 12, item 12.1.2 - Violation of Section 10 (Proper Uniform, Dress Code and Related Rules/Regulations).</option> 
