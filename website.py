@@ -1294,8 +1294,7 @@ def submit_request():
        
         course1 = session.get('course1', '')
 
-        remarks = request.form.get('remarks')
-        print(remarks)
+        remarks = "The details of the report is located in the document"
         department = request.form.get('department1')
         print(department)
         section = request.form.get('section2')
