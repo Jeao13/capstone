@@ -1293,12 +1293,12 @@
             <div class="form-container">
               <div class="form-element">
                 <label for="student" class="form-label">SR-CODE of the Student:</label>
-                        <input type="text" id="student" name="student" pattern="[0-9]{2}-[0-9]{5}" placeholder="Ex: 20-XXXXX" class="form-input">
+                        <input type="text" id="student" name="student" pattern="[0-9]{2}-[0-9]{5}" placeholder="Ex: 20-XXXXX" class="form-input" required>
               </div>
 
               <div class="form-element">
                 <label for="section" class="form-label">Year and Section:</label>
-                <input type="text" id="section" name="section" class="form-input">
+                <input type="text" id="section" name="section" class="form-input" required>
               </div>
             </div>
 
@@ -1432,24 +1432,24 @@
                     <div class="form-container">
                       <div class="form-element">
                         <label for="student" class="form-label">SR-CODE of the Student:</label>
-                        <input type="text" id="student" name="student" pattern="[0-9]{2}-[0-9]{5}" placeholder="Ex: 20-06193" class="form-input">
+                        <input type="text" id="student" name="student" pattern="[0-9]{2}-[0-9]{5}" placeholder="Ex: 20-06193" class="form-input" required>
                       </div>
       
                       <div class="form-element">
                         <label for="student2" class="form-label">Name of the Complainant:</label>
-                        <input type="text" id="student2" name="student2" class="form-input">
+                        <input type="text" id="student2" name="student2" class="form-input" required>
                       </div>
                     </div>
 
                     <div class="form-container">
                       <div class="form-element">
                         <label for="date2" class="form-label">Date report received:</label>
-                        <input type="date" id="date2" name="date2" class="form-input1">
+                        <input type="date" id="date2" name="date2" class="form-input1"required>
                       </div>
       
                       <div class="form-element">
                         <label for="sactions">Select a Sanction:</label>
-                          <select id="sanctionsInput" name="sanctions" placeholder="Select Section:" class="form-input">
+                          <select id="sanctionsInput" name="sanctions" placeholder="Select Section:" class="form-input" required>
                             <option value="" selected disabled>Select Type of Sanction:</option>
                             <option value="12.1.1 - attendance, punctuality, cutting classes">Section 12, item 12.1.1 - Violation of the usual classroom rules and regulations, such as cutting of classes set by the instructor.</option> 
                             <option value="12.1.2 - dress code, uniform">Section 12, item 12.1.2 - Violation of Section 10 (Proper Uniform, Dress Code and Related Rules/Regulations).</option> 
@@ -1522,7 +1522,7 @@
                     </div>
 
                     <label id="provision1" for="remarks" class="form-label">What did the respondent do?:</label>
-                    <textarea id="remarks" name="remarks" rows="6" cols="20" required class="form-textarea"></textarea>
+                    <textarea id="remarks" name="remarks" rows="6" cols="20" required class="form-textarea" ></textarea>
               
                     <label id="provision1" for="norms" class="form-label">What happened in the investigation?:</label>
                     <textarea id="norms" name="norms" rows="6" cols="20" required class="form-textarea"></textarea>
@@ -1542,7 +1542,7 @@
                     <div class="form-container">
                       <div class="form-element">
                         <label for="student" class="form-label">SR-CODE of the Student:</label>
-                        <input type="text" id="student" name="student" pattern="[0-9]{2}-[0-9]{5}" placeholder="Ex: 20-06193" class="form-input">
+                        <input type="text" id="student" name="student" pattern="[0-9]{2}-[0-9]{5}" placeholder="Ex: 20-06193" class="form-input" required >
                       </div>
           
                       <div class="form-element">
@@ -1637,31 +1637,31 @@
                   <div class="form-container">
                     <div class="form-element">
                       <label for="student" class="form-label">SR-CODE of the Student:</label>
-                        <input type="text" id="student" name="student" pattern="[0-9]{2}-[0-9]{5}" placeholder="Ex: 20-06193" class="form-input">
+                        <input type="text" id="student" name="student" pattern="[0-9]{2}-[0-9]{5}" placeholder="Ex: 20-06193" class="form-input" required>
                     </div>
         
                     <div class="form-element">
                       <label for="parent" class="form-label">Name of Parent or Guardian:</label>
-                      <input type="text" id="parent" name="parent" class="form-input">
+                      <input type="text" id="parent" name="parent" class="form-input" required>
                     </div>
                   </div>
         
                   <div class="form-container">
                     <div class="form-element">
                       <label for="days" class="form-label">Days of Suspension:</label>
-                      <input type="number" id="days" name="days" pattern="[0-9]*" inputmode="numeric" class="form-input">
+                      <input type="number" id="days" name="days" pattern="[0-9]*" inputmode="numeric" class="form-input" required>
                     </div>
         
                     <div class="form-element">
                       <label for="effectivity" class="form-label">Effectivity:</label>
-                      <input type="text" id="effectivity" name="effectivity" class="form-input">
+                      <input type="text" id="effectivity" name="effectivity" class="form-input" required>
                     </div>
                   </div>
         
                   <div class="form-container">
                     <div class="form-element">
                       <label for="sactions" class="form-label">Select a Sanction:</label>
-                        <select id="sanctionsInput" name="sanctions" placeholder="Select Section:" class="form-input">
+                        <select id="sanctionsInput" name="sanctions" placeholder="Select Section:" class="form-input" required>
                           <option value="" selected disabled>Select Type of Sanction:</option>
                           <option value="12.1.1 - attendance, punctuality, cutting classes">Section 12, item 12.1.1 - Violation of the usual classroom rules and regulations, such as cutting of classes set by the instructor.</option> 
                           <option value="12.1.2 - dress code, uniform">Section 12, item 12.1.2 - Violation of Section 10 (Proper Uniform, Dress Code and Related Rules/Regulations).</option> 
@@ -1738,14 +1738,14 @@
                       <label for="checked" class="form-label">Checked By:<div class="tooltip">?
                         <span class="tooltiptext">Department/ Program Chairperson /Adviser Name</span>
                       </div></label>
-                      <input type="text"  id="checked" name="checked" class="form-input">
+                      <input type="text"  id="checked" name="checked" class="form-input" required>
                     </div>
         
                     <div class="form-element">
                       <label for="verified" class="form-label">Verified By:<div class="tooltip">?
                         <span class="tooltiptext">Dean/ Head, Academic Affairs Name</span>
                       </div></label>
-                      <input type="text" id="verified" name="verified" class="form-input">
+                      <input type="text" id="verified" name="verified" class="form-input" required>
                     </div>
                   </div>
         
