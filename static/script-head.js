@@ -1689,6 +1689,7 @@ function closeModal7() {
     modal.style.display = 'none';
 }
 
+
 function coordedit2(id) {
     const modal = document.getElementById('modalContainera');
     console.log(id)

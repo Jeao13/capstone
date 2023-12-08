@@ -45,6 +45,7 @@ def create_connection_pool():
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
 
+
         
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
 
