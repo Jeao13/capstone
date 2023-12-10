@@ -45,7 +45,6 @@ def create_connection_pool():
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
 
-
         
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
 
@@ -71,6 +70,20 @@ pdfkit_options = {
     'encoding': 'UTF-8',
 }
 
+
+def timestamp_to_datetime(value):
+    if isinstance(value, datetime):
+        return value
+    return datetime.fromtimestamp(value / 1000)
+
+def timestamp_to_datetime1(value):
+    if isinstance(value, str):
+        value = int(value)
+    return datetime.fromtimestamp(value / 1000)
+
+app.jinja_env.filters['timestamp_to_datetime'] = timestamp_to_datetime
+
+app.jinja_env.filters['timestamp_to_datetime1'] = timestamp_to_datetime1
 
 
 @app.route('/get_data_endpoint', methods=['GET'])
@@ -317,15 +330,21 @@ def submit_notice():
             Name_Coordinator = "Paula Joyce A. Buisan"
 
     elif program == "CICS":
-        Name_Coordinator = "Lovely Rose Tipan Hernandez"
+        Name_Coordinator = "Israel Penero"
 
 
     elif program == "CIT":
-        Name_Coordinator = "Dolfus G. Miciano"
+        Name_Coordinator = "Nenita G. Hornilla"
 
 
     elif program == "COE":
-        Name_Coordinator = "Lovely Rose Tipan Hernandez"
+        Name_Coordinator = "Dolfus G. Miciano"
+
+    elif program == "COE1":
+        Name_Coordinator = "Therezia O. Conti"
+
+    elif program == "COE2":
+        Name_Coordinator = "Belen E. Bagui"
 
     if gender == "male":
         status = "checked"

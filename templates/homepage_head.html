@@ -12,7 +12,7 @@
 
 
 </head>
-<body>
+<body onload="digi()">
  
       
   <div class="navbar">
@@ -50,7 +50,7 @@
             <img src="static\bsul.png" alt="Logo">
             <h3>Grievance System</h3>
         </div>
-        <ul >
+        <ul>
             <li><a href="#tab1"><i class="fa-solid fa-house"></i>Dashboard</a></li>
             <hr><li><a href="#tab2"><i class="fa-solid fa-file"></i>Complaints</a></li>
             {% if user_source == 'accounts_coordinator'%}
@@ -63,19 +63,29 @@
             <hr><li><a href="#tab5"><i class="fa-solid fa-scale-balanced"></i>Sanctions</a></li>  
           
             <li><a href="#tab10"><i class="fa-solid fa-pager"></i>Call Student</a></li>
-           
+            {% if user_source == 'accounts_head'%}
             <li class="dropdown">
-              {% if user_source == 'accounts_head'%}
+              
                 <a style="pointer-events: none;"><i class="fa-solid fa-users"></i>Manage Accounts</a>
                 <ul class="dropdown-menu">
                    
                     <li><a href="#tab7"><i class="fa-solid fa-users"></i>Coordinators</a></li>
                     <li><a href="#tab8"><i class="fa-solid fa-users"></i>Users</a></li>
-                    {% endif %}
+           
+
+                   
+                    
         </ul>
+        </li>
+        {% endif %}
+        <hr>
+        <li class="time" style="margin-top:50px;"> <p style="text-align: center;" id="tt"></p></li>
+  
+       
     
         
     </div>
+
     <div class="modal" id="reportModal5">
       <div class="modal-content">
           <span class="close" onclick="closeModal5()">&times;</span>
@@ -177,6 +187,7 @@
 
           <div id="tab11" class="tab-content">
             <h1 class="form-title">My Complaints</h1>
+            <div style="margin-top:20px; margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
             {% if complaints1 %}
     {% for row in complaints1|sort(attribute='3', reverse=true) %}
         <div class="report">
@@ -199,6 +210,7 @@
           <div id="tab1" class="tab-content active">
 
             <h1 class="form-title">Dashboard</h1>
+            <div style="margin-top:20px; margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
             {% if user_source == 'accounts_coordinator' %}
               <div class="chart-container-wrapper">
                 <div class="dashboard-section">
@@ -238,10 +250,13 @@
               </div>
             {% endif %}
             {% if user_source == 'accounts_head' %}
-           
+             <button style="margin-bottom:50px;" type="button" id="searchButton" onclick="openModal6()" >Generate Report</button>
               <div class="chart-container-wrapper">
+                
                 <div class="dashboard-section">
+                  
                   <div class="complaints-section">
+                    
                     <h2>Complaints</h2>
                     <ul>
                       {% for key, value in counts2.items() %}
@@ -319,7 +334,7 @@
               </div>
            
        <br>
-              <button type="button" id="searchButton" onclick="openModal6()" style="float:right; margin-bottom:20px;">Generate Report</button>
+            
 
            
            <br>
@@ -347,6 +362,7 @@
 
             
             <div id="tab2" class="tab-content"><h1 class="form-title">Complaints</h1>
+              <div style="margin-top:20px; margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
 
               <div id="modalContainer10" class="modal">
                 <div class="modal-password-content">
@@ -389,9 +405,9 @@
                             <tr>
                                 <th>Report ID</th>               
                                 <th>Complainant's Username</th>
-                                <th>Course</th>
+                                <th>Complainant's Course</th>
                                 <th>Date and Time</th>
-                                <th>Department</th>
+                                <th>Received by</th>
                                 <th>Status</th>
                                 <th>Attached Form</th>
                                 <th>Attached Evidence/s</th>
@@ -408,9 +424,30 @@
                                 <td>{{ row[1] }}</td>
                                 <td>{{ row[2] }}</td>
                                 <td>{{ row[19] }}</td>
-                                <td>{{ row[3] }}</td>
+                                <td>
+                                  {% set timestamp = row[3] %}
+                                  {% set datetime_obj = timestamp|timestamp_to_datetime %}
+                                  {{ datetime_obj.strftime('%B %d, %Y / %I:%M %p') }}
                                 
-                                <td>{{ row[5] }}</td>
+                                </td>
+                                
+                                <td>
+                                  {% if row[5] == 'CICS' %}
+                                  Israel Penero
+                              {% elif row[5] == 'CAFAD' %}
+                                  Paula Joyce A. Buisan
+                              {% elif row[5] == 'COE' %}
+                              Dolfus G. Miciano
+                              {% elif row[5] == 'COE1' %}
+                              Therezia O. Conti
+                              {% elif row[5] == 'COE2' %}
+                              Belen E. Bagui
+                              {% elif row[5] == 'CIT' %}
+                              Nenita G. Hornilla
+                              {% else %}
+                                  {{ row[5] }} Coordinator
+                              {% endif %}
+                            </td>
                                 <td>{{ row[6] }}</td>
                                     <td>
                                         <a style="text-decoration: underline; cursor: pointer;" onclick="openModal7('{{ row[0] }}')" target="_blank">{{ row[8] }}</a>
@@ -790,6 +827,7 @@
                     </div>
                 </div>
                     <h1 class="form-title">Request</h1>
+                    <div style="margin-top:20px; margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
                     <div class="modern-sleek-navbar-container">
                         
                         <div class="modern-sleek-navbar">
@@ -832,7 +870,12 @@
                                         <td>{{ row[0] }}</td>
                                         <td>{{ row[1] }}</td>
                                         <td>{{ row[13] }}</td>
-                                        <td>{{ row[2] }}</td>
+                                        <td>
+                                          {% set timestamp = row[2] %}
+                                          {% set datetime_obj = timestamp|timestamp_to_datetime %}
+                                          {{ datetime_obj.strftime('%B %d, %Y / %I:%M %p') }}
+                                        
+                                        </td>
                                        
                                         <td>{{ row[5] }}</td>
                                         <td><a style="text-decoration: underline; cursor: pointer;" onclick="openModal8('{{ row[0] }}')" target="_blank">{{ row[7] }}</a></td>
@@ -890,7 +933,12 @@
                                         <td>{{ row[0] }}</td>
                                         <td>{{ row[1] }}</td>
                                         <td>{{ row[13] }}</td>
-                                        <td>{{ row[2] }}</td>
+                                        <td>
+                                          {% set timestamp = row[2] %}
+                                          {% set datetime_obj = timestamp|timestamp_to_datetime %}
+                                          {{ datetime_obj.strftime('%B %d, %Y / %I:%M %p') }}
+                                        
+                                        </td>
                                         
                                         <td>{{ row[5] }}</td>
                                         <td><a style="text-decoration: underline; cursor: pointer;" onclick="openModal8('{{ row[0] }}')" target="_blank">{{ row[7] }}</a></td>
@@ -944,7 +992,12 @@
                                         <td>{{ row[0] }}</td>
                                         <td>{{ row[1] }}</td>
                                         <td>{{ row[13] }}</td>
-                                        <td>{{ row[2] }}</td>
+                                        <td>
+                                          {% set timestamp = row[2] %}
+                                          {% set datetime_obj = timestamp|timestamp_to_datetime %}
+                                          {{ datetime_obj.strftime('%B %d, %Y / %I:%M %p') }}
+                                        
+                                        </td>
                                     
                                         <td>{{ row[5] }}</td>
                                         <td><a style="text-decoration: underline; cursor: pointer;" onclick="openModal8('{{ row[0] }}')" target="_blank">{{ row[7] }}</a></td>
@@ -1000,6 +1053,7 @@
 
                 <div id="tab9" class="tab-content">
                   <h3 class="form-title">File Report</h3>
+                  <div style="margin-top:20px; margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
                   <hr>
                     <div style="margin-bottom: 20px;">
                         <h4>Reminders:</h4>
@@ -1286,6 +1340,7 @@
             </div>
         </div>
           <h1 class="section-title">Call Slip Section</h1>
+          
 
           <div style="margin-bottom:20px; border-bottom: 1px solid #3c3c3c;"></div>
 
