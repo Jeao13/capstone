@@ -2255,5 +2255,14 @@ function digi() {
   }
 
 
+function toggleActive(element) {
+  // Remove 'active' class from all sidebar items
+  var sidebarItems = document.querySelectorAll('.sidebar ul li');
+  sidebarItems.forEach(function (item) {
+    item.classList.remove('active');
+  });
 
+  // Add 'active' class to the clicked sidebar item
+  element.classList.add('active');
+}
 

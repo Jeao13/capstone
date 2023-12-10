@@ -51,26 +51,26 @@
             <h3>Grievance System</h3>
         </div>
         <ul>
-            <li><a href="#tab1"><i class="fa-solid fa-house"></i>Dashboard</a></li>
-            <hr><li><a href="#tab2"><i class="fa-solid fa-file"></i>Complaints</a></li>
+            <li onclick="toggleActive(this)"><a href="#tab1"><i class="fa-solid fa-house"></i>Dashboard</a></li>
+            <hr><li onclick="toggleActive(this)"><a href="#tab2"><i class="fa-solid fa-file"></i>Complaints</a></li>
             {% if user_source == 'accounts_coordinator'%}
-            <li><a href="#tab11"><i class="fa-solid fa-file"></i>My Complaints</a></li>
+            <li onclick="toggleActive(this)"><a href="#tab11"><i class="fa-solid fa-file"></i>My Complaints</a></li>
             {% endif %}
-            <li><a href="#tab3"><i class="fa-solid fa-file-export"></i>Form Requests</a></li>
+            <li onclick="toggleActive(this)"><a href="#tab3"><i class="fa-solid fa-file-export"></i>Form Requests</a></li>
             {% if user_source == 'accounts_coordinator'%}
-            <li><a href="#tab9"><i class="fa-solid fa-file-lines"></i>Lodge Complaint</a></li>   
+            <li onclick="toggleActive(this)"><a href="#tab9"><i class="fa-solid fa-file-lines"></i>Lodge Complaint</a></li>   
             {% endif %}
-            <hr><li><a href="#tab5"><i class="fa-solid fa-scale-balanced"></i>Sanctions</a></li>  
+            <hr><li onclick="toggleActive(this)"><a href="#tab5"><i class="fa-solid fa-scale-balanced"></i>Sanctions</a></li>  
           
-            <li><a href="#tab10"><i class="fa-solid fa-pager"></i>Call Student</a></li>
+            <li onclick="toggleActive(this)"><a href="#tab10"><i class="fa-solid fa-pager"></i>Call Student</a></li>
             {% if user_source == 'accounts_head'%}
             <li class="dropdown">
               
                 <a style="pointer-events: none;"><i class="fa-solid fa-users"></i>Manage Accounts</a>
                 <ul class="dropdown-menu">
                    
-                    <li><a href="#tab7"><i class="fa-solid fa-users"></i>Coordinators</a></li>
-                    <li><a href="#tab8"><i class="fa-solid fa-users"></i>Users</a></li>
+                    <li onclick="toggleActive(this)" ><a href="#tab7"><i class="fa-solid fa-users"></i>Coordinators</a></li>
+                    <li onclick="toggleActive(this)"><a href="#tab8"><i class="fa-solid fa-users"></i>Users</a></li>
            
 
                    

@@ -204,6 +204,13 @@ color:#cb1313;
   background-position: 0;
 }
 
+.sidebar ul li.active {
+  background-color: #cb1313;
+  /* Add other styles for the active item as needed */
+}
+
+  
+
 .dropdown-menu {
   border-radius: 5px;
   display: none;
