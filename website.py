@@ -3876,8 +3876,8 @@ def homepage():
 
     # Encode the profile picture data as a Base64 string
     if profile_picture_data is not None:
-        profile_picture_base64 = base64.b64encode(
-            profile_picture_data).decode('utf-8')
+            profile_picture_base64 = base64.b64encode(
+                profile_picture_data).decode('utf-8')
     else:
         # Handle the case where there is no profile picture data
         profile_picture_base64 = None
