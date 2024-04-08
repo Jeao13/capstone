@@ -212,11 +212,10 @@ color:#cb1313;
   
 
 .dropdown-menu {
-  border-radius: 5px;
   display: none;
   position: absolute;
-  top: 0; /* Adjusted to align the top of the dropdown menu with the parent */
-  left: 100%; /* Adjusted to move the dropdown menu to the right of the parent */
+  top: 100%; /* Adjusted to align the top of the dropdown menu with the parent */
+  bottom: 100%; /* Adjusted to move the dropdown menu to the right of the parent */
   background-color: #444;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   min-width: 200px; /* Set a minimum width for the dropdown menu */
@@ -1459,4 +1458,9 @@ span {
   font-size:16px;
   
   
+}
+
+.pagination{
+  padding-top:20px;
+  text-align: center;
 }

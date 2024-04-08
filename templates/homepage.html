@@ -13,15 +13,14 @@
     <title>User Page - Grievance System</title>
 </head>
 
-<body onload="digi()">
+<body>
 
  <!--NAV BAR -->
     <div class="cont">
         <!-- Dark gray navbar with logo -->
         <div class="navbar navbar-expand-lg">
             <img src="static\bsul.png" width="50" alt="" class="d-inline-block align-middle mr-3" style="margin: 10px 8px 8px 8px;">
-            <div class="logo">Office of Student Discipline - Grievance System </div>
-            <p style="text-align:right; margin-left:47%; " id="tt"></p>
+            <div class="logo">Office of Student Discipline - Grievance System</div>
         </div>
 
    
@@ -80,9 +79,9 @@
                 <div class="overlay-text">{{ name }}</div>
                 {% if roles in ['student', 'Student'] %}
                 <div class="overlay-text1">{{ course }} - {{year}}</div>
-                {% elif roles == 'faculty' %}
+                {% elif roles == 'Faculty' %}
                 <div class="overlay-text1">Faculty</div>
-                {% elif roles == 'staff' %}
+                {% elif roles == 'Staff' %}
                 <div class="overlay-text1">Staff</div>
                 {% else %}
                 <div class="overlay-text1">Security Guard</div>
@@ -107,6 +106,30 @@
         </div>
 
         <div style=" margin-top: 15px; border-bottom: 1px solid #ccc;"></div>
+
+
+       {% if name != 'Gemaica Cruzat'%}
+        <div class="reminders-container">
+            <!-- Reminder content goes here -->
+            <ul style="list-style-type: disc; margin-left: 20px; padding-left: 0;">
+                <li style="margin-bottom: 10px;">Remember to submit your grievance promptly after experiencing an issue. Timely reporting helps us address concerns efficiently.</li>
+                <li style="margin-bottom: 10px;">Provide clear and detailed information about your grievance. The more specific you are, the easier it is for us to investigate and resolve the issue.</li>
+                <li style="margin-bottom: 10px;">If you've submitted a grievance or document request, feel free to follow up on its status through the system. Keeping track of your report ensures timely resolution.</li>
+                <li style="margin-bottom: 10px;">If you need assistance or have questions about using the grievance system, don't hesitate to contact through following channels.</li>
+            </ul>
+        </div>
+        {%else%}
+        <div class="reminders-container">
+            <!-- Reminder content goes here -->
+            <ul style="list-style-type: disc; margin-left: 20px; padding-left: 0;">
+                <li style="margin-bottom: 10px;">Good Morning!</li>
+                <li style="margin-bottom: 10px;">Be Happy Everyday!</li>
+                <li style="margin-bottom: 10px;">Kaya mo yan!</li>
+                <li style="margin-bottom: 10px;">Wag ka papatalo sa problema!</li>
+            </ul>
+        </div>
+
+        {%endif%}
 
     </div>
     

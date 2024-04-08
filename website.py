@@ -38,12 +38,13 @@ import subprocess
 
 def create_connection_pool():
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
-    'user': os.environ.get('MYSQL_USER', 'mysql'),
-    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
-    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
+    'host': os.environ.get('MYSQL_HOST', 'localhost'),
+    'user': os.environ.get('MYSQL_USER', 'root'),
+    'password': os.environ.get('MYSQL_PASSWORD', ''),
+    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
+
 
         
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
@@ -1014,8 +1015,7 @@ def submit_report():
             Name_Coordinator = "Paula Joyce A. Buisan"
 
         elif department == "CICS":
-            Name_Coordinator = "Lovely Rose Tipan Hernandez"
-
+            Name_Coordinator = "Israel Penero"
 
         elif department == "CIT":
             Name_Coordinator = "Dolfus G. Miciano"
@@ -5230,4 +5230,3 @@ def edit_pic4():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-
