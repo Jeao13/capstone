@@ -1461,7 +1461,27 @@ span {
   
 }
 
-.pagination{
-  padding-top:20px;
-  text-align: center;
+.pagination {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin-top:20px;
+}
+
+.pagination li {
+  margin: 10px 5px; /* Adjust the margin as needed */
+}
+
+.pagination li a {
+  text-decoration: none;
+  color: black; /* Change the color as needed */
+  padding: 5px 10px; /* Adjust the padding as needed */
+  border: 1px solid #ccc; /* Add borders for styling */
+  border-radius: 5px; /* Add rounded corners */
+}
+
+.pagination li.active a {
+  background-color: #007bff; /* Change the background color for the active page */
+  color: white; /* Change the text color for the active page */
 }

@@ -6,7 +6,6 @@ import base64
 import io
 import os
 import requests
-import convertapi
 import detectlanguage
 import random
 import string
@@ -27,10 +26,10 @@ from sklearn.svm import LinearSVC
 from sklearn.model_selection import cross_val_score
 import time
 from docx.oxml import OxmlElement
+from math import ceil
 from PIL import Image
 import io
 from docx.shared import Inches
-import subprocess
 
 
 
@@ -38,12 +37,13 @@ import subprocess
 
 def create_connection_pool():
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', 'localhost'),
-    'user': os.environ.get('MYSQL_USER', 'root'),
-    'password': os.environ.get('MYSQL_PASSWORD', ''),
-    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
+    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
+    'user': os.environ.get('MYSQL_USER', 'mysql'),
+    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
+    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
+
 
 
         
@@ -399,7 +399,7 @@ def submit_notice():
         status5 = "not"
         
 
-    pdf_filename = 'notice.docx'
+    pdf_filename = 'forms/notice.docx'
     doc = Document(pdf_filename)
 
     toggle_table_cell_checkbox(doc.tables[0], 4, 19, status1)
@@ -822,7 +822,7 @@ def generate_report():
     ctotalreject = str(result32[0])
     ctotalcaseclosed = str(result33[0])
 
-    pdf_filename = 'reports.docx'
+    pdf_filename = 'forms/reports.docx'
     doc = Document(pdf_filename)
 
     replace_placeholder(doc, "(date)", form)
@@ -1033,9 +1033,13 @@ def submit_report():
         username = session.get('username', '')
         print(username)
 
-        pdf_filename = 'Formal Complaint Letter.docx'
 
-        doc = Document(pdf_filename)
+
+       
+        full_file_path = 'forms/Formal Complaint Letter.docx'
+        
+
+        doc = Document(full_file_path)
         # Replace placeholders
 
         cnx = create_connection_pool()
@@ -1201,7 +1205,7 @@ def submit_report():
 
         username = session.get('username', '')
 
-        pdf_filename = 'Incident Report.docx'
+        pdf_filename = 'forms/Incident Report.docx'
         doc = Document(pdf_filename)
         # Replace placeholders
 
@@ -1329,7 +1333,7 @@ def submit_request():
         username = session.get('username', '')
 
 
-        pdf_filename = 'Temporary Gate Pass.docx'
+        pdf_filename = 'forms/Temporary Gate Pass.docx'
         doc = Document(pdf_filename)
 
         replace_table_cell_placeholder1(doc.tables[0], 2, 11, formatted_date, "(date)")
@@ -1475,7 +1479,7 @@ def submit_request():
         else:
             status7 = "not"
 
-        pdf_filename = 'Request for Non-Wearing of Uniform.docx'
+        pdf_filename = 'forms/Request for Non-Wearing of Uniform.docx'
         doc = Document(pdf_filename)
 
         toggle_table_cell_checkbox(doc.tables[0], 6, 0, status)
@@ -1607,7 +1611,7 @@ def submit_request():
             status7 = "not"
 
 
-        pdf_filename = 'request for new id.docx'
+        pdf_filename = 'forms/request for new id.docx'
         doc = Document(pdf_filename)
 # problem
         replace_table_cell_placeholder2(doc.tables[0], 7, 0, status, "SHIFT")
@@ -1848,7 +1852,7 @@ def submit_call():
 
     
 
-    pdf_filename = 'call slip.docx'
+    pdf_filename = 'forms/call slip.docx'
     doc = Document(pdf_filename)
 
     replace_table_cell_placeholder1(doc.tables[0], 2, 3, srcode, "(name)")
@@ -2063,7 +2067,7 @@ def submit_written():
 
 
 
-        pdf_filename = 'written warning.docx'
+        pdf_filename = 'forms/written warning.docx'
         doc = Document(pdf_filename)
 
         replace_table_cell_placeholder1(doc.tables[0], 2, 12, formatted_date,"(date)")
@@ -2243,7 +2247,7 @@ def submit_written():
         elif sanction in sanction_mapping2:
             sanction_number = "14"
 
-        pdf_filename = 'Written Reprimand.docx'
+        pdf_filename = 'forms/Written Reprimand.docx'
         doc = Document(pdf_filename)
 
         replace_table_cell_placeholder1(
@@ -2487,7 +2491,7 @@ def submit_written():
         sanction_number1 = sanction_mapping3.get(sanction, "Unknown")
 
 
-        pdf_filename = 'letter of suspension.docx'
+        pdf_filename = 'forms/letter of suspension.docx'
         doc = Document(pdf_filename)
 
         replace_table_cell_placeholder1(
@@ -2714,13 +2718,30 @@ tables = [
     'accounts_guard'
 ]
 
-
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
-    # Retrieve the username from the session if it exists
-    username = session.get('username', '')
+    lastpath = session.get('last_visited_page')
+    print(lastpath)
 
-    error_message = None
+    if session.get('logged_in'):
+        
+        return redirect(lastpath)
+    else:
+        print("Welcome")
+        return redirect('/login')
+    
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    # Retrieve the username from the session if it exists 
+    username = session.get('username', '')
+    lastpath = session.get('last_visited_page')
+    print(lastpath)
+
+  
+    session['last_visited_page'] = None
+    print("wow")
+    
 
     if request.method == 'POST':
         # Get the submitted username and password
@@ -2740,6 +2761,7 @@ def index():
         result = response.json()
 
         if result['success']:
+            session['logged_in'] = True
 
         #if result == "success" :
 
@@ -2777,8 +2799,7 @@ def index():
             return render_template('index.html', username=username, captcha=captcha)
 
     return render_template('index.html', username=username)
-
-
+        
 
 @app.route('/menu')
 def menu():
@@ -3158,14 +3179,30 @@ def sanctions():
 
 @app.route('/head', methods=['GET', 'POST'])
 def homepage_head():
+    session['last_visited_page'] = request.path
     success = request.args.get('success')
     username = session.get('username', '')
     cnx = create_connection_pool()
     cursor1=cnx.get_connection()
     db_cursor_reports = cursor1.cursor()
 
+    page = request.args.get('page', 1, type=int)  # Get the page number from the request query parameters
+    
+    # Define the number of items per page and calculate the offset
+    per_page = 10
+    offset = (page - 1) * per_page
+    
+    # Execute the SQL query to get the total number of complaints
+    db_cursor_reports.execute("SELECT COUNT(*) FROM reports WHERE username = %s", (username,))
+    total_complaints = db_cursor_reports.fetchone()[0]
+
+    # Calculate the total number of pages
+    num_pages = ceil(total_complaints / per_page)
+
+    # Execute the SQL query with pagination
     db_cursor_reports.execute(
-            "SELECT * FROM reports WHERE username = %s", (username,))
+        "SELECT * FROM reports WHERE username = %s LIMIT %s OFFSET %s",
+        (username, per_page, offset))
     complaints1 = db_cursor_reports.fetchall()
 
     db_cursor_reports.close()
@@ -3313,6 +3350,7 @@ def homepage_head():
     cursor1=cnx.get_connection()
     db_cursor_get = cursor1.cursor()
     db_cursor_get1 = cursor1.cursor()
+    db_cursor_reports = cursor1.cursor()
 
     if user_role == 'accounts_coordinators':
         isCoordinator = "yes"
@@ -3323,18 +3361,44 @@ def homepage_head():
         if user_course:
             user_course = user_course[0]  # Extract the course from the result
 
-            # Query reports where the course matches the user's course
+            # Count total complaints for pagination
+            db_cursor_reports.execute(
+                "SELECT COUNT(*) FROM reports WHERE course = %s", (user_course,))
+            total_complaints = db_cursor_reports.fetchone()[0]
+
+            # Calculate the number of pages
+            per_page = 10
+            num_pages = ceil(total_complaints / per_page)
+
+            page = request.args.get('page', 1, type=int)  # Get the page number from the request query parameters
+            offset = (page - 1) * per_page
+
+            # Query reports where the course matches the user's course with pagination
             db_cursor_get.execute(
-                "SELECT * FROM reports WHERE course = %s", (user_course,))
+                "SELECT * FROM reports WHERE course = %s LIMIT %s OFFSET %s", (user_course, per_page, offset))
             reports3 = db_cursor_get.fetchall()
+
             db_cursor_get1.execute(
                 "SELECT * FROM forms_osd WHERE course = %s", (user_course,))
             reports4 = db_cursor_get1.fetchall()
 
     elif user_role == 'accounts_head':
         isCoordinator = "no"
-        db_cursor_get.execute("SELECT * FROM reports")
+        # Count total complaints for pagination
+        db_cursor_reports.execute("SELECT COUNT(*) FROM reports")
+        total_complaints = db_cursor_reports.fetchone()[0]
+
+        # Calculate the number of pages
+        per_page = 10
+        num_pages = ceil(total_complaints / per_page)
+
+        page = request.args.get('page', 1, type=int)  # Get the page number from the request query parameters
+        offset = (page - 1) * per_page
+
+        # Query all reports with pagination
+        db_cursor_get.execute("SELECT * FROM reports LIMIT %s OFFSET %s", (per_page, offset))
         reports3 = db_cursor_get.fetchall()
+
         db_cursor_get1.execute("SELECT * FROM forms_osd")
         reports4 = db_cursor_get1.fetchall()
         user_course = ""
@@ -3648,13 +3712,15 @@ def homepage_head():
 
 
     # Pass the sorted offenses, username, profile picture (Base64), name, course, and user_source to the template
-    return render_template('homepage_head.html',complaints1=complaints1,counts5=filtered_counts5,counts4= filtered_counts4, counts2=counts2, counts3=counts3, counts=counts, counts1=counts1, isCoordinator=isCoordinator, request=reports4, profile_pictures=profile_pictures, coordinators=coordinators, reports3=reports3, reports1=reports1, reports=reports, reports2=reports2, username=username, profile_picture_base64=profile_picture_base643, name=name, course=course, year=year, user_source=user_source, warning=warning, reprimand=reprimand, suspension=suspension, call=call, profile_pictures1=profile_pictures1, profile_pictures2=profile_pictures2, profile_pictures3=profile_pictures3, profile_pictures4=profile_pictures4, cics=cics, cafad=cafad, coe=coe, cit=cit)
+    return render_template('homepage_head.html',complaints1=complaints1,num_pages=num_pages,counts5=filtered_counts5,counts4= filtered_counts4, counts2=counts2, counts3=counts3, counts=counts, counts1=counts1, isCoordinator=isCoordinator, request=reports4, profile_pictures=profile_pictures, coordinators=coordinators, reports3=reports3, reports1=reports1, reports=reports, reports2=reports2, username=username, profile_picture_base64=profile_picture_base643, name=name, course=course, year=year, user_source=user_source, warning=warning, reprimand=reprimand, suspension=suspension, call=call, profile_pictures1=profile_pictures1, profile_pictures2=profile_pictures2, profile_pictures3=profile_pictures3, profile_pictures4=profile_pictures4, cics=cics, cafad=cafad, coe=coe, cit=cit)
 
 
 @app.route('/hello', methods=['GET', 'POST'])
 def homepage():
     username = session.get('username', '')
     print(username)
+
+    session['last_visited_page'] = request.path
 
     if request.method == 'POST':
         # Handle the POST request (form submission)
