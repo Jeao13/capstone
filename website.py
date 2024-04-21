@@ -45,7 +45,6 @@ def create_connection_pool():
     }
 
 
-
         
     cnxpool = pooling.MySQLConnectionPool(pool_name = "example_pool", pool_size = 20, autocommit=True,  **db_config)
 
@@ -3201,7 +3200,7 @@ def homepage_head():
 
     # Execute the SQL query with pagination
     db_cursor_reports.execute(
-        "SELECT * FROM reports WHERE username = %s LIMIT %s OFFSET %s",
+        "SELECT * FROM reports WHERE username = %s ORDER BY date_time DESC LIMIT %s OFFSET %s",
         (username, per_page, offset))
     complaints1 = db_cursor_reports.fetchall()
 
@@ -3375,7 +3374,7 @@ def homepage_head():
 
             # Query reports where the course matches the user's course with pagination
             db_cursor_get.execute(
-                "SELECT * FROM reports WHERE course = %s LIMIT %s OFFSET %s", (user_course, per_page, offset))
+                "SELECT * FROM reports WHERE course = %s ORDER BY date_time DESC LIMIT %s OFFSET %s", (user_course, per_page, offset))
             reports3 = db_cursor_get.fetchall()
 
             db_cursor_get1.execute(
@@ -3396,7 +3395,7 @@ def homepage_head():
         offset = (page - 1) * per_page
 
         # Query all reports with pagination
-        db_cursor_get.execute("SELECT * FROM reports LIMIT %s OFFSET %s", (per_page, offset))
+        db_cursor_get.execute("SELECT * FROM reports ORDER BY date_time DESC LIMIT %s OFFSET %s", (per_page, offset))
         reports3 = db_cursor_get.fetchall()
 
         db_cursor_get1.execute("SELECT * FROM forms_osd")
