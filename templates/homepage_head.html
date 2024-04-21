@@ -52,7 +52,7 @@
         </div>
         <ul>
             <li onclick="toggleActive(this)"><a href="#tab1"><i class="fa-solid fa-house"></i>Dashboard</a></li>
-            <hr><li onclick="toggleActive(this)"><a href="#tab2"><i class="fa-solid fa-file"></i>Complaints</a></li>
+             <hr><li onclick="toggleActive(this)" id="complaint-action"><a href="#tab2" id="complaint-action1"><i class="fa-solid fa-file"></i>Complaints</a></li>
             {% if user_source == 'accounts_coordinator'%}
             <li onclick="toggleActive(this)"><a href="#tab11"><i class="fa-solid fa-file"></i>My Complaints</a></li>
             {% endif %}
@@ -2082,4 +2082,26 @@
 
 
 </body>
+<script> 
+window.onload = function() {
+  // Get the URL parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  // Check if the URL contains 'head?page='
+  if (window.location.href.indexOf('head?page=') !== -1) {
+      // Activate the desired element
+      console.log("test");
+    
+      const tab2Element1 = document.getElementById("complaint-action1");
+      tab2Element1.click();
+  }
+};
+
+function toggleActive(element) {
+  // Remove 'active' class from all li elements
+  const listItems = document.querySelectorAll('li');
+  listItems.forEach(item => item.classList.remove('active'));
+  // Add 'active' class to the clicked li element
+  element.classList.add('active');
+}
+</script>
 </html>
