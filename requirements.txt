@@ -10,3 +10,4 @@ matplotlib
 python-docx
 Pillow
 gunicorn
+reportlab
