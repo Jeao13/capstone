@@ -1,8 +1,11 @@
 Flask
-docx
 mysql-connector-python
 requests
+detectlanguage
+docx
 scikit-learn
-scipy
-Pillow
 numpy
+scipy
+matplotlib
+python-docx
+Pillow
