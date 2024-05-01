@@ -9,3 +9,4 @@ scipy
 matplotlib
 python-docx
 Pillow
+gunicorn
