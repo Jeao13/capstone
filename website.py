@@ -10,6 +10,7 @@ import detectlanguage
 import random
 import string
 import base64
+import time
 from docx import Document
 from docx.shared import Pt, RGBColor, Cm
 from werkzeug.utils import secure_filename
@@ -24,7 +25,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.svm import LinearSVC
 from sklearn.model_selection import cross_val_score
-import time
 from docx.oxml import OxmlElement
 from math import ceil
 from PIL import Image
@@ -36,13 +36,22 @@ from docx.shared import Inches
 
 
 def create_connection_pool():
+    # db_config = {
+    # 'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
+    # 'user': os.environ.get('MYSQL_USER', 'mysql'),
+    # 'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
+    # 'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
+    # 'port': os.environ.get('MYSQL_PORT', '3306'),
+    # }
+
     db_config = {
-    'host': os.environ.get('MYSQL_HOST', 'mysql-uetk'),
-    'user': os.environ.get('MYSQL_USER', 'mysql'),
-    'password': os.environ.get('MYSQL_PASSWORD', '1NYNmyNJSq59o8UBx3d57qFZehQyl/GfjICwd6/PpgE='),
-    'database': os.environ.get('MYSQL_DATABASE', 'mysql'),
+    'host': os.environ.get('MYSQL_HOST', 'localhost'),
+    'user': os.environ.get('MYSQL_USER', 'root'),
+    'password': os.environ.get('MYSQL_PASSWORD', ''),
+    'database': os.environ.get('MYSQL_DATABASE', 'capstoneproject'),
     'port': os.environ.get('MYSQL_PORT', '3306'),
     }
+
 
 
         
@@ -3010,7 +3019,7 @@ def search_students():
 
         # Perform a database query to search for students in the accounts_cics table
         cnx = create_connection_pool()
-        cursor1=cnx.get_connection()
+        cursor1=cnx.get_connection()  
         db_cursor = cursor1.cursor()
         db_cursor.execute(
             "SELECT * FROM accounts_cics WHERE Name LIKE %s", ('%' + search_value + '%',))
@@ -3178,12 +3187,28 @@ def sanctions():
 
 @app.route('/head', methods=['GET', 'POST'])
 def homepage_head():
-    session['last_visited_page'] = request.path
-    success = request.args.get('success')
+    
     username = session.get('username', '')
     cnx = create_connection_pool()
     cursor1=cnx.get_connection()
     db_cursor_reports = cursor1.cursor()
+
+    duration = request.form.get('duration') 
+    session['duration'] = duration  
+    current_time = time.localtime()
+
+    if duration =="monthly":
+        dur = "monthly"
+        current_year = current_time.tm_year
+        current_month = current_time.tm_mon
+        
+    elif duration == "yearly":
+        dur = "yearly"
+        current_year = current_time.tm_year
+        
+    elif duration == "all" or duration is None:
+        dur = ""
+        
 
     page = request.args.get('page', 1, type=int)  # Get the page number from the request query parameters
     
@@ -3205,12 +3230,6 @@ def homepage_head():
     complaints1 = db_cursor_reports.fetchall()
 
     db_cursor_reports.close()
-    
-    if request.method == 'POST':
-        # Handle the POST request (form submission)
-        username = request.form['username']
-        # Save the username in the session
-        session['username'] = username
 
     # Determine the user source (accounts_cics or accounts_coordinators) and set the user_source variable
 
@@ -3552,6 +3571,8 @@ def homepage_head():
     cursor1=cnx.get_connection()
     db_cursor = cursor1.cursor()
 
+    
+
     for status in statuses:
         if status:
             query = "SELECT COUNT(*) FROM reports WHERE course = %s AND status = %s"
@@ -3584,31 +3605,80 @@ def homepage_head():
     cursor1=cnx.get_connection()
     db_cursor2 = cursor1.cursor()
 
-    for status in statuses:
-        if status:
-            query = "SELECT COUNT(*) FROM reports WHERE status = %s"
-            db_cursor2.execute(query, (status,))
-        else:
-            query = "SELECT COUNT(*) FROM reports"
-            db_cursor2.execute(query,)
-        result2 = db_cursor2.fetchone()
-        counts2[status] = result2[0]
+    if dur == "":
 
+        for status in statuses:
+            if status:
+                query = "SELECT COUNT(*) FROM reports WHERE status = %s"
+                db_cursor2.execute(query, (status,))
+            else:
+                query = "SELECT COUNT(*) FROM reports"
+                db_cursor2.execute(query,)
+            result2 = db_cursor2.fetchone()
+            counts2[status] = result2[0]
+
+    elif dur == "yearly":
+        for status in statuses:
+            if status:
+                query = "SELECT COUNT(*) FROM reports WHERE status = %s AND YEAR(date_time) = %s"
+                db_cursor2.execute(query, (status, current_year,))
+            else:
+                query = "SELECT COUNT(*) FROM reports WHERE YEAR(date_time) = %s"
+                db_cursor2.execute(query, (current_year,))
+            result2 = db_cursor2.fetchone()
+            counts2[status] = result2[0]
+
+    else:
+        for status in statuses:
+            if status:
+                query = "SELECT COUNT(*) FROM reports WHERE status = %s AND MONTH(date_time) = %s AND YEAR(date_time) = %s"
+                db_cursor2.execute(query, (status, current_month, current_year,))
+            else:
+                query = "SELECT COUNT(*) FROM reports WHERE MONTH(date_time) = %s AND YEAR(date_time) = %s"
+                db_cursor2.execute(query, (current_month, current_year,))
+            result2 = db_cursor2.fetchone()
+            counts2[status] = result2[0]
+    
     db_cursor2.close()
 
     cnx = create_connection_pool()
     cursor1=cnx.get_connection()
     db_cursor3 = cursor1.cursor()
 
-    for status in statuses1:
-        if status:
-            query = "SELECT COUNT(*) FROM forms_osd WHERE status = %s"
-            db_cursor3.execute(query, (status,))
-        else:
-            query = "SELECT COUNT(*) FROM forms_osd"
-            db_cursor3.execute(query,)
-        result3 = db_cursor3.fetchone()
-        counts3[status] = result3[0]
+    if dur == "":
+
+        for status in statuses1:
+            if status:
+                query = "SELECT COUNT(*) FROM forms_osd WHERE status = %s"
+                db_cursor3.execute(query, (status,))
+            else:
+                query = "SELECT COUNT(*) FROM forms_osd"
+                db_cursor3.execute(query,)
+            result3 = db_cursor3.fetchone()
+            counts3[status] = result3[0]
+
+    elif dur == "yearly":
+
+        for status in statuses1:
+            if status:
+                query = "SELECT COUNT(*) FROM forms_osd WHERE status = %s AND YEAR(date_time) = %s"
+                db_cursor3.execute(query, (status, current_year,))
+            else:
+                query = "SELECT COUNT(*) FROM forms_osd WHERE YEAR(date_time) = %s"
+                db_cursor3.execute(query, (current_year,))
+            result3 = db_cursor3.fetchone()
+            counts3[status] = result3[0]
+
+    else:
+        for status in statuses1:
+            if status:
+                query = "SELECT COUNT(*) FROM forms_osd WHERE status = %s AND MONTH(date_time) = %s AND YEAR(date_time) = %s"
+                db_cursor3.execute(query, (status, current_month, current_year,))
+            else:
+                query = "SELECT COUNT(*) FROM forms_osd WHERE MONTH(date_time) = %s AND YEAR(date_time) = %s"
+                db_cursor3.execute(query, (current_month, current_year,))
+            result3 = db_cursor3.fetchone()
+            counts3[status] = result3[0]
 
     db_cursor3.close()
 
@@ -3616,13 +3686,32 @@ def homepage_head():
     cursor1=cnx.get_connection()
     db_cursor4 = cursor1.cursor()
 
-    for status in minor:
-  
-        query = "SELECT COUNT(*) FROM sanctions WHERE sanction = %s"
-        db_cursor4.execute(query, (status,))
+    if dur == "":
 
-        result4 = db_cursor4.fetchone()
-        counts4[status] = result4[0]
+        for status in minor:
+    
+            query = "SELECT COUNT(*) FROM sanctions WHERE sanction = %s"
+            db_cursor4.execute(query, (status,))
+
+            result4 = db_cursor4.fetchone()
+            counts4[status] = result4[0]
+
+    elif dur == "yearly":
+        for status in minor:
+    
+            query = "SELECT COUNT(*) FROM sanctions WHERE sanction = %s AND YEAR(date_time) = %s"
+            db_cursor4.execute(query, (status, current_year,))
+
+            result4 = db_cursor4.fetchone()
+            counts4[status] = result4[0]
+    else:
+        for status in minor:
+    
+            query = "SELECT COUNT(*) FROM sanctions WHERE sanction = %s AND MONTH(date_time) = %s AND YEAR(date_time) = %s"
+            db_cursor4.execute(query, (status,current_month, current_year,))
+
+            result4 = db_cursor4.fetchone()
+            counts4[status] = result4[0]
 
     db_cursor4.close()
 
@@ -3630,13 +3719,33 @@ def homepage_head():
     cursor1=cnx.get_connection()
     db_cursor5 = cursor1.cursor()
 
-    for status in major:
-      
-        query = "SELECT COUNT(*) FROM sanctions WHERE sanction = %s"
-        db_cursor5.execute(query, (status,))
+    if dur == "":
 
-        result5 = db_cursor5.fetchone()
-        counts5[status] = result5[0]
+        for status in major:
+        
+            query = "SELECT COUNT(*) FROM sanctions WHERE sanction = %s"
+            db_cursor5.execute(query, (status,))
+
+            result5 = db_cursor5.fetchone()
+            counts5[status] = result5[0]
+
+    elif dur == "yearly":
+        for status in major:
+        
+            query = "SELECT COUNT(*) FROM sanctions WHERE sanction = %s AND YEAR(date_time) = %s"
+            db_cursor5.execute(query, (status, current_year,))
+
+            result5 = db_cursor5.fetchone()
+            counts5[status] = result5[0]
+
+    elif dur == "monthly":
+        for status in major:
+        
+            query = "SELECT COUNT(*) FROM sanctions WHERE sanction = %s AND MONTH(date_time) = %s AND YEAR(date_time) = %s"
+            db_cursor5.execute(query, (status, current_month, current_year,))
+
+            result5 = db_cursor5.fetchone()
+            counts5[status] = result5[0]
 
     db_cursor5.close()
 
@@ -4092,6 +4201,11 @@ def lookup_student_info(username):
 def lookup_student():
     # Get the username from the request
     username = request.form.get('username')
+
+    if not username:
+        username = request.json.get('username')
+
+    
 
     # Call the function to look up the student's name and course
     student_name, student_course = lookup_student_info(username)

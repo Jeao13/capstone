@@ -250,7 +250,19 @@
               </div>
             {% endif %}
             {% if user_source == 'accounts_head' %}
-             <button style="margin-bottom:50px;" type="button" id="searchButton" onclick="openModal6()" >Generate Report</button>
+            <div style="display:flex; justify-content: space-between;">
+              <button style="margin-bottom:50px;" type="button" id="searchButton" onclick="openModal6()" >Generate Report</button>
+              <form id="duration_form" action="/head" method="post">
+                <!-- Include the session data as a hidden input field -->
+                <input type="hidden" name="duration" id="session_duration" value="">
+                <select name="duration" id="duration" style="width:200px; height: 50px;" onchange="submitForm()" required>
+                    <option value="all" id="all">All-Time</option> 
+                    <option value="yearly" id="year">This Year</option> 
+                    <option value="monthly" id="monthly">This Month</option> 
+                </select>
+            </form>
+            </div>
+             
               <div class="chart-container-wrapper">
                 
                 <div class="dashboard-section">
@@ -400,90 +412,81 @@
             
               
          <div id="table-containers">
-                    <table class="headtable">
-                        <thead>
-                            <tr>
-                                <th>Report ID</th>               
-                                <th>Complainant's Username</th>
-                                <th>Complainant's Course</th>
-                                <th>Date and Time</th>
-                                <th>Received by</th>
-                                <th>Status</th>
-                                <th>Attached Form</th>
-                                <th>Attached Evidence/s</th>
-                                <th>Action</th>
-                                <th>Change Status</th>
+          <table class="headtable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Report ID</th>               
+                    <th>Complainant's Username</th>
+                    <th>Complainant's Course</th>
+                    <th>Date and Time</th>
+                    <th>Received by</th>
+                    <th>Status</th>
+                    <th>Attached Form</th>
+                    <th>Attached Evidence/s</th>
+                    <th>Action</th>
+                    <th>Change Status</th>
+                </tr>
+            </thead>
+            <tbody>
             
-                            </tr>
-                        </thead>
-                       
-                            <tbody>
-                              {% for row in reports3|sort(reverse=true) %}
-                            <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
-                            <tr >
-                                <td>{{ row[1] }}</td>
-                                <td>{{ row[2] }}</td>
-                                <td>{{ row[19] }}</td>
-                                <td>
-                                  {% set timestamp = row[3] %}
-                                  {% set datetime_obj = timestamp|timestamp_to_datetime %}
-                                  {{ datetime_obj.strftime('%B %d, %Y / %I:%M %p') }}
-                                
-                                </td>
-                                
-                                <td>
-                                  {% if row[5] == 'CICS' %}
-                                  Israel Penero
-                              {% elif row[5] == 'CAFAD' %}
-                                  Paula Joyce A. Buisan
-                              {% elif row[5] == 'COE' %}
-                              Dolfus G. Miciano
-                              {% elif row[5] == 'COE1' %}
-                              Therezia O. Conti
-                              {% elif row[5] == 'COE2' %}
-                              Belen E. Bagui
-                              {% elif row[5] == 'CIT' %}
-                              Nenita G. Hornilla
-                              {% else %}
-                                  {{ row[5] }} Coordinator
-                              {% endif %}
-                            </td>
-                                <td>{{ row[6] }}</td>
-                                    <td>
-                                        <a style="text-decoration: underline; cursor: pointer;" onclick="openModal7('{{ row[0] }}')" target="_blank">{{ row[8] }}</a>
-                                    </td>
-                
-                              
-                                    <td style=" text-overflow:ellipsis; overflow: hidden; max-width:200px;">
-                                        <label for="lol" style="display: inline-block;">Evidence 1:</label><a class = "lol" href="{{ url_for('preview_support_file', report_id=row[1],idx=1) }}" target="_blank">{{ row[11] }}</a><br>
-                                        <label for="lol1" style = "display: inline-block;">Evidence 2:</label><a class = "lol1" href="{{ url_for('preview_support_file', report_id=row[1],idx=2) }}" target="_blank">{{ row[14] }}</a><br>
-                                        <label for="lol2" style = "display: inline-block;">Evidence 3:</label><a class = "lol2" href="{{ url_for('preview_support_file', report_id=row[1],idx=3) }}" target="_blank">{{ row[17] }}</a><br>
-                                    </td>
-
-                                    
-                                  
-                                
-                                
-                                    <td><button class="view-report-button" onclick="getAlgorithmResult('{{ row[4] }}')">View Report</button></td>
-                                    <td>
-                                        <!-- Add a form to change the status -->
-                                        <form id="statusChangeForm" onsubmit="checkStatus('{{ row[0] }}','{{ row[1] }}'); return false; ">
-                                            <select name="new_status" id="new_status_select_{{ row[0] }}">
-                                              <option value="" selected disabled>Select Status:</option>
-                                              <option value="On Going">On Going</option>
-                                              <option value="Rejected">Rejected</option>
-                                              <option value="Case Closed">Case Closed</option>
-                                            </select>
-                                            <button type="submit"><i class="fa-solid fa-pen-to-square"></i></button>
-                                          </form>
-                                    </td>
-                                   
-                                  
-    
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                {% for row in reports3|sort(reverse=true) %}
+                <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[19] }}</td>
+                    <td>
+                        {% set timestamp = row[3] %}
+                        {% set datetime_obj = timestamp|timestamp_to_datetime %}
+                        {{ datetime_obj.strftime('%B %d, %Y / %I:%M %p') }}
+                    </td>
+                    <td>
+                        {% if row[5] == 'CICS' %}
+                        Israel Penero
+                        {% elif row[5] == 'CAFAD' %}
+                        Paula Joyce A. Buisan
+                        {% elif row[5] == 'COE' %}
+                        Dolfus G. Miciano
+                        {% elif row[5] == 'COE1' %}
+                        Therezia O. Conti
+                        {% elif row[5] == 'COE2' %}
+                        Belen E. Bagui
+                        {% elif row[5] == 'CIT' %}
+                        Nenita G. Hornilla
+                        {% else %}
+                        {{ row[5] }} Coordinator
+                        {% endif %}
+                    </td>
+                    <td>{{ row[6] }}</td>
+                    <td>
+                        <a style="text-decoration: underline; cursor: pointer;" onclick="openModal7('{{ row[0] }}')" target="_blank">{{ row[8] }}</a>
+                    </td>
+                    <td style=" text-overflow:ellipsis; overflow: hidden; max-width:200px;">
+                        <label for="lol" style="display: inline-block;">Evidence 1:</label><a class = "lol" href="{{ url_for('preview_support_file', report_id=row[1],idx=1) }}" target="_blank">{{ row[11] }}</a><br>
+                        <label for="lol1" style = "display: inline-block;">Evidence 2:</label><a class = "lol1" href="{{ url_for('preview_support_file', report_id=row[1],idx=2) }}" target="_blank">{{ row[14] }}</a><br>
+                        <label for="lol2" style = "display: inline-block;">Evidence 3:</label><a class = "lol2" href="{{ url_for('preview_support_file', report_id=row[1],idx=3) }}" target="_blank">{{ row[17] }}</a><br>
+                    </td>
+                    <td><button class="view-report-button" onclick="getAlgorithmResult('{{ row[4] }}')">View Report</button></td>
+                    <td>
+                        <!-- Add a form to change the status -->
+                        <form id="statusChangeForm" onsubmit="checkStatus('{{ row[0] }}','{{ row[1] }}'); return false; ">
+                            <select name="new_status" id="new_status_select_{{ row[0] }}">
+                                <option value="" selected disabled>Select Status:</option>
+                                <option value="On Going">On Going</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Case Closed">Case Closed</option>
+                            </select>
+                            <button type="submit"><i class="fa-solid fa-pen-to-square"></i></button>
+                        </form>
+                    </td>
+                </tr>
+              
+                {% endfor %}
+            </tbody>
+        </table>
+        
                     <nav aria-label="Page navigation">
                       <ul class="pagination justify-content-center">
                         {% for page_num in range(1, num_pages + 1) %}
@@ -857,6 +860,7 @@
                             <table class="rep-table">
                                 <thead>
                                     <tr>
+                                      <th>#</th>
                                         <th>Report ID</th>               
                                         <th>SR-CODE</th>
                                         <th>Course</th>
@@ -865,7 +869,7 @@
                                         <th>Attached Form</th>
                                         <th>Attached Supporting Document</th>
                                         <th>Action</th>
-                                        <th>Change Status</th>
+                                        <th>Change Status to Ongoing</th>
                                         
                                     </tr>
                                 </thead>
@@ -877,6 +881,7 @@
                                     {% if row[5] == 'Pending' %}
                                     <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
                                     <tr>
+                                      <td>{{loop.index}}</td>
                                         <td>{{ row[0] }}</td>
                                         <td>{{ row[1] }}</td>
                                         <td>{{ row[13] }}</td>
@@ -892,10 +897,10 @@
                                         <td> <a href="{{ url_for('preview_support_file1', report_id=row[0]) }}" target="_blank">{{ row[10] }}</a></td>
                                         <td><button class="modern-sleek-view-report-button" onclick="openModal('{{ row[3] }}')">View Report</button></td>
                                         <td>
-                                            <!-- Add a form to change the status -->
+                              
                                             <form id="statusChangeForm" method="POST" action="{{ url_for('change_report_status1', report_id=row[0]) }}"
-                                            onsubmit="return confirmStatusChange('{{ row[0] }}')();">
-                                            <select name="new_status">
+                                            onsubmit="return confirmStatusChange('{{ row[0] }}')();" style="display: flex; justify-content: center; align-items: center;">
+                                            <select name="new_status" hidden>
                                                 <option value="Ongoing">Ongoing</option>
                                 
                                             </select>
@@ -921,6 +926,7 @@
                             <table class="rep-table">
                                 <thead>
                                     <tr>
+                                      <th>#</th>
                                         <th>Report ID</th>               
                                         <th>SR-CODE</th>
                                         <th>Course</th>
@@ -940,6 +946,7 @@
                                     {% if row[5] == 'Ongoing' %}
                                     <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
                                     <tr>
+                                      <td>{{loop.index}}</td>
                                         <td>{{ row[0] }}</td>
                                         <td>{{ row[1] }}</td>
                                         <td>{{ row[13] }}</td>
@@ -981,6 +988,7 @@
                             <table class="rep-table">
                                 <thead>
                                     <tr>
+                                      <th>#</th>
                                         <th>Report ID</th>               
                                         <th>SR-CODE</th>
                                         <th>Course</th>
@@ -999,6 +1007,7 @@
                                     {% if row[5] == 'Approved' or row[5] == 'Rejected' %}
                                     <!-- Sort the reports list by the third element (date and time) in reverse order (descending) -->
                                     <tr>
+                                      <td>{{loop.index}}</td>
                                         <td>{{ row[0] }}</td>
                                         <td>{{ row[1] }}</td>
                                         <td>{{ row[13] }}</td>
@@ -1358,7 +1367,13 @@
             <div class="form-container">
               <div class="form-element">
                 <label for="student" class="form-label">SR-CODE of the Student:</label>
-                        <input type="text" id="student" name="student" pattern="[0-9]{2}-[0-9]{5}" placeholder="Ex: 20-XXXXX" class="form-input" required>
+                <input type="text" oninput="srcodechange()" id="student1" name="student1" pattern="[0-9]{2}-[0-9]{5}" placeholder="Ex: 20-XXXXX" class="form-input" required>
+
+
+                <div style="width: 300px; background-color: white; padding: 20px;">
+                  <p id="nameofstudent">Name:</p>
+                  <p id="secofstudent">Section:</p>
+                </div>
               </div>
 
               <div class="form-element">
@@ -2103,5 +2118,9 @@ function toggleActive(element) {
   // Add 'active' class to the clicked li element
   element.classList.add('active');
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  setDuration();
+})
 </script>
 </html>
